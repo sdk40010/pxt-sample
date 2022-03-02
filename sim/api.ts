@@ -1,4 +1,5 @@
 /// <reference path="../libs/core/enums.d.ts"/>
+/// <reference path="../node_modules/pxt-core/built/pxtlib.d.ts"/>
 
 namespace pxsim.hare {
     /**
@@ -43,7 +44,7 @@ namespace pxsim.turtle {
             b.sprite.angle -= angle;
         else
             b.sprite.angle += angle;
-        return Promise.delay(400)
+        return ts.pxtc.Util.delay(400)
     }
 
     /**
@@ -77,7 +78,7 @@ namespace pxsim.loops {
     //% help=functions/pause weight=54
     //% block="pause (ms) %pause" blockId=device_pause
     export function pauseAsync(ms: number) {
-        return Promise.delay(ms)
+        return ts.pxtc.Util.delay(ms)
     }
 }
 
@@ -131,7 +132,7 @@ namespace pxsim {
             if (this.x < 0 || this.y < 0)
                 board().bus.queue("TURTLE", "BUMP");
 
-            return Promise.delay(400)
+            return ts.pxtc.Util.delay(400)
         }
     }
 }
