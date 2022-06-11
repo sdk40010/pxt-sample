@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>sample simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Turtle simulator</title>
     <link rel="stylesheet" type="text/css" href="/sim/sim.css">
     <style>
         body {
@@ -13,11 +14,11 @@
     </style>
     <script src="/cdn/pxtsim.js"></script>
     <script src="/sim/sim.js"></script>
+    <script src="js/createjs.min.js"></script>
 </head>
 
 <body>
-    <svg id='svgcanvas' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 280">
-        <circle id='svgsprite' cx="100" cy="100" r="50" class="sprite" />
-        <circle id='svgsprite2' cx="50" cy="50" r="25" class="sprite" />
-    </svg>
+    <div id="canvas-container">
+        <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
 </body>

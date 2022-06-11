@@ -20,7 +20,9 @@
       "listsBlocks": false
     },
     "simulator": {
-        "autoRun": true
+        "autoRun": true,
+        "hideFullscreen": true,
+        "aspectRatio": 1
     },
     "appTheme": {
         "logoUrl": "https://github.com/Microsoft/pxt-sample",

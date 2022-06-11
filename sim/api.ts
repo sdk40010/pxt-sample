@@ -1,156 +1,188 @@
 /// <reference path="../libs/core/enums.d.ts"/>
 
-async function delay<T>(duration: number, value: T | Promise<T>): Promise<T>;
-async function delay(duration: number): Promise<void>
-async function delay<T>(duration: number, value?: T | Promise<T>): Promise<T> {
-    // eslint-disable-next-line
-    const output = await value;
-    await new Promise<void>(resolve => setTimeout(() => resolve(), duration));
-    return output;
-}
-
-namespace pxsim.hare {
-    /**
-     * This is hop
-     */
-    //% blockId="sampleHop" block="hop %hop on color %color=colorNumberPicker"
-    //% hop.fieldEditor="gridpicker"
-    export function hop(hop: Hop, color: number) {
-
-    }
-
-    //% blockId=sampleOnLand block="on land"
-    //% optionalVariableArgs
-    export function onLand(handler: (height: number, more: number, most: number) => void) {
-
-    }
-}
-
 namespace pxsim.turtle {
     /**
-     * Moves the sprite forward
-     * @param steps number of steps to move, eg: 1
+     * Move the turtle forward
+     * @param distance distance to move, eg: 50
      */
     //% weight=90
-    //% blockId=sampleForward block="forward %steps"
-    export function forwardAsync(steps: number) {
-        return board().sprite.forwardAsync(steps)
+    //% blockId=turtleForward block="forward %distance steps"
+    export async function forwardAsync(distance: number) {
+        await board().move(distance);
     }
 
     /**
-     * Moves the sprite forward
-     * @param direction the direction to turn, eg: Direction.Left
-     * @param angle degrees to turn, eg:90
+     * Move the turtle backward
+     * @param distance distance to move, eg: 50
      */
     //% weight=85
-    //% blockId=sampleTurn block="turn %direction|by %angle degrees"
-    //% angle.min=-180 angle.max=180
-    export function turnAsync(direction: Direction, angle: number) {
-        let b = board();
-
-        if (direction == Direction.Left)
-            b.sprite.angle -= angle;
-        else
-            b.sprite.angle += angle;
-        return delay(400)
+    //% blockId=turtleBackward block="backward %distance steps"
+    export async function backwardAsync(distance: number) {
+        await board().move(-distance);
     }
 
     /**
-     * Triggers when the turtle bumps a wall
-     * @param handler 
+     * Turn the turtle to the right
+     * @param angle degrees to turn, eg: 90
      */
-    //% blockId=onBump block="on bump"
-    export function onBump(handler: RefAction) {
-        let b = board();
-
-        b.bus.listen("Turtle", "Bump", handler);
-    }
-}
-
-namespace pxsim.loops {
-
-    /**
-     * Repeats the code forever in the background. On each iteration, allows other code to run.
-     * @param body the code to repeat
-     */
-    //% help=functions/forever weight=55 blockGap=8
-    //% blockId=device_forever block="forever" 
-    export function forever(body: RefAction): void {
-        thread.forever(body)
+    //% weight=80
+    //% blockId=turtleTurnRight block="turn right by %angle degrees"
+    //% angle.min=0 angle.max=360
+    export async function turnRightAsync(angle: number) {
+        await board().turn(angle);
     }
 
     /**
-     * Pause for the specified time in milliseconds
-     * @param ms how long to pause for, eg: 100, 200, 500, 1000, 2000
+     * Turn the turtle to the left
+     * @param angle degrees to turn, eg: 90
      */
-    //% help=functions/pause weight=54
-    //% block="pause (ms) %pause" blockId=device_pause
-    export function pauseAsync(ms: number) {
-        return delay(ms)
+    //% weight=75
+    //% blockId=turtleTurnLeft block="turn left by %angle degrees"
+    //% angle.min=0 angle.max=360
+    export async function turnLeftAsync(angle: number) {
+        await board().turn(-angle);
     }
-}
 
-function logMsg(m:string) { console.log(m) }
-
-namespace pxsim.console {
     /**
-     * Print out message
+     * Pull the pen up
      */
-    //% 
-    export function log(msg:string) {
-        logMsg("CONSOLE: " + msg)
-        // why doesn't that work?
-        board().writeSerial(msg + "\n")
+    //% weight=70
+    //% blockId=turtlePenUp block="pull the pen up"
+    export function penUp() {
+        board().pen = false;
     }
-}
 
-namespace pxsim {
     /**
-     * A ghost on the screen.
+     * Pull the pen down
      */
-    //%
-    export class Sprite {
-        /**
-         * The X-coordiante
-         */
-        //%
-        public x = 100;
-         /**
-         * The Y-coordiante
-         */
-        //%
-        public y = 100;
-        public angle = 90;
-        
-        constructor() {
-        }
-        
-        private foobar() {}
-
-        /**
-         * Move the thing forward
-         */
-        //%
-        public forwardAsync(steps: number) {
-            let deg = this.angle / 180 * Math.PI;
-            this.x += Math.cos(deg) * steps * 10;
-            this.y += Math.sin(deg) * steps * 10;
-            board().updateView();
-
-            if (this.x < 0 || this.y < 0)
-                board().bus.queue("TURTLE", "BUMP");
-
-            return delay(400)
-        }
+    //% weight=65
+    //% blockId=turtlePenDown block="pull the pen down"
+    export function penDown() {
+        board().pen = true;
     }
-}
 
-namespace pxsim.sprites {
     /**
-     * Creates a new sprite
+     * Move the turtle to the origin and set heading to 0
      */
-    //% blockId="sampleCreate" block="createSprite"
-    export function createSprite(): Sprite {
-        return new Sprite();
+    //% weight=60
+    //% blockId=turtleHome block="back to home"
+    export async function homeAsync() {
+        await board().moveTo(0, 0, 0);
+    }
+
+    /**
+     * X position of the turtle
+     */
+    //% weight=55
+    //% blockId=turtleX block="x position"
+    export function x() {
+        return board().x;
+    }
+
+    /**
+     * Y position of the turtle
+     */
+    //% weight=54
+    //% blockId=turtleY block="y position"
+    export function y() {
+        return board().y;
+    }
+
+    /**
+     * Heading of the turtle
+     */
+    //% weight=53
+    //% blockId=turtleHeading block="heading"
+    export function heading() {
+        return board().heading;
+    }
+
+    /**
+     * Set the speed of the turtle
+     * @param speed turtle speed, eg: Speed.Fast
+     */
+    //% weight=40
+    //% blockId=turtleSpeed block="set speed to %speed"
+    export function setSpeed(speed: Speed) {
+        board().speed = speed;
+    }
+
+    /**
+     * Set the pen color
+     * @param color pen color, eg: 0x007fff
+     */
+    //% weight=50
+    //% blockId="turtlePenColor" block="set pen color to %color=colorNumberPicker"
+    export function setPenColor(color: number) {
+        board().penColor = color;
+    }
+
+    /**
+     * Set the pen size
+     * @param size pen size, eg: 3
+     */
+    //% weight=45
+    //% blockId="turtlePenSize" block="set pen size to %size"
+    //% size.min=1 size.max=10
+    export function setPenSize(size: number) {
+        board().penSize = size;
+    }
+
+    /**
+     * Show the turtle
+     */
+    //% weight=30
+    //% blockId=turtleShow block="show turtle"
+    export function show() {
+        board().turtle = true;
+    }
+
+    /**
+     * Hide the turtle
+     */
+    //% weight=35
+    //% blockId=turtleHide block="hide turtle"
+    export function hide() {
+        board().turtle = false;
+    }
+
+    /**
+     * Move the turtle to the given position
+     * @param xpos x position
+     * @param ypos y position
+     */
+    //% weight=29
+    //% blockId=turtleGoto block="goto x=%xpos and y=%ypos"
+    export async function gotoAsync(xpos: number, ypos: number) {
+        await board().moveTo(xpos, ypos, board().heading);
+    }
+
+    /**
+     * Print a text and move forward
+     * @param text text to print, eg: "Hello World"
+     */
+    //% weight=20
+    //% blockId=turtlePrintAndMove block="print %text and move forward"
+    export async function printAndMoveAsync(text: string) {
+        await board().print(text, true);
+    }
+
+    /**
+     * Print a text and stand still
+     * @param text text to print, eg: "Hello World"
+     */
+    //% weight=25
+    //% blockId=turtlePrint block="print %text"
+    export async function printAsync(text: string) {
+        await board().print(text, false);
+    }
+
+    /**
+     * Clear the canvas
+     */
+    //% weight=15
+    //% blockId=turtleClear block="clear the canvas"
+    export function clear() {
+        board().clear();
     }
 }
