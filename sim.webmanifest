@@ -1,0 +1,12 @@
+{
+    "lang": "en",
+    "dir": "ltr",
+    "name": "turtle",
+    "short_name": "turtle",
+    "background_color": "#FAFAFA",
+    "icons": [],
+    "scope": "/",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "landscape"
+}

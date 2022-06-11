@@ -1,0 +1,9 @@
+CACHE MANIFEST
+
+CACHE:
+/pxt-sample/pxtsim.js
+/pxt-sample/sim.js
+/pxt-sample/sim.css
+
+NETWORK:
+*
