@@ -1,7 +1,7 @@
 {
-    "id": "sample",
-    "name": "sample",
-    "title": "MakeCode Editor Sample",
+    "id": "turtle",
+    "name": "turtle",
+    "title": "MakeCode Editor for Turtle graphics",
     "corepkg": "core",
     "cloud": {
         "workspace": false,
@@ -61,6 +61,12 @@
         "greenScreen": true,
         "monacoColors": {
             "editor.background": "#ecf0f1"
-        }
+        },
+        "selectLanguage": true,
+        "availableLocales": [
+            "en",
+            "ja"
+        ],
+        "defaultLocale": "en"
     }
 }
