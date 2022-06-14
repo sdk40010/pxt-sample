@@ -64,7 +64,7 @@ namespace pxsim {
         }
 
         set penColor(color: number) {
-            this.color = `#${("00000" + color.toString(16)).substring(-6)}`;
+            this.color = `#${color.toString(16)}`;
         }
 
         set turtle(visible: boolean) {
