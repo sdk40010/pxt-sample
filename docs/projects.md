@@ -3,13 +3,13 @@
 ```codecard
 [
     {
-        "name": "Examples",
-        "url": "/examples"
+        "name": "チュートリアル",
+        "url": "/tutorials"
     }
 ]
 ```
 
 ## See Also
 
-[Examples](/examples)
+[チュートリアル](/tutorials)
 
