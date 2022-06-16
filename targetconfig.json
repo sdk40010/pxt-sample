@@ -6,6 +6,13 @@
         ]
     },
     "galleries": {
-        "チュートリアル": "tutorials"
+        "チュートリアル": "tutorials",
+        "スキルマップ": "skillmaps"
+    },
+    "skillMap": {
+        "defaultPath": "docs:/skillmap/beginner",
+        "pathAliases": {
+            "beginner": "docs:/skillmap/beginner"
+        }
     }
 }
