@@ -38,6 +38,10 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "pxt-core": "7.4.21"
+    "pxt-core": "7.5.46"
+  },
+  "scripts": {
+    "start": "pxt serve",
+    "skillmap": "pxt skillmap --serve --docs skillmap"
   }
 }
