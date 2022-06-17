@@ -1,1 +1,10524 @@
-var pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim,pxsim;!function(e){!function(e){let t;e.makeFocusable=function(e){e.setAttribute("focusable","true"),e.setAttribute("tabindex","0")},e.enableKeyboardInteraction=function(e,t,n){t&&e.addEventListener("keydown",(e=>{const n="number"==typeof e.which?e.which:e.keyCode;32!==n&&13!==n||t()})),n&&e.addEventListener("keyup",(e=>{const t="number"==typeof e.which?e.which:e.keyCode;32!==t&&13!==t||n()}))},e.setAria=function(e,t,n){t&&!e.hasAttribute("role")&&e.setAttribute("role",t),n&&!e.hasAttribute("aria-label")&&e.setAttribute("aria-label",n)},e.setLiveContent=function(e){if(!t){let e="position: absolute !important;display: block;visibility: visible;overflow: hidden;width: 1px;height: 1px;margin: -1px;border: 0;padding: 0;clip: rect(0 0 0 0);";t=document.createElement("div"),t.setAttribute("role","status"),t.setAttribute("aria-live","polite"),t.setAttribute("aria-hidden","false"),t.setAttribute("style",e),document.body.appendChild(t)}t.textContent!==e&&(t.textContent=e)}}(e.accessibility||(e.accessibility={}))}(pxsim||(pxsim={})),function(e){const t="blue",n="red",s="orange";const i=e=>(e=>e.reduce(((e,t)=>e+(t?1:0)),0))(e)>0;function r(e,t){let n={};for(let t in e)n[t]=e[t];for(let e in t)n[e]=t[e];return n}function o(t){e.U.assert(!!t,"Invalid pin: "+t);const n=/^(\w+)\.\s*(?:[a-z]*)?([A-Z][A-Z\d_]+)$/.exec(t);return n?n[2]:void 0}function a(e){return"-Z"===e.orientation&&"male"===e.style}e.readPin=o;class l{constructor(t){this.availablePowerPins={top:{fiveVolt:e.mkRange(26,51).map((e=>({type:"breadboard",row:"+",col:`${e}`}))),threeVolt:e.mkRange(26,51).map((e=>({type:"breadboard",row:"+",col:`${e}`}))),ground:e.mkRange(26,51).map((e=>({type:"breadboard",row:"-",col:`${e}`})))},bottom:{fiveVolt:e.mkRange(1,26).map((e=>({type:"breadboard",row:"+",col:`${e}`}))),threeVolt:e.mkRange(1,26).map((e=>({type:"breadboard",row:"+",col:`${e}`}))),ground:e.mkRange(1,26).map((e=>({type:"breadboard",row:"-",col:`${e}`})))}},this.opts=t}allocPartIRs(e,t,n){let s=[];const i=(e,t,s,i)=>{let r=[];for(let t=0;t<e.numberOfPins;t++){let i,o=e.pinDefinitions[t];if("string"==typeof o.target)i=o.target;else{let e=o.target.pinInstantiationIdx;if(!s||void 0===s[e])return void console.log(`error: parts no pin found for PinInstantiationIdx: ${e}. (Is the part missing an ArgumentRole or "trackArgs=" annotations?)`);i=s[e]}let a=e.visual.pinLocations[t],l=n.yOffset+a.y,u=Math.round(l/e.visual.pinDistance),d=l-u*e.visual.pinDistance,c=n.xOffset+a.x,h=Math.round(c/e.visual.pinDistance),p={partRelativeRowIdx:u,partRelativeColIdx:h,xOffset:c-h*e.visual.pinDistance,yOffset:d};r.push({def:o,loc:a,target:i,bbFit:p})}return{name:t,def:e,pins:r,partParams:i||{},bbFit:n}},r=e.instantiations||[];return e.instantiation&&r.push(e.instantiation),r.forEach((n=>{if("singleton"===n.kind)s.push(i(e,t));else if("function"===n.kind){let r=n,a=r.fullyQualifiedName.split(","),l={};a.forEach((e=>{this.opts.fnArgs[e]&&this.opts.fnArgs[e].forEach((e=>{l[e]=1}))}));let u=Object.keys(l);if(!u||!u.length)return void console.log(`error: parts failed to read pin(s) from callsite for: ${a}`);u.forEach((n=>{const l=n.split(",");if(l.length!=r.argumentRoles.length)return void console.log(`error: parts mismatch between number of arguments at callsite (function name: ${a}) vs number of argument roles in part definition (part: ${t}).`);let u=[],d={};l.forEach(((e,t)=>{let n=r.argumentRoles[t];if(void 0!==n.partParameter&&(d[n.partParameter]=e),void 0!==n.pinInstantiationIdx){let t=n.pinInstantiationIdx,s=o(e);u[t]=s}})),s.push(i(e,t,u,d))}))}})),s.filter((e=>!!e))}computePartDimensions(t,n){let s=t.visual.pinLocations,i=t.pinDefinitions,o=t.numberOfPins;e.U.assert(s.length===o,`Mismatch between "numberOfPins" and length of "visual.pinLocations" for "${n}"`),e.U.assert(i.length===o,`Mismatch between "numberOfPins" and length of "pinDefinitions" for "${n}"`),e.U.assert(o>0,`Part "${n}" has no pins`);let a,l,u,d,c=s.map(((e,t)=>{return n={idx:t},s=e,o=i[t],r(r(n,s),o);var n,s,o})).filter((e=>"-Z"===e.orientation)),h=c.length>0,p=t.visual.pinDistance;if(h){let e=c[0],n=Math.ceil(e.x/p),s=Math.ceil(e.y/p);a=n*p-e.x,l=s*p-e.y,u=Math.ceil((a+t.visual.width)/p)+1,d=Math.ceil((l+t.visual.height)/p)+1}else u=Math.ceil(t.visual.width/p),d=Math.ceil(t.visual.height/p),a=u*p-t.visual.width,l=d*p-t.visual.height;return{xOffset:a,yOffset:l,rowCount:d,colCount:u}}allocColumns(t){let n=t.length;let s=e.visuals.BREADBOARD_MID_COLS-t.map((e=>e.colCount)).reduce(((e,t)=>e+t),0);s<=0&&console.log("Not enough breadboard space!");let i=Math.floor(s/(n-1+2)),r=s-i*(n-1),o=Math.floor(r/2),a=(Math.ceil(r/2),1+o);return t.map((e=>{let t=a;return a+=e.colCount+i,t}))}placeParts(t){const n=e.visuals.BREADBOARD_MID_ROWS+2;let s=this.allocColumns(t.map((e=>e.bbFit))),i=t.map((e=>{let t=n-e.bbFit.rowCount,s=Math.floor(t/2);return s>4&&(s=4),s<1&&(s=1),s}));return t.map(((e,t)=>{let n=i[t];return r({startColumnIdx:s[t],startRowIdx:n},e)}))}nextColor(){return(!this.availableWireColors||this.availableWireColors.length<=0)&&(this.availableWireColors=e.visuals.GPIO_WIRE_COLORS.map((e=>e))),this.availableWireColors.pop()}allocWireIRs(i){let o=[],l=i.pins.map(((r,l)=>{let u,d,c=r.target,h=i.startColumnIdx+r.bbFit.partRelativeColIdx,p=e.visuals.getColumnName(h),m=i.startRowIdx+r.bbFit.partRelativeRowIdx;if(m>=7&&(m-=2),a(r.def)){u={type:"breadboard",row:m<5?"j":"a",col:p,style:r.def.style}}else{u={type:"breadboard",row:e.visuals.getRowName(m),col:p,xOffset:r.bbFit.xOffset/i.def.visual.pinDistance,yOffset:r.bbFit.yOffset/i.def.visual.pinDistance,style:r.def.style}}return d="ground"===c?t:"threeVolt"===c?n:"fiveVolt"===c?s:"number"==typeof r.def.colorGroup?o[r.def.colorGroup]?o[r.def.colorGroup]:o[r.def.colorGroup]=this.nextColor():this.nextColor(),{start:u,end:c,color:d,pinIdx:l}}));return r(i,{wires:l})}allocLocation(t,n){if("ground"===t||"threeVolt"===t||"fiveVolt"==t){if("ground"===t&&this.powerUsage.singleGround){return{type:"dalboard",pin:this.getBoardGroundPin()}}if("threeVolt"===t&&this.powerUsage.singleThreeVolt){return{type:"dalboard",pin:this.getBoardThreeVoltPin()}}if("fiveVolt"===t&&this.powerUsage.singleFiveVolt){return{type:"dalboard",pin:this.getBoardFiveVoltPin()}}e.U.assert(!!n.referenceBBPin);let s=this.opts.getBBCoord(n.referenceBBPin),i=[this.availablePowerPins.top.ground[0]||this.availablePowerPins.top.threeVolt[0],this.availablePowerPins.bottom.ground[0]||this.availablePowerPins.bottom.threeVolt[0]].map((e=>this.opts.getBBCoord(e)));i[0]&&i[1]||console.debug(`No more available "${t}" locations!`);let r,o=0==e.visuals.findClosestCoordIdx(s,i);o?"ground"===t?r=this.availablePowerPins.top.ground:"threeVolt"===t?r=this.availablePowerPins.top.threeVolt:"fiveVolt"===t&&(r=this.availablePowerPins.top.fiveVolt):"ground"===t?r=this.availablePowerPins.bottom.ground:"threeVolt"===t?r=this.availablePowerPins.bottom.threeVolt:"fiveVolt"===t&&(r=this.availablePowerPins.bottom.fiveVolt);let a=r.map((e=>this.opts.getBBCoord(e))),l=e.visuals.findClosestCoordIdx(s,a),u=r[l];return o?(this.availablePowerPins.top.ground.splice(l,1),this.availablePowerPins.top.threeVolt.splice(l,1)):(this.availablePowerPins.bottom.ground.splice(l,1),this.availablePowerPins.bottom.threeVolt.splice(l,1)),u}if("breadboard"===t.type)return t;if("MOSI"===t||"MISO"===t||"SCK"===t){return this.opts.boardDef.spiPins||console.debug("No SPI pin mappings found!"),{type:"dalboard",pin:this.opts.boardDef.spiPins[t]}}if("SDA"===t||"SCL"===t){return this.opts.boardDef.i2cPins||console.debug("No I2C pin mappings found!"),{type:"dalboard",pin:this.opts.boardDef.i2cPins[t]}}{e.U.assert("string"==typeof t,"Unknown location type: "+t);let n=t,s=this.opts.boardDef.gpioPinMap[n]||n;return s?{type:"dalboard",pin:s}:void console.debug(`unknown pin location for ${n}`)}}getBoardGroundPin(){let e=this.opts.boardDef.groundPins&&this.opts.boardDef.groundPins[0]||null;return e||console.debug("No available ground pin on board!"),e}getBoardThreeVoltPin(){let e=this.opts.boardDef.threeVoltPins&&this.opts.boardDef.threeVoltPins[0]||null;return e||console.debug("No available 3.3V pin on board!"),e}getBoardFiveVoltPin(){let e=this.opts.boardDef.fiveVoltPins&&this.opts.boardDef.fiveVoltPins[0]||null;return e||console.debug("No available 5V pin on board!"),e}allocPowerWires(e){let i=this.getBoardGroundPin(),r=this.getBoardThreeVoltPin(),o=this.getBoardFiveVoltPin();const a={type:"breadboard",row:"-",col:"26"},l={type:"breadboard",row:"-",col:"1"},u={type:"breadboard",row:"-",col:"50"},d={type:"breadboard",row:"-",col:"25"};let c,h;this.opts.boardDef.attachPowerOnRight?(c=u,h=d):(c=a,h=l);let p=[],m=[],f=[];e.bottomGround&&e.topGround&&p.push({start:this.allocLocation("ground",{referenceBBPin:c}),end:this.allocLocation("ground",{referenceBBPin:h}),color:t}),e.topGround?p.push({start:this.allocLocation("ground",{referenceBBPin:c}),end:{type:"dalboard",pin:i},color:t}):e.bottomGround&&p.push({start:this.allocLocation("ground",{referenceBBPin:h}),end:{type:"dalboard",pin:i},color:t}),e.bottomThreeVolt&&e.bottomGround?m.push({start:this.allocLocation("threeVolt",{referenceBBPin:c}),end:this.allocLocation("threeVolt",{referenceBBPin:h}),color:n}):e.bottomFiveVolt&&e.bottomGround&&f.push({start:this.allocLocation("fiveVolt",{referenceBBPin:c}),end:this.allocLocation("fiveVolt",{referenceBBPin:h}),color:s}),e.topThreeVolt?m.push({start:this.allocLocation("threeVolt",{referenceBBPin:c}),end:{type:"dalboard",pin:r},color:n}):e.bottomThreeVolt&&m.push({start:this.allocLocation("threeVolt",{referenceBBPin:h}),end:{type:"dalboard",pin:r},color:s}),e.topFiveVolt&&!e.topThreeVolt?f.push({start:this.allocLocation("fiveVolt",{referenceBBPin:c}),end:{type:"dalboard",pin:o},color:n}):e.bottomFiveVolt&&!e.bottomThreeVolt&&f.push({start:this.allocLocation("fiveVolt",{referenceBBPin:h}),end:{type:"dalboard",pin:o},color:s});let g=[];p.length>0&&g.push({wireIndices:p.map(((e,t)=>t))});let b=p.length;return m.length>0&&g.push({wireIndices:m.map(((e,t)=>t+b))}),f.length>0&&g.push({wireIndices:m.map(((e,t)=>t+b+m.length))}),{wires:p.concat(m).concat(f),assembly:g}}allocWire(e){const t=[e.start,e.end],n=t.map((e=>"ground"===e||"threeVolt"===e||"fiveVolt"===e));let s=t.map(((e,t)=>n[t]?void 0:this.allocLocation(e,{})));if(s=s.map(((e,n)=>{if(e)return e;const i=s[1-n];return this.allocLocation(t[n],{referenceBBPin:i})})),s[0]&&s[1])return{start:s[0],end:s[1],color:e.color}}allocPart(t){let n=t.pins.filter((e=>a(e.def))).map((n=>{let s=t.startRowIdx+n.bbFit.partRelativeRowIdx;s>=7&&(s-=2);let i=e.visuals.getRowName(s),r=t.startColumnIdx+n.bbFit.partRelativeColIdx;return{type:"breadboard",row:i,col:e.visuals.getColumnName(r)}}));return{name:t.name,visual:t.def.visual,bbFit:t.bbFit,startColumnIdx:t.startColumnIdx,startRowIdx:t.startRowIdx,breadboardConnections:n,params:t.partParams,simulationBehavior:t.def.simulationBehavior}}allocAll(){let e=this.opts.partsList.map((e=>({name:e,def:this.opts.partDefs[e]}))).filter((e=>!!e.def));if(e.length>0){let t=e.map((e=>this.computePartDimensions(e.def,e.name))),n=[];e.forEach(((e,s)=>{let i=t[s],r=this.allocPartIRs(e.def,e.name,i);n=n.concat(r)}));const s=this.placeParts(n).map((e=>this.allocWireIRs(e))),r=s.map((e=>e.wires)).reduce(((e,t)=>e.concat(t)),[]).map((e=>function(e){let t=[e.start,e.end],n=t.map((e=>"ground"===e)),s=t.map((e=>"threeVolt"===e)),r=t.map((e=>"fiveVolt"===e)),o=t.map((e=>function(e){let t=!1;if("string"!=typeof e&&"breadboard"===e.type){let n=e.row;t=0<=["a","b","c","d","e"].indexOf(n)}return t}(e))),a=i(n),l=i(s),u=i(r),d=i(o);return{topGround:a&&!d,topThreeVolt:l&&!d,topFiveVolt:u&&!d,bottomGround:a&&d,bottomThreeVolt:l&&d,bottomFiveVolt:u&&d,singleGround:a,singleThreeVolt:l,singleFiveVolt:u}}(e)));this.powerUsage=function(e){const t=e.reduce(((e,t)=>({topGround:e.topGround||t.topGround,topThreeVolt:e.topThreeVolt||t.topThreeVolt,topFiveVolt:e.topFiveVolt||t.topFiveVolt,bottomGround:e.bottomGround||t.bottomGround,bottomThreeVolt:e.bottomThreeVolt||t.bottomThreeVolt,bottomFiveVolt:e.bottomFiveVolt||t.bottomFiveVolt,singleGround:t.singleGround?null===e.singleGround:e.singleGround,singleThreeVolt:t.singleThreeVolt?null===e.singleThreeVolt:e.singleThreeVolt,singleFiveVolt:t.singleFiveVolt?null===e.singleFiveVolt:e.singleFiveVolt})),{topGround:!1,topThreeVolt:!1,topFiveVolt:!1,bottomGround:!1,bottomThreeVolt:!1,bottomFiveVolt:!1,singleGround:null,singleThreeVolt:null,singleFiveVolt:null});return t.singleGround&&(t.topGround=t.bottomGround=!1),t.singleThreeVolt&&(t.topThreeVolt=t.bottomThreeVolt=!1),t.singleFiveVolt&&(t.topFiveVolt=t.bottomFiveVolt=!1),t}(r);const o=this.allocPowerWires(this.powerUsage),a=s.map(((e,t)=>{const n=this.allocPart(e),s=e.wires.map((e=>this.allocWire(e)));if(s.some((e=>!e)))return;const i=[];e.wires.forEach(((e,t)=>{i[e.pinIdx]=t}));return{part:n,wires:s,assembly:e.def.assembly.map((e=>({part:e.part,wireIndices:(e.pinIndices||[]).map((e=>i[e]))})))}})).filter((e=>!!e)),l=[o].concat(a).filter((e=>e.assembly&&e.assembly.length)),u=!l.some((e=>e.part&&e.part.breadboardConnections&&e.part.breadboardConnections.length>0||e.wires&&e.wires.some((e=>"breadboard"==e.end.type&&"croc"!=e.end.style||"breadboard"==e.start.type&&"croc"!=e.start.style))));return{partsAndWires:l,wires:[],parts:[],hideBreadboard:u}}return{partsAndWires:[],wires:[],parts:[]}}}e.allocateDefinitions=function(e){return new l(e).allocAll()}}(pxsim||(pxsim={})),function(e){!function(e){class t{constructor(e){this.seq=0,this.type=e}}e.Message=t;e.Response=class extends t{constructor(e,t){super("response"),this.request_seq=e.seq,this.command=e.command,t?(this.success=!1,this.message=t):this.success=!0}};class n extends t{constructor(e,t){super("event"),this.event=e,t&&(this.body=t)}}e.Event=n;e.Source=class{constructor(e,t,n=0,s,i){this.name=e,this.path=t,this.sourceReference=n,s&&(this.origin=s),i&&(this.adapterData=i)}};e.Scope=class{constructor(e,t,n=!1){this.name=e,this.variablesReference=t,this.expensive=n}};e.StackFrame=class{constructor(e,t,n,s=0,i=0){this.id=e,this.source=n,this.line=s,this.column=i,this.name=t}};e.Thread=class{constructor(e,t){this.id=e,this.name=t||"Thread #"+e}};e.Variable=class{constructor(e,t,n=0,s,i){this.name=e,this.value=t,this.variablesReference=n,"number"==typeof i&&(this.namedVariables=i),"number"==typeof s&&(this.indexedVariables=s)}};e.Breakpoint=class{constructor(e,t,n,s){this.verified=e;const i=this;"number"==typeof t&&(i.line=t),"number"==typeof n&&(i.column=n),s&&(i.source=s)}};e.Module=class{constructor(e,t){this.id=e,this.name=t}};e.CompletionItem=class{constructor(e,t,n=0){this.label=e,this.start=t,this.length=n}};e.StoppedEvent=class extends n{constructor(e,t,n=null){if(super("stopped"),this.body={reason:e,threadId:t},n){this.body.text=n}}};e.ContinuedEvent=class extends n{constructor(e,t){super("continued"),this.body={threadId:e},"boolean"==typeof t&&(this.body.allThreadsContinued=t)}};e.InitializedEvent=class extends n{constructor(){super("initialized")}};e.TerminatedEvent=class extends n{constructor(e){if(super("terminated"),"boolean"==typeof e){this.body={restart:e}}}};e.OutputEvent=class extends n{constructor(e,t="console",n){super("output"),this.body={category:t,output:e},void 0!==n&&(this.body.data=n)}};e.ThreadEvent=class extends n{constructor(e,t){super("thread"),this.body={reason:e,threadId:t}}};e.BreakpointEvent=class extends n{constructor(e,t){super("breakpoint"),this.body={reason:e,breakpoint:t}}};e.ModuleEvent=class extends n{constructor(e,t){super("module"),this.body={reason:e,module:t}}};class s{constructor(){this._pendingRequests={}}start(e){this._sequence=1,this.host=e,this.host.onData((e=>{if("request"===e.type)this.dispatchRequest(e);else if("response"===e.type){const t=e,n=this._pendingRequests[t.seq];n&&(delete this._pendingRequests[t.seq],n(t))}}))}stop(){this.host&&this.host.close()}sendEvent(e){this.send("event",e)}sendResponse(e){e.seq>0?console.error(`attempt to send more than one response for command ${e.command}`):this.send("response",e)}sendRequest(t,n,s,i){const r={command:t};if(n&&Object.keys(n).length>0&&(r.arguments=n),this.send("request",r),i){this._pendingRequests[r.seq]=i;const t=setTimeout((()=>{clearTimeout(t);const n=this._pendingRequests[r.seq];n&&(delete this._pendingRequests[r.seq],n(new e.Response(r,"timeout")))}),s)}}send(e,t){if(t.type=e,t.seq=this._sequence++,this.host){const e=JSON.stringify(t);this.host.send(e)}}dispatchRequest(e){}}e.ProtocolServer=s;class i extends s{constructor(){super(...arguments),this._debuggerLinesStartAt1=!1,this._debuggerColumnsStartAt1=!1,this._clientLinesStartAt1=!0,this._clientColumnsStartAt1=!0}shutdown(){}dispatchRequest(t){const n=new e.Response(t);try{if("initialize"===t.command){let e=t.arguments;if("boolean"==typeof e.linesStartAt1&&(this._clientLinesStartAt1=e.linesStartAt1),"boolean"==typeof e.columnsStartAt1&&(this._clientColumnsStartAt1=e.columnsStartAt1),"path"!==e.pathFormat)this.sendErrorResponse(n,2018,"debug adapter only supports native paths",null);else{const t=n;t.body={},this.initializeRequest(t,e)}}else"launch"===t.command?this.launchRequest(n,t.arguments):"attach"===t.command?this.attachRequest(n,t.arguments):"disconnect"===t.command?this.disconnectRequest(n,t.arguments):"setBreakpoints"===t.command?this.setBreakPointsRequest(n,t.arguments):"setFunctionBreakpoints"===t.command?this.setFunctionBreakPointsRequest(n,t.arguments):"setExceptionBreakpoints"===t.command?this.setExceptionBreakPointsRequest(n,t.arguments):"configurationDone"===t.command?this.configurationDoneRequest(n,t.arguments):"continue"===t.command?this.continueRequest(n,t.arguments):"next"===t.command?this.nextRequest(n,t.arguments):"stepIn"===t.command?this.stepInRequest(n,t.arguments):"stepOut"===t.command?this.stepOutRequest(n,t.arguments):"stepBack"===t.command?this.stepBackRequest(n,t.arguments):"restartFrame"===t.command?this.restartFrameRequest(n,t.arguments):"goto"===t.command?this.gotoRequest(n,t.arguments):"pause"===t.command?this.pauseRequest(n,t.arguments):"stackTrace"===t.command?this.stackTraceRequest(n,t.arguments):"scopes"===t.command?this.scopesRequest(n,t.arguments):"variables"===t.command?this.variablesRequest(n,t.arguments):"setVariable"===t.command?this.setVariableRequest(n,t.arguments):"source"===t.command?this.sourceRequest(n,t.arguments):"threads"===t.command?this.threadsRequest(n):"evaluate"===t.command?this.evaluateRequest(n,t.arguments):"stepInTargets"===t.command?this.stepInTargetsRequest(n,t.arguments):"gotoTargets"===t.command?this.gotoTargetsRequest(n,t.arguments):"completions"===t.command?this.completionsRequest(n,t.arguments):this.customRequest(t.command,n,t.arguments)}catch(e){this.sendErrorResponse(n,1104,"{_stack}",{_exception:e.message,_stack:e.stack})}}initializeRequest(e,t){e.body.supportsConditionalBreakpoints=!1,e.body.supportsHitConditionalBreakpoints=!1,e.body.supportsFunctionBreakpoints=!1,e.body.supportsConfigurationDoneRequest=!0,e.body.supportsEvaluateForHovers=!1,e.body.supportsStepBack=!1,e.body.supportsSetVariable=!1,e.body.supportsRestartFrame=!1,e.body.supportsStepInTargetsRequest=!1,e.body.supportsGotoTargetsRequest=!1,e.body.supportsCompletionsRequest=!1,this.sendResponse(e)}disconnectRequest(e,t){this.sendResponse(e),this.shutdown()}launchRequest(e,t){this.sendResponse(e)}attachRequest(e,t){this.sendResponse(e)}setBreakPointsRequest(e,t){this.sendResponse(e)}setFunctionBreakPointsRequest(e,t){this.sendResponse(e)}setExceptionBreakPointsRequest(e,t){this.sendResponse(e)}configurationDoneRequest(e,t){this.sendResponse(e)}continueRequest(e,t){this.sendResponse(e)}nextRequest(e,t){this.sendResponse(e)}stepInRequest(e,t){this.sendResponse(e)}stepOutRequest(e,t){this.sendResponse(e)}stepBackRequest(e,t){this.sendResponse(e)}restartFrameRequest(e,t){this.sendResponse(e)}gotoRequest(e,t){this.sendResponse(e)}pauseRequest(e,t){this.sendResponse(e)}sourceRequest(e,t){this.sendResponse(e)}threadsRequest(e){this.sendResponse(e)}stackTraceRequest(e,t){this.sendResponse(e)}scopesRequest(e,t){this.sendResponse(e)}variablesRequest(e,t){this.sendResponse(e)}setVariableRequest(e,t){this.sendResponse(e)}evaluateRequest(e,t){this.sendResponse(e)}stepInTargetsRequest(e,t){this.sendResponse(e)}gotoTargetsRequest(e,t){this.sendResponse(e)}completionsRequest(e,t){this.sendResponse(e)}customRequest(e,t,n){this.sendErrorResponse(t,1014,"unrecognized request",null)}sendErrorResponse(e,t,n,s){let r;"number"==typeof t?(r={id:t,format:n},s&&(r.variables=s),r.showUser=!0):r=t,e.success=!1,i.formatPII(r.format,!0,r.variables),e.body||(e.body={}),e.body.error=r,this.sendResponse(e)}convertClientLineToDebugger(e){return this._debuggerLinesStartAt1?this._clientLinesStartAt1?e:e+1:this._clientLinesStartAt1?e-1:e}convertDebuggerLineToClient(e){return this._debuggerLinesStartAt1?this._clientLinesStartAt1?e:e-1:this._clientLinesStartAt1?e+1:e}convertClientColumnToDebugger(e){return this._debuggerColumnsStartAt1?this._clientColumnsStartAt1?e:e+1:this._clientColumnsStartAt1?e-1:e}convertDebuggerColumnToClient(e){return this._debuggerColumnsStartAt1?this._clientColumnsStartAt1?e:e-1:this._clientColumnsStartAt1?e+1:e}convertClientPathToDebugger(e){return this._clientPathsAreURIs!=this._debuggerPathsAreURIs?this._clientPathsAreURIs?i.uri2path(e):i.path2uri(e):e}convertDebuggerPathToClient(e){return this._debuggerPathsAreURIs!=this._clientPathsAreURIs?this._debuggerPathsAreURIs?i.uri2path(e):i.path2uri(e):e}static path2uri(e){let t=e.replace(/\\/g,"/");return"/"!==t[0]&&(t="/"+t),encodeURI("file://"+t)}static uri2path(e){return e}static formatPII(e,t,n){return e.replace(i._formatPIIRegexp,(function(e,s){return t&&s.length>0&&"_"!==s[0]?e:n[s]&&n.hasOwnProperty(s)?n[s]:e}))}}i._formatPIIRegexp=/{([^}]+)}/g,e.DebugSession=i}(e.protocol||(e.protocol={}))}(pxsim||(pxsim={})),function(e){!function(e){e.injectPolyphils=function(){String.prototype.startsWith||Object.defineProperty(String.prototype,"startsWith",{value:function(e,t){return void 0!==e&&null!=e&&(t=!t||t<0?0:+t,this.substring(t,t+e.length)===e)}}),Array.prototype.fill||Object.defineProperty(Array.prototype,"fill",{writable:!0,enumerable:!0,value:function(e){if(null==this)throw new TypeError("this is null or not defined");let t=Object(this),n=t.length>>>0,s=arguments[1],i=s>>0,r=i<0?Math.max(n+i,0):Math.min(i,n),o=arguments[2],a=void 0===o?n:o>>0,l=a<0?Math.max(n+a,0):Math.min(a,n);for(;r<l;)t[r]=e,r++;return t}}),Array.prototype.find||Object.defineProperty(Array.prototype,"find",{writable:!0,enumerable:!0,value:function(e){if(null==this)throw new TypeError('"this" is null or not defined');let t=Object(this);const n=t.length>>>0;if("function"!=typeof e)throw new TypeError("predicate must be a function");const s=arguments[1];let i=0;for(;i<n;){const n=t[i];if(e.call(s,n,i,t))return n;i++}}}),Uint8Array.prototype.slice||Object.defineProperty(Uint8Array.prototype,"slice",{value:Array.prototype.slice,writable:!0,enumerable:!0}),Uint16Array.prototype.slice||Object.defineProperty(Uint16Array.prototype,"slice",{value:Array.prototype.slice,writable:!0,enumerable:!0}),Uint32Array.prototype.slice||Object.defineProperty(Uint32Array.prototype,"slice",{value:Array.prototype.slice,writable:!0,enumerable:!0}),Uint8Array.prototype.fill||Object.defineProperty(Uint8Array.prototype,"fill",{value:Array.prototype.fill,writable:!0,enumerable:!0}),Uint16Array.prototype.fill||Object.defineProperty(Uint16Array.prototype,"fill",{value:Array.prototype.fill,writable:!0,enumerable:!0}),Uint32Array.prototype.fill||Object.defineProperty(Uint32Array.prototype,"fill",{value:Array.prototype.fill,writable:!0,enumerable:!0}),Uint8Array.prototype.some||Object.defineProperty(Uint8Array.prototype,"some",{value:Array.prototype.some,writable:!0,enumerable:!0}),Uint16Array.prototype.some||Object.defineProperty(Uint16Array.prototype,"some",{value:Array.prototype.some,writable:!0,enumerable:!0}),Uint32Array.prototype.some||Object.defineProperty(Uint32Array.prototype,"some",{value:Array.prototype.some,writable:!0,enumerable:!0}),Uint8Array.prototype.reverse||Object.defineProperty(Uint8Array.prototype,"reverse",{value:Array.prototype.reverse,writable:!0,enumerable:!0}),Uint16Array.prototype.reverse||Object.defineProperty(Uint16Array.prototype,"reverse",{value:Array.prototype.reverse,writable:!0,enumerable:!0}),Uint32Array.prototype.reverse||Object.defineProperty(Uint32Array.prototype,"reverse",{value:Array.prototype.reverse,writable:!0,enumerable:!0}),Math.imul||(Math.imul=function(e,t){const n=65535&e,s=65535&t;return n*s+((e>>>16&65535)*s+n*(t>>>16&65535)<<16>>>0)|0}),"function"!=typeof Object.assign&&Object.defineProperty(Object,"assign",{value:function(e,t){"use strict";if(null==e)throw new TypeError("Cannot convert undefined or null to object");let n=Object(e);for(let e=1;e<arguments.length;e++){let t=arguments[e];if(null!=t)for(let e in t)Object.prototype.hasOwnProperty.call(t,e)&&(n[e]=t[e])}return n},writable:!0,configurable:!0}),Promise.prototype.finally||(Promise.prototype.finally=Promise.prototype.finally||{finally(e){const t=t=>Promise.resolve(e()).then(t);return this.then((e=>t((()=>e))),(e=>t((()=>Promise.reject(e)))))}}.finally)};function t(e){e=e.replace(/\\/g,"/");const t=[];return e.split("/").forEach((e=>{".."===e&&t.length?t.pop():e&&"."!==e&&t.push(e)})),t}e.Lazy=class{constructor(e){this._func=e,this._evaluated=!1}get value(){return this._evaluated||(this._value=this._func(),this._evaluated=!0),this._value}},e.getNormalizedParts=t,e.normalizePath=function(e){return t(e).join("/")},e.relativePath=function(e,n){const s=t(e),i=t(n);let r=0;for(;s[r]===i[r]&&(r++,r!==s.length&&r!==i.length););const o=s.slice(r),a=i.slice(r);for(let e=0;e<o.length;e++)a.unshift("..");return a.join("/")},e.pathJoin=function(...e){let t="";return e.forEach((e=>{e.replace(/\\/g,"/"),e.lastIndexOf("/")===e.length-1&&(e=e.slice(0,e.length-1)),t+="/"+e})),t},e.toArray=function(e){if(Array.isArray(e))return e;let t=[];for(let n=0;n<e.length;++n)t.push(e[n]);return t}}(e.util||(e.util={}))}(pxsim||(pxsim={})),function(e){e.getWarningMessage=function(t){let n={type:"debugger",subtype:"warning",breakpointIds:[],message:t},s=e.runtime.currFrame;for(;null!=s;)n.breakpointIds.push(s.lastBrkId),s=s.parent;return n};function t(t,n){switch(typeof t){case"string":case"number":case"boolean":return t;case"function":return{text:"(function)",type:"function"};case"undefined":return null;case"object":if(!t)return null;if(t instanceof e.RefObject){n&&(n[t.id]=t);let s=e.RefObject.toDebugString(t),i=s.startsWith("[")?"array":s;return{id:t.id,preview:s,hasFields:null!==t.fields||s.startsWith("["),type:i}}return t._width&&t._height?{text:t._width+"x"+t._height,type:"image"}:{text:"(object)",type:"object"};default:throw new Error}}function n(e,n,i,r){return function(e,i){const o={};for(let s of Object.keys(e))/^__/.test(s)||!/___\d+$/.test(s)||r&&-1===r.indexOf(s)||(o[s]=t(e[s],n));if(e.fields&&i)for(let r of i)r=r.substring(r.lastIndexOf(".")+1),o[r]=t(s(e.vtable.iface[r],e),n);if(e.fields)for(let s of Object.keys(e.fields).filter((e=>!e.startsWith("_"))))o[s]=t(e.fields[s],n);else Array.isArray(e.data)&&e.data.forEach(((e,s)=>{o[s]=t(e,n)}));return o}(e,i)}function s(e,t){let n={pc:0,arg0:t,fn:e,parent:{}};for(;n.fn;)n=n.fn(n);return n.retval}function i(e,s){let i=e.fn?e.fn.info:null;if(i){let r={thisParam:t(e.argL,s),params:[]};if(i.argumentNames){const n=i.argumentNames;r.params=n.map(((n,i)=>({name:n,value:t(e["arg"+i],s)})))}return{locals:n(e,s),funcInfo:i,breakpointId:e.lastBrkId,callLocationId:e.callLocIdx,arguments:r}}}e.BreakpointMap=class{constructor(e){this.fileMap={},this.idMap={},e.forEach((e=>{const[t,n]=e;this.fileMap[n.source.path]||(this.fileMap[n.source.path]=[]),this.fileMap[n.source.path].push(e),this.idMap[t]=n}));for(const e in this.fileMap){const t=this.fileMap[e];this.fileMap[e]=t.sort((([,e],[,t])=>e.line===t.line?t.endLine===e.endLine?e.column-t.column:t.endLine-e.endLine:e.line-t.line))}}getById(e){return this.idMap[e]}verifyBreakpoint(e,t){const n=this.fileMap[e];let s;if(n)for(const[e,i]of n)i.line<=t.line&&i.endLine>=t.line&&(s=[e,i]);return s?(s[1].verified=!0,s):[-1,{verified:!1}]}},e.dumpHeap=n,e.injectEnvironmentGlobals=function(n,s){const i=e.runtime.environmentGlobals;if(!Object.keys(i).length)return;const r=n.environmentGlobals={};Object.keys(i).forEach((n=>r[n]=t(e.runtime.environmentGlobals[n],s)))},e.getBreakpointMsg=function(t,s,r){const o={},a={type:"debugger",subtype:"breakpoint",breakpointId:s,globals:n(e.runtime.globals,o,void 0,r),stackframes:[]};for(;null!=t;){let e=i(t,o);e&&a.stackframes.push(e),t=t.parent}return{msg:a,heap:o}};class r extends e.protocol.DebugSession{constructor(t){super();let n={onDebuggerBreakpoint:e=>this.onDebuggerBreakpoint(e),onDebuggerWarning:e=>this.onDebuggerWarning(e),onDebuggerResume:()=>this.onDebuggerResume(),onStateChanged:e=>this.onStateChanged(e)};this.driver=new e.SimulatorDriver(t,n)}runCode(t,n,s,i,r){this.breakpoints=i,this.projectDir&&this.fixBreakpoints(),this.sendEvent(new e.protocol.InitializedEvent),this.driver.run(t,{parts:n,fnArgs:s,boardDefinition:r})}stopSimulator(e=!1){this.driver.stop(e)}initializeRequest(e,t){e.body.supportsConditionalBreakpoints=!1,e.body.supportsHitConditionalBreakpoints=!1,e.body.supportsFunctionBreakpoints=!1,e.body.supportsEvaluateForHovers=!1,e.body.supportsStepBack=!1,e.body.supportsSetVariable=!1,e.body.supportsRestartFrame=!1,e.body.supportsStepInTargetsRequest=!1,e.body.supportsGotoTargetsRequest=!1,e.body.supportsCompletionsRequest=!1,e.body.supportsConfigurationDoneRequest=!0,this.sendResponse(e)}disconnectRequest(e,t){this.sendResponse(e),this.shutdown()}launchRequest(t,n){this.projectDir||(this.projectDir=e.util.normalizePath(n.projectDir),this.breakpoints&&this.fixBreakpoints()),this.sendResponse(t)}setBreakPointsRequest(t,n){t.body={breakpoints:[]};const s=[];n.breakpoints.forEach((i=>{if(this.breakpoints){const[r,o]=this.breakpoints.verifyBreakpoint(e.util.relativePath(this.projectDir,n.source.path),i);t.body.breakpoints.push(o),o.verified&&s.push(r)}else t.body.breakpoints.push({verified:!1})})),this.driver.setBreakpoints(s),this.sendResponse(t)}continueRequest(t,n){this.driver.resume(e.SimulatorDebuggerCommand.Resume),this.sendResponse(t)}nextRequest(t,n){this.driver.resume(e.SimulatorDebuggerCommand.StepOver),this.sendResponse(t)}stepInRequest(t,n){this.driver.resume(e.SimulatorDebuggerCommand.StepInto),this.sendResponse(t)}stepOutRequest(t,n){this.driver.resume(e.SimulatorDebuggerCommand.StepOut),this.sendResponse(t)}pauseRequest(t,n){this.driver.resume(e.SimulatorDebuggerCommand.Pause),this.sendResponse(t)}threadsRequest(e){e.body={threads:[{id:r.THREAD_ID,name:"main"}]},this.sendResponse(e)}stackTraceRequest(e,t){if(this.lastBreak){const t=this.state.getFrames();e.body={stackFrames:t}}this.sendResponse(e)}scopesRequest(e,t){this.state&&(e.body={scopes:this.state.getScopes(t.frameId)}),this.sendResponse(e)}variablesRequest(e,t){this.state&&(e.body={variables:this.state.getVariables(t.variablesReference)}),this.sendResponse(e)}onDebuggerBreakpoint(t){if(this.lastBreak=t,this.state=new o(this.lastBreak,this.breakpoints,this.projectDir),t.exceptionMessage){const n=t.exceptionMessage.replace(/___\d+/g,"");this.sendEvent(new e.protocol.StoppedEvent("exception",r.THREAD_ID,n))}else this.sendEvent(new e.protocol.StoppedEvent("breakpoint",r.THREAD_ID))}onDebuggerWarning(e){}onDebuggerResume(){this.sendEvent(new e.protocol.ContinuedEvent(r.THREAD_ID,!0))}onStateChanged(t){switch(t){case e.SimulatorState.Paused:break;case e.SimulatorState.Running:this.sendEvent(new e.protocol.ContinuedEvent(r.THREAD_ID,!0));break;case e.SimulatorState.Stopped:this.sendEvent(new e.protocol.TerminatedEvent)}}fixBreakpoints(){for(const t in this.breakpoints.idMap){const n=this.breakpoints.idMap[t];n.source.path=e.util.pathJoin(this.projectDir,n.source.path),n.line=this.convertDebuggerLineToClient(n.line),n.endLine=this.convertDebuggerLineToClient(n.endLine),n.column=this.convertDebuggerColumnToClient(n.column),n.endColumn=this.convertDebuggerColumnToClient(n.endColumn)}}}r.THREAD_ID=1,e.SimDebugSession=r;class o{constructor(e,t,n){this._message=e,this._map=t,this._dir=n,this._currentId=1,this._frames={},this._vars={};const s=this.nextId();this._vars[s]=this.getVariableValues(this._message.globals),this._globalScope={name:"Globals",variablesReference:s,expensive:!1}}getFrames(){return this._message.stackframes.map(((e,t)=>{const n=this._map.getById(e.breakpointId);if(n)return this._frames[e.breakpointId]=e,{id:e.breakpointId,name:e.funcInfo?e.funcInfo.functionName:0===t?"main":"anonymous",line:n.line,column:n.column,endLine:n.endLine,endColumn:n.endLine,source:n.source}})).filter((e=>!!e))}getScopes(e){const t=this._frames[e];if(t){const e=this.nextId();return this._vars[e]=this.getVariableValues(t.locals),[{name:"Locals",variablesReference:e,expensive:!1},this._globalScope]}return[this._globalScope]}getVariables(e){const t=this._vars[e];return t&&t.value||[]}getVariableValues(t){return new e.util.Lazy((()=>{const e=[];for(const n in t){const s=t[n];let i,r=0;null===s?i="null":void 0===s?i="undefined":"object"==typeof s?(i="(object)",r=this.nextId(),this._vars[r]=this.getVariableValues(s)):i=s.toString();const o=n.substr(0,n.lastIndexOf("___"));e.push({name:o,value:i,variablesReference:r})}return e}))}nextId(){return this._currentId++}}}(pxsim||(pxsim={})),function(e){function t(e=0){function t(){try{window.print()}catch(e){}}e?setTimeout(t,e):t()}let n;function s(e,t){i({type:"pxtsim",action:"event",tick:e,data:t})}function i(e){"undefined"!=typeof window&&window.parent&&window.parent!==window&&window.parent.postMessage(e,"*")}function r(){setInterval((()=>{e.Runtime.postMessage({type:"simulator",command:"reload"})}),3e3)}e.print=t,function(n){function i(n){n.origin;let i=n.data||{},r=i.type;if(r)switch(r){case"run":l(i);break;case"instructions":e.instructions.renderInstructions(i);break;case"stop":a();break;case"mute":u(i.mute);break;case"stopsound":e.AudioContextManager.stopAll();break;case"print":t();break;case"recorder":!function(e){if(!o)return;switch(e.action){case"start":o.startRecording(e.width);break;case"stop":o.stopRecording()}}(i);break;case"screenshot":e.Runtime.postScreenshotAsync(i);break;case"custom":e.handleCustomMessage&&e.handleCustomMessage(i);break;case"pxteditor":break;case"debugger":o&&o.handleDebuggerMsg(i);break;case"simulator":let n=i;switch(n.command){case"focus":s("simulator.focus",{timestamp:n.timestamp});break;case"blur":s("simulator.blur",{timestamp:n.timestamp})}default:!function(e){if(!o||o.dead)return;o.board.receiveMessage(e)}(i)}}let o;function a(){o&&(o.kill(),o.board&&o.board.kill())}function l(t){a(),t.mute&&u(t.mute),t.localizedStrings&&e.localization.setLocalizedStrings(t.localizedStrings);const n=new e.Runtime(t);o=n,n.board.initAsync(t).then((()=>{n===o&&n.run((t=>{e.dumpLivePointers(),e.Runtime.postMessage({type:"toplevelcodefinished"})}))}))}function u(t){e.AudioContextManager.mute(t)}n.start=function(){window.addEventListener("message",i,!1),n.frameid=window.location.hash.slice(1),function(){if("serviceWorker"in navigator&&-1!==window.location.href.indexOf("---simulator")&&!e.U.isLocalHost()){const e=window.location.pathname,t=e.substring(1,e.indexOf("---"));navigator.serviceWorker.controller&&navigator.serviceWorker.addEventListener("message",(e=>{const n=e.data;n&&"serviceworker"===n.type&&"activated"===n.state&&n.ref===t&&r()}));const n=window.location.href.replace(/---simulator.*$/,"---simserviceworker");navigator.serviceWorker.register(n).then((function(e){console.log("Simulator ServiceWorker registration successful with scope: ",e.scope)}),(function(e){console.log("Simulator ServiceWorker registration failed: ",e)}))}}(),e.Runtime.postMessage({type:"ready",frameid:n.frameid})},n.stop=a,n.run=l}(n=e.Embed||(e.Embed={})),e.tickEvent=s,e.reportError=function(e,t,n){i({type:"pxtsim",action:"event",tick:"error",category:e,message:t,data:n})},e.reload=r}(pxsim||(pxsim={})),pxsim.util.injectPolyphils(),"undefined"!=typeof window&&window.addEventListener("load",(function(e){pxsim.Embed.start()})),function(e){!function(t){const n=e=>`${e}x`,s=.95,[i,r]=[816*s,1056*s],o=i-86.4,a=r-86.4,[l,u]=[1,1],d=24,c=o/u-48*u,h=`\n            .instr-panel {\n                margin: 20px;\n                padding: 24px;\n                border-width: 4px;\n                border-color: gray;\n                border-style: solid;\n                border-radius: 20px;\n                display: inline-block;\n                width: ${c}px;\n                height: ${a/l-48*l}px;\n                position: relative;\n                overflow: hidden;\n                page-break-inside: avoid;\n            }\n            .board-svg {\n                margin: 0 auto;\n                display: block;\n                position: absolute;\n                bottom: 24px;\n                left: ${(c-465)/2+d}px;\n            }\n            .panel-num-outer {\n                position: absolute;\n                left: -4px;\n                top: -4px;\n                width: 120px;\n                height: 120px;\n                border-width: 4px;\n                border-style: solid;\n                border-color: gray;\n                border-radius: 20px 0 20px 0;\n            }\n            .panel-num {\n                margin: 10px 0;\n                text-align: center;\n                font-size: 80px;\n            }\n            .cmp-div {\n                display: inline-block;\n            }\n            .reqs-div {\n                margin-left: 144px;\n                margin-top: 5px;\n            }\n            .partslist-wire,\n            .partslist-cmp {\n                margin: 10px;\n            }\n            .partslist-wire {\n                display: inline-block;\n            }\n            `;function p(t,n){let s=document.createElementNS("http://www.w3.org/2000/svg","svg"),i={l:0,t:0,w:0,h:0},r=document.createElementNS("http://www.w3.org/2000/svg","svg");s.appendChild(r),r.appendChild(t.el);let o={viewBox:`${t.x} ${t.y} ${t.w} ${t.h}`,preserveAspectRatio:"xMidYMid"};i.w=t.w,i.h=t.h;let a=e=>{i.h*=e,i.w*=e,o.width=i.w,o.height=i.h};n.cmpScale&&a(n.cmpScale),n.cmpWidth&&n.cmpWidth<i.w?a(n.cmpWidth/i.w):n.cmpHeight&&n.cmpHeight<i.h&&a(n.cmpHeight/i.h),e.svg.hydrate(r,o);let l=i.l,u=i.t,d=i.w,c=i.h,h=e=>{if(e<i.l){let t=i.l-e;i.l=e,i.w+=t}},p=e=>{let t=i.l+i.w;if(t<e){let n=e-t;i.w+=n}},m=e=>{if(e<i.t){let t=i.t-e;i.t=e,i.h+=t}},f=e=>{let t=i.t+i.h;if(t<e){let n=e-t;i.h+=n}},[g,b]=[-.3,.3];const v=[1.4,1];if(n&&n.top){let t=n.topSize,i=t/v[0],r=t/v[1],[o,a]=[l+d/2,u-3-r/2],c=e.visuals.mkTxt(o,a,t,0,n.top,g,b);e.U.addClass(c,"cmp-lbl"),s.appendChild(c);let f=i*n.top.length;m(a-r/2),h(o-f/2),p(o+f/2)}if(n&&n.bot){let t=n.botSize,i=t/v[0],r=t/v[1],[o,a]=[l+d/2,u+c+3+r/2],m=e.visuals.mkTxt(o,a,t,0,n.bot,g,b);e.U.addClass(m,"cmp-lbl"),s.appendChild(m);let y=i*n.bot.length;f(a+r/2),h(o-y/2),p(o+y/2)}if(n&&n.right){let t=n.rightSize,i=t/v[1],r=t/v[0]*n.right.length,[o,a]=[l+d+5+r/2,u+c/2],h=e.visuals.mkTxt(o,a,t,0,n.right,g,b);e.U.addClass(h,"cmp-lbl"),s.appendChild(h),m(a-i/2),p(o+r/2),f(a+i/2)}if(n&&n.left){let t=n.leftSize,i=t/v[1],r=t/v[0]*n.left.length,[o,a]=[l-5-r/2,u+c/2],d=e.visuals.mkTxt(o,a,t,0,n.left,g,b);e.U.addClass(d,"cmp-lbl"),s.appendChild(d),m(a-i/2),h(o-r/2),f(a+i/2)}let y={viewBox:`${i.l} ${i.t} ${i.w} ${i.h}`,width:1.7*i.w,height:1.7*i.h,preserveAspectRatio:"xMidYMid"};e.svg.hydrate(s,y);let w=document.createElement("div");return w.appendChild(s),w}function m(t,n){let s,i=e.runtime.board;if("wire"==t)s=e.visuals.mkWirePart([0,0],n.wireClr||"red",n.crocClips);else{let n=t;if("string"==typeof n.builtIn){s=(0,i.builtinPartVisuals[n.builtIn])([0,0])}else s=e.visuals.mkGenericPartSVG(n)}return p(s,n)}function f(t,n,s=!1){const i={state:e.runtime.board,boardDef:t.boardDef,forceBreadboardLayout:!0,forceBreadboardRender:t.allAlloc.requiresBreadboard,partDefs:t.cmpDefs,maxWidth:`${n}px`,fnArgs:t.fnArgs,wireframe:s,partsList:[]};let r=new e.visuals.BoardHost(e.visuals.mkBoardView({visual:i.boardDef.visual,boardDef:i.boardDef,wireframe:i.wireframe}),i),o=r.getView();return e.U.addClass(o,"board-svg"),r}function g(){let t=document.createElement("div");return e.U.addClass(t,"instr-panel"),t}function b(t){let s=g();var i;let r=p((i=t.boardDef,e.visuals.mkBoardView({visual:i.visual,boardDef:i}).getView()),{left:n(1),leftSize:30,cmpScale:.17});s.appendChild(r);let o=p(new e.visuals.Breadboard({}).getSVGAndSize(),{left:n(1),leftSize:30,cmpScale:.25});return s.appendChild(o),t.allCmps.forEach((t=>{let i=1;"buttonpair"===t.visual.builtIn&&(i=2);let r=m(t.visual,{left:n(i),leftSize:30,cmpScale:.3});e.U.addClass(r,"partslist-cmp"),s.appendChild(r)})),t.allWireColors.forEach((i=>{let r=t.colorToWires[i].length,o=t.boardDef.pinStyles[i]||"female",a=m("wire",{left:n(r),leftSize:20,wireClr:i,cmpScale:.23,crocClips:"croc"==o});e.U.addClass(a,"partslist-wire"),s.appendChild(a)})),s}function v(t,n){let s=g(),i=f(n,465,!0);!function(t,n,s){let i=t.getView();n>0&&e.U.addClass(i,"grayed");for(let i=0;i<=n;i++){let r=s.stepToCmps[i];r&&r.forEach((s=>{let r=t.addPart(s);i===n&&(s.breadboardConnections.forEach((e=>t.highlightBreadboardPin(e))),e.U.addClass(r.element,"notgrayed"))}));let o=s.stepToWires[i];o&&o.forEach((e=>{let s=t.addWire(e);s&&i===n&&("breadboard"==e.start.type?t.highlightBreadboardPin(e.start):t.highlightBoardPin(e.start.pin),"breadboard"==e.end.type?t.highlightBreadboardPin(e.end):t.highlightBoardPin(e.end.pin),t.highlightWire(s))}))}}(i,t,n),s.appendChild(i.getView());let r=document.createElement("div");e.U.addClass(r,"panel-num-outer"),e.U.addClass(r,"noselect"),s.appendChild(r);let o=document.createElement("div");e.U.addClass(o,"panel-num"),o.textContent=t+1+"",r.appendChild(o);let a=document.createElement("div");e.U.addClass(a,"reqs-div"),s.appendChild(a);let l=n.stepToWires[t]||[],u=e=>{if("breadboard"===e.type){let{row:t,col:n}=e;return`(${t},${n})`}return e.pin};return l.forEach((t=>{let s=!1;"dalboard"==t.end.type&&(s="croc"==n.boardDef.pinStyles[t.end.pin]);let i=m("wire",{top:u(t.end),topSize:10,bot:u(t.start),botSize:10,wireClr:t.color,cmpHeight:40,crocClips:s});e.U.addClass(i,"cmp-div"),a.appendChild(i)})),(n.stepToCmps[t]||[]).forEach((t=>{let n;n="buttonpair"===t.visual.builtIn?[t.breadboardConnections[0],t.breadboardConnections[2]]:[t.breadboardConnections[0]],n.forEach(((n,s)=>{let i;if(n){let{row:e,col:t}=n;i=`(${e},${t})`}else i="";let r=1.5;"buttonpair"===t.visual.builtIn&&(r*=.5);let o=m(t.visual,{top:i,topSize:10,cmpHeight:50,cmpScale:r});e.U.addClass(o,"cmp-div"),a.appendChild(o)}))})),s}function y(t,n){n.boardDef.pinStyles||(n.boardDef.pinStyles={}),n.configData&&e.setConfigData(n.configData.cfg,n.configData.cfgKey);const s={type:"run",code:"",boardDefinition:n.boardDef,partDefinitions:n.partDefinitions};e.runtime=new e.Runtime(s),e.runtime.board=null,e.initCurrentRuntime(s);let i=document.createElement("style");i.textContent+=h,document.head.appendChild(i);const r=n.partDefinitions;let o=new e.visuals.Breadboard({}),a=function(t){let n=e.allocateDefinitions(t),s=[],i=[],r=1;n.partsAndWires.forEach((e=>{let t=e.part,n=e.wires;e.assembly.forEach(((e,o)=>{e.part&&t&&(i[r+o]=[t]),e.wireIndices&&e.wireIndices.length>0&&n&&(s[r+o]=e.wireIndices.map((e=>n[e])))})),r+=e.assembly.length}));let o=r-1,a=n.partsAndWires.map((e=>e.part)).filter((e=>!!e)),l=n.partsAndWires.map((e=>e.wires||[])).reduce(((e,t)=>e.concat(t)),[]),u={},d=[];return l.forEach((e=>{u[e.color]||(u[e.color]=[],d.push(e.color)),u[e.color].push(e)})),{boardDef:t.boardDef,cmpDefs:t.partDefs,fnArgs:t.fnArgs,allAlloc:n,stepToWires:s,stepToCmps:i,allWires:l,allCmps:a,lastStep:o,colorToWires:u,allWireColors:d}}({boardDef:n.boardDef,partDefs:r,partsList:n.parts,fnArgs:n.fnArgs,getBBCoord:o.getCoord.bind(o)});a.allAlloc.requiresBreadboard=!0;!function(e){let t=document.getElementById("front-panel"),n=f(e,400,!1);n.addAll(e.allAlloc),t.appendChild(n.getView())}(a);let l=b(a);t.appendChild(l);for(let e=0;e<=a.lastStep;e++){let n=v(e,a);t.appendChild(n)}n.print&&e.print(2e3)}t.renderParts=y,t.renderInstructions=function(e){document.getElementById("proj-title").innerText=e.options.name||"",y(document.body,e.options)}}(e.instructions||(e.instructions={}))}(pxsim||(pxsim={})),function(e){function t(e,t="sim: check failed"){if(!e)throw new Error(t)}e.quiet=!1,e.check=t,e.title="";let n,s,i,r,o,a={},l={};e.getConfig=function(e){return l.hasOwnProperty(e+"")?l[e+""]:null},e.getConfigKey=function(e){return a.hasOwnProperty(e)?a[e]:null},e.getAllConfigKeys=function(){return Object.keys(a)},e.setConfigKey=function(e,t){a[e]=t},e.setConfig=function(e,t){l[e]=t},e.setConfigData=function(e,t){l=e,a=t},e.getConfigData=function(){return{cfg:l,cfgKey:a}},e.setTitle=function(t){e.title=t};class u{constructor(){e.runtime?this.id=e.runtime.registerLiveObject(this):this.id=0}destroy(){}scan(t){throw e.U.userError("scan not implemented")}gcKey(){throw e.U.userError("gcKey not implemented")}gcSize(){throw e.U.userError("gcSize not implemented")}gcIsStatic(){return!1}print(){e.runtime&&e.runtime.refCountingDebug&&console.log(`RefObject id:${this.id}`)}toDebugString(){return"(object)"}static toAny(e){return e&&e.toAny?e.toAny():e}static toDebugString(e){return null===e?"null":void 0===e?"undefined;":e.vtable&&e.vtable.name?e.vtable.name:e.toDebugString?e.toDebugString():"string"==typeof e?JSON.stringify(e):e.toString()}}e.RefObject=u;class d{constructor(e,t,n){this.func=e,this.caps=t,this.args=n}}e.FnWrapper=d;class c extends u{constructor(){super(...arguments),this.fields={}}scan(e){for(let t of Object.keys(this.fields))e(t,this.fields[t])}gcKey(){return this.vtable.name}gcSize(){return this.vtable.numFields+1}destroy(){this.fields=null,this.vtable=null}print(){e.runtime&&e.runtime.refCountingDebug&&console.log(`RefRecord id:${this.id} (${this.vtable.name})`)}}e.RefRecord=c;class h extends u{constructor(){super(...arguments),this.fields=[]}scan(e){for(let t=0;t<this.fields.length;++t)e("_cap"+t,this.fields[t])}gcKey(){return e.functionName(this.func)}gcSize(){return this.fields.length+3}isRef(e){return t(0<=e&&e<this.fields.length),e<this.len}ldclo(e){return t(0<=(e>>=2)&&e<this.fields.length),this.fields[e]}destroy(){this.fields=null,this.func=null}print(){e.runtime&&e.runtime.refCountingDebug&&console.log(`RefAction id:${this.id} len:${this.fields.length}`)}}e.RefAction=h,function(t){t.seedAddRandom=function(e){},t.mkAction=function(e,t){let n=new h;n.len=e,n.func=t;for(let t=0;t<e;++t)n.fields.push(null);return n},t.runAction=function(t,n){let s=e.getResume();s(t instanceof h?new d(t.func,t.fields,n):new d(t,null,n))};let n={};t.dumpPerfCounters=function(){if(!e.runtime||!e.runtime.perfCounters)return;let t="calls,us,name\n";for(let n of e.runtime.perfCounters){n.lastFew.sort();const e=n.lastFew[n.lastFew.length>>1];t+=`${n.numstops},${n.value},${n.name},${e}\n`}!function(e){let t="";const s=(e,n)=>{t+=e.length>=n?e:("              "+e).slice(-n)},i=e=>s(""+Math.round(e),6),r=(e,n)=>{s(Math.round(n)+"",8),t+=" /",i(e),t+=" =",i(n/e)};for(let s of e.split(/\n/)){if(!s)continue;if(!/^\d/.test(s))continue;const e=s.split(/,/);let l=n[e[2]];l||(n[e[2]]=l={stops:0,us:0,meds:[]}),o=e[2],a=25,t+=o.length>=a?o:(o+"                         ").slice(0,a);const u=parseInt(e[0]),d=parseInt(e[1]);r(u,d),t+=" |",r(u-l.stops,d-l.us),t+=" ~";const c=parseInt(e[3]);i(c),l.meds.length>10&&l.meds.shift(),l.meds.push(c);const h=l.meds.slice();h.sort(((e,t)=>e-t));const p=h[h.length>>1];t+=" ~~",i(p),l.stops=u,l.us=d,t+="\n"}var o,a;console.log(t)}(t)}}(n=e.pxtcore||(e.pxtcore={}));class p extends u{constructor(){super(...arguments),this.v=void 0}scan(e){e("*",this.v)}gcKey(){return"LOC"}gcSize(){return 2}destroy(){}print(){e.runtime&&e.runtime.refCountingDebug&&console.log(`RefRefLocal id:${this.id} v:${this.v}`)}}e.RefRefLocal=p;class m extends u{constructor(){super(...arguments),this.vtable=e.mkMapVTable(),this.data=[]}scan(e){for(let t of this.data)e(t.key,t.val)}gcKey(){return"{...}"}gcSize(){return 2*this.data.length+4}findIdx(e){e+="";for(let t=0;t<this.data.length;++t)if(this.data[t].key==e)return t;return-1}destroy(){super.destroy();for(let e=0;e<this.data.length;++e)this.data[e].val=0;this.data=[]}print(){e.runtime&&e.runtime.refCountingDebug&&console.log(`RefMap id:${this.id} size:${this.data.length}`)}toAny(){const e={};return this.data.forEach((t=>{e[t.key]=u.toAny(t.val)})),e}}function f(){e.runtime&&e.runtime.dumpLivePointers()}e.RefMap=m,e.dumpLivePointers=f,function(e){e.toString=function(e){return null===e?"null":void 0===e?"undefined":e.toString()},e.toBoolDecr=function(e){return!!e},e.toBool=function(e){return!!e}}(s=e.numops||(e.numops={})),function(e){e.toInt=function(e){return 0|e},e.toFloat=function(e){return e},e.ignore=function(e){return e}}(i=e.langsupp||(e.langsupp={})),function(t){t.ptrOfLiteral=function(e){return e},t.debugMemLeaks=function(){f()},t.templateHash=function(){return 0},t.programHash=function(){return 0},t.programName=function(){return e.title},t.programSize=function(){return 0},t.afterProgramPage=function(){return 0},t.getConfig=function(t,n){let s=e.getConfig(t);return null==s?n:s},t.toInt=function(e){return e>>0},t.toUInt=function(e){return e>>>0},t.toDouble=function(e){return e},t.toFloat=function(e){return e},t.fromInt=function(e){return e},t.fromUInt=function(e){return e},t.fromDouble=function(e){return e},t.fromFloat=function(e){return e},t.fromBool=function(e){return!!e}}(n=e.pxtcore||(e.pxtcore={})),function(n){function s(e,t){if(t+="",e instanceof c){return e.fields[t]}let n=e.findIdx(t);if(!(n<0))return e.data[n].val}function i(e,t,n){if(t+="",e instanceof c){return void(e.fields[t]=n)}let s=e.findIdx(t);s<0?e.data.push({key:t,val:n}):e.data[s].val=n}n.toInt8=function(e){return(255&e)<<24>>24},n.toInt16=function(e){return(65535&e)<<16>>16},n.toInt32=function(e){return 0|e},n.toUInt32=function(e){return e>>>0},n.toUInt8=function(e){return 255&e},n.toUInt16=function(e){return 65535&e},n.nullFix=function(e){return null==e||!1===e?0:!0===e?1:e},n.nullCheck=function(t){null==t&&e.U.userError("Dereferencing null/undefined value.")},n.panic=function(t){e.U.userError("PANIC! Code "+t)},n.stringToBool=function(e){return e?1:0},n.ptrToBool=function(e){return e?1:0},n.emptyToNull=function(e){return""==e?0:e},n.ldlocRef=function(e){return e.v},n.stlocRef=function(e,t){e.v=t},n.mklocRef=function(){return new p},n.stclo=function(e,n,s){return t(0<=n&&n<e.fields.length),t(null===e.fields[n]),e.fields[n]=s,e},n.runtimeWarning=function(t){e.Runtime.postMessage(e.getWarningMessage(t))},n.mkMap=function(){return new m},n.mapGet=function(e,t){return s(e,n.mapKeyNames[t])},n.mapSet=function(e,t,s){return i(e,n.mapKeyNames[t],s)},n.mapGetByString=s,n.mapDeleteByString=function(e,t){e instanceof m||n.panic(923);let s=e.findIdx(t);return s>=0&&e.data.splice(s,1),!0},n.mapSetGeneric=i,n.mapGetGeneric=s,n.mapSetByString=i,n.keysOf=function(t){let n=new e.RefCollection;if(t instanceof m)for(let e of t.data)n.push(e.key);return n}}(r=e.pxtrt||(e.pxtrt={})),function(e){e.mkClassInstance=function(e){t(!!e.methods);let n=new c;return n.vtable=e,n},e.switch_eq=function(e,t){return e==t},e.typeOf=function(e){return typeof e}}(n=e.pxtcore||(e.pxtcore={})),function(t){t.panic=r.panic,t.pause=function(t){let n=e.getResume();e.runtime.schedule((()=>{n()}),t)},t.runInBackground=function(t){e.runtime.runFiberAsync(t)},t.forever=function(t){r.nullCheck(t),function n(){e.runtime.runFiberAsync(t).then((()=>e.U.delay(20))).then(n)}()}}(o=e.thread||(e.thread={}))}(pxsim||(pxsim={})),function(e){class t extends e.RefObject{constructor(){super(),this.data=[]}scan(e){for(let t=0;t<this.data.length;++t)e("["+t+"]",this.data[t])}gcKey(){return"[...]"}gcSize(){return this.data.length+2}toArray(){return this.data.slice(0)}toAny(){return this.data.map((t=>e.RefObject.toAny(t)))}toDebugString(){let t="[";for(let n=0;n<this.data.length;++n){n>0&&(t+=",");let s=e.RefObject.toDebugString(this.data[n]);if(t.length+s.length>100){0==n&&(t+=s.substr(0,100)),t+="...";break}t+=s}return t+="]",t}destroy(){let e=this.data;for(let t=0;t<e.length;++t)e[t]=0;this.data=[]}isValidIndex(e){return e>=0&&e<this.data.length}push(e){this.data.push(e)}pop(){return this.data.pop()}getLength(){return this.data.length}setLength(e){this.data.length=e}getAt(e){return this.data[e]}setAt(e,t){this.data[e]=t}insertAt(e,t){this.data.splice(e,0,t)}removeAt(e){return this.data.splice(e,1)[0]}indexOf(e,t){return this.data.indexOf(e,t)}print(){}}let n,s,i,r,o,a,l,u;e.RefCollection=t,function(n){function s(t,n){if(e.pxtrt.nullCheck(t),t.isValidIndex(n))return t.removeAt(n)}function i(t,n,s){return e.pxtrt.nullCheck(t),t.indexOf(n,s)}n.mk=function(){return new t},n.isArray=function(e){return e instanceof t},n.length=function(t){return e.pxtrt.nullCheck(t),t.getLength()},n.setLength=function(t,n){e.pxtrt.nullCheck(t),t.setLength(n)},n.push=function(t,n){e.pxtrt.nullCheck(t),t.push(n)},n.pop=function(t,n){return e.pxtrt.nullCheck(t),t.pop()},n.getAt=function(t,n){return e.pxtrt.nullCheck(t),t.getAt(n)},n.removeAt=s,n.insertAt=function(t,n,s){e.pxtrt.nullCheck(t),t.insertAt(n,s)},n.setAt=function(t,n,s){e.pxtrt.nullCheck(t),t.setAt(n,s)},n.indexOf=i,n.removeElement=function(t,n){e.pxtrt.nullCheck(t);let r=i(t,n,0);return r>=0?(s(t,r),1):0}}(n=e.Array_||(e.Array_={})),function(e){e.imul=Math.imul||function(e,t){const n=65535&e,s=65535&t;return n*s+((e>>>16&65535)*s+n*(t>>>16&65535)<<16>>>0)|0},e.idiv=function(e,t){return(0|e)/(0|t)|0},e.round=function(e){return Math.round(e)},e.roundWithPrecision=function(e,t){if((t|=0)<=0)return Math.round(e);if(0==e)return 0;let n=0;for(;0==n&&t<21;){const s=Math.pow(10,t++);n=Math.round(e*s+Number.EPSILON)/s}return n},e.ceil=function(e){return Math.ceil(e)},e.floor=function(e){return Math.floor(e)},e.sqrt=function(e){return Math.sqrt(e)},e.pow=function(e,t){return Math.pow(e,t)},e.clz32=function(e){return Math.clz32(e)},e.log=function(e){return Math.log(e)},e.log10=function(e){return Math.log10(e)},e.log2=function(e){return Math.log2(e)},e.exp=function(e){return Math.exp(e)},e.sin=function(e){return Math.sin(e)},e.sinh=function(e){return Math.sinh(e)},e.cos=function(e){return Math.cos(e)},e.cosh=function(e){return Math.cosh(e)},e.tan=function(e){return Math.tan(e)},e.tanh=function(e){return Math.tanh(e)},e.asin=function(e){return Math.asin(e)},e.asinh=function(e){return Math.asinh(e)},e.acos=function(e){return Math.acos(e)},e.acosh=function(e){return Math.acosh(e)},e.atan=function(e){return Math.atan(e)},e.atanh=function(e){return Math.atanh(e)},e.atan2=function(e,t){return Math.atan2(e,t)},e.trunc=function(e){return e>0?Math.floor(e):Math.ceil(e)},e.random=function(){return Math.random()},e.randomRange=function(e,t){if(e==t)return e;if(e>t){let n=e;e=t,t=n}return Math.floor(e)==e&&Math.floor(t)==t?e+Math.floor(Math.random()*(t-e+1)):e+Math.random()*(t-e)}}(s=e.Math_||(e.Math_={})),function(t){function n(t,n){return e.pxtrt.nullFix(t)==e.pxtrt.nullFix(n)}t.lt=function(e,t){return e<t},t.le=function(e,t){return e<=t},t.neq=function(e,t){return!n(e,t)},t.eq=n,t.eqDecr=function(t,n){return e.pxtrt.nullFix(t)==e.pxtrt.nullFix(n)},t.gt=function(e,t){return e>t},t.ge=function(e,t){return e>=t},t.div=function(e,t){return 0|Math.floor(e/t)},t.mod=function(e,t){return e%t},t.bnot=function(e){return~e},t.toString=function(e){return e+""}}(i=e.Number_||(e.Number_={})),function(e){e.adds=function(e,t){return e+t|0},e.subs=function(e,t){return e-t|0},e.divs=function(e,t){return 0|Math.floor(e/t)},e.muls=function(e,t){return s.imul(e,t)},e.ands=function(e,t){return e&t},e.orrs=function(e,t){return e|t},e.eors=function(e,t){return e^t},e.lsls=function(e,t){return e<<t},e.lsrs=function(e,t){return e>>>t},e.asrs=function(e,t){return e>>t},e.bnot=function(e){return~e},e.ignore=function(e){return e}}(r=e.thumb||(e.thumb={})),function(e){function t(e){return e<<16>>16}e.adds=function(e,n){return t(e+n)},e.subs=function(e,n){return t(e-n)},e.divs=function(e,n){return t(Math.floor(e/n))},e.muls=function(e,n){return t(s.imul(e,n))},e.ands=function(e,n){return t(e&n)},e.orrs=function(e,n){return t(e|n)},e.eors=function(e,n){return t(e^n)},e.lsls=function(e,n){return t(e<<n)},e.lsrs=function(e,t){return(65535&e)>>>t},e.asrs=function(e,n){return t(e>>n)},e.bnot=function(e){return~e},e.ignore=function(e){return e}}(o=e.avr||(e.avr={})),function(t){t.stringConv=function(t){const n=e.getResume();t instanceof e.RefRecord&&t.vtable.toStringMethod?e.runtime.runFiberAsync(t.vtable.toStringMethod,t).then((()=>{n(e.runtime.currFrame.retval+"")})):n(t+"")},t.mkEmpty=function(){return""},t.fromCharCode=function(e){return String.fromCharCode(e)},t.toNumber=function(e){return parseFloat(e)},t.concat=function(e,t){return e+t},t.substring=function(t,n,s){return e.pxtrt.nullCheck(t),t.slice(n,n+s)},t.equals=function(e,t){return e==t},t.compare=function(e,t){return e==t?0:e<t?-1:1},t.compareDecr=function(e,t){return e==t?0:e<t?-1:1},t.length=function(e){return e.length},t.substr=function(e,t,n){return e.substr(t,n)},t.charAt=function(e,t){return e.charAt(t)},t.charCodeAt=function(t,n){return e.pxtrt.nullCheck(t),function(t,n){return e.pxtrt.nullCheck(t),0<=n&&n<t.length}(t,n)?t.charCodeAt(n):0},t.indexOf=function(t,n,s){return e.pxtrt.nullCheck(t),null==n?-1:t.indexOf(n,s)},t.lastIndexOf=function(t,n,s){return e.pxtrt.nullCheck(t),null==n?-1:t.lastIndexOf(n,s)},t.includes=function(t,n,s){return e.pxtrt.nullCheck(t),null!=n&&t.includes(n,s)}}(a=e.String_||(e.String_={})),function(e){e.toString=function(e){return e?"true":"false"},e.bang=function(e){return!e}}(l=e.Boolean_||(e.Boolean_={}));class d extends e.RefObject{constructor(e){super(),this.data=e,this.isStatic=!1}scan(e){}gcKey(){return"Buffer"}gcSize(){return 2+(this.data.length+3>>2)}gcIsStatic(){return this.isStatic}print(){}toDebugString(){return u.toHex(this)}}e.RefBuffer=d,function(t){let n;function s(t){let s=function(t){switch(t){case n.Int8LE:return-1;case n.UInt8LE:return 1;case n.Int16LE:return-2;case n.UInt16LE:return 2;case n.Int32LE:return-4;case n.UInt32LE:return 4;case n.Int8BE:return-10;case n.UInt8BE:return 10;case n.Int16BE:return-20;case n.UInt16BE:return 20;case n.Int32BE:return-40;case n.UInt32BE:return 40;case n.Float32LE:return 4;case n.Float32BE:return 40;case n.Float64LE:return 8;case n.Float64BE:return 80;default:throw e.U.userError("bad format")}}(t),i=!1;s<0&&(i=!0,s=-s);let r=!1;return s>=10&&(r=!0,s/=10),{size:s,signed:i,swap:r,isFloat:t>=n.Float32LE}}function i(e){return new d(new Uint8Array(e))}function r(t,n){return e.pxtrt.nullCheck(t),0<=n&&n<t.data.length}function o(e,t){return r(e,t)?e.data[t]:0}function a(t){t.isStatic&&e.U.userError("Writing to read only buffer.")}function l(e,t,n){r(e,t)&&(a(e),e.data[t]=n)}function u(e,t,n=0,s=-1){n<0||n>e.data.length||(s<0&&(s=e.data.length),s=Math.min(s,e.data.length-n),a(e),e.data.fill(t,n,n+s))}function c(e,t,n,s,i){if(n.buffer===e.buffer)c(e,t,n.slice(s,s+i),0,i);else for(let r=0;r<i;++r)e[t+r]=n[s+r]}!function(e){e[e.Int8LE=1]="Int8LE",e[e.UInt8LE=2]="UInt8LE",e[e.Int16LE=3]="Int16LE",e[e.UInt16LE=4]="UInt16LE",e[e.Int32LE=5]="Int32LE",e[e.Int8BE=6]="Int8BE",e[e.UInt8BE=7]="UInt8BE",e[e.Int16BE=8]="Int16BE",e[e.UInt16BE=9]="UInt16BE",e[e.Int32BE=10]="Int32BE",e[e.UInt32LE=11]="UInt32LE",e[e.UInt32BE=12]="UInt32BE",e[e.Float32LE=13]="Float32LE",e[e.Float64LE=14]="Float64LE",e[e.Float32BE=15]="Float32BE",e[e.Float64BE=16]="Float64BE"}(n=t.NumberFormat||(t.NumberFormat={})),t.getNumber=function(e,t,n){let i=s(t);if(i.isFloat){let t=e.data.buffer.slice(n,n+i.size);if(i.swap){new Uint8Array(t).reverse()}return 4==i.size?new Float32Array(t)[0]:new Float64Array(t)[0]}let r=0;for(let t=0;t<i.size;++t){r<<=8;let s=i.swap?n+t:n+i.size-t-1;r|=e.data[s]}if(i.signed){let e=32-8*i.size;r=r<<e>>e}else r>>>=0;return r},t.setNumber=function(e,t,n,i){let r=s(t);if(r.isFloat){let t=new Uint8Array(r.size);4==r.size?new Float32Array(t.buffer)[0]=i:new Float64Array(t.buffer)[0]=i,r.swap&&t.reverse();for(let s=0;s<r.size;++s)e.data[n+s]=t[s]}else for(let t=0;t<r.size;++t){let s=r.swap?n+r.size-t-1:n+t;e.data[s]=255&i,i>>=8}},t.createBuffer=i,t.createBufferFromHex=function(e){let t=i(e.length>>1);for(let n=0;n<e.length;n+=2)t.data[n>>1]=parseInt(e.slice(n,n+2),16);return t.isStatic=!0,t},t.isReadOnly=function(e){return e.isStatic},t.getBytes=function(e){return e.data},t.getUint8=function(e,t){return o(e,t)},t.getByte=o,t.setUint8=function(e,t,n){l(e,t,n)},t.setByte=l,t.length=function(e){return e.data.length},t.fill=u,t.slice=function(e,t,n){return t=Math.min(e.data.length,t),n<0&&(n=e.data.length),n=Math.min(n,e.data.length-t),new d(e.data.slice(t,t+n))},t.toHex=function(e){const t="0123456789abcdef";let n="";for(let s=0;s<e.data.length;++s)n+=t[e.data[s]>>4],n+=t[15&e.data[s]];return n},t.toString=function(t){return e.U.fromUTF8Array(t.data)};const h=-2147483648;t.shift=function(e,t,n,s){s<0&&(s=e.data.length-n),n<0||n+s>e.data.length||n+s<n||0==s||0==t||t==h||0!=s&&0!=t&&t!=h&&(t<=-s||t>=s?u(e,0):(a(e),t<0?(t=-t,c(e.data,n+t,e.data,n,s-t),e.data.fill(0,n,n+t)):(s-=t,c(e.data,n,e.data,n+t,s),e.data.fill(0,n+s,n+s+t))))},t.rotate=function(e,t,n,s){if(s<0&&(s=e.data.length-n),n<0||n+s>e.data.length||n+s<n||0==s||0==t||t==h)return;a(e),t<0&&(t+=s<<8),(t%=s)<0&&(t+=s);let i=e.data,r=t,o=0,l=r,u=s;for(;o!=l;){let e=i[o+n];i[o+++n]=i[l+n],i[l+++n]=e,l==u?l=r:o==r&&(r=l)}},t.write=function(e,t,n,s=0,i=-1){i<0&&(i=n.data.length),s<0||t<0||t>e.data.length||(i=Math.min(n.data.length-s,e.data.length-t))<0||(a(e),c(e.data,t,n.data,s,i))}}(u=e.BufferMethods||(e.BufferMethods={}))}(pxsim||(pxsim={})),function(e){!function(t){t.createBufferFromUTF8=function(t){return new e.RefBuffer(e.U.toUTF8Array(t))}}(e.control||(e.control={}))}(pxsim||(pxsim={})),function(e){!function(e){let t={};e.setLocalizedStrings=function(e){t=e||{}};function n(e,t){return 0==t.length?e:e.replace(/\{([0-9]+)(\:[^\}]+)?\}/g,(function(e,n,r){let o=t[parseInt(n)],a="",l=/^:f(\d*)\.(\d+)/.exec(r);if(l){let e=parseInt(l[2]),t=parseInt(l[1])||0,n=/^0/.test(l[1])?"0":" ",s=o.toFixed(e);if(t>0&&e>0&&(t+=e+1),t>0)for(;s.length<t;)s=n+s;a=s}else a=":x"==r?"0x"+o.toString(16):void 0===o?"(undef)":null===o?"(null)":o.toString?o.toString():o+"";return":a"==r?/^\s*[euioah]/.test(a.toLowerCase())?a="an "+a:/^\s*[bcdfgjklmnpqrstvwxz]/.test(a.toLowerCase())&&(a="a "+a):":s"==r?a=1==o?"":"s":":q"==r?a=s(a):":jq"==r?a=i(a):":uri"==r?a=encodeURIComponent(a).replace(/'/g,"%27").replace(/"/g,"%22"):":url"==r?a=encodeURI(a).replace(/'/g,"%27").replace(/"/g,"%22"):":%"==r&&(a=(100*o).toFixed(1).toString()+"%"),a}))}function s(e){return e?e.replace(/([^\w .!?\-$])/g,(e=>"&#"+e.charCodeAt(0)+";")):e}function i(e){return e.replace(/[^\w .!?\-$]/g,(e=>{let t=e.charCodeAt(0).toString(16);return"\\u"+"0000".substr(0,4-t.length)+t}))}e.lf=function(e,...s){let i=t[e]||e;return i=i.replace(/^\{(id|loc):[^\}]+\}/g,""),n(i,s)},e.fmt_va=n,e.htmlEscape=s,e.jsStringQuote=i}(e.localization||(e.localization={}))}(pxsim||(pxsim={})),function(pxsim){const MIN_MESSAGE_WAIT_MS=200;let tracePauseMs=0,U,pxtcore;!function(e){function t(e){return e.split(/\s+/).filter((e=>!!e))}function n(e){for(;e.firstChild;)e.removeChild(e.firstChild)}let s;e.containsClass=function(e,n){return t(n).every((t=>function(e,t){if(e.classList)return e.classList.contains(t);return!((e.className+"").split(/\s+/).indexOf(t)<0)}(e,t)))},e.addClass=function(e,n){t(n).forEach((t=>function(e,t){if(e.classList)e.classList.add(t);else{(e.className+"").split(/\s+/).indexOf(t)<0&&(e.className.baseVal+=" "+t)}}(e,t)))},e.removeClass=function(e,n){t(n).forEach((t=>function(e,t){e.classList?e.classList.remove(t):e.className.baseVal=(e.className+"").split(/\s+/).filter((e=>e!=t)).join(" ")}(e,t)))},e.remove=function(e){e.parentElement.removeChild(e)},e.removeChildren=n,e.clear=function(e){n(e)},e.assert=function(e,t="Assertion failed"){if(!e)throw new Error(t)},e.repeatMap=function(e,t){e=e||0;let n=[];for(let s=0;s<e;++s)n.push(t(s));return n},e.userError=function(e){let t=new Error(e);throw t.isUserError=!0,t},e.now=function(){return Date.now()},e.perfNowUs=function(){return s||(s="undefined"!=typeof performance?performance.now.bind(performance)||performance.moznow.bind(performance)||performance.msNow.bind(performance)||performance.webkitNow.bind(performance)||performance.oNow.bind(performance):Date.now),1e3*s()};const i=Promise.resolve();async function r(e,t,n){let s=0;const i=[],r=[];for(let o=0;o<e;o++){const e=(async()=>{for(;s<t.length;){const e=s++,i=t[e];r[e]=await n(i)}})();i.push(e)}try{await Promise.all(i)}catch(e){throw s=t.length,e}return r}function o(){return"undefined"!=typeof window&&!!window.pxtElectron}function a(){return"undefined"!=typeof window&&!!window.ipcRenderer}function l(){return o()||a()}function u(){try{return"undefined"!=typeof window&&/^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(window.location.href)&&!/nolocalhost=1/.test(window.location.href)}catch(e){return!1}}e.nextTick=function(e){i.then(e)},e.delay=async function(e,t){const n=await t;return await new Promise((t=>setTimeout((()=>t()),e))),n},e.promiseMapAll=function(e,t){return Promise.all(e.map((e=>t(e))))},e.promiseMapAllSeries=function(e,t){return r(1,e,t)},e.promisePoolAsync=r,e.promiseTimeout=async function(e,t,n){let s,i;const r=new Promise(((t,r)=>{i=t,s=setTimeout((()=>{i=void 0,clearTimeout(s),r(n||`Promise timed out after ${e}ms`)}),e)}));return Promise.race([t,r]).then((e=>(i&&(clearTimeout(s),i()),e)))},e.stringToUint8Array=function(e){let t=e.length,n=new Uint8Array(t);for(let s=0;s<t;++s)n[s]=255&e.charCodeAt(s);return n},e.uint8ArrayToString=function(e){let t=e.length,n="";for(let s=0;s<t;++s)n+=String.fromCharCode(e[s]);return n},e.fromUTF8=function(e){if(!e)return"";let t="";for(let n=0;n<e.length;++n){let s=255&e.charCodeAt(n);t+=37==s||s>127?"%"+s.toString(16):e.charAt(n)}return decodeURIComponent(t)},e.toUTF8=function(e,t){let n="";if(!e)return n;for(let s=0;s<e.length;++s){let i=e.charCodeAt(s);if(i<=127)n+=e.charAt(s);else if(i<=2047)n+=String.fromCharCode(192|i>>6,128|63&i);else{if(!t&&55296<=i&&i<=56319){let t=e.charCodeAt(++s);isNaN(t)||(i=65536+(i-55296<<10)+(t-56320))}n+=i<=65535?String.fromCharCode(224|i>>12,128|i>>6&63,128|63&i):String.fromCharCode(240|i>>18,128|i>>12&63,128|i>>6&63,128|63&i)}}return n},e.toUTF8Array=function(e){return(new TextEncoder).encode(e)},e.fromUTF8Array=function(e){return(new TextDecoder).decode(e)},e.isPxtElectron=o,e.isIpcRenderer=a,e.isElectron=l,e.isLocalHost=u,e.isLocalHostDev=function(){return u()&&!l()},e.unique=function(e,t){let n=[],s={};return e.forEach((e=>{let i=t(e);s.hasOwnProperty(i)||(s[i]=null,n.push(e))})),n}}(U=pxsim.U||(pxsim.U={}));class BreakLoopException{}function getResume(){return pxsim.runtime.getResume()}pxsim.BreakLoopException=BreakLoopException,function(e){function t(e){let t=pxsim.runtime.currTryFrame();t||U.userError("unhandled exception: "+e);const n=t.handlerFrame;throw pxsim.runtime.currFrame=n,n.pc=t.handlerPC,n.tryFrame=t.parent,n.thrownValue=e,n.hasThrownValue=!0,new BreakLoopException}e.beginTry=function(e){pxsim.runtime.currFrame.tryFrame={parent:pxsim.runtime.currTryFrame(),handlerPC:e,handlerFrame:pxsim.runtime.currFrame}},e.endTry=function(){const e=pxsim.runtime.currFrame;e.tryFrame=e.tryFrame.parent},e.throwValue=t,e.getThrownValue=function(){const e=pxsim.runtime.currFrame;return U.assert(e.hasThrownValue),e.hasThrownValue=!1,e.thrownValue},e.endFinally=function(){const e=pxsim.runtime.currFrame;e.hasThrownValue&&(e.hasThrownValue=!1,t(e.thrownValue))}}(pxtcore=pxsim.pxtcore||(pxsim.pxtcore={})),pxsim.getResume=getResume;const SERIAL_BUFFER_LENGTH=16;class BaseBoard{constructor(){this.messageListeners=[],this.serialOutBuffer="",this.messages=[],this.lastSerialTime=0,this.debouncedPostAll=()=>{const e=Date.now();e-this.lastSerialTime>MIN_MESSAGE_WAIT_MS?(clearTimeout(this.serialTimeout),this.messages.length&&(Runtime.postMessage({type:"bulkserial",data:this.messages,id:pxsim.runtime.id,sim:!0}),this.messages=[],this.lastSerialTime=e)):this.serialTimeout=setTimeout(this.debouncedPostAll,50)},this.id=pxsim.Embed.frameid||"b"+Math.round(2147483647*Math.random()),this.bus=new pxsim.EventBus(pxsim.runtime,this)}updateView(){}receiveMessage(e){pxsim.runtime&&!pxsim.runtime.dead&&this.dispatchMessage(e)}dispatchMessage(e){for(const t of this.messageListeners)t(e)}addMessageListener(e){this.messageListeners.push(e)}get storedState(){return this.runOptions?(this.runOptions.storedState||(this.runOptions.storedState={}),this.runOptions.storedState):{}}initAsync(e){return this.runOptions=e,Promise.resolve()}setStoredState(e,t){null==t?delete this.storedState[e]:this.storedState[e]=t,Runtime.postMessage({type:"simulator",command:"setstate",stateKey:e,stateValue:t})}onDebuggerResume(){}screenshotAsync(e){return Promise.resolve(void 0)}kill(){}writeSerial(e){this.serialOutBuffer+=e,(/\n/.test(this.serialOutBuffer)||this.serialOutBuffer.length>SERIAL_BUFFER_LENGTH)&&(this.messages.push({time:Date.now(),data:this.serialOutBuffer}),this.debouncedPostAll(),this.serialOutBuffer="")}}pxsim.BaseBoard=BaseBoard;class CoreBoard extends BaseBoard{constructor(){super(),this.updateSubscribers=[],this.updateView=()=>{this.updateSubscribers.forEach((e=>e()))},this.builtinParts={},this.builtinVisuals={},this.builtinPartVisuals={}}kill(){super.kill(),pxsim.AudioContextManager.stopAll()}}pxsim.CoreBoard=CoreBoard;class BareBoard extends BaseBoard{}function initBareRuntime(){pxsim.runtime.board=new BareBoard;let e=pxsim;e.basic={pause:pxsim.thread.pause,showNumber:e=>{let t=getResume();console.log("SHOW NUMBER:",e),U.nextTick(t)}},e.serial={writeString:e=>pxsim.runtime.board.writeSerial(e)},e.pins={createBuffer:pxsim.BufferMethods.createBuffer},e.control={inBackground:pxsim.thread.runInBackground,createBuffer:pxsim.BufferMethods.createBuffer,dmesg:e=>console.log("DMESG: "+e),deviceDalVersion:()=>"sim",__log:(e,t)=>console.log("LOG: "+t.trim())}}let LogType;pxsim.initBareRuntime=initBareRuntime,function(e){e[e.UserSet=0]="UserSet",e[e.BackAdd=1]="BackAdd",e[e.BackRemove=2]="BackRemove"}(LogType||(LogType={}));class EventQueue{constructor(e,t){this.runtime=e,this.valueToArgs=t,this.max=5,this.events=[],this.awaiters=[],this._handlers=[],this._addRemoveLog=[]}push(e,t){if(this.awaiters.length>0)if(t){const e=this.awaiters.shift();e&&e()}else{const e=this.awaiters.slice();this.awaiters=[],e.forEach((e=>e()))}return 0==this.handlers.length||this.events.length>this.max?Promise.resolve():(this.events.push(e),this.lock?Promise.resolve():this.poke())}poke(){this.lock=!0;let e=this.events;return this.events=[],U.promiseMapAllSeries(e,(e=>U.promiseMapAllSeries(this.handlers,(t=>this.runtime.runFiberAsync(t,...this.valueToArgs?this.valueToArgs(e):[e]))))).then((()=>this.events.length>0?this.poke():(this.lock=!1,this._addRemoveLog.forEach((e=>{e.log===LogType.BackAdd?this.addHandler(e.act):e.log===LogType.BackRemove?this.removeHandler(e.act):this.setHandler(e.act)})),this._addRemoveLog=[],Promise.resolve())))}get handlers(){return this._handlers}setHandler(e){this.lock?this._addRemoveLog.push({act:e,log:LogType.UserSet}):this._handlers=[e]}addHandler(e){if(this.lock)this._addRemoveLog.push({act:e,log:LogType.BackAdd});else{-1==this._handlers.indexOf(e)&&this._handlers.push(e)}}removeHandler(e){if(this.lock)this._addRemoveLog.push({act:e,log:LogType.BackRemove});else{let t=this._handlers.indexOf(e);-1!=t&&this._handlers.splice(t,1)}}addAwaiter(e){this.awaiters.push(e)}}function bind(e){const t=e.arg0,n=e.fn;return e=>{let s=0;for(;e.hasOwnProperty("arg"+s);)s++;const i=e;for(let e=s;e>0;e--)i["arg"+e]=i["arg"+(e-1)];return e.arg0=t,n(e)}}function _leave(e,t){return e.parent.retval=t,e.parent}function syntheticRefAction(e){return pxtcore.mkAction(0,(t=>_leave(t,e(t))))}pxsim.EventQueue=EventQueue,pxsim.initCurrentRuntime=void 0,pxsim.handleCustomMessage=void 0,pxsim.syntheticRefAction=syntheticRefAction;class TimeoutScheduled{constructor(e,t,n,s){this.id=e,this.fn=t,this.totalRuntime=n,this.timestampCall=s}}pxsim.TimeoutScheduled=TimeoutScheduled;class PausedTimeout{constructor(e,t){this.fn=e,this.timeRemaining=t}}function mkVTable(e){return{name:e.name,numFields:e.numFields,classNo:e.classNo,methods:e.methods,iface:e.iface,lastSubtypeNo:e.lastSubtypeNo,toStringMethod:e.toStringMethod,maxBgInstances:e.maxBgInstances}}pxsim.PausedTimeout=PausedTimeout,pxsim.mkVTable=mkVTable;let mapVTable=null;function mkMapVTable(){return mapVTable||(mapVTable=mkVTable({name:"_Map",numFields:0,classNo:0,lastSubtypeNo:0,methods:null})),mapVTable}function functionName(e){const t=e.info;return t?`${t.functionName} (${t.fileName}:${t.line+1}:${t.column+1})`:"()"}pxsim.mkMapVTable=mkMapVTable,pxsim.functionName=functionName;class Runtime{constructor(msg){this.numGlobals=1e3,this.dead=!1,this.running=!1,this.idleTimer=void 0,this.recording=!1,this.recordingTimer=0,this.recordingLastImageData=void 0,this.recordingWidth=void 0,this.startTime=0,this.startTimeUs=0,this.pausedTime=0,this.lastPauseTimestamp=0,this.globals={},this.environmentGlobals={},this.otherFrames=[],this.loopLock=null,this.loopLockWaitList=[],this.heapSnapshots=[],this.timeoutsScheduled=[],this.timeoutsPausedOnBreakpoint=[],this.pausedOnBreakpoint=!1,this.traceDisabled=!1,this.perfOffset=0,this.perfElapsed=0,this.perfStack=0,this.refCountingDebug=!1,this.refObjId=1,this.numDisplayUpdates=0,U.assert(!!pxsim.initCurrentRuntime),this.id=msg.id,this.refCountingDebug=!!msg.refCountingDebug;let threadId=0,breakpoints=null,currResume,dbgHeap,dbgResume,breakFrame=null,lastYield=Date.now(),userGlobals,__this=this;this.traceDisabled=!!msg.traceDisabled;const evalIface={runtime:this,oops:oops,doNothing:doNothing,pxsim:pxsim,globals:this.globals,setupYield:setupYield,maybeYield:maybeYield,setupDebugger:setupDebugger,isBreakFrame:isBreakFrame,breakpoint:breakpoint,trace:trace,checkStack:checkStack,leave:_leave,checkResumeConsumed:checkResumeConsumed,setupResume:setupResume,setupLambda:setupLambda,checkSubtype:checkSubtype,failedCast:failedCast,buildResume:buildResume,mkVTable:mkVTable,bind:bind,leaveAccessor:leaveAccessor};function oops(e){throw new Error("sim error: "+e)}function doNothing(e){return e.pc=-1,_leave(e,e.parent.retval)}function flushLoopLock(){for(;__this.loopLockWaitList.length>0&&!__this.loopLock;){__this.loopLockWaitList.shift()()}}let yieldReset=()=>{};function setupYield(e){yieldReset=e}function loopForSchedule(e){const t=new Object,n=e.pc;return __this.loopLock=t,__this.otherFrames.push(e),()=>{__this.dead||(U.assert(e.pc==n),U.assert(__this.loopLock===t),__this.loopLock=null,loop(e),flushLoopLock())}}function maybeYield(e,t,n){if(__this.pausedOnBreakpoint)return!1;__this.cleanScheduledExpired(),yieldReset();let s=Date.now();return s-lastYield>=20&&(lastYield=s,e.pc=t,e.r0=n,setTimeout(loopForSchedule(e),5),!0)}function setupDebugger(e,t){return breakpoints=new Uint8Array(e),breakpoints[0]=msg.breakOnStart?1:0,userGlobals=t,breakpoints}function isBreakFrame(e){if(!breakFrame)return!0;for(let t=breakFrame;t;t=t.parent)if(t==e)return!0;return!1}function breakpoint(e,t,n,s){let i={};__this.loopLock=i,U.assert(!dbgResume),U.assert(!dbgHeap),e.pc=t,e.r0=s;const{msg:r,heap:o}=pxsim.getBreakpointMsg(e,n,userGlobals);return dbgHeap=o,pxsim.injectEnvironmentGlobals(r,o),Runtime.postMessage(r),breakpoints[0]=0,breakFrame=null,__this.pauseScheduled(),dbgResume=n=>{if(dbgResume=null,dbgHeap=null,__this.dead)return null;switch(__this.resumeAllPausedScheduled(),__this.board.onDebuggerResume(),pxsim.runtime=__this,U.assert(e.pc==t),breakpoints[0]=0,breakFrame=null,n.subtype){case"resume":break;case"stepover":breakpoints[0]=1,breakFrame=e;break;case"stepinto":breakpoints[0]=1;break;case"stepout":breakpoints[0]=1,breakFrame=e.parent||e}U.assert(__this.loopLock==i),__this.loopLock=null,__this.otherFrames.push(e),loop(e),flushLoopLock()},null}function trace(e,t,n,s){if(setupResume(t,n),"<main>"===s.functionName||"main.ts"===s.fileName){if(!pxsim.runtime.traceDisabled){const{msg:n}=pxsim.getBreakpointMsg(t,e,userGlobals);n.subtype="trace",Runtime.postMessage(n)}pxsim.thread.pause(tracePauseMs||1)}else pxsim.thread.pause(0);checkResumeConsumed()}function handleDebuggerMsg(e){switch(e.subtype){case"config":let t=e;if(t.setBreakpoints&&breakpoints){breakpoints.fill(0);for(let e of t.setBreakpoints)breakpoints[e]=1}break;case"traceConfig":tracePauseMs=e.interval;break;case"pause":breakpoints[0]=1,breakFrame=null;break;case"resume":case"stepover":case"stepinto":case"stepout":dbgResume&&dbgResume(e);break;case"variables":const n=e;let s;if(dbgHeap){const e=dbgHeap[n.variablesReference];void 0!==e&&(s=pxsim.dumpHeap(e,dbgHeap,n.fields))}Runtime.postMessage({type:"debugger",subtype:"variables",req_seq:e.seq,variables:s})}}function removeFrame(e){const t=__this.otherFrames;for(let n=t.length-1;n>=0;--n)if(t[n]===e)return void t.splice(n,1);U.userError("frame cannot be removed!")}function loop(e){if(__this.dead)console.log("Runtime terminated");else{U.assert(!__this.loopLock),__this.perfStartRuntime(),removeFrame(e);try{for(pxsim.runtime=__this;e;)__this.currFrame=e,__this.currFrame.overwrittenPC=!1,e=e.fn(e),__this.maybeUpdateDisplay(),__this.currFrame.overwrittenPC&&(e=__this.currFrame);__this.perfStopRuntime()}catch(t){if(t instanceof BreakLoopException)return void U.nextTick(loopForSchedule(__this.currFrame));if(__this.perfStopRuntime(),__this.errorHandler)__this.errorHandler(t);else{console.error("Simulator crashed, no error handler",t.stack);const{msg:n,heap:s}=pxsim.getBreakpointMsg(e,e.lastBrkId,userGlobals);pxsim.injectEnvironmentGlobals(n,s),n.exceptionMessage=t.message,n.exceptionStack=t.stack,Runtime.postMessage(n),__this.postError&&__this.postError(t)}}}}function checkStack(e){e>100&&U.userError("Stack overflow")}function actionCall(e){return e.depth=e.parent.depth+1,checkStack(e.depth),e.pc=0,e}function setupTop(e){let t=setupTopCore(e);return setupResume(t,0),t}function setupTopCore(e){let t={parent:null,pc:0,depth:0,threadId:++threadId,fn:()=>(e&&e(t.retval),null)};return t}function topCall(e,t){U.assert(!!__this.board),U.assert(!__this.running),__this.setRunning(!0);let n={parent:setupTopCore(t),fn:e,depth:0,pc:0};__this.otherFrames=[n],loop(actionCall(n))}function checkResumeConsumed(){currResume&&oops("getResume() not called")}function setupResume(e,t){currResume=buildResume(e,t)}function leaveAccessor(e,t){if(e.stage2Call){const n={pc:0,fn:null,depth:e.depth,parent:e.parent};let s=1;for(;e.hasOwnProperty("arg"+s);)n["arg"+(s-1)]=e["arg"+s],s++;return setupLambda(n,t),n}return e.parent.retval=t,e.parent}function setupLambda(e,t,n){if(n){const t=e;for(let e=1;e<n;++e)t["arg"+(e-1)]=t["arg"+e];delete t["arg"+(n-1)]}t instanceof pxsim.RefAction?(e.fn=t.func,e.caps=t.fields):"function"==typeof t?e.fn=t:oops("calling non-function")}function checkSubtype(e,t){if(!e)return!1;const n=e.vtable;return t===n||n&&t.classNo<=n.classNo&&n.classNo<=t.lastSubtypeNo}function failedCast(e){pxsim.control&&pxsim.control.dmesgValue&&pxsim.control.dmesgValue(e),oops("failed cast on "+e)}function buildResume(e,t){currResume&&oops("already has resume"),e.pc=t;let n=Date.now();__this.otherFrames.push(e);let s=i=>{if(__this.dead)return;if(__this.loopLock)return void __this.loopLockWaitList.push((()=>s(i)));pxsim.runtime=__this;let r=Date.now();if(r-n>3&&(lastYield=r),U.assert(e.pc==t),i instanceof pxsim.FnWrapper){let t=i,n={parent:e,fn:t.func,lambdaArgs:t.args,pc:0,caps:t.caps,depth:e.depth+1},s={};return __this.loopLock=s,removeFrame(e),__this.otherFrames.push(n),U.nextTick((()=>{U.assert(__this.loopLock===s),__this.loopLock=null,loop(actionCall(n)),flushLoopLock()}))}return e.retval=i,loop(e)};return s}const entryPoint=msg.code&&eval(msg.code)(evalIface);this.run=e=>topCall(entryPoint,e),this.getResume=()=>{currResume||oops("noresume");let e=currResume;return currResume=null,e},this.setupTop=setupTop,this.handleDebuggerMsg=handleDebuggerMsg,this.entry=entryPoint,this.overwriteResume=e=>{currResume=null,e>=0&&(this.currFrame.pc=e),this.currFrame.overwrittenPC=!0},pxsim.runtime=this,pxsim.initCurrentRuntime(msg)}registerLiveObject(e){return this.refObjId++}runningTime(){return U.now()-this.startTime-this.pausedTime}runningTimeUs(){return 4294967295&U.perfNowUs()-this.startTimeUs>>0}runFiberAsync(e,t,n,s){return new Promise(((i,r)=>U.nextTick((()=>{pxsim.runtime=this,this.setupTop(i),pxtcore.runAction(e,[t,n,s])}))))}currTryFrame(){for(let e=this.currFrame;e;e=e.parent)if(e.tryFrame)return e.tryFrame;return null}traceObjects(){const e={};for(;this.heapSnapshots.length>2;)this.heapSnapshots.shift();const t={count:0,size:0,name:"TOTAL"},n={TOTAL:t};function s(t,n,i=null){if(!(n instanceof pxsim.RefObject))return;const r=n;if(r.gcIsStatic())return;const o=e[r.id];if(o)return void(i&&o.pointers.push([i,t]));const a={obj:r,path:null,pointers:[[i,t]]};e[r.id]=a,r.scan(((t,n)=>{n instanceof pxsim.RefObject&&!e[n.id]&&s(t,n,a)}))}this.heapSnapshots.push({visited:e,statsByType:n});for(let e of Object.keys(this.globals))s(e.replace(/___\d+$/,""),this.globals[e]);const i=this.otherFrames.slice();this.currFrame&&i.indexOf(this.currFrame)<0&&i.unshift(this.currFrame);for(const e of this.getThreads()){const t="Thread-"+this.rootFrame(e).threadId;for(let n=e;n;n=n.parent){const e=t+"."+functionName(n.fn);for(let t of Object.keys(n))if(/^(r0|arg\d+|.*___\d+)/.test(t)){const i=n[t];i instanceof pxsim.RefObject&&(t=t.replace(/___.*/,""),s(e+"."+t,i))}if(n.caps)for(let t of n.caps)s(e+".cap",t)}}const r=Object.keys(e).map((t=>e[t]));r.sort(((e,t)=>t.obj.gcSize()-e.obj.gcSize()));const o=e=>{if(null!=e.path)return;let t="";e.path="(cycle)";for(let[n,s]of e.pointers){if(null==n)return void(e.path=s);o(n);const i=n.path+"."+s;(!t||t.length>i.length)&&(t=i)}e.path=t};r.forEach(o);const a=[t];for(const e of r){const s=e.obj.gcSize(),i=e.obj.gcKey();n.hasOwnProperty(i)||a.push(n[i]={count:0,size:0,name:i});const r=n[i];r.size+=s,r.count++,t.size+=s,t.count++}a.sort(((e,t)=>e.size-t.size));let l="";const u=e=>("        "+e.toString()).slice(-7);for(const e of a)l+=u(4*e.size)+u(e.count)+" "+e.name+"\n";const d=e=>u(4*e.obj.gcSize())+" "+e.obj.gcKey()+" "+e.path,c=r.slice(0,20).map(d).join("\n");let h="";if(this.heapSnapshots.length>=3){const e=this.heapSnapshots[this.heapSnapshots.length-3].visited,t=this.heapSnapshots[this.heapSnapshots.length-2].visited,s=e=>e instanceof pxsim.RefRecord&&!!(e.vtable&&e.vtable.maxBgInstances&&n[e.gcKey()].count<=e.vtable.maxBgInstances);h=r.filter((n=>!e[n.obj.id]&&t[n.obj.id])).filter((e=>!s(e.obj))).map(d).join("\n")}return"Threads:\n"+this.threadInfo()+"\n\nSummary:\n"+l+"\n\nLarge Objects:\n"+c+"\n\nNew Objects:\n"+h}getThreads(){const e=this.otherFrames.slice();return this.currFrame&&e.indexOf(this.currFrame)<0&&e.unshift(this.currFrame),e}rootFrame(e){let t=e;for(;t.parent;)t=t.parent;return t}threadInfo(){const e=this.getThreads();let t="";for(let n of e){t+=`Thread ${this.rootFrame(n).threadId}:\n`;for(let e of pxsim.getBreakpointMsg(n,n.lastBrkId).msg.stackframes){let n=e.funcInfo;t+=`   at ${n.functionName} (${n.fileName}:${n.line+1}:${n.column+1})\n`}t+="\n"}return t}static postMessage(e){e&&("undefined"!=typeof window&&window.parent&&window.parent.postMessage&&window.parent.postMessage(e,"*"),Runtime.messagePosted&&Runtime.messagePosted(e))}static postScreenshotAsync(e){const t=pxsim.runtime&&pxsim.runtime.board;return(t?t.screenshotAsync().catch((e=>{console.debug("screenshot failed")})):Promise.resolve(void 0)).then((t=>Runtime.postMessage({type:"screenshot",data:t,delay:e&&e.delay})))}static requestToggleRecording(){const e=pxsim.runtime;e&&Runtime.postMessage({type:"recorder",action:e.recording?"stop":"start"})}restart(){this.kill(),setTimeout((()=>pxsim.Runtime.postMessage({type:"simulator",command:"restart"})),500)}kill(){this.dead=!0,this.stopRecording(),this.stopIdle(),this.setRunning(!1)}updateDisplay(){this.board.updateView(),this.postFrame()}startRecording(e){!this.recording&&this.running&&(this.recording=!0,this.recordingTimer=setInterval((()=>this.postFrame()),66),this.recordingLastImageData=void 0,this.recordingWidth=e)}stopRecording(){this.recording&&(this.recordingTimer&&clearInterval(this.recordingTimer),this.recording=!1,this.recordingTimer=0,this.recordingLastImageData=void 0,this.recordingWidth=void 0)}postFrame(){if(!this.recording||!this.running)return;let e=pxsim.U.now();this.board.screenshotAsync(this.recordingWidth).then((t=>{if(this.recordingLastImageData&&t&&this.recordingLastImageData.data.byteLength==t.data.byteLength){const e=this.recordingLastImageData.data,n=t.data,s=e.byteLength;let i=0;for(i=0;i<s&&e[i]==n[i];++i);if(i==s)return}this.recordingLastImageData=t,Runtime.postMessage({type:"screenshot",data:t,time:e})}))}queueDisplayUpdate(){this.numDisplayUpdates++}maybeUpdateDisplay(){this.numDisplayUpdates&&(this.numDisplayUpdates=0,this.updateDisplay())}setRunning(e){this.running!=e&&(this.running=e,this.running?(this.startTime=U.now(),this.startTimeUs=U.perfNowUs(),Runtime.postMessage({type:"status",frameid:pxsim.Embed.frameid,runtimeid:this.id,state:"running"})):(this.stopRecording(),this.stopIdle(),Runtime.postMessage({type:"status",frameid:pxsim.Embed.frameid,runtimeid:this.id,state:"killed"})),this.stateChanged&&this.stateChanged())}dumpLivePointers(){}setupPerfCounters(e){e&&e.length&&(this.perfCounters=e.map((e=>new PerfCounter(e))))}perfStartRuntime(){0!==this.perfOffset?this.perfStack++:this.perfOffset=U.perfNowUs()-this.perfElapsed}perfStopRuntime(){this.perfStack?this.perfStack--:(this.perfElapsed=this.perfNow(),this.perfOffset=0)}perfNow(){return 0===this.perfOffset&&U.userError("bad time now"),U.perfNowUs()-this.perfOffset|0}startPerfCounter(e){if(!this.perfCounters)return;const t=this.perfCounters[e];t.start&&U.userError("startPerf"),t.start=this.perfNow()}stopPerfCounter(e){if(!this.perfCounters)return;const t=this.perfCounters[e];t.start||U.userError("stopPerf");const n=this.perfNow()-t.start;t.start=0,t.value+=n,t.numstops++;let s=t.lastFewPtr++;s>=t.lastFew.length&&(s=0,t.lastFewPtr=1),t.lastFew[s]=n}startIdle(){void 0===this.idleTimer&&(this.idleTimer=setInterval((()=>{if(!this.running||this.pausedOnBreakpoint)return;const e=this.board.bus;e&&e.queueIdle()}),20))}stopIdle(){void 0!==this.idleTimer&&(clearInterval(this.idleTimer),this.idleTimer=void 0)}schedule(e,t){if(t<=0&&(t=0),this.pausedOnBreakpoint)return this.timeoutsPausedOnBreakpoint.push(new PausedTimeout(e,t)),-1;const n=U.now(),s=new TimeoutScheduled(-1,e,t,n);return s.id=setTimeout((()=>{const t=this.timeoutsScheduled.indexOf(s);t>=0&&this.timeoutsScheduled.splice(t,1),e()}),t),this.timeoutsScheduled.push(s),s.id}pauseScheduled(){this.pausedOnBreakpoint=!0,this.timeoutsScheduled.forEach((e=>{clearTimeout(e.id);let t=U.now()-e.timestampCall,n=e.totalRuntime-t;n<=0&&(n=1),this.timeoutsPausedOnBreakpoint.push(new PausedTimeout(e.fn,n))})),this.lastPauseTimestamp=U.now(),this.timeoutsScheduled=[]}resumeAllPausedScheduled(){this.pausedOnBreakpoint=!1,this.timeoutsPausedOnBreakpoint.forEach((e=>{this.schedule(e.fn,e.timeRemaining)})),this.lastPauseTimestamp&&(this.pausedTime+=U.now()-this.lastPauseTimestamp,this.lastPauseTimestamp=0),this.timeoutsPausedOnBreakpoint=[]}cleanScheduledExpired(){let e=U.now();this.timeoutsScheduled=this.timeoutsScheduled.filter((t=>{let n=e-t.timestampCall;return t.totalRuntime>n}))}}pxsim.Runtime=Runtime;class PerfCounter{constructor(e){this.name=e,this.start=0,this.numstops=0,this.value=0,this.lastFew=new Uint32Array(32),this.lastFewPtr=0}}pxsim.PerfCounter=PerfCounter}(pxsim||(pxsim={})),function(e){let t,n;!function(e){e[e.Unloaded=0]="Unloaded",e[e.Stopped=1]="Stopped",e[e.Pending=2]="Pending",e[e.Starting=3]="Starting",e[e.Running=4]="Running",e[e.Paused=5]="Paused",e[e.Suspended=6]="Suspended"}(t=e.SimulatorState||(e.SimulatorState={})),function(e){e[e.StepInto=0]="StepInto",e[e.StepOver=1]="StepOver",e[e.StepOut=2]="StepOut",e[e.Resume=3]="Resume",e[e.Pause=4]="Pause"}(n=e.SimulatorDebuggerCommand||(e.SimulatorDebuggerCommand={}));const s="pxtdriver";e.SimulatorDriver=class{constructor(n,s={}){this.container=n,this.options=s,this.themes=["blue","red","green","yellow"],this.runId="",this.nextFrameId=0,this.frameCounter=0,this.traceInterval=0,this.breakpointsSet=!1,this._runOptions={},this.state=t.Unloaded,this._allowedOrigins=[],this.frameCleanupTimeout=void 0,this.debuggerSeq=1,this.debuggerResolvers={},this._allowedOrigins.push(window.location.origin),s.parentOrigin&&this._allowedOrigins.push(s.parentOrigin),this._allowedOrigins.push(this.getSimUrl().origin);const i=null==s?void 0:s.messageSimulators;i&&Object.keys(i).map((e=>i[e])).forEach((e=>{this._allowedOrigins.push(new URL(e.url).origin),e.localHostUrl&&this._allowedOrigins.push(new URL(e.localHostUrl).origin)})),this._allowedOrigins=e.U.unique(this._allowedOrigins,(e=>e))}isDebug(){return this._runOptions&&!!this._runOptions.debug}isTracing(){return this._runOptions&&!!this._runOptions.trace}hasParts(){return this._runOptions&&this._runOptions.parts&&!!this._runOptions.parts.length}setDirty(){this.state==e.SimulatorState.Running&&this.suspend()}setPending(){this.setState(t.Pending)}focus(){const e=this.simFrames()[0];e&&e.focus()}registerDependentEditor(e){e&&(this._dependentEditors||(this._dependentEditors=[]),this._dependentEditors.push(e))}dependentEditors(){return this._dependentEditors&&(this._dependentEditors=this._dependentEditors.filter((e=>!!e.parent)),this._dependentEditors.length||(this._dependentEditors=void 0)),this._dependentEditors}setStarting(){this.setState(t.Starting)}setHwDebugger(e){e?(this.hwdbg=e,this.setState(t.Running),this.container.style.opacity="0.3"):(delete this.container.style.opacity,this.hwdbg=null,this.setState(t.Running),this.stop())}handleHwDebuggerMsg(e){this.hwdbg&&this.handleMessage(e)}setThemes(t){e.U.assert(t&&t.length>0),this.themes=t}startRecording(e){this.simFrames()[0]&&this.postMessage({type:"recorder",action:"start",source:s,width:e})}stopRecording(){this.postMessage({type:"recorder",source:s,action:"stop"})}setFrameState(n){const s=n.nextElementSibling,i=s.nextElementSibling;switch(this.state){case t.Pending:case t.Starting:s.style.display="",s.className="",i.style.display="";break;case t.Stopped:case t.Suspended:e.U.addClass(n,this.state==t.Stopped||this._runOptions&&this._runOptions.autoRun?this.stoppedClass:this.invalidatedClass),this._runOptions&&this._runOptions.autoRun?s.style.display="none":(s.style.display="",s.className="videoplay xicon icon"),i.style.display="none",this.scheduleFrameCleanup();break;default:e.U.removeClass(n,this.stoppedClass),e.U.removeClass(n,this.invalidatedClass),s.style.display="none",i.style.display="none"}}setState(e){this.state!=e&&(this.state=e,this.freeze(this.state==t.Paused),this.simFrames().forEach((e=>this.setFrameState(e))),this.options.onStateChanged&&this.options.onStateChanged(this.state))}freeze(t){const n="pause-overlay";t?e.util.toArray(this.container.querySelectorAll("div.simframe")).forEach((e=>{if(e.querySelector(`div.${n}`))return;const t=document.createElement("div");t.className=n,t.onclick=e=>(e.preventDefault(),!1),e.appendChild(t)})):e.util.toArray(this.container.querySelectorAll(`div.simframe div.${n}`)).forEach((e=>e.parentElement.removeChild(e)))}simFrames(t=!1){let n=e.util.toArray(this.container.getElementsByTagName("iframe"));const s=this.loanedIFrame();return s&&!t&&n.unshift(s),n}getSimUrl(){const e=this.options.simUrl||(window.pxtConfig||{}).simUrl||`${location.origin}/sim/simulator.html`;try{return new URL(e)}catch(t){return new URL(e,location.origin)}}postMessage(t,n,s){var i;if(this.hwdbg)return void this.hwdbg.postMessage(t);const r=this.dependentEditors();let o=this.simFrames();s&&(o=o.filter((e=>e.id===s)));const a=t;if(n&&(null==a?void 0:a.broadcast)){const s=!!(null===(i=this._currentRuntime)||void 0===i?void 0:i.single),a=window.parent&&window.parent!==window.window?window.parent:window.opener;if(this.options.nestedEditorSim&&a){if(n!==a){const e=this.options.parentOrigin||window.location.origin;a.postMessage(t,e)}}else if(r)r.forEach((e=>{n!==e&&e.postMessage(t,window.location.origin)}));else if(!s){const n="messagepacket"===t.type&&t.channel,s=n&&this.options.messageSimulators&&this.options.messageSimulators[n];if(s){let t=o.find((e=>e.dataset.messagechannel===n));if(t)t.dataset.runid!=this.runId&&this.startFrame(t);else{const i=(e.U.isLocalHost()&&/localhostmessagesims=1/i.test(window.location.href)&&s.localHostUrl||s.url).replace("$PARENT_ORIGIN$",encodeURIComponent(this.options.parentOrigin||""));let r=this.createFrame(i);this.container.appendChild(r),t=r.firstElementChild,t.dataset.messagechannel=n,e.U.addClass(r,"simmsg"),e.U.addClass(r,"simmsg"+n),s.permanent&&(t.dataset.permanent="true"),this.startFrame(t),o=this.simFrames()}}else{const e=o.filter((e=>!e.dataset.messagechannel));e.length<2?(this.container.appendChild(this.createFrame()),o=this.simFrames()):e[1].dataset.runid!=this.runId&&this.startFrame(e[1])}}}for(let e=0;e<o.length;++e){const s=o[e];if((!n||s.contentWindow!=n)&&(s.contentWindow&&(this.postMessageCore(s,t),"recorder"==t.type&&"start"==t.action)))break}}postMessageCore(t,n){var s,i,r,o;if(t.contentWindow.postMessage(n,t.dataset.origin),e.U.isLocalHostDev()&&(null===(i=null===(s=pxt)||void 0===s?void 0:s.appTarget)||void 0===i?void 0:i.id))try{t.contentWindow.postMessage(n,`https://trg-${null===(o=null===(r=pxt)||void 0===r?void 0:r.appTarget)||void 0===o?void 0:o.id}.userpxt.io/---simulator`)}catch(e){}}createFrame(n){const s=document.createElement("div");s.className="simframe ui embed";const i=document.createElement("iframe");i.id="sim-frame-"+this.nextId(),i.title=e.localization.lf("Simulator"),i.allowFullscreen=!0,i.setAttribute("allow","autoplay"),i.setAttribute("sandbox","allow-same-origin allow-scripts"),i.className="no-select";const r=(n||this.getSimUrl())+"#"+i.id;i.src=r,i.frameBorder="0",i.dataset.runid=this.runId,i.dataset.origin=new URL(r).origin||"*",s.appendChild(i);const o=document.createElement("i");o.className="videoplay xicon icon",o.style.display="none",o.onclick=e=>(e.preventDefault(),this.state!=t.Running&&this.state!=t.Starting&&(this.options.restart?this.options.restart():this.start()),i.focus(),!1),s.appendChild(o);const a=document.createElement("div");return a.className="ui active loader",o.style.display="none",s.appendChild(a),this._runOptions&&this.applyAspectRatioToFrame(i),s}preload(e){this.simFrames().length||(this.container.appendChild(this.createFrame()),this.applyAspectRatio(e),this.setStarting())}stop(e=!1,n=!1){this.clearDebugger(),this.postMessage({type:"stop",source:s}),this.setState(n?t.Starting:t.Stopped),e&&this.unload()}suspend(){this.postMessage({type:"stop",source:s}),this.setState(t.Suspended)}unload(){this.cancelFrameCleanup(),e.U.removeChildren(this.container),this.setState(t.Unloaded),this._runOptions=void 0,this._currentRuntime=void 0,this.runId=void 0}mute(e){this._currentRuntime&&(this._currentRuntime.mute=e),this.postMessage({type:"mute",source:s,mute:e})}stopSound(){this.postMessage({type:"stopsound",source:s})}isLoanedSimulator(e){return!!this.loanedSimulator&&this.loanedIFrame()==e}loanSimulator(){return this.loanedSimulator||(this.loanedSimulator=this.container.firstElementChild||this.createFrame(),this.loanedSimulator.parentNode&&this.container.removeChild(this.loanedSimulator)),this.loanedSimulator}unloanSimulator(){this.loanedSimulator&&(this.loanedSimulator.parentNode&&this.loanedSimulator.parentNode.removeChild(this.loanedSimulator),this.container.insertBefore(this.loanedSimulator,this.container.firstElementChild),delete this.loanedSimulator)}loanedIFrame(){return this.loanedSimulator&&this.loanedSimulator.parentNode&&this.loanedSimulator.querySelector("iframe")}cancelFrameCleanup(){this.frameCleanupTimeout&&(clearTimeout(this.frameCleanupTimeout),this.frameCleanupTimeout=void 0)}scheduleFrameCleanup(){this.cancelFrameCleanup(),this.frameCleanupTimeout=setTimeout((()=>{this.frameCleanupTimeout=void 0,this.cleanupFrames()}),5e3)}applyAspectRatio(e){if(!e&&!this._runOptions)return;this.simFrames().forEach((t=>this.applyAspectRatioToFrame(t,e)))}applyAspectRatioToFrame(e,t){var n,s,i,r;let o=t;if(void 0===o){const t=parseFloat(e.dataset.aspectratio);isNaN(t)||(o=t)}if(void 0===o){const t=e.dataset.messagechannel;if(t){const e=null===(i=null===(s=null===(n=this.options)||void 0===n?void 0:n.messageSimulators)||void 0===s?void 0:s[t])||void 0===i?void 0:i.aspectRatio;e&&(o=e)}}void 0===o&&(o=(null===(r=this._runOptions)||void 0===r?void 0:r.aspectRatio)||1.22),e.parentElement.style.paddingBottom=100/o+"%"}cleanupFrames(){const e=this.simFrames(!0);e.shift(),e.filter((e=>!e.dataset.permanent)).forEach((e=>{this.state!=t.Stopped&&e.dataset.runid==this.runId||(this.options.removeElement?this.options.removeElement(e.parentElement):e.parentElement.remove())}))}hide(e){if(this.suspend(),!this.options.removeElement)return;const t=this.simFrames();t.forEach((t=>{this.options.removeElement(t.parentElement,e)})),0==t.length&&e&&e()}unhide(){if(!this.options.unhideElement)return;this.simFrames().forEach((e=>{this.options.unhideElement(e.parentElement)}))}run(e,t={}){this._runOptions=t,this.runId=this.nextId(),this._currentRuntime={type:"run",source:s,boardDefinition:t.boardDefinition,parts:t.parts,builtinParts:t.builtinParts,fnArgs:t.fnArgs,code:e,partDefinitions:t.partDefinitions,mute:t.mute,highContrast:t.highContrast,light:t.light,cdnUrl:t.cdnUrl,localizedStrings:t.localizedStrings,refCountingDebug:t.refCountingDebug,version:t.version,clickTrigger:t.clickTrigger,breakOnStart:t.breakOnStart,storedState:t.storedState,ipc:t.ipc,single:t.single,dependencies:t.dependencies},this.start()}restart(){this.stop(),this.cleanupFrames(),this.start()}areBreakpointsSet(){return this.breakpointsSet}start(){if(this.clearDebugger(),this.addEventListeners(),this.applyAspectRatio(),this.scheduleFrameCleanup(),!this._currentRuntime)return;this.breakpointsSet=!1;let e=this.simFrames()[0];if(e)this.startFrame(e);else{let t=this.createFrame();this.container.appendChild(t),e=t.firstElementChild}this.debuggingFrame=e.id,this.setState(t.Running),this.setTraceInterval(this.traceInterval)}startFrame(e){if(!this._currentRuntime||!e.contentWindow)return!1;const t=JSON.parse(JSON.stringify(this._currentRuntime));return t.frameCounter=++this.frameCounter,t.options={theme:this.themes[this.nextFrameId++%this.themes.length]},t.id=`${t.options.theme}-${this.nextId()}`,e.dataset.runid=this.runId,e.dataset.runtimeid=t.id,e.id!==this.debuggingFrame&&(t.traceDisabled=!0,t.breakOnStart=!1),this.postMessageCore(e,t),this.traceInterval&&this.setTraceInterval(this.traceInterval),this.applyAspectRatioToFrame(e),this.setFrameState(e),!0}handleMessage(e,n){switch(e.type||""){case"ready":{const t=e.frameid,n=document.getElementById(t);n&&(this.startFrame(n),this.options.revealElement&&this.options.revealElement(n)),this.options.onSimulatorReady&&this.options.onSimulatorReady();break}case"status":{const n=e.frameid,s=document.getElementById(n);if(s){const n=e;if(n.runtimeid==s.dataset.runtimeid)switch(n.state){case"running":this.setState(t.Running);break;case"killed":this.setState(t.Stopped)}}break}case"simulator":this.handleSimulatorCommand(e);break;case"serial":case"pxteditor":case"screenshot":case"custom":case"recorder":case"addextensions":break;case"aspectratio":{const t=e,n=t.frameid,s=document.getElementById(n);s&&(s.dataset.aspectratio=t.value+"",this.applyAspectRatioToFrame(s));break}case"debugger":this.handleDebuggerMessage(e);break;case"toplevelcodefinished":this.options.onTopLevelCodeEnd&&this.options.onTopLevelCodeEnd();break;default:this.postMessage(e,n)}}addEventListeners(){this.listener||(this.listener=t=>{if(!this.hwdbg){if(e.U.isLocalHost());else if(this._allowedOrigins.indexOf(t.origin)<0)return;this.handleMessage(t.data,t.source)}},window.addEventListener("message",this.listener,!1))}removeEventListeners(){this.listener&&(window.removeEventListener("message",this.listener,!1),this.listener=void 0)}resume(e){let i;switch(e){case n.Resume:i="resume",this.setState(t.Running);break;case n.StepInto:i="stepinto",this.setState(t.Running);break;case n.StepOut:i="stepout",this.setState(t.Running);break;case n.StepOver:i="stepover",this.setState(t.Running);break;case n.Pause:i="pause";break;default:return void console.debug("unknown command")}this.postMessage({type:"debugger",subtype:i,source:s})}setBreakpoints(e){this.breakpointsSet=!0,this.postDebuggerMessage("config",{setBreakpoints:e},void 0,this.debuggingFrame)}setTraceInterval(e){this.traceInterval=e,this.postDebuggerMessage("traceConfig",{interval:e})}variablesAsync(e,t){return this.postDebuggerMessageAsync("variables",{variablesReference:e,fields:t},this.debuggingFrame).then((e=>e),(e=>{}))}handleSimulatorCommand(e){this.options.onSimulatorCommand&&this.options.onSimulatorCommand(e)}clearDebugger(){const e=new Error("Debugging cancelled");Object.keys(this.debuggerResolvers).forEach((t=>{const{reject:n}=this.debuggerResolvers[t];n(e)})),this.debuggerResolvers={},this.debuggerSeq++}handleDebuggerMessage(e){if("trace"!==e.subtype&&console.log("DBG-MSG",e.subtype,e),e.seq){const{resolve:t}=this.debuggerResolvers[e.seq];t&&t(e)}switch(e.subtype){case"warning":this.options.onDebuggerWarning&&this.options.onDebuggerWarning(e);break;case"breakpoint":{const s=e;if(this.state==t.Running){if(s.exceptionMessage)this.suspend();else{this.setState(t.Paused);this.simFrames(!0).length>1&&this.resume(n.Pause)}this.options.onDebuggerBreakpoint&&this.options.onDebuggerBreakpoint(s);let e=s.exceptionMessage+"\n";for(let t of s.stackframes){let n=t.funcInfo;e+=`   at ${n.functionName} (${n.fileName}:${n.line+1}:${n.column+1})\n`}s.exceptionMessage&&console.error(e)}else console.error("debugger: trying to pause from "+this.state);break}case"trace":{const n=e;this.state==t.Running&&this.options.onTraceMessage&&this.options.onTraceMessage(n);break}default:const s=e.req_seq;if(s){const{resolve:t}=this.debuggerResolvers[s];t&&(delete this.debuggerResolvers[s],t(e))}}}postDebuggerMessageAsync(e,t={},n){return new Promise(((s,i)=>{const r=this.debuggerSeq++;this.debuggerResolvers[r.toString()]={resolve:s,reject:i},this.postDebuggerMessage(e,t,r,n)}))}postDebuggerMessage(e,t={},n,i){const r=JSON.parse(JSON.stringify(t));r.type="debugger",r.subtype=e,r.source=s,n&&(r.seq=n),this.postMessage(r,void 0,i)}nextId(){return this.nextFrameId+++(Math.random()+""+Math.random()).replace(/[^\d]/,"")}get stoppedClass(){return this.options&&this.options.stoppedClass||"grayscale"}get invalidatedClass(){return this.options&&this.options.invalidatedClass||"sepia"}}}(pxsim||(pxsim={})),function(e){e.mkRange=function(e,t){let n=[];for(;e<t;e++)n.push(e);return n};e.EventBus=class{constructor(e,t,n){this.runtime=e,this.board=t,this.valueToArgs=n,this.queues={},this.backgroundHandlerFlag=!1,this.nextNotifyEvent=1024,this.schedulerID=15,this.idleEventID=2,this.board.addMessageListener(this.handleMessage.bind(this))}handleMessage(e){if("eventbus"===e.type){const t=e;this.queue(t.id,t.eventid,t.value)}}setBackgroundHandlerFlag(){this.backgroundHandlerFlag=!0}setNotify(e,t){this.notifyID=e,this.notifyOneID=t}setIdle(e,t){this.schedulerID=e,this.idleEventID=t}start(t,n,s,i=!1){let r=(s?"back":"fore")+":"+t+":"+n;return!this.queues[r]&&i&&(this.queues[r]=new e.EventQueue(this.runtime,this.valueToArgs)),this.queues[r]}listen(e,t,n){e==this.schedulerID&&t==this.idleEventID&&this.runtime.startIdle();let s=this.start(e,t,this.backgroundHandlerFlag,!0);this.backgroundHandlerFlag?s.addHandler(n):s.setHandler(n),this.backgroundHandlerFlag=!1}removeBackgroundHandler(e){Object.keys(this.queues).forEach((t=>{t.startsWith("back:")&&this.queues[t].removeHandler(e)}))}getQueues(e,t,n){let s=[this.start(0,0,n)];return 0==e&&0==t||(t&&s.push(this.start(0,t,n)),e&&s.push(this.start(e,0,n)),e&&t&&s.push(this.start(e,t,n))),s}queue(t,n,s=null){if(e.runtime.pausedOnBreakpoint)return;const i=this.notifyID&&this.notifyOneID&&t==this.notifyOneID;i&&(t=this.notifyID);let r=this.getQueues(t,n,!0).concat(this.getQueues(t,n,!1));this.lastEventValue=n,this.lastEventTimestampUs=e.U.perfNowUs(),e.U.promiseMapAllSeries(r,(e=>e?e.push(s,i):Promise.resolve()))}queueIdle(){this.schedulerID&&this.idleEventID&&this.queue(this.schedulerID,this.idleEventID)}wait(e,t,n){this.start(e,t,!1,!0).addAwaiter(n)}getLastEventValue(){return this.lastEventValue}getLastEventTime(){return 4294967295&this.lastEventTimestampUs-e.runtime.startTimeUs}};let t;function n(){return"undefined"!=typeof window&&("ontouchstart"in window||navigator&&navigator.maxTouchPoints>0)}function s(){return"undefined"!=typeof window&&!!window.PointerEvent}e.AnimationQueue=class{constructor(e){this.runtime=e,this.queue=[],this.process=()=>{let t=this.queue[0];if(!t)return;if(this.runtime.dead)return;e=this.runtime;let n=t.frame();e.queueDisplayUpdate(),e.maybeUpdateDisplay(),!1===n?(this.queue.shift(),this.queue[0]&&(this.queue[0].setTimeoutHandle=setTimeout(this.process,this.queue[0].interval)),t.whenDone(!1)):t.setTimeoutHandle=setTimeout(this.process,t.interval)}}cancelAll(){let e=this.queue;this.queue=[];for(let t of e)t.whenDone(!0),t.setTimeoutHandle&&clearTimeout(t.setTimeoutHandle)}cancelCurrent(){let e=this.queue[0];e&&(this.queue.shift(),e.whenDone(!0),e.setTimeoutHandle&&clearTimeout(e.setTimeoutHandle))}enqueue(e){e.whenDone||(e.whenDone=()=>{}),this.queue.push(e),1==this.queue.length&&this.process()}executeAsync(t){return e.U.assert(!t.whenDone),new Promise(((e,n)=>{t.whenDone=e,this.enqueue(t)}))}},function(t){let n,s,i,r,o=0,a=!1;function l(){return n||(n=function(){if(window.AudioContext=window.AudioContext||window.webkitAudioContext,window.AudioContext)try{return new window.AudioContext}catch(e){}return}()),n}function u(){k(0),o=0,r&&r.pause()}function d(){u(),x()}function c(e,t){e.gain.value&&e.gain.setTargetAtTime(0,l().currentTime,.015),setTimeout((()=>{e.disconnect(),t&&t.disconnect()}),450)}t.mute=function(e){a=e,d();const t=l();!e&&t&&"suspended"===t.state&&t.resume()},t.stopAll=d,t.stop=function(){u(),function(){if(i){try{c(i,s)}catch(e){}i=void 0,s=void 0}}()},t.frequency=function(){return o};const h=[null,"triangle","sawtooth","sine"];let p,m,f=[],g=[];function b(e,t){let n,s=h[e];if(s){let e=l().createOscillator();return e.type=s,e.frequency.value=t,e}if(4==e)n=function(){if(!m){const e=131072;m=l().createBuffer(1,e,l().sampleRate);const t=m.getChannelData(0);let n=251771520;for(let s=0;s<e;s+=4)n^=n<<13,n^=n>>17,n^=n<<5,32768&n?(t[s]=1,t[s+1]=1,t[s+2]=-1,t[s+3]=-1):(t[s]=0,t[s+1]=0,t[s+2]=0,t[s+3]=0)}return m}();else if(5==e)n=function(){if(!p){const e=1e5;p=l().createBuffer(1,e,l().sampleRate);const t=p.getChannelData(0);let n=251771520;for(let s=0;s<e;s++)n^=n<<13,n^=n>>17,n^=n<<5,t[s]=(1023&n)/512-1}return p}();else if(11<=e&&e<=15)n=function(e){if(!g[e]){const t=1024,n=l().createBuffer(1,t,l().sampleRate),s=n.getChannelData(0);for(let n=0;n<t;n++)s[n]=n<e/100*t?1:-1;g[e]=n}return g[e]}(10*(e-10));else{if(!(16<=e&&e<=18))return null;n=function(e){if(!f[e]){const t=1024,n=l().createBuffer(1,t,l().sampleRate),s=n.getChannelData(0),i=[770763591,3356908179],r=[15,31,63];for(let n=0;n<t;n+=4){let t,o=n/4;o&=r[e-4],t=0!=(i[o>>5]&1<<(31&o)),t?(s[n]=1,s[n+1]=1,s[n+2]=-1,s[n+3]=-1):(s[n]=0,s[n+1]=0,s[n+2]=0,s[n+3]=0)}f[e]=n}return f[e]}(e-16+4)}let i=l().createBufferSource();i.buffer=n,i.loop=!0;return 4==e||16<=e&&e<=18?i.playbackRate.value=t/(l().sampleRate/4):5!=e&&(i.playbackRate.value=t/(l().sampleRate/1024)),i}const v=[];class y{mute(){this.gain?c(this.gain,this.generator):this.generator&&(this.generator.stop(),this.generator.disconnect()),this.gain=null,this.generator=null}remove(){const e=v.indexOf(this);e>=0&&v.splice(e,1),this.mute()}}let w=1;function x(){for(w++;v.length;)v[0].remove()}function C(t){const s=w;let i=l(),r=0,o=new y,u=-1,d=-1,c=0;v.length>5&&v[0].remove(),v.push(o);const h=(e,t)=>e/1024/4*(t?.5:1),p=()=>{o.mute(),c=0,u=-1,d=-1},m=()=>{if(r>=t.data.length||!t.data[r])return e.U.delay(c).then(p);const f=t.data[r],g=e.BufferMethods.getNumber(t,e.BufferMethods.NumberFormat.UInt16LE,r+2),v=e.BufferMethods.getNumber(t,e.BufferMethods.NumberFormat.UInt16LE,r+4),y=e.BufferMethods.getNumber(t,e.BufferMethods.NumberFormat.UInt16LE,r+6),x=e.BufferMethods.getNumber(t,e.BufferMethods.NumberFormat.UInt16LE,r+8),C=e.BufferMethods.getNumber(t,e.BufferMethods.NumberFormat.UInt16LE,r+10),S=11<=f&&f<=15,k=4==f||16<=f&&f<=18,R=h(y,S),E=h(x,S);if(!i||s!=w)return e.U.delay(v);if(u!=f||d!=g||g!=C){if(o.generator)return e.U.delay(c).then((()=>(p(),m())));if(o.generator=a?null:b(f,g),!o.generator)return e.U.delay(v);if(u=f,d=g,o.gain=i.createGain(),o.gain.gain.value=0,o.gain.gain.setTargetAtTime(R,n.currentTime,.015),C!=g)if(null!=o.generator.frequency){o.generator.frequency.linearRampToValueAtTime(C,i.currentTime+(c+v)/1e3)}else if(null!=o.generator.playbackRate){const e=k?4:1024;o.generator.playbackRate.linearRampToValueAtTime(C/(l().sampleRate/e),i.currentTime+(c+v)/1e3)}o.generator.connect(o.gain),o.gain.connect(i.destination),o.generator.start()}r+=12,o.gain.gain.setValueAtTime(R,i.currentTime+c/1e3),c+=v;const I=0!==E&&v>50?(c-50)/1e3:(c-10)/1e3;return o.gain.gain.linearRampToValueAtTime(E,i.currentTime+I),m()};return m().then((()=>o.remove()))}function S(e,t){if(e<0)return;o=e;let n=l();if(n){t=Math.max(0,Math.min(1,t));try{s||(s=n.createOscillator(),i=n.createGain(),i.gain.value=0,s.type="triangle",s.connect(i),i.connect(n.destination),s.start(0)),k(t)}catch(e){return s=void 0,void(i=void 0)}s.frequency.value=e,k(t)}}function k(e){(null==i?void 0:i.gain)&&i.gain.setTargetAtTime(a?0:e,n.currentTime,.015)}t.muteAllChannels=x,t.queuePlayInstructions=function(t,n){const s=w;e.U.delay(t).then((()=>s!=w?Promise.resolve():C(n)))},t.playInstructionsAsync=C,t.tone=S,t.setCurrentToneGain=k,t.playBufferAsync=function(e){return e?new Promise((t=>{function n(){t&&t(),t=void 0}const s="data:audio/wav;base64,"+window.btoa(function(e){let t=e.length,n="";for(let s=0;s<t;++s)n+=String.fromCharCode(e[s]);return n}(e.data));r=new Audio(s),a&&(r.volume=0),r.onended=()=>n(),r.onpause=()=>n(),r.onerror=()=>n(),r.play()})):Promise.resolve()};t.playPCMBufferStreamAsync=function(e,t,n=.3,s){return new Promise((i=>{let r=[],o=l().currentTime,u=!1;function d(){const t=s&&s();for(;!u&&r.length<3&&!t;){const t=e();if(!t||!t.length){u=!0;break}c(t)}u&&0===r.length&&(h.remove(),i&&i(),i=void 0)}function c(e){const n=l().createBuffer(1,e.length,t);if(n.copyToChannel)n.copyToChannel(e,0);else{const t=n.getChannelData(0);for(let n=0;n<e.length;n++)t[n]=e[n]}const s=l().createBufferSource();r.push(s),s.connect(h.gain),s.buffer=n,s.addEventListener("ended",(()=>{r.shift().disconnect(),d()})),s.start(o),o+=n.duration}const h=new y;h.gain=l().createGain(),h.gain.gain.value=0,a||h.gain.gain.setValueAtTime(n,l().currentTime),h.gain.connect(l().destination),v.length>5&&v[0].remove(),v.push(h),d()}))},t.sendMidiMessage=function(e){const t=e.data;if(!t.length)return;const n=t[0]>>4,s=15&t[0],i=t[1]||0,r=(o=i,440*Math.pow(2,(o-69)/12));var o;const a=t[2]||0;8==n||9==n&&0==a?u():9==n&&(S(r,1),9==s&&setTimeout((()=>u()),500))}}(t=e.AudioContextManager||(e.AudioContextManager={})),e.isTouchEnabled=n,e.hasPointerEvents=s,e.pointerEvents=s()?{up:"pointerup",down:["pointerdown"],move:"pointermove",enter:"pointerenter",leave:"pointerleave"}:n()?{up:"mouseup",down:["mousedown","touchstart"],move:"touchmove",enter:"touchenter",leave:"touchend"}:{up:"mouseup",down:["mousedown"],move:"mousemove",enter:"mouseenter",leave:"mouseleave"}}(pxsim||(pxsim={})),function(e){!function(t){function n(e,t){return n=>n*(t/e)}function s(e,t){let n=e[0]-t[0],s=e[1]-t[1];return n*n+s*s}t.translateEl=function(t,n){e.svg.hydrate(t,{transform:`translate(${n[0]} ${n[1]})`})},t.composeSVG=function(t){let[n,s]=[t.el1,t.el2];e.U.assert(0==n.x&&0==n.y&&0==s.x&&0==s.y,"el1 and el2 x,y offsets not supported");let i=(t,n,s)=>e.svg.hydrate(t,{x:n,y:s}),r=(t,n,s)=>e.svg.hydrate(t,{width:`${n}px`,height:`${s}px`}),o=t.scaleUnit2,a=t.scaleUnit2/t.scaleUnit1,l=n.w*a,u=n.h*a;r(n.el,l,u);let d=1*s.w,c=1*s.h;r(s.el,d,c);let[h,p,m,f]=t.margin,g=t.middleMargin,b=Math.max(l,d),v=p+(b-l)/2,y=h;i(n.el,v,y);let w=p+(b-d)/2,x=y+u+g;i(s.el,w,x);let C=[y,y+u,x,x+c],S=p+b+f,k=h+u+g+c+m,R=e.svg.elt("svg",{version:"1.0",viewBox:`0 0 ${S} ${k}`,class:"sim-bb"});((t,n,s)=>{n&&e.svg.hydrate(t,{width:n}),s&&e.svg.hydrate(t,{height:s})})(R,t.maxWidth,t.maxHeight),i(R,0,0);let E=e.svg.child(R,"g");return R.appendChild(n.el),R.appendChild(s.el),{under:E,over:e.svg.child(R,"g"),host:R,edges:C,scaleUnit:o,toHostCoord1:e=>{let[t,n]=e;return[t*a+v,n*a+y]},toHostCoord2:e=>{let[t,n]=e;return[1*t+w,1*n+x]}}},t.mkScaleFn=n,t.mkImageSVG=function(t){let s=n(t.imageUnitDist,t.targetUnitDist),i=s(t.width),r=s(t.height),o=e.svg.elt("image",{width:i,height:r});return o.setAttributeNS("http://www.w3.org/1999/xlink","href",`${t.image}`),{el:o,w:i,h:r,x:0,y:0}},t.findDistSqrd=s,t.findClosestCoordIdx=function(e,t){return t.map((t=>s(e,t))).reduce(((e,t,n,s)=>t<s[e]?n:e),0)},t.mkTxt=function(t,n,s,i,r,o,a){let l=e.svg.elt("text");a=a||.3;const u=(o=o||-.33333)*s*r.length,d=a*s;return e.svg.hydrate(l,{style:`font-size:${s}px;`,transform:`translate(${t} ${n}) rotate(${i}) translate(${u} ${d})`}),e.U.addClass(l,"noselect"),l.textContent=r,l},t.GPIO_WIRE_COLORS=["pink","orange","yellow","green","purple"],t.WIRE_COLOR_MAP={black:"#514f4d",white:"#fcfdfc",gray:"#acabab",purple:"#a772a1",blue:"#01a6e8",green:"#3cce73",yellow:"#ece600",orange:"#fdb262",red:"#f44f43",brown:"#c89764",pink:"#ff80fa"},t.mapWireColor=function(e){return t.WIRE_COLOR_MAP[e]||e},t.PIN_DIST=15,t.rgbToHsl=function(e){let t,n,s,[i,r,o]=e,[a,l,u]=[i/255,r/255,o/255],d=Math.min(a,l,u),c=Math.max(a,l,u),h=c-d,p=c+d;return s=p/2*100,0===h?n=t=0:(c===a?t=(l-u)/h%6*60:c===l?t=60*((u-a)/h+2):c===u&&(t=60*((a-l)/h+4)),n=s>50?h/(2-p)*100:h/p*100),[Math.floor(t),Math.floor(n),Math.floor(s)]}}(e.visuals||(e.visuals={}))}(pxsim||(pxsim={})),function(e){var t;!function(n){function s(e,n,s){let i={class:e,d:n};s&&(i.title=s);let r=t.elt("path");return t.hydrate(r,i),r}function i(e,n=!1){let s=t.elt("linearGradient");t.hydrate(s,{id:e,x1:"0%",y1:"0%",x2:n?"100%":"0%",y2:n?"0%":"100%"});t.child(s,"stop",{offset:"0%"}),t.child(s,"stop",{offset:"100%"}),t.child(s,"stop",{offset:"100%"}),t.child(s,"stop",{offset:"100%"});return s}function r(e){let n=t.elt("title");return n.textContent=e,n}n.parseString=function(e){return(new DOMParser).parseFromString(e,"image/svg+xml").getElementsByTagName("svg").item(0)},n.toDataUri=function(e){return"data:image/svg+xml,"+encodeURI(e)},n.cursorPoint=function(e,t,n){return e.x=null!=n.clientX?n.clientX:n.pageX,e.y=null!=n.clientY?n.clientY:n.pageY,e.matrixTransform(t.getScreenCTM().inverse())},n.rotateElement=function(e,t,n,s){e.setAttribute("transform",`translate(${t},${n}) rotate(${s+90}) translate(${-t},${-n})`)},n.hydrate=function(e,n){for(let s in n)"title"==s?t.title(e,n[s]):e.setAttributeNS(null,s,n[s])},n.elt=function(e,n){let s=document.createElementNS("http://www.w3.org/2000/svg",e);return n&&t.hydrate(s,n),s},n.child=function(e,n,s){let i=t.elt(n,s);return e.appendChild(i),i},n.mkPath=s,n.path=function(e,t,n,i){let r=s(t,n,i);return e.appendChild(r),r},n.fill=function(e,t){e.style.fill=t},n.filter=function(e,t){e.style.filter=t},n.fills=function(e,t){e.forEach((e=>e.style.fill=t))},n.isTouchEnabled=function(){return"undefined"!=typeof window&&("ontouchstart"in window||navigator.maxTouchPoints>0)},n.onClick=function(t,n){let s=!1;e.pointerEvents.down.forEach((e=>t.addEventListener(e,(e=>(s=!0,!0)),!1))),t.addEventListener(e.pointerEvents.up,(e=>!s||(s=!1,n(e),e.preventDefault(),!1)),!1)},n.buttonEvents=function(t,n,s,i,r){let o=!1;e.pointerEvents.down.forEach((e=>t.addEventListener(e,(e=>(o=!0,s&&s(e),!0)),!1))),t.addEventListener(e.pointerEvents.move,(e=>!o||(n&&n(e),e.preventDefault(),!1)),!1),t.addEventListener(e.pointerEvents.up,(e=>{o=!1,i&&i(e)}),!1),t.addEventListener(e.pointerEvents.leave,(e=>{o=!1,i&&i(e)}),!1),t.addEventListener("keydown",(e=>{o=!1,r&&r(e)}))},n.mkLinearGradient=i,n.linearGradient=function(e,t,n=!1){let s=i(t,n);return e.appendChild(s),s},n.setGradientColors=function(e,t,n){e&&(e.childNodes[0].style.stopColor=t,e.childNodes[1].style.stopColor=t,e.childNodes[2].style.stopColor=n,e.childNodes[3].style.stopColor=n)},n.setGradientValue=function(e,t){e.childNodes[1].getAttribute("offset")!=t&&(e.childNodes[1].setAttribute("offset",t),e.childNodes[2].setAttribute("offset",t))},n.animate=function(t,n){e.U.addClass(t,n);let s=t.parentElement;s&&(s.removeChild(t),s.appendChild(t))},n.mkTitle=r,n.title=function(e,t){let n=r(t);return e.appendChild(n),n},n.toHtmlColor=function(e){return`rgba(${e>>16&255}, ${e>>8&255}, ${255&e}, ${e>>24&1})`}}(t=e.svg||(e.svg={}))}(pxsim||(pxsim={})),function(e){class t{constructor(e){this.id=e}}e.Button=t;e.ButtonPairState=class{constructor(e){this.props=e,this.usesButtonAB=!1,this.aBtn=new t(this.props.ID_BUTTON_A),this.bBtn=new t(this.props.ID_BUTTON_B),this.abBtn=new t(this.props.ID_BUTTON_AB),this.abBtn.virtual=!0}}}(pxsim||(pxsim={})),function(e){e.CompassState=class{constructor(){this.usesHeading=!1,this.heading=90}}}(pxsim||(pxsim={})),function(e){e.FileSystemState=class{constructor(){this.files={}}append(e,t){this.files[e]=(this.files[e]||"")+t}remove(e){delete this.files[e]}}}(pxsim||(pxsim={})),function(e){e.LightSensorState=class{constructor(){this.usesLightLevel=!1,this.lightLevel=128}}}(pxsim||(pxsim={})),function(e){!function(t){t.mkBoardView=e=>{const n=e.visual;return new t.GenericBoardSvg({visualDef:n,boardDef:e.boardDef,wireframe:e.wireframe})};t.BoardHost=class{constructor(n,s){this.parts=[],this.boardView=n,this.opts=s,s.boardDef.pinStyles||(s.boardDef.pinStyles={}),this.state=s.state;let i=s.partsList,r=0<i.length||s.forceBreadboardLayout;if(r){this.breadboard=new t.Breadboard({wireframe:s.wireframe});const n=s.boardDef.marginWhenBreadboarding||[0,0,40,0],o=t.composeSVG({el1:this.boardView.getView(),scaleUnit1:this.boardView.getPinDist(),el2:this.breadboard.getSVGAndSize(),scaleUnit2:this.breadboard.getPinDist(),margin:[n[0],n[1],20,n[3]],middleMargin:n[2],maxWidth:s.maxWidth,maxHeight:s.maxHeight}),a=o.under,l=o.over;this.view=o.host;const u=o.edges;this.fromMBCoord=o.toHostCoord1,this.fromBBCoord=o.toHostCoord2,this.partGroup=l,this.partOverGroup=e.svg.child(this.view,"g"),this.style=e.svg.child(this.view,"style",{}),this.defs=e.svg.child(this.view,"defs",{}),this.wireFactory=new t.WireFactory(a,l,u,this.style,this.getLocCoord.bind(this),this.getPinStyle.bind(this));const d=e.allocateDefinitions({boardDef:s.boardDef,partDefs:s.partDefs,fnArgs:s.fnArgs,getBBCoord:this.breadboard.getCoord.bind(this.breadboard),partsList:i});d.partsAndWires.length||s.forceBreadboardLayout?(this.addAll(d),d.requiresBreadboard||s.forceBreadboardRender?d.hideBreadboard&&this.breadboard&&this.breadboard.hide():r=!1):r=!1}if(!r){delete this.breadboard,delete this.wireFactory,delete this.partOverGroup,delete this.partGroup,delete this.style,delete this.defs,delete this.fromBBCoord,delete this.fromMBCoord;const t=this.boardView.getView().el;this.view=t,this.partGroup=e.svg.child(this.view,"g"),this.partOverGroup=e.svg.child(this.view,"g"),s.maxWidth&&e.svg.hydrate(this.view,{width:s.maxWidth}),s.maxHeight&&e.svg.hydrate(this.view,{height:s.maxHeight})}this.state.updateSubscribers.push((()=>this.updateState()))}highlightBoardPin(e){this.boardView.highlightPin(e)}highlightBreadboardPin(e){this.breadboard.highlightLoc(e)}highlightWire(t){t.wires.forEach((t=>{e.U.addClass(t,"highlight"),t.style.visibility="visible"})),e.U.addClass(t.endG,"highlight")}getView(){return this.view}screenshotAsync(e){const t=this.view.cloneNode(!0);t.setAttribute("width",this.view.width.baseVal.value+""),t.setAttribute("height",this.view.height.baseVal.value+"");const n=(new XMLSerializer).serializeToString(t),s="data:image/svg+xml,"+encodeURIComponent(n.replace(/\s+/g," ").replace(/"/g,"'"));return new Promise(((t,n)=>{const i=document.createElement("img");i.onload=()=>{const n=document.createElement("canvas");n.width=i.width,n.height=i.height,e>0?(n.width=e,n.height=i.height*e/i.width|0):n.width<200?(n.width*=2,n.height*=2):n.width>480&&(n.width/=2,n.height/=2);const s=n.getContext("2d");s.drawImage(i,0,0,n.width,n.height),t(s.getImageData(0,0,n.width,n.height))},i.onerror=e=>{console.log(e),t(void 0)},i.src=s}))}updateState(){this.parts.forEach((e=>e.updateState()))}getBBCoord(e){let t=this.breadboard.getCoord(e);return this.fromBBCoord(t)}getPinCoord(e){let t=this.boardView.getCoord(e);if(t)return this.fromMBCoord(t);console.error(`Unable to find coord for pin: ${e}`)}getLocCoord(e){let t;if("breadboard"===e.type){let n=e;t=this.getBBCoord(n)}else{let n=e.pin;t=this.getPinCoord(n)}return t||console.debug("Unknown location: "+name),t}getPinStyle(e){return"breadboard"==e.type?"female":this.opts.boardDef.pinStyles[e.pin]||"female"}addPart(n){let s=null;if(n.simulationBehavior){let e=n.simulationBehavior,t=this.state.builtinVisuals[e],i=this.state.builtinParts[e];s=t(),s.init(this.state.bus,i,this.view,n.params)}else{let e=n.visual;s=new t.GenericPart(e)}this.parts.push(s),this.partGroup.appendChild(s.element),s.overElement&&this.partOverGroup.appendChild(s.overElement),s.defs&&s.defs.forEach((e=>this.defs.appendChild(e))),this.style.textContent+=s.style||"";let i=n.startColumnIdx,r=n.startRowIdx,o={type:"breadboard",row:t.getRowName(r),col:t.getColumnName(i),xOffset:n.bbFit.xOffset/n.visual.pinDistance,yOffset:n.bbFit.yOffset/n.visual.pinDistance},a=this.getBBCoord(o);s.moveToCoord(a);let l=`sim-${n.name}-cmp`;return e.U.addClass(s.element,l),e.U.addClass(s.element,"sim-cmp"),s.updateTheme(),s.updateState(),s}addWire(e){return this.wireFactory.addWire(e.start,e.end,e.color)}addAll(e){e.partsAndWires.forEach((t=>{const n=t.wires,s=n&&n.every((e=>this.wireFactory.checkWire(e.start,e.end)));s&&n.forEach((t=>e.wires.push(this.addWire(t))));let i=t.part;!i||n&&!s||e.parts.push(this.addPart(i))})),e.requiresBreadboard=!!e.wires.length||!!e.parts.length}}}(e.visuals||(e.visuals={}))}(pxsim||(pxsim={})),function(e){!function(t){const n=15,s="#DD4BA0",i=`\n        /* bread board */\n        .sim-bb-background {\n            fill:#E0E0E0;\n        }\n        .sim-bb-pin {\n            fill:#999;\n        }\n        .sim-bb-pin-hover {\n            visibility: hidden;\n            pointer-events: all;\n            stroke-width: 7.5px;\n            stroke: transparent;\n            fill: #777;\n        }\n        .sim-bb-pin-hover:hover {\n            visibility: visible;\n            fill:#444;\n        }\n        .sim-bb-group-wire {\n            stroke: #999;\n            stroke-width: 3.75px;\n            visibility: hidden;\n        }\n        .sim-bb-pin-group {\n            pointer-events: all;\n        }\n        .sim-bb-label,\n        .sim-bb-label-hover {\n            font-family:"Lucida Console", Monaco, monospace;\n            fill:#555;\n            pointer-events: all;\n            stroke-width: 0;\n            cursor: default;\n        }\n        .sim-bb-label-hover {\n            visibility: hidden;\n            fill:#000;\n            font-weight: bold;\n        }\n        .sim-bb-bar {\n            stroke-width: 0;\n        }\n        .sim-bb-blue {\n            fill:#1AA5D7;\n            stroke:#1AA5D7\n        }\n        .sim-bb-red {\n            fill:${s};\n            stroke:${s};\n        }\n        .sim-bb-pin-group:hover .sim-bb-pin-hover,\n        .sim-bb-pin-group:hover .sim-bb-group-wire,\n        .sim-bb-pin-group:hover .sim-bb-label-hover {\n            visibility: visible;\n        }\n        .sim-bb-pin-group:hover .sim-bb-label {\n            visibility: hidden;\n        }\n        /* outline mode */\n        .sim-bb-outline .sim-bb-background {\n            stroke-width: ${n/7}px;\n            fill: #FFF;\n            stroke: #000;\n        }\n        .sim-bb-outline .sim-bb-mid-channel {\n            fill: #FFF;\n            stroke: #888;\n            stroke-width: 2px;\n        }\n        /* grayed out */\n        .grayed .sim-bb-background {\n            stroke-width: 3px;\n        }\n        .grayed .sim-bb-red,\n        .grayed .sim-bb-blue {\n            fill: #BBB;\n        }\n        .grayed .sim-bb-bar {\n            fill: #FFF;\n        }\n        .grayed .sim-bb-pin {\n            fill: #000;\n            stroke: #FFF;\n            stroke-width: 3px;\n        }\n        .grayed .sim-bb-label {\n            fill: none;\n        }\n        .grayed .sim-bb-background {\n            stroke-width: 7.5px;\n            stroke: #555;\n        }\n        .grayed .sim-bb-group-wire {\n            stroke: #DDD;\n        }\n        .grayed .sim-bb-channel {\n            visibility: hidden;\n        }\n        /* highlighted */\n        .sim-bb-label.highlight {\n            visibility: hidden;\n        }\n        .sim-bb-label-hover.highlight {\n            visibility: visible;\n        }\n        .sim-bb-blue.highlight {\n            fill:#1AA5D7;\n        }\n        .sim-bb-red.highlight {\n            fill:${s};\n        }\n        .sim-bb-bar.highlight {\n            stroke-width: 0px;\n        }\n        `;t.BREADBOARD_MID_ROWS=10,t.BREADBOARD_MID_COLS=30;const r=[4,4],o=t.BREADBOARD_MID_ROWS+r.length,a=25,l=[4,9,14,19],u=a+l.length,d=n*(t.BREADBOARD_MID_COLS+3),c=n*(o+4+5.5),h=2/3,p=c*h,m=.16666666666666669*c,f=(t.BREADBOARD_MID_COLS-1)*n,g=(d-f)/2,b=m+(p-(o-1)*n)/2,v=(u-1)*n,y=(d-v)/2,w=(m-15)/2,x=y,C=w+m+p,S=25.5,k=12,R=1.05,E=-90,I="abcdefghij".split("").reverse();function P(e){return`${e+1}`}function D(e){return I[e]}function B(t){let n=t.xOffset||0,s=t.yOffset||0,i=[],r=e.svg.elt("g"),o=t.colStartIdx||0,a=t.rowStartIdx||0,l=e=>e?e.slice(0,e.length):[],u=(e,t)=>{let n,s=0;for(;0<=(n=e.indexOf(t));)e.splice(n,1),s+=1;return s},d=0,c=l(t.rowIdxsWithGap);for(let h=0;h<t.rowCount;h++){let p=0,m=l(t.colIdxsWithGap),f=s+h*t.pinDist+d*t.pinDist,g=h+a;for(let s=0;s<t.colCount;s++){let a=n+s*t.pinDist+p*t.pinDist,l=s+o;const d=t=>(e.svg.hydrate(t.el,"circle"==t.el.tagName?{cx:a,cy:f}:{x:a-.5*t.w,y:f-.5*t.h}),r.appendChild(t.el),t.el);let c=d(t.mkPin()),h=d(t.mkHoverPin()),b=t.getRowName(g),v=t.getColName(l),y=t.getGroupName?t.getGroupName(g,l):null,w={el:c,hoverEl:h,cx:a,cy:f,row:b,col:v,group:y};i.push(w),p+=u(m,l)}d+=u(c,g)}return{g:r,allPins:i}}function _(){let t=e.svg.elt("rect");return e.svg.hydrate(t,{class:"sim-bb-pin",rx:2,ry:2,width:6,height:6}),{el:t,w:6,h:6,x:0,y:0}}function T(){let t=e.svg.elt("rect"),n=6*1.3;return e.svg.hydrate(t,{class:"sim-bb-pin-hover",rx:2,ry:2,width:n,height:n}),{el:t,w:n,h:n,x:0,y:0}}function A(n,s,i,r,o,a,l){let u=t.mkTxt(n,s,i,r,o);e.U.addClass(u,"sim-bb-label"),l&&l.forEach((t=>e.U.addClass(u,t)));let d=t.mkTxt(n,s,1.3*i,r,o);return e.U.addClass(d,"sim-bb-label-hover"),l&&l.forEach((t=>e.U.addClass(d,t))),{el:u,hoverEl:d,txt:o,group:a}}t.getColumnName=P,t.getRowName=D,t.mkGrid=B;t.Breadboard=class{constructor(t){this.allPins=[],this.allLabels=[],this.allPowerBars=[],this.rowColToPin={},this.rowColToLbls={},this.buildDom(),t.wireframe&&e.U.addClass(this.bb,"sim-bb-outline")}hide(){this.bb.style.display="none"}updateLocation(t,n){e.svg.hydrate(this.bb,{x:`${t}px`,y:`${n}px`})}getPin(e,t){let n=this.rowColToPin[e];if(!n)return null;let s=n[t];return s||null}getCoord(e){let{row:t,col:s,xOffset:i,yOffset:r}=e,o=this.getPin(t,s);if(!o)return null;let a=(i||0)*n,l=(r||0)*n;return[o.cx+a,o.cy+l]}getPinDist(){return n}buildDom(){this.bb=e.svg.elt("svg",{version:"1.0",viewBox:`0 0 ${d} ${c}`,class:"sim-bb",width:d+"px",height:c+"px"}),this.styleEl=e.svg.child(this.bb,"style",{}),this.styleEl.textContent+=i,this.defs=e.svg.child(this.bb,"defs",{}),e.svg.child(this.bb,"rect",{class:"sim-bb-background",width:d,height:c,rx:4.5,ry:4.5});let s="sim-bb-channel-grad",o=e.svg.elt("linearGradient");e.svg.hydrate(o,{id:s,x1:"0%",y1:"0%",x2:"0%",y2:"100%"}),this.defs.appendChild(o);e.svg.child(o,"stop",{offset:"0%",style:"stop-color: #AAA;"}),e.svg.child(o,"stop",{offset:"20%",style:"stop-color: #CCC;"}),e.svg.child(o,"stop",{offset:"80%",style:"stop-color: #CCC;"}),e.svg.child(o,"stop",{offset:"100%",style:"stop-color: #AAA;"});const u=(t,n,i)=>{let r=e.svg.child(this.bb,"rect",{class:`sim-bb-channel ${i||""}`,y:t-n/2,width:d,height:n});return r.setAttribute("fill",`url(#${s})`),r};u(m+p/2,15,"sim-bb-mid-channel"),u(m,.75,"sim-bb-sml-channel"),u(m+p,.75,"sim-bb-sml-channel");const h=(e,n)=>`${(e=>e<t.BREADBOARD_MID_ROWS/2?"b":"t")(e)}${P(n)}`,f=e=>0===e?"-":"+",I=(e,t)=>{let n=(e=>e<25?"b":"t")(t);return`${f(e)}${n}`};let F=B({xOffset:g,yOffset:b,rowCount:t.BREADBOARD_MID_ROWS,colCount:t.BREADBOARD_MID_COLS,pinDist:n,mkPin:_,mkHoverPin:T,getRowName:D,getColName:P,getGroupName:h,rowIdxsWithGap:r});F.g;this.allPins=this.allPins.concat(F.allPins);let M=B({xOffset:x,yOffset:C,rowCount:2,colCount:a,pinDist:n,mkPin:_,mkHoverPin:T,getRowName:f,getColName:P,getGroupName:I,colIdxsWithGap:l});M.g;this.allPins=this.allPins.concat(M.allPins);let L=B({xOffset:y,yOffset:w,rowCount:2,colCount:a,colStartIdx:a,pinDist:n,mkPin:_,mkHoverPin:T,getRowName:f,getColName:P,getGroupName:I,colIdxsWithGap:l.map((e=>e+a))});L.g;this.allPins=this.allPins.concat(L.allPins),this.allPins.forEach((t=>{let{el:n,row:s,col:i,hoverEl:r}=t,o=`(${s},${i})`;e.svg.hydrate(n,{title:o}),e.svg.hydrate(r,{title:o})})),this.allPins.forEach((e=>{let t=this.rowColToPin[e.row];t||(t=this.rowColToPin[e.row]={}),t[e.col]=e}));const U=(e,t,n,s,i,r)=>{let o=this.getCoord({type:"breadboard",row:e,col:t}),[a,l]=o;return A(a+n,l+s,10.5,-90,i,r)};for(let e=0;e<t.BREADBOARD_MID_COLS;e++){let n=P(e),s=0,i=U(D(s),n,0,-15,n,h(s,e));this.allLabels.push(i);let r=t.BREADBOARD_MID_ROWS-1,o=U(D(r),n,0,15,n,h(r,e));this.allLabels.push(o)}for(let e=0;e<t.BREADBOARD_MID_ROWS;e++){let n=D(e),s=U(n,P(0),-15,0,n);this.allLabels.push(s);let i=U(n,P(t.BREADBOARD_MID_COLS-1),15,0,n);this.allLabels.push(i)}let O=[A(13.05,m+p+k,30,E,"-",I(0,0),["sim-bb-blue"]),A(12,m+p+m-k,S,E,"+",I(1,0),["sim-bb-red"]),A(d-k+R,m+p+k,30,E,"-",I(0,24),["sim-bb-blue"]),A(d-k,m+p+m-k,S,E,"+",I(1,24),["sim-bb-red"])];this.allLabels=this.allLabels.concat(O);let N=[A(13.05,12,30,E,"-",I(0,a),["sim-bb-blue"]),A(12,m-k,S,E,"+",I(1,a),["sim-bb-red"]),A(d-k+R,12,30,E,"-",I(0,49),["sim-bb-blue"]),A(d-k,m-k,S,E,"+",I(1,49),["sim-bb-red"])];this.allLabels=this.allLabels.concat(N);let V={};this.allLabels.forEach((e=>{let{el:t,txt:n}=e;(V[n]=V[n]||[]).push(e)}));this.allPins.forEach((e=>{let{row:t,col:n,group:s}=e,i=this.rowColToLbls[t]||(this.rowColToLbls[t]={}),r=i[n]||(i[n]=[]);if((e=>"-"===e.row||"+"===e.row)(e)){Number(n)<=a?O.filter((t=>t.group==e.group)).forEach((e=>r.push(e))):N.filter((t=>t.group==e.group)).forEach((e=>r.push(e)))}else{V[t].forEach((e=>r.push(e))),V[n].forEach((e=>r.push(e)))}}));const q=v+22.5,$=(q-v)/2,W=(t,n,s,i)=>{let r=e.svg.elt("rect");return e.svg.hydrate(r,{class:`sim-bb-bar ${i}`,x:t,y:n-1.5,width:q,height:3}),{el:r,group:s}};let G=[W(x-$,C-9,I(0,49),"sim-bb-blue"),W(x-$,C+n+9,I(1,49),"sim-bb-red"),W(y-$,w-9,I(0,0),"sim-bb-blue"),W(y-$,w+n+9,I(1,0),"sim-bb-red")];this.allPowerBars=this.allPowerBars.concat(G),this.allPowerBars.forEach((e=>this.bb.appendChild(e.el)));let j=this.allPins.map((e=>e.group)).filter(((e,t,n)=>n.indexOf(e)==t)),H=j.map((t=>e.svg.elt("g")));H.forEach((t=>e.U.addClass(t,"sim-bb-pin-group"))),H.forEach(((t,n)=>e.U.addClass(t,`group-${j[n]}`)));let z={};j.forEach(((e,t)=>z[e]=H[t]));let K={};this.allPins.forEach(((e,t)=>{let n=e.group;(K[n]||(K[n]=[])).push(e)})),j.forEach((t=>{let n=K[t],[s,i]=[n.map((e=>e.cx)),n.map((e=>e.cy))],r=e=>e.reduce(((e,t)=>e<t?e:t)),o=e=>e.reduce(((e,t)=>e>t?e:t)),[a,l,u,d]=[r(s),o(s),r(i),o(i)],c=e.svg.elt("rect"),h=Math.max(l-a,1e-4),p=Math.max(d-u,1e-4);e.svg.hydrate(c,{x:a,y:u,width:h,height:p}),e.U.addClass(c,"sim-bb-group-wire"),z[t].appendChild(c)})),this.allPins.forEach((e=>{let t=z[e.group];t.appendChild(e.el),t.appendChild(e.hoverEl)}));let Y=e.svg.elt("g");e.svg.hydrate(Y,{class:"sim-bb-group-misc"}),H.push(Y),this.allLabels.forEach((e=>{if(e.group){let t=z[e.group];t.appendChild(e.el),t.appendChild(e.hoverEl)}else Y.appendChild(e.el),Y.appendChild(e.hoverEl)})),H.forEach((e=>this.bb.appendChild(e)))}getSVGAndSize(){return{el:this.bb,y:0,x:0,w:d,h:c}}highlightLoc(t){let{row:n,col:s}=t,i=this.rowColToPin[n][s],{cx:r,cy:o}=i;this.rowColToLbls[n][s].forEach((t=>{e.U.addClass(t.el,"highlight"),e.U.addClass(t.hoverEl,"highlight")}))}}}(e.visuals||(e.visuals={}))}(pxsim||(pxsim={})),function(e){!function(t){t.BOARD_SYTLE=`\n        .noselect {\n            -webkit-touch-callout: none; /* iOS Safari */\n            -webkit-user-select: none;   /* Chrome/Safari/Opera */\n            -khtml-user-select: none;    /* Konqueror */\n            -moz-user-select: none;      /* Firefox */\n            -ms-user-select: none;       /* Internet Explorer/Microsoft Edge */\n            user-select: none;           /* Non-prefixed version, currently\n                                            not supported by any browser */\n        }\n\n        .sim-board-pin {\n            fill:#999;\n            stroke:#000;\n            stroke-width:${t.PIN_DIST/3}px;\n        }\n        .sim-board-pin-lbl {\n            fill: #333;\n        }\n        .gray-cover {\n            fill:#FFF;\n            opacity: 0.3;\n            stroke-width:0;\n            visibility: hidden;\n        }\n        .sim-board-pin-hover {\n            visibility: hidden;\n            pointer-events: all;\n            stroke-width:${t.PIN_DIST/6}px;\n        }\n        .sim-board-pin-hover:hover {\n            visibility: visible;\n        }\n        .sim-board-pin-lbl {\n            visibility: hidden;\n        }\n        .sim-board-outline .sim-board-pin-lbl {\n            visibility: visible;\n        }\n        .sim-board-pin-lbl {\n            fill: #555;\n        }\n        .sim-board-pin-lbl-hover {\n            fill: red;\n        }\n        .sim-board-outline .sim-board-pin-lbl-hover {\n            fill: black;\n        }\n        .sim-board-pin-lbl,\n        .sim-board-pin-lbl-hover {\n            font-family:"Lucida Console", Monaco, monospace;\n            pointer-events: all;\n            stroke-width: 0;\n        }\n        .sim-board-pin-lbl-hover {\n            visibility: hidden;\n        }\n        .sim-board-outline .sim-board-pin-hover:hover + .sim-board-pin-lbl,\n        .sim-board-pin-lbl.highlight {\n            visibility: hidden;\n        }\n        .sim-board-outline .sim-board-pin-hover:hover + * + .sim-board-pin-lbl-hover,\n        .sim-board-pin-lbl-hover.highlight {\n            visibility: visible;\n        }\n        /* Graying out */\n        .grayed .sim-board-pin-lbl:not(.highlight) {\n            fill: #AAA;\n        }\n        .grayed .sim-board-pin:not(.highlight) {\n            fill:#BBB;\n            stroke:#777;\n        }\n        .grayed .gray-cover {\n            visibility: inherit;\n        }\n        .grayed .sim-cmp:not(.notgrayed) {\n            opacity: 0.3;\n        }\n        /* Highlighting */\n        .sim-board-pin-lbl.highlight {\n            fill: #000;\n            font-weight: bold;\n        }\n        .sim-board-pin.highlight {\n            fill:#999;\n            stroke:#000;\n        }\n        `;const n=.7*t.PIN_DIST,s=1.5*n,i=.66666*t.PIN_DIST,r=.66666*t.PIN_DIST+t.PIN_DIST/3;let o=0;t.GenericBoardSvg=class{constructor(a){this.props=a,this.allPins=[],this.allLabels=[],this.pinNmToLbl={},this.pinNmToPin={},this.id=o++;let l=a.visualDef,u=a.wireframe&&l.outlineImage?l.outlineImage:l.image,d=t.mkImageSVG({image:u,width:l.width,height:l.height,imageUnitDist:l.pinDist,targetUnitDist:t.PIN_DIST}),c=t.mkScaleFn(l.pinDist,t.PIN_DIST);this.width=d.w,this.height=d.h;let h=d.el;this.element=e.svg.elt("svg"),e.svg.hydrate(this.element,{version:"1.0",viewBox:`0 0 ${this.width} ${this.height}`,class:`sim sim-board-id-${this.id}`,x:"0px",y:"0px"}),a.wireframe&&e.U.addClass(this.element,"sim-board-outline"),this.style=e.svg.child(this.element,"style",{}),this.style.textContent+=t.BOARD_SYTLE,this.defs=e.svg.child(this.element,"defs",{}),this.g=e.svg.elt("g"),this.element.appendChild(this.g),this.g.appendChild(h),this.background=h,e.svg.hydrate(h,{class:"sim-board"});const p=()=>{let t=e.svg.elt("circle"),n=i;return e.svg.hydrate(t,{class:"sim-board-pin",r:n/2}),{el:t,w:n,h:n,x:0,y:0}},m=()=>{let t=e.svg.elt("circle"),n=r;return e.svg.hydrate(t,{class:"sim-board-pin-hover",r:n/2}),{el:t,w:n,h:n,x:0,y:0}},f=()=>{let t=e.svg.elt("rect"),n=i;return e.svg.hydrate(t,{class:"sim-board-pin",width:n,height:n}),{el:t,w:n,h:n,x:0,y:0}},g=()=>{let t=e.svg.elt("rect"),n=r;return e.svg.hydrate(t,{class:"sim-board-pin-hover",width:n,height:n}),{el:t,w:n,h:n,x:0,y:0}};let b=l.pinBlocks.map(((n,s)=>{let i=c(n.x)+t.PIN_DIST/2,r=c(n.y)+t.PIN_DIST/2,o=n.labels.length,a=t.mkGrid({xOffset:i,yOffset:r,rowCount:1,colCount:o,pinDist:t.PIN_DIST,mkPin:l.useCrocClips?p:f,mkHoverPin:l.useCrocClips?m:g,getRowName:()=>`${s+1}`,getColName:e=>n.labels[e],getGroupName:()=>n.labels.join(" ")});a.allPins,a.g;return e.U.addClass(a.g,"sim-board-pin-group"),a})),v=[];b.forEach(((e,t)=>e.allPins.forEach(((e,n)=>{this.allPins.push(e),v.push(l.pinBlocks[t])})))),this.allPins.forEach((t=>{let n=t.col;e.svg.hydrate(t.el,{title:n}),e.svg.hydrate(t.hoverEl,{title:n})})),this.allPins.forEach((e=>{this.pinNmToPin[e.col]=e}));const y=(e,n,s,i,r)=>{let o,a;if("below"===r){a=e,o=n+12+.25*s*i.length}else{a=e,o=n-11-.32*s*i.length}return t.mkTxt(a,o,s,-90,i)};this.allLabels=this.allPins.map(((t,i)=>{let r=v[i];return((t,i,r,o)=>{let a=y(t,i,n,r,o);e.U.addClass(a,"sim-board-pin-lbl");let l=y(t,i,s,r,o);return e.U.addClass(l,"sim-board-pin-lbl-hover"),{el:a,hoverEl:l,txt:r}})(t.cx,t.cy,t.col,r.labelPosition||"above")})),this.allPins.forEach(((e,t)=>{let n=this.allLabels[t];this.pinNmToLbl[e.col]=n})),this.allPins.forEach(((e,t)=>{let n=this.allLabels[t];this.g.appendChild(e.el),this.g.appendChild(e.hoverEl),this.g.appendChild(n.el),this.g.appendChild(n.hoverEl)}))}findPin(e){let t=this.pinNmToPin[e];return!t&&this.props.boardDef.gpioPinMap&&(e=this.props.boardDef.gpioPinMap[e])&&(t=this.pinNmToPin[e]),t}findPinLabel(e){let t=this.pinNmToLbl[e];return!t&&this.props.boardDef.gpioPinMap&&(e=this.props.boardDef.gpioPinMap[e])&&(t=this.pinNmToLbl[e]),t}getCoord(e){let t=this.findPin(e);return t?[t.cx,t.cy]:null}mkGrayCover(t,n,s,i){let r=e.svg.elt("rect");return e.svg.hydrate(r,{x:t,y:n,width:s,height:i,class:"gray-cover"}),r}getView(){return{el:this.element,w:this.width,h:this.height,x:0,y:0}}getPinDist(){return t.PIN_DIST}highlightPin(t){let n=this.findPinLabel(t),s=this.findPin(t);n&&s&&(e.U.addClass(n.el,"highlight"),e.U.addClass(n.hoverEl,"highlight"),e.U.addClass(s.el,"highlight"),e.U.addClass(s.hoverEl,"highlight"))}}}(e.visuals||(e.visuals={}))}(pxsim||(pxsim={})),function(e){!function(t){function n(e){return t.mkImageSVG({image:e.image,width:e.width,height:e.height,imageUnitDist:e.pinDistance,targetUnitDist:t.PIN_DIST})}t.mkGenericPartSVG=n;t.GenericPart=class{constructor(t){this.style="",this.defs=[];let s=n(t).el;this.element=e.svg.elt("g"),this.element.appendChild(s)}moveToCoord(e){t.translateEl(this.element,e)}init(e,t,n){}updateState(){}updateTheme(){}}}(e.visuals||(e.visuals={}))}(pxsim||(pxsim={})),function(e){!function(t){const n=t.PIN_DIST/2.5,s=.7;function i(e){return e.replace(/\#/g,"-").replace(/\(/g,"-").replace(/\)/g,"-").replace(/\,/g,"-").replace(/\./g,"-").replace(/\s/g,"")}let r;function o(t,n,s,i){const r=e=>`${e[0]}, ${e[1]}`;let[o,a]=t,[l,u]=n,d=u-a,c=[o,a+d*s],h=[l,u-d*s],p=e.svg.mkPath("sim-bb-wire",`M${r(t)} C${r(c)} ${r(h)} ${r(n)}`);return e.U.addClass(p,`wire-stroke-${i}`),p}function a(t,n,s){const i=e=>`${e[0]}, ${e[1]}`;let r=e.svg.mkPath("sim-bb-wire",`M${i(t)} L${i(n)}`);return e.U.addClass(r,`wire-stroke-${s}`),r}function l(s,i){const r=t.PIN_DIST/4;let o=e.svg.elt("circle"),a=s[0],l=s[1],u=n/2+r/2;return e.svg.hydrate(o,{cx:a,cy:l,r:u,class:"sim-bb-wire-end"}),e.U.addClass(o,`wire-fill-${i}`),o.style["stroke-width"]=`${r}px`,o}function u(n,s,i){let r=.24*t.PIN_DIST,o=10*r,a=2*r,l=6*r,u=r;const d=t.PIN_DIST/4;let[c,h]=n,p=s?-1:1,m=e.svg.elt("g"),f=e.svg.elt("rect"),g=o,b=a,v=c-b/2,y=h-g/2;e.svg.hydrate(f,{x:v,y:y,width:b,height:g,rx:.5,ry:.5,class:"sim-bb-wire-end"}),f.style["stroke-width"]=`${d}px`;let w=e.svg.elt("rect"),x=l,C=u,S=c-C/2,k=h+p*(g/2+x/2)-x/2;return e.svg.hydrate(w,{x:S,y:k,width:C,height:x,class:"sim-bb-wire-bare-end"}),w.style.fill="#bbb",m.appendChild(w),m.appendChild(f),{el:m,x:v-d,y:Math.min(y,k),w:b+2*d,h:g+x}}function d(n,s,i){let r=.24*t.PIN_DIST;const o=4*r,a=10*r,l=3.5*r,u=3.5*r,d=t.PIN_DIST/4;let[c,h]=n,p=s?-1:1,m=e.svg.elt("g"),f=e.svg.elt("polygon"),g=a,b=o,v=c-b/2,y=h-g/2;const w=s?.15:.3,x=s?.7:1-.7,C=s?.3:.15;e.svg.hydrate(f,{points:((...e)=>e.map((e=>(e=>`${e[0]},${e[1]}`)(e))).join(" "))([v+b*w,y],[v+b*(1-w),y],[v+b,y+g*x],[v+b*(1-C),y+g],[v+b*C,y+g],[v,y+g*x])}),e.svg.hydrate(f,{rx:.5,ry:.5,class:"sim-bb-wire-end"}),f.style["stroke-width"]=`${d}px`;let S=e.svg.elt("rect"),k=l,R=u,E=c-R/2,I=h+p*(g/2+k/2)-k/2;return e.svg.hydrate(S,{x:E,y:I,width:R,height:k,class:"sim-bb-wire-bare-end"}),m.appendChild(S),m.appendChild(f),{el:m,x:v-d,y:Math.min(y,I),w:b+2*d,h:g+k}}t.WIRES_CSS=`\n        .sim-bb-wire {\n            fill:none;\n            stroke-linecap: round;\n            stroke-width:${n}px;\n            pointer-events: none;\n        }\n        .sim-bb-wire-end {\n            stroke:#333;\n            fill:#333;\n        }\n        .sim-bb-wire-bare-end {\n            fill: #ccc;\n        }\n        .sim-bb-wire-hover {\n            stroke-width: ${n}px;\n            visibility: hidden;\n            stroke-dasharray: ${t.PIN_DIST/10},${t.PIN_DIST/1.5};\n            /*stroke-opacity: 0.4;*/\n        }\n        .grayed .sim-bb-wire-ends-g:not(.highlight) .sim-bb-wire-end {\n            stroke: #777;\n            fill: #777;\n        }\n        .grayed .sim-bb-wire:not(.highlight) {\n            stroke: #CCC;\n        }\n        .sim-bb-wire-ends-g:hover .sim-bb-wire-end {\n            stroke: red;\n            fill: red;\n        }\n        .sim-bb-wire-ends-g:hover .sim-bb-wire-bare-end {\n            stroke: #FFF;\n            fill: #FFF;\n        }\n        `,function(e){e[e.BBJumper=0]="BBJumper",e[e.OpenJumper=1]="OpenJumper",e[e.Croc=2]="Croc"}(r=t.WireEndStyle||(t.WireEndStyle={})),t.mkWirePart=function(n,s,i=!1){let r,o=e.svg.elt("g"),[a,l]=n,c=[a-15,l-50],h=[a+15,l+50];s=t.mapWireColor(s),r=i?d(c,!0,s):u(c,!0,s);let p=function(t,n,s){const i=e=>`${e[0]}, ${e[1]}`;let[r,o]=t,[a,l]=n,u=l-o,d=[r,o+.8*u],c=[a,l-.8*u],h=e.svg.mkPath("sim-bb-wire",`M${i(t)} C${i(d)} ${i(c)} ${i(n)}`);return h.style.stroke=s,{el:h,x:Math.min(r,a),y:Math.min(o,l),w:Math.abs(r-a),h:Math.abs(o-l)}}(c,h,s),m=u(h,!1,s);o.appendChild(p.el),o.appendChild(r.el),o.appendChild(m.el);let f=Math.min(r.x,m.x),g=Math.max(r.x+r.w,m.x+m.w),b=Math.min(r.y,m.y);return{el:o,x:f,y:b,w:g-f,h:Math.max(r.y+r.h,m.y+m.h)-b}};t.WireFactory=class{constructor(e,n,s,i,r,o){this.nextWireId=0,this.styleEl=i,this.styleEl.textContent+=t.WIRES_CSS,this.underboard=e,this.overboard=n,this.boardEdges=s,this.getLocCoord=r,this.getPinStyle=o}indexOfMin(e){let t=0,n=e[0];for(let s=1;s<e.length;s++)e[s]<n&&(n=e[s],t=s);return t}closestEdgeIdx(e){let t=this.boardEdges.map((t=>Math.abs(e[1]-t)));return this.indexOfMin(t)}closestEdge(e){return this.boardEdges[this.closestEdgeIdx(e)]}drawWire(n,r,u){let d=[],c=e.svg.child(this.overboard,"g",{class:"sim-bb-wire-group"});const h=e=>{const n=t.PIN_DIST/2;let s,i=this.closestEdge(e);return s=i-e[1]<0?i-n:i+n,[e[0],s]};let p=this.nextWireId++,m=i(u),f=l(n,m),g=l(r,m),b=e.svg.child(c,"g",{class:"sim-bb-wire-ends-g"});b.appendChild(f),b.appendChild(g);let v=this.closestEdgeIdx(n),y=this.closestEdgeIdx(r);if(v==y){let e=a(n,r,m);c.appendChild(e),d.push(e)}else{let t,i,l=h(n),u=h(r),f=a(n,l,m),g=a(r,u,m);!(1!=v&&2!=v||1!=y&&2!=y)?(t=o(l,u,s,m),i=o(l,u,s,m)):(t=a(l,u,m),i=a(l,u,m)),e.U.addClass(i,"sim-bb-wire-hover"),c.appendChild(f),d.push(f),c.appendChild(g),d.push(g),this.underboard.appendChild(t),d.push(t),c.appendChild(i),d.push(i);let w=`sim-bb-wire-id-${p}`;const x=t=>e.U.addClass(t,w);x(b),x(i),this.styleEl.textContent+=`\n                    .${w}:hover ~ .${w}.sim-bb-wire-hover {\n                        visibility: visible;\n                    }`}let w=`\n                .wire-stroke-${m} {\n                    stroke: ${t.mapWireColor(u)};\n                }\n                .wire-fill-${m} {\n                    fill: ${t.mapWireColor(u)};\n                }\n                `;return this.styleEl.textContent+=w,{endG:b,end1:f,end2:g,wires:d}}drawWireWithCrocs(n,r,u,c=!1){let h=[],p=e.svg.child(this.overboard,"g",{class:"sim-bb-wire-group"});const m=e=>{const n=t.PIN_DIST/2;let s,i=this.closestEdge(e);return s=i-e[1]<0?i-n:i+n,[e[0],s]};let f=this.nextWireId++,g=i(u),b=l(n,g),v=r,[y,w]=r;r=[y,w+40],[y,w]=r;let x,C=[y,w+-17];x=c?function(n,s,i){let r=.24*t.PIN_DIST,o=4*r,a=1.2*r,l=10*r,u=r;const d=t.PIN_DIST/4;let[c,h]=n,p=s?-1:1,m=e.svg.elt("g"),f=e.svg.elt("rect"),g=o,b=a,v=c-b/2,y=h+10-g/2;e.svg.hydrate(f,{x:v,y:y,width:b,height:g,rx:.5,ry:.5,class:"sim-bb-wire-end"}),f.style["stroke-width"]=`${d}px`;let w=e.svg.elt("rect"),x=l,C=u,S=c-C/2,k=h+10+p*(g/2+x/2)-x/2;return e.svg.hydrate(w,{x:S,y:k,width:C,height:x,class:"sim-bb-wire-bare-end"}),w.style.fill="#bbb",m.appendChild(w),m.appendChild(f),{el:m,x:v-d,y:Math.min(y,k),w:b+2*d,h:g+x}}(C,!0):d(C,!0);let S=x.el,k=e.svg.child(p,"g",{class:"sim-bb-wire-ends-g"});k.appendChild(b);let R=this.closestEdgeIdx(n),E=this.closestEdgeIdx(v);if(R==E){let e=a(n,r,g);p.appendChild(e),h.push(e)}else{let t,i,l=m(n),u=a(n,l,g);!(1!=R&&2!=R||1!=E&&2!=E)?(t=o(l,r,s,g),i=o(l,r,s,g)):(t=a(l,r,g),i=a(l,r,g)),e.U.addClass(i,"sim-bb-wire-hover"),p.appendChild(u),h.push(u),this.underboard.appendChild(t),h.push(t);let d=`sim-bb-wire-id-${f}`;const c=t=>e.U.addClass(t,d);c(k),c(i),this.styleEl.textContent+=`\n                    .${d}:hover ~ .${d}.sim-bb-wire-hover {\n                        visibility: visible;\n                    }`}k.appendChild(S);let I=`\n                .wire-stroke-${g} {\n                    stroke: ${t.mapWireColor(u)};\n                }\n                .wire-fill-${g} {\n                    fill: ${t.mapWireColor(u)};\n                }\n                `;return this.styleEl.textContent+=I,{endG:k,end1:b,end2:S,wires:h}}checkWire(e,t){let n=this.getLocCoord(e),s=this.getLocCoord(t);return!!n&&!!s}addWire(e,t,n){let s=this.getLocCoord(e),i=this.getLocCoord(t);if(!s||!i)return void console.debug(`unable to allocate wire for ${e} or ${t}`);let r,o=this.getPinStyle(t);return r="dalboard"==t.type&&"croc"==o?this.drawWireWithCrocs(s,i,n):this.drawWire(s,i,n),r}}}(e.visuals||(e.visuals={}))}(pxsim||(pxsim={}));
+// Helpers designed to help to make a simulator accessible.
+var pxsim;
+(function (pxsim) {
+    var accessibility;
+    (function (accessibility) {
+        let liveRegion;
+        function makeFocusable(elem) {
+            elem.setAttribute("focusable", "true");
+            elem.setAttribute("tabindex", "0");
+        }
+        accessibility.makeFocusable = makeFocusable;
+        function enableKeyboardInteraction(elem, handlerKeyDown, handlerKeyUp) {
+            if (handlerKeyDown) {
+                elem.addEventListener('keydown', (e) => {
+                    const charCode = (typeof e.which == "number") ? e.which : e.keyCode;
+                    if (charCode === 32 || charCode === 13) { // Enter or Space key
+                        handlerKeyDown();
+                    }
+                });
+            }
+            if (handlerKeyUp) {
+                elem.addEventListener('keyup', (e) => {
+                    const charCode = (typeof e.which == "number") ? e.which : e.keyCode;
+                    if (charCode === 32 || charCode === 13) { // Enter or Space key
+                        handlerKeyUp();
+                    }
+                });
+            }
+        }
+        accessibility.enableKeyboardInteraction = enableKeyboardInteraction;
+        function setAria(elem, role, label) {
+            if (role && !elem.hasAttribute("role")) {
+                elem.setAttribute("role", role);
+            }
+            if (label && !elem.hasAttribute("aria-label")) {
+                elem.setAttribute("aria-label", label);
+            }
+        }
+        accessibility.setAria = setAria;
+        function setLiveContent(value) {
+            if (!liveRegion) {
+                let style = "position: absolute !important;" +
+                    "display: block;" +
+                    "visibility: visible;" +
+                    "overflow: hidden;" +
+                    "width: 1px;" +
+                    "height: 1px;" +
+                    "margin: -1px;" +
+                    "border: 0;" +
+                    "padding: 0;" +
+                    "clip: rect(0 0 0 0);";
+                liveRegion = document.createElement("div");
+                liveRegion.setAttribute("role", "status");
+                liveRegion.setAttribute("aria-live", "polite");
+                liveRegion.setAttribute("aria-hidden", "false");
+                liveRegion.setAttribute("style", style);
+                document.body.appendChild(liveRegion);
+            }
+            if (liveRegion.textContent !== value) {
+                liveRegion.textContent = value;
+            }
+        }
+        accessibility.setLiveContent = setLiveContent;
+    })(accessibility = pxsim.accessibility || (pxsim.accessibility = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    const GROUND_COLOR = "blue";
+    const POWER_COLOR = "red";
+    const POWER5V_COLOR = "orange";
+    ;
+    ;
+    ;
+    ;
+    ;
+    ;
+    function isOnBreadboardBottom(location) {
+        let isBot = false;
+        if (typeof location !== "string" && location.type === "breadboard") {
+            let bbLoc = location;
+            let row = bbLoc.row;
+            isBot = 0 <= ["a", "b", "c", "d", "e"].indexOf(row);
+        }
+        return isBot;
+    }
+    const arrCount = (a) => a.reduce((p, n) => p + (n ? 1 : 0), 0);
+    const arrAny = (a) => arrCount(a) > 0;
+    function computePowerUsage(wire) {
+        let ends = [wire.start, wire.end];
+        let endIsGround = ends.map(e => e === "ground");
+        let endIsThreeVolt = ends.map(e => e === "threeVolt");
+        let endIsFiveVolt = ends.map(e => e === "fiveVolt");
+        let endIsBot = ends.map(e => isOnBreadboardBottom(e));
+        let hasGround = arrAny(endIsGround);
+        let hasThreeVolt = arrAny(endIsThreeVolt);
+        let hasFiveVolt = arrAny(endIsFiveVolt);
+        let hasBot = arrAny(endIsBot);
+        return {
+            topGround: hasGround && !hasBot,
+            topThreeVolt: hasThreeVolt && !hasBot,
+            topFiveVolt: hasFiveVolt && !hasBot,
+            bottomGround: hasGround && hasBot,
+            bottomThreeVolt: hasThreeVolt && hasBot,
+            bottomFiveVolt: hasFiveVolt && hasBot,
+            singleGround: hasGround,
+            singleThreeVolt: hasThreeVolt,
+            singleFiveVolt: hasFiveVolt
+        };
+    }
+    function mergePowerUsage(powerUsages) {
+        const finalPowerUsage = powerUsages.reduce((p, n) => ({
+            topGround: p.topGround || n.topGround,
+            topThreeVolt: p.topThreeVolt || n.topThreeVolt,
+            topFiveVolt: p.topFiveVolt || n.topFiveVolt,
+            bottomGround: p.bottomGround || n.bottomGround,
+            bottomThreeVolt: p.bottomThreeVolt || n.bottomThreeVolt,
+            bottomFiveVolt: p.bottomFiveVolt || n.bottomFiveVolt,
+            singleGround: n.singleGround ? p.singleGround === null : p.singleGround,
+            singleThreeVolt: n.singleThreeVolt ? p.singleThreeVolt === null : p.singleThreeVolt,
+            singleFiveVolt: n.singleFiveVolt ? p.singleFiveVolt === null : p.singleFiveVolt,
+        }), {
+            topGround: false,
+            topThreeVolt: false,
+            topFiveVolt: false,
+            bottomGround: false,
+            bottomThreeVolt: false,
+            bottomFiveVolt: false,
+            singleGround: null,
+            singleThreeVolt: null,
+            singleFiveVolt: null
+        });
+        if (finalPowerUsage.singleGround)
+            finalPowerUsage.topGround = finalPowerUsage.bottomGround = false;
+        if (finalPowerUsage.singleThreeVolt)
+            finalPowerUsage.topThreeVolt = finalPowerUsage.bottomThreeVolt = false;
+        if (finalPowerUsage.singleFiveVolt)
+            finalPowerUsage.topFiveVolt = finalPowerUsage.bottomFiveVolt = false;
+        return finalPowerUsage;
+    }
+    function copyDoubleArray(a) {
+        return a.map(b => b.map(p => p));
+    }
+    function merge2(a, b) {
+        let res = {};
+        for (let aKey in a)
+            res[aKey] = a[aKey];
+        for (let bKey in b)
+            res[bKey] = b[bKey];
+        return res;
+    }
+    function merge3(a, b, c) {
+        return merge2(merge2(a, b), c);
+    }
+    function readPin(arg) {
+        pxsim.U.assert(!!arg, "Invalid pin: " + arg);
+        const pin = /^(\w+)\.\s*(?:[a-z]*)?([A-Z][A-Z\d_]+)$/.exec(arg);
+        return pin ? pin[2] : undefined;
+    }
+    pxsim.readPin = readPin;
+    function mkReverseMap(map) {
+        let origKeys = [];
+        let origVals = [];
+        for (let key in map) {
+            origKeys.push(key);
+            origVals.push(map[key]);
+        }
+        let newMap = {};
+        for (let i = 0; i < origKeys.length; i++) {
+            let newKey = origVals[i];
+            let newVal = origKeys[i];
+            newMap[newKey] = newVal;
+        }
+        return newMap;
+    }
+    function isConnectedToBB(pin) {
+        return pin.orientation === "-Z" && pin.style === "male";
+    }
+    class Allocator {
+        constructor(opts) {
+            this.availablePowerPins = {
+                top: {
+                    fiveVolt: pxsim.mkRange(26, 51).map(n => ({ type: "breadboard", row: "+", col: `${n}` })),
+                    threeVolt: pxsim.mkRange(26, 51).map(n => ({ type: "breadboard", row: "+", col: `${n}` })),
+                    ground: pxsim.mkRange(26, 51).map(n => ({ type: "breadboard", row: "-", col: `${n}` })),
+                },
+                bottom: {
+                    fiveVolt: pxsim.mkRange(1, 26).map(n => ({ type: "breadboard", row: "+", col: `${n}` })),
+                    threeVolt: pxsim.mkRange(1, 26).map(n => ({ type: "breadboard", row: "+", col: `${n}` })),
+                    ground: pxsim.mkRange(1, 26).map(n => ({ type: "breadboard", row: "-", col: `${n}` })),
+                },
+            };
+            this.opts = opts;
+        }
+        allocPartIRs(def, name, bbFit) {
+            let partIRs = [];
+            const mkIR = (def, name, instPins, partParams) => {
+                let pinIRs = [];
+                for (let i = 0; i < def.numberOfPins; i++) {
+                    let pinDef = def.pinDefinitions[i];
+                    let pinTarget;
+                    if (typeof pinDef.target === "string") {
+                        pinTarget = pinDef.target;
+                    }
+                    else {
+                        let instIdx = pinDef.target.pinInstantiationIdx;
+                        if (!(!!instPins && instPins[instIdx] !== undefined)) {
+                            console.log(`error: parts no pin found for PinInstantiationIdx: ${instIdx}. (Is the part missing an ArgumentRole or "trackArgs=" annotations?)`);
+                            return undefined;
+                        }
+                        pinTarget = instPins[instIdx];
+                    }
+                    let pinLoc = def.visual.pinLocations[i];
+                    let adjustedY = bbFit.yOffset + pinLoc.y;
+                    let relativeRowIdx = Math.round(adjustedY / def.visual.pinDistance);
+                    let relativeYOffset = adjustedY - relativeRowIdx * def.visual.pinDistance;
+                    let adjustedX = bbFit.xOffset + pinLoc.x;
+                    let relativeColIdx = Math.round(adjustedX / def.visual.pinDistance);
+                    let relativeXOffset = adjustedX - relativeColIdx * def.visual.pinDistance;
+                    let pinBBFit = {
+                        partRelativeRowIdx: relativeRowIdx,
+                        partRelativeColIdx: relativeColIdx,
+                        xOffset: relativeXOffset,
+                        yOffset: relativeYOffset
+                    };
+                    pinIRs.push({
+                        def: pinDef,
+                        loc: pinLoc,
+                        target: pinTarget,
+                        bbFit: pinBBFit,
+                    });
+                }
+                return {
+                    name: name,
+                    def: def,
+                    pins: pinIRs,
+                    partParams: partParams || {},
+                    bbFit: bbFit
+                };
+            };
+            // support for multiple possible instantions
+            const instantiations = def.instantiations || [];
+            if (def.instantiation)
+                instantiations.push(def.instantiation);
+            instantiations.forEach(instantiation => {
+                if (instantiation.kind === "singleton") {
+                    partIRs.push(mkIR(def, name));
+                }
+                else if (instantiation.kind === "function") {
+                    let fnAlloc = instantiation;
+                    let fnNms = fnAlloc.fullyQualifiedName.split(',');
+                    let callsitesTrackedArgsHash = {};
+                    fnNms.forEach(fnNm => { if (this.opts.fnArgs[fnNm])
+                        this.opts.fnArgs[fnNm].forEach((targetArg) => { callsitesTrackedArgsHash[targetArg] = 1; }); });
+                    let callsitesTrackedArgs = Object.keys(callsitesTrackedArgsHash);
+                    if (!(!!callsitesTrackedArgs && !!callsitesTrackedArgs.length)) {
+                        console.log(`error: parts failed to read pin(s) from callsite for: ${fnNms}`);
+                        return undefined;
+                    }
+                    callsitesTrackedArgs.forEach(fnArgsStr => {
+                        const fnArgsSplit = fnArgsStr.split(",");
+                        if (fnArgsSplit.length != fnAlloc.argumentRoles.length) {
+                            console.log(`error: parts mismatch between number of arguments at callsite (function name: ${fnNms}) vs number of argument roles in part definition (part: ${name}).`);
+                            return;
+                        }
+                        let instPins = [];
+                        let paramArgs = {};
+                        fnArgsSplit.forEach((arg, idx) => {
+                            let role = fnAlloc.argumentRoles[idx];
+                            if (role.partParameter !== undefined) {
+                                paramArgs[role.partParameter] = arg;
+                            }
+                            if (role.pinInstantiationIdx !== undefined) {
+                                let instIdx = role.pinInstantiationIdx;
+                                let pin = readPin(arg);
+                                instPins[instIdx] = pin;
+                            }
+                        });
+                        partIRs.push(mkIR(def, name, instPins, paramArgs));
+                    });
+                }
+            });
+            return partIRs.filter(ir => !!ir);
+        }
+        computePartDimensions(def, name) {
+            let pinLocs = def.visual.pinLocations;
+            let pinDefs = def.pinDefinitions;
+            let numPins = def.numberOfPins;
+            pxsim.U.assert(pinLocs.length === numPins, `Mismatch between "numberOfPins" and length of "visual.pinLocations" for "${name}"`);
+            pxsim.U.assert(pinDefs.length === numPins, `Mismatch between "numberOfPins" and length of "pinDefinitions" for "${name}"`);
+            pxsim.U.assert(numPins > 0, `Part "${name}" has no pins`);
+            let pins = pinLocs.map((loc, idx) => merge3({ idx: idx }, loc, pinDefs[idx]));
+            let bbPins = pins.filter(p => p.orientation === "-Z");
+            let hasBBPins = bbPins.length > 0;
+            let pinDist = def.visual.pinDistance;
+            let xOff;
+            let yOff;
+            let colCount;
+            let rowCount;
+            if (hasBBPins) {
+                let refPin = bbPins[0];
+                let refPinColIdx = Math.ceil(refPin.x / pinDist);
+                let refPinRowIdx = Math.ceil(refPin.y / pinDist);
+                xOff = refPinColIdx * pinDist - refPin.x;
+                yOff = refPinRowIdx * pinDist - refPin.y;
+                colCount = Math.ceil((xOff + def.visual.width) / pinDist) + 1;
+                rowCount = Math.ceil((yOff + def.visual.height) / pinDist) + 1;
+            }
+            else {
+                colCount = Math.ceil(def.visual.width / pinDist);
+                rowCount = Math.ceil(def.visual.height / pinDist);
+                xOff = colCount * pinDist - def.visual.width;
+                yOff = rowCount * pinDist - def.visual.height;
+            }
+            return {
+                xOffset: xOff,
+                yOffset: yOff,
+                rowCount: rowCount,
+                colCount: colCount
+            };
+        }
+        allocColumns(colCounts) {
+            let partsCount = colCounts.length;
+            const totalColumnsCount = pxsim.visuals.BREADBOARD_MID_COLS; //TODO allow multiple breadboards
+            let totalSpaceNeeded = colCounts.map(d => d.colCount).reduce((p, n) => p + n, 0);
+            let extraSpace = totalColumnsCount - totalSpaceNeeded;
+            if (extraSpace <= 0) {
+                console.log("Not enough breadboard space!");
+                //TODO
+            }
+            let padding = Math.floor(extraSpace / (partsCount - 1 + 2));
+            let partSpacing = padding; //Math.floor(extraSpace/(partsCount-1));
+            let totalPartPadding = extraSpace - partSpacing * (partsCount - 1);
+            let leftPadding = Math.floor(totalPartPadding / 2);
+            let rightPadding = Math.ceil(totalPartPadding / 2);
+            let nextAvailableCol = 1 + leftPadding;
+            let partStartCol = colCounts.map(part => {
+                let col = nextAvailableCol;
+                nextAvailableCol += part.colCount + partSpacing;
+                return col;
+            });
+            return partStartCol;
+        }
+        placeParts(parts) {
+            const totalRowsCount = pxsim.visuals.BREADBOARD_MID_ROWS + 2; // 10 letters + 2 for the middle gap
+            let startColumnIndices = this.allocColumns(parts.map(p => p.bbFit));
+            let startRowIndicies = parts.map(p => {
+                let extraRows = totalRowsCount - p.bbFit.rowCount;
+                let topPad = Math.floor(extraRows / 2);
+                let startIdx = topPad;
+                if (startIdx > 4)
+                    startIdx = 4;
+                if (startIdx < 1)
+                    startIdx = 1;
+                return startIdx;
+            });
+            let placements = parts.map((p, idx) => {
+                let row = startRowIndicies[idx];
+                let col = startColumnIndices[idx];
+                return merge2({ startColumnIdx: col, startRowIdx: row }, p);
+            });
+            return placements;
+        }
+        nextColor() {
+            if (!this.availableWireColors || this.availableWireColors.length <= 0) {
+                this.availableWireColors = pxsim.visuals.GPIO_WIRE_COLORS.map(c => c);
+            }
+            return this.availableWireColors.pop();
+        }
+        allocWireIRs(part) {
+            let groupToColor = [];
+            let wires = part.pins.map((pin, pinIdx) => {
+                let end = pin.target;
+                let start;
+                let colIdx = part.startColumnIdx + pin.bbFit.partRelativeColIdx;
+                let colName = pxsim.visuals.getColumnName(colIdx);
+                let pinRowIdx = part.startRowIdx + pin.bbFit.partRelativeRowIdx;
+                if (pinRowIdx >= 7) //account for middle gap
+                    pinRowIdx -= 2;
+                if (isConnectedToBB(pin.def)) {
+                    //make a wire from bb top or bottom to target
+                    let connectedToTop = pinRowIdx < 5;
+                    let rowName = connectedToTop ? "j" : "a";
+                    start = {
+                        type: "breadboard",
+                        row: rowName,
+                        col: colName,
+                        style: pin.def.style
+                    };
+                }
+                else {
+                    //make a wire directly from pin to target
+                    let rowName = pxsim.visuals.getRowName(pinRowIdx);
+                    start = {
+                        type: "breadboard",
+                        row: rowName,
+                        col: colName,
+                        xOffset: pin.bbFit.xOffset / part.def.visual.pinDistance,
+                        yOffset: pin.bbFit.yOffset / part.def.visual.pinDistance,
+                        style: pin.def.style
+                    };
+                }
+                let color;
+                if (end === "ground") {
+                    color = GROUND_COLOR;
+                }
+                else if (end === "threeVolt") {
+                    color = POWER_COLOR;
+                }
+                else if (end === "fiveVolt") {
+                    color = POWER5V_COLOR;
+                }
+                else if (typeof pin.def.colorGroup === "number") {
+                    if (groupToColor[pin.def.colorGroup]) {
+                        color = groupToColor[pin.def.colorGroup];
+                    }
+                    else {
+                        color = groupToColor[pin.def.colorGroup] = this.nextColor();
+                    }
+                }
+                else {
+                    color = this.nextColor();
+                }
+                return {
+                    start: start,
+                    end: end,
+                    color: color,
+                    pinIdx: pinIdx,
+                };
+            });
+            return merge2(part, { wires: wires });
+        }
+        allocLocation(location, opts) {
+            if (location === "ground" || location === "threeVolt" || location == "fiveVolt") {
+                //special case if there is only a single ground or three volt pin in the whole build
+                if (location === "ground" && this.powerUsage.singleGround) {
+                    let boardGroundPin = this.getBoardGroundPin();
+                    return { type: "dalboard", pin: boardGroundPin };
+                }
+                else if (location === "threeVolt" && this.powerUsage.singleThreeVolt) {
+                    let boardThreeVoltPin = this.getBoardThreeVoltPin();
+                    return { type: "dalboard", pin: boardThreeVoltPin };
+                }
+                else if (location === "fiveVolt" && this.powerUsage.singleFiveVolt) {
+                    let boardFiveVoltPin = this.getBoardFiveVoltPin();
+                    return { type: "dalboard", pin: boardFiveVoltPin };
+                }
+                pxsim.U.assert(!!opts.referenceBBPin);
+                let nearestCoord = this.opts.getBBCoord(opts.referenceBBPin);
+                let firstTopAndBot = [
+                    this.availablePowerPins.top.ground[0] || this.availablePowerPins.top.threeVolt[0],
+                    this.availablePowerPins.bottom.ground[0] || this.availablePowerPins.bottom.threeVolt[0]
+                ].map(loc => {
+                    return this.opts.getBBCoord(loc);
+                });
+                if (!firstTopAndBot[0] || !firstTopAndBot[1]) {
+                    console.debug(`No more available "${location}" locations!`);
+                    //TODO
+                }
+                let nearTop = pxsim.visuals.findClosestCoordIdx(nearestCoord, firstTopAndBot) == 0;
+                let barPins;
+                if (nearTop) {
+                    if (location === "ground") {
+                        barPins = this.availablePowerPins.top.ground;
+                    }
+                    else if (location === "threeVolt") {
+                        barPins = this.availablePowerPins.top.threeVolt;
+                    }
+                    else if (location === "fiveVolt") {
+                        barPins = this.availablePowerPins.top.fiveVolt;
+                    }
+                }
+                else {
+                    if (location === "ground") {
+                        barPins = this.availablePowerPins.bottom.ground;
+                    }
+                    else if (location === "threeVolt") {
+                        barPins = this.availablePowerPins.bottom.threeVolt;
+                    }
+                    else if (location === "fiveVolt") {
+                        barPins = this.availablePowerPins.bottom.fiveVolt;
+                    }
+                }
+                let pinCoords = barPins.map(rowCol => {
+                    return this.opts.getBBCoord(rowCol);
+                });
+                let closestPinIdx = pxsim.visuals.findClosestCoordIdx(nearestCoord, pinCoords);
+                let pin = barPins[closestPinIdx];
+                if (nearTop) {
+                    this.availablePowerPins.top.ground.splice(closestPinIdx, 1);
+                    this.availablePowerPins.top.threeVolt.splice(closestPinIdx, 1);
+                }
+                else {
+                    this.availablePowerPins.bottom.ground.splice(closestPinIdx, 1);
+                    this.availablePowerPins.bottom.threeVolt.splice(closestPinIdx, 1);
+                }
+                return pin;
+            }
+            else if (location.type === "breadboard") {
+                return location;
+            }
+            else if (location === "MOSI" || location === "MISO" || location === "SCK") {
+                if (!this.opts.boardDef.spiPins)
+                    console.debug("No SPI pin mappings found!");
+                let pin = this.opts.boardDef.spiPins[location];
+                return { type: "dalboard", pin: pin };
+            }
+            else if (location === "SDA" || location === "SCL") {
+                if (!this.opts.boardDef.i2cPins)
+                    console.debug("No I2C pin mappings found!");
+                let pin = this.opts.boardDef.i2cPins[location];
+                return { type: "dalboard", pin: pin };
+            }
+            else {
+                //it must be a MicrobitPin
+                pxsim.U.assert(typeof location === "string", "Unknown location type: " + location);
+                let mbPin = location;
+                let boardPin = this.opts.boardDef.gpioPinMap[mbPin] || mbPin;
+                if (!boardPin) { // this pin is internal
+                    console.debug(`unknown pin location for ${mbPin}`);
+                    return undefined;
+                }
+                return { type: "dalboard", pin: boardPin };
+            }
+        }
+        getBoardGroundPin() {
+            let pin = this.opts.boardDef.groundPins && this.opts.boardDef.groundPins[0] || null;
+            if (!pin) {
+                console.debug("No available ground pin on board!");
+                //TODO
+            }
+            return pin;
+        }
+        getBoardThreeVoltPin() {
+            let pin = this.opts.boardDef.threeVoltPins && this.opts.boardDef.threeVoltPins[0] || null;
+            if (!pin) {
+                console.debug("No available 3.3V pin on board!");
+                //TODO
+            }
+            return pin;
+        }
+        getBoardFiveVoltPin() {
+            let pin = this.opts.boardDef.fiveVoltPins && this.opts.boardDef.fiveVoltPins[0] || null;
+            if (!pin) {
+                console.debug("No available 5V pin on board!");
+                //TODO
+            }
+            return pin;
+        }
+        allocPowerWires(powerUsage) {
+            let boardGroundPin = this.getBoardGroundPin();
+            let threeVoltPin = this.getBoardThreeVoltPin();
+            let fiveVoltPin = this.getBoardFiveVoltPin();
+            const topLeft = { type: "breadboard", row: "-", col: "26" };
+            const botLeft = { type: "breadboard", row: "-", col: "1" };
+            const topRight = { type: "breadboard", row: "-", col: "50" };
+            const botRight = { type: "breadboard", row: "-", col: "25" };
+            let top, bot;
+            if (this.opts.boardDef.attachPowerOnRight) {
+                top = topRight;
+                bot = botRight;
+            }
+            else {
+                top = topLeft;
+                bot = botLeft;
+            }
+            let groundWires = [];
+            let threeVoltWires = [];
+            let fiveVoltWires = [];
+            if (powerUsage.bottomGround && powerUsage.topGround) {
+                //bb top - <==> bb bot -
+                groundWires.push({
+                    start: this.allocLocation("ground", { referenceBBPin: top }),
+                    end: this.allocLocation("ground", { referenceBBPin: bot }),
+                    color: GROUND_COLOR,
+                });
+            }
+            if (powerUsage.topGround) {
+                //board - <==> bb top -
+                groundWires.push({
+                    start: this.allocLocation("ground", { referenceBBPin: top }),
+                    end: { type: "dalboard", pin: boardGroundPin },
+                    color: GROUND_COLOR,
+                });
+            }
+            else if (powerUsage.bottomGround) {
+                //board - <==> bb bot -
+                groundWires.push({
+                    start: this.allocLocation("ground", { referenceBBPin: bot }),
+                    end: { type: "dalboard", pin: boardGroundPin },
+                    color: GROUND_COLOR,
+                });
+            }
+            if (powerUsage.bottomThreeVolt && powerUsage.bottomGround) {
+                //bb top + <==> bb bot +
+                threeVoltWires.push({
+                    start: this.allocLocation("threeVolt", { referenceBBPin: top }),
+                    end: this.allocLocation("threeVolt", { referenceBBPin: bot }),
+                    color: POWER_COLOR,
+                });
+            }
+            else if (powerUsage.bottomFiveVolt && powerUsage.bottomGround) {
+                //bb top + <==> bb bot +
+                fiveVoltWires.push({
+                    start: this.allocLocation("fiveVolt", { referenceBBPin: top }),
+                    end: this.allocLocation("fiveVolt", { referenceBBPin: bot }),
+                    color: POWER5V_COLOR,
+                });
+            }
+            if (powerUsage.topThreeVolt) {
+                //board + <==> bb top +
+                threeVoltWires.push({
+                    start: this.allocLocation("threeVolt", { referenceBBPin: top }),
+                    end: { type: "dalboard", pin: threeVoltPin },
+                    color: POWER_COLOR,
+                });
+            }
+            else if (powerUsage.bottomThreeVolt) {
+                //board + <==> bb bot +
+                threeVoltWires.push({
+                    start: this.allocLocation("threeVolt", { referenceBBPin: bot }),
+                    end: { type: "dalboard", pin: threeVoltPin },
+                    color: POWER5V_COLOR,
+                });
+            }
+            if (powerUsage.topFiveVolt && !powerUsage.topThreeVolt) {
+                //board + <==> bb top +
+                fiveVoltWires.push({
+                    start: this.allocLocation("fiveVolt", { referenceBBPin: top }),
+                    end: { type: "dalboard", pin: fiveVoltPin },
+                    color: POWER_COLOR,
+                });
+            }
+            else if (powerUsage.bottomFiveVolt && !powerUsage.bottomThreeVolt) {
+                //board + <==> bb bot +
+                fiveVoltWires.push({
+                    start: this.allocLocation("fiveVolt", { referenceBBPin: bot }),
+                    end: { type: "dalboard", pin: fiveVoltPin },
+                    color: POWER5V_COLOR,
+                });
+            }
+            let assembly = [];
+            if (groundWires.length > 0)
+                assembly.push({ wireIndices: groundWires.map((w, i) => i) });
+            let numGroundWires = groundWires.length;
+            if (threeVoltWires.length > 0)
+                assembly.push({
+                    wireIndices: threeVoltWires.map((w, i) => i + numGroundWires)
+                });
+            if (fiveVoltWires.length > 0)
+                assembly.push({
+                    wireIndices: threeVoltWires.map((w, i) => i + numGroundWires + threeVoltWires.length)
+                });
+            return {
+                wires: groundWires.concat(threeVoltWires).concat(fiveVoltWires),
+                assembly: assembly
+            };
+        }
+        allocWire(wireIR) {
+            const ends = [wireIR.start, wireIR.end];
+            const endIsPower = ends.map(e => e === "ground" || e === "threeVolt" || e === "fiveVolt");
+            //allocate non-power first so we know the nearest pin for the power end
+            let endInsts = ends.map((e, idx) => !endIsPower[idx] ? this.allocLocation(e, {}) : undefined);
+            //allocate power pins closest to the other end of the wire
+            endInsts = endInsts.map((e, idx) => {
+                if (e)
+                    return e;
+                const locInst = endInsts[1 - idx]; // non-power end
+                const l = this.allocLocation(ends[idx], {
+                    referenceBBPin: locInst,
+                });
+                return l;
+            });
+            // one of the pins is not accessible
+            if (!endInsts[0] || !endInsts[1])
+                return undefined;
+            return { start: endInsts[0], end: endInsts[1], color: wireIR.color };
+        }
+        allocPart(ir) {
+            let bbConnections = ir.pins
+                .filter(p => isConnectedToBB(p.def))
+                .map(p => {
+                let rowIdx = ir.startRowIdx + p.bbFit.partRelativeRowIdx;
+                if (rowIdx >= 7) //account for middle gap
+                    rowIdx -= 2;
+                let rowName = pxsim.visuals.getRowName(rowIdx);
+                let colIdx = ir.startColumnIdx + p.bbFit.partRelativeColIdx;
+                let colName = pxsim.visuals.getColumnName(colIdx);
+                return {
+                    type: "breadboard",
+                    row: rowName,
+                    col: colName,
+                };
+            });
+            let part = {
+                name: ir.name,
+                visual: ir.def.visual,
+                bbFit: ir.bbFit,
+                startColumnIdx: ir.startColumnIdx,
+                startRowIdx: ir.startRowIdx,
+                breadboardConnections: bbConnections,
+                params: ir.partParams,
+                simulationBehavior: ir.def.simulationBehavior
+            };
+            return part;
+        }
+        allocAll() {
+            let partNmAndDefs = this.opts.partsList
+                .map(partName => { return { name: partName, def: this.opts.partDefs[partName] }; })
+                .filter(d => !!d.def);
+            if (partNmAndDefs.length > 0) {
+                let dimensions = partNmAndDefs.map(nmAndPart => this.computePartDimensions(nmAndPart.def, nmAndPart.name));
+                let partIRs = [];
+                partNmAndDefs.forEach((nmAndDef, idx) => {
+                    let dims = dimensions[idx];
+                    let irs = this.allocPartIRs(nmAndDef.def, nmAndDef.name, dims);
+                    partIRs = partIRs.concat(irs);
+                });
+                const partPlacements = this.placeParts(partIRs);
+                const partsAndWireIRs = partPlacements.map(p => this.allocWireIRs(p));
+                const allWireIRs = partsAndWireIRs.map(p => p.wires).reduce((p, n) => p.concat(n), []);
+                const allPowerUsage = allWireIRs.map(w => computePowerUsage(w));
+                this.powerUsage = mergePowerUsage(allPowerUsage);
+                const basicWires = this.allocPowerWires(this.powerUsage);
+                const partsAndWires = partsAndWireIRs.map((irs, idx) => {
+                    const part = this.allocPart(irs);
+                    const wires = irs.wires.map(w => this.allocWire(w));
+                    if (wires.some(w => !w))
+                        return undefined;
+                    const pinIdxToWireIdx = [];
+                    irs.wires.forEach((wIR, idx) => {
+                        pinIdxToWireIdx[wIR.pinIdx] = idx;
+                    });
+                    const assembly = irs.def.assembly.map(stepDef => {
+                        return {
+                            part: stepDef.part,
+                            wireIndices: (stepDef.pinIndices || []).map(i => pinIdxToWireIdx[i])
+                        };
+                    });
+                    return {
+                        part: part,
+                        wires: wires,
+                        assembly: assembly
+                    };
+                }).filter(p => !!p);
+                const all = [basicWires].concat(partsAndWires)
+                    .filter(pw => pw.assembly && pw.assembly.length); // only keep steps with something to do
+                // hide breadboard if not used
+                const hideBreadboard = !all.some(r => (r.part && r.part.breadboardConnections && r.part.breadboardConnections.length > 0)
+                    || r.wires && r.wires.some(w => (w.end.type == "breadboard" && w.end.style != "croc") || (w.start.type == "breadboard" && w.start.style != "croc")));
+                return {
+                    partsAndWires: all,
+                    wires: [],
+                    parts: [],
+                    hideBreadboard
+                };
+            }
+            else {
+                return {
+                    partsAndWires: [],
+                    wires: [],
+                    parts: []
+                };
+            }
+        }
+    }
+    function allocateDefinitions(opts) {
+        return new Allocator(opts).allocAll();
+    }
+    pxsim.allocateDefinitions = allocateDefinitions;
+})(pxsim || (pxsim = {}));
+/// <reference path="../localtypings/vscode-debug-protocol.d.ts" />
+/**
+ * Heavily adapted from https://github.com/microsoft/vscode-debugadapter-node
+ * and altered to run in a browser and communcate via JSON over a websocket
+ * rather than through stdin and stdout
+ */
+var pxsim;
+(function (pxsim) {
+    var protocol;
+    (function (protocol) {
+        class Message {
+            constructor(type) {
+                this.seq = 0;
+                this.type = type;
+            }
+        }
+        protocol.Message = Message;
+        class Response extends Message {
+            constructor(request, message) {
+                super('response');
+                this.request_seq = request.seq;
+                this.command = request.command;
+                if (message) {
+                    this.success = false;
+                    this.message = message;
+                }
+                else {
+                    this.success = true;
+                }
+            }
+        }
+        protocol.Response = Response;
+        class Event extends Message {
+            constructor(event, body) {
+                super('event');
+                this.event = event;
+                if (body) {
+                    this.body = body;
+                }
+            }
+        }
+        protocol.Event = Event;
+        class Source {
+            constructor(name, path, id = 0, origin, data) {
+                this.name = name;
+                this.path = path;
+                this.sourceReference = id;
+                if (origin) {
+                    this.origin = origin;
+                }
+                if (data) {
+                    this.adapterData = data;
+                }
+            }
+        }
+        protocol.Source = Source;
+        class Scope {
+            constructor(name, reference, expensive = false) {
+                this.name = name;
+                this.variablesReference = reference;
+                this.expensive = expensive;
+            }
+        }
+        protocol.Scope = Scope;
+        class StackFrame {
+            constructor(i, nm, src, ln = 0, col = 0) {
+                this.id = i;
+                this.source = src;
+                this.line = ln;
+                this.column = col;
+                this.name = nm;
+            }
+        }
+        protocol.StackFrame = StackFrame;
+        class Thread {
+            constructor(id, name) {
+                this.id = id;
+                if (name) {
+                    this.name = name;
+                }
+                else {
+                    this.name = 'Thread #' + id;
+                }
+            }
+        }
+        protocol.Thread = Thread;
+        class Variable {
+            constructor(name, value, ref = 0, indexedVariables, namedVariables) {
+                this.name = name;
+                this.value = value;
+                this.variablesReference = ref;
+                if (typeof namedVariables === 'number') {
+                    this.namedVariables = namedVariables;
+                }
+                if (typeof indexedVariables === 'number') {
+                    this.indexedVariables = indexedVariables;
+                }
+            }
+        }
+        protocol.Variable = Variable;
+        class Breakpoint {
+            constructor(verified, line, column, source) {
+                this.verified = verified;
+                const e = this;
+                if (typeof line === 'number') {
+                    e.line = line;
+                }
+                if (typeof column === 'number') {
+                    e.column = column;
+                }
+                if (source) {
+                    e.source = source;
+                }
+            }
+        }
+        protocol.Breakpoint = Breakpoint;
+        class Module {
+            constructor(id, name) {
+                this.id = id;
+                this.name = name;
+            }
+        }
+        protocol.Module = Module;
+        class CompletionItem {
+            constructor(label, start, length = 0) {
+                this.label = label;
+                this.start = start;
+                this.length = length;
+            }
+        }
+        protocol.CompletionItem = CompletionItem;
+        class StoppedEvent extends Event {
+            constructor(reason, threadId, exception_text = null) {
+                super('stopped');
+                this.body = {
+                    reason: reason,
+                    threadId: threadId
+                };
+                if (exception_text) {
+                    const e = this;
+                    e.body.text = exception_text;
+                }
+            }
+        }
+        protocol.StoppedEvent = StoppedEvent;
+        class ContinuedEvent extends Event {
+            constructor(threadId, allThreadsContinued) {
+                super('continued');
+                this.body = {
+                    threadId: threadId
+                };
+                if (typeof allThreadsContinued === 'boolean') {
+                    this.body.allThreadsContinued = allThreadsContinued;
+                }
+            }
+        }
+        protocol.ContinuedEvent = ContinuedEvent;
+        class InitializedEvent extends Event {
+            constructor() {
+                super('initialized');
+            }
+        }
+        protocol.InitializedEvent = InitializedEvent;
+        class TerminatedEvent extends Event {
+            constructor(restart) {
+                super('terminated');
+                if (typeof restart === 'boolean') {
+                    const e = this;
+                    e.body = {
+                        restart: restart
+                    };
+                }
+            }
+        }
+        protocol.TerminatedEvent = TerminatedEvent;
+        class OutputEvent extends Event {
+            constructor(output, category = 'console', data) {
+                super('output');
+                this.body = {
+                    category: category,
+                    output: output
+                };
+                if (data !== undefined) {
+                    this.body.data = data;
+                }
+            }
+        }
+        protocol.OutputEvent = OutputEvent;
+        class ThreadEvent extends Event {
+            constructor(reason, threadId) {
+                super('thread');
+                this.body = {
+                    reason: reason,
+                    threadId: threadId
+                };
+            }
+        }
+        protocol.ThreadEvent = ThreadEvent;
+        class BreakpointEvent extends Event {
+            constructor(reason, breakpoint) {
+                super('breakpoint');
+                this.body = {
+                    reason: reason,
+                    breakpoint: breakpoint
+                };
+            }
+        }
+        protocol.BreakpointEvent = BreakpointEvent;
+        class ModuleEvent extends Event {
+            constructor(reason, module) {
+                super('module');
+                this.body = {
+                    reason: reason,
+                    module: module
+                };
+            }
+        }
+        protocol.ModuleEvent = ModuleEvent;
+        class ProtocolServer {
+            constructor() {
+                this._pendingRequests = {};
+            }
+            start(host) {
+                this._sequence = 1;
+                this.host = host;
+                this.host.onData(msg => {
+                    if (msg.type === 'request') {
+                        this.dispatchRequest(msg);
+                    }
+                    else if (msg.type === 'response') {
+                        const response = msg;
+                        const clb = this._pendingRequests[response.seq];
+                        if (clb) {
+                            delete this._pendingRequests[response.seq];
+                            clb(response);
+                        }
+                    }
+                });
+            }
+            stop() {
+                if (this.host) {
+                    this.host.close();
+                }
+            }
+            sendEvent(event) {
+                this.send('event', event);
+            }
+            sendResponse(response) {
+                if (response.seq > 0) {
+                    console.error(`attempt to send more than one response for command ${response.command}`);
+                }
+                else {
+                    this.send('response', response);
+                }
+            }
+            sendRequest(command, args, timeout, cb) {
+                const request = {
+                    command: command
+                };
+                if (args && Object.keys(args).length > 0) {
+                    request.arguments = args;
+                }
+                this.send('request', request);
+                if (cb) {
+                    this._pendingRequests[request.seq] = cb;
+                    const timer = setTimeout(() => {
+                        clearTimeout(timer);
+                        const clb = this._pendingRequests[request.seq];
+                        if (clb) {
+                            delete this._pendingRequests[request.seq];
+                            clb(new protocol.Response(request, 'timeout'));
+                        }
+                    }, timeout);
+                }
+            }
+            send(typ, message) {
+                message.type = typ;
+                message.seq = this._sequence++;
+                if (this.host) {
+                    const json = JSON.stringify(message);
+                    this.host.send(json);
+                }
+            }
+            // ---- protected ----------------------------------------------------------
+            dispatchRequest(request) {
+            }
+        }
+        protocol.ProtocolServer = ProtocolServer;
+        class DebugSession extends ProtocolServer {
+            constructor() {
+                super(...arguments);
+                this._debuggerLinesStartAt1 = false;
+                this._debuggerColumnsStartAt1 = false;
+                this._clientLinesStartAt1 = true;
+                this._clientColumnsStartAt1 = true;
+            }
+            shutdown() {
+            }
+            dispatchRequest(request) {
+                const response = new protocol.Response(request);
+                try {
+                    if (request.command === 'initialize') {
+                        let args = request.arguments;
+                        if (typeof args.linesStartAt1 === 'boolean') {
+                            this._clientLinesStartAt1 = args.linesStartAt1;
+                        }
+                        if (typeof args.columnsStartAt1 === 'boolean') {
+                            this._clientColumnsStartAt1 = args.columnsStartAt1;
+                        }
+                        if (args.pathFormat !== 'path') {
+                            this.sendErrorResponse(response, 2018, 'debug adapter only supports native paths', null);
+                        }
+                        else {
+                            const initializeResponse = response;
+                            initializeResponse.body = {};
+                            this.initializeRequest(initializeResponse, args);
+                        }
+                    }
+                    else if (request.command === 'launch') {
+                        this.launchRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'attach') {
+                        this.attachRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'disconnect') {
+                        this.disconnectRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'setBreakpoints') {
+                        this.setBreakPointsRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'setFunctionBreakpoints') {
+                        this.setFunctionBreakPointsRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'setExceptionBreakpoints') {
+                        this.setExceptionBreakPointsRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'configurationDone') {
+                        this.configurationDoneRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'continue') {
+                        this.continueRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'next') {
+                        this.nextRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'stepIn') {
+                        this.stepInRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'stepOut') {
+                        this.stepOutRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'stepBack') {
+                        this.stepBackRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'restartFrame') {
+                        this.restartFrameRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'goto') {
+                        this.gotoRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'pause') {
+                        this.pauseRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'stackTrace') {
+                        this.stackTraceRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'scopes') {
+                        this.scopesRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'variables') {
+                        this.variablesRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'setVariable') {
+                        this.setVariableRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'source') {
+                        this.sourceRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'threads') {
+                        this.threadsRequest(response);
+                    }
+                    else if (request.command === 'evaluate') {
+                        this.evaluateRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'stepInTargets') {
+                        this.stepInTargetsRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'gotoTargets') {
+                        this.gotoTargetsRequest(response, request.arguments);
+                    }
+                    else if (request.command === 'completions') {
+                        this.completionsRequest(response, request.arguments);
+                    }
+                    else {
+                        this.customRequest(request.command, response, request.arguments);
+                    }
+                }
+                catch (e) {
+                    this.sendErrorResponse(response, 1104, '{_stack}', { _exception: e.message, _stack: e.stack });
+                }
+            }
+            initializeRequest(response, args) {
+                // This default debug adapter does not support conditional breakpoints.
+                response.body.supportsConditionalBreakpoints = false;
+                // This default debug adapter does not support hit conditional breakpoints.
+                response.body.supportsHitConditionalBreakpoints = false;
+                // This default debug adapter does not support function breakpoints.
+                response.body.supportsFunctionBreakpoints = false;
+                // This default debug adapter implements the 'configurationDone' request.
+                response.body.supportsConfigurationDoneRequest = true;
+                // This default debug adapter does not support hovers based on the 'evaluate' request.
+                response.body.supportsEvaluateForHovers = false;
+                // This default debug adapter does not support the 'stepBack' request.
+                response.body.supportsStepBack = false;
+                // This default debug adapter does not support the 'setVariable' request.
+                response.body.supportsSetVariable = false;
+                // This default debug adapter does not support the 'restartFrame' request.
+                response.body.supportsRestartFrame = false;
+                // This default debug adapter does not support the 'stepInTargetsRequest' request.
+                response.body.supportsStepInTargetsRequest = false;
+                // This default debug adapter does not support the 'gotoTargetsRequest' request.
+                response.body.supportsGotoTargetsRequest = false;
+                // This default debug adapter does not support the 'completionsRequest' request.
+                response.body.supportsCompletionsRequest = false;
+                this.sendResponse(response);
+            }
+            disconnectRequest(response, args) {
+                this.sendResponse(response);
+                this.shutdown();
+            }
+            launchRequest(response, args) {
+                this.sendResponse(response);
+            }
+            attachRequest(response, args) {
+                this.sendResponse(response);
+            }
+            setBreakPointsRequest(response, args) {
+                this.sendResponse(response);
+            }
+            setFunctionBreakPointsRequest(response, args) {
+                this.sendResponse(response);
+            }
+            setExceptionBreakPointsRequest(response, args) {
+                this.sendResponse(response);
+            }
+            configurationDoneRequest(response, args) {
+                this.sendResponse(response);
+            }
+            continueRequest(response, args) {
+                this.sendResponse(response);
+            }
+            nextRequest(response, args) {
+                this.sendResponse(response);
+            }
+            stepInRequest(response, args) {
+                this.sendResponse(response);
+            }
+            stepOutRequest(response, args) {
+                this.sendResponse(response);
+            }
+            stepBackRequest(response, args) {
+                this.sendResponse(response);
+            }
+            restartFrameRequest(response, args) {
+                this.sendResponse(response);
+            }
+            gotoRequest(response, args) {
+                this.sendResponse(response);
+            }
+            pauseRequest(response, args) {
+                this.sendResponse(response);
+            }
+            sourceRequest(response, args) {
+                this.sendResponse(response);
+            }
+            threadsRequest(response) {
+                this.sendResponse(response);
+            }
+            stackTraceRequest(response, args) {
+                this.sendResponse(response);
+            }
+            scopesRequest(response, args) {
+                this.sendResponse(response);
+            }
+            variablesRequest(response, args) {
+                this.sendResponse(response);
+            }
+            setVariableRequest(response, args) {
+                this.sendResponse(response);
+            }
+            evaluateRequest(response, args) {
+                this.sendResponse(response);
+            }
+            stepInTargetsRequest(response, args) {
+                this.sendResponse(response);
+            }
+            gotoTargetsRequest(response, args) {
+                this.sendResponse(response);
+            }
+            completionsRequest(response, args) {
+                this.sendResponse(response);
+            }
+            /**
+             * Override this hook to implement custom requests.
+             */
+            customRequest(command, response, args) {
+                this.sendErrorResponse(response, 1014, 'unrecognized request', null);
+            }
+            sendErrorResponse(response, codeOrMessage, format, variables) {
+                let msg;
+                if (typeof codeOrMessage === 'number') {
+                    msg = {
+                        id: codeOrMessage,
+                        format: format
+                    };
+                    if (variables) {
+                        msg.variables = variables;
+                    }
+                    msg.showUser = true;
+                }
+                else {
+                    msg = codeOrMessage;
+                }
+                response.success = false;
+                DebugSession.formatPII(msg.format, true, msg.variables);
+                if (!response.body) {
+                    response.body = {};
+                }
+                response.body.error = msg;
+                this.sendResponse(response);
+            }
+            convertClientLineToDebugger(line) {
+                if (this._debuggerLinesStartAt1) {
+                    return this._clientLinesStartAt1 ? line : line + 1;
+                }
+                return this._clientLinesStartAt1 ? line - 1 : line;
+            }
+            convertDebuggerLineToClient(line) {
+                if (this._debuggerLinesStartAt1) {
+                    return this._clientLinesStartAt1 ? line : line - 1;
+                }
+                return this._clientLinesStartAt1 ? line + 1 : line;
+            }
+            convertClientColumnToDebugger(column) {
+                if (this._debuggerColumnsStartAt1) {
+                    return this._clientColumnsStartAt1 ? column : column + 1;
+                }
+                return this._clientColumnsStartAt1 ? column - 1 : column;
+            }
+            convertDebuggerColumnToClient(column) {
+                if (this._debuggerColumnsStartAt1) {
+                    return this._clientColumnsStartAt1 ? column : column - 1;
+                }
+                return this._clientColumnsStartAt1 ? column + 1 : column;
+            }
+            convertClientPathToDebugger(clientPath) {
+                if (this._clientPathsAreURIs != this._debuggerPathsAreURIs) {
+                    if (this._clientPathsAreURIs) {
+                        return DebugSession.uri2path(clientPath);
+                    }
+                    else {
+                        return DebugSession.path2uri(clientPath);
+                    }
+                }
+                return clientPath;
+            }
+            convertDebuggerPathToClient(debuggerPath) {
+                if (this._debuggerPathsAreURIs != this._clientPathsAreURIs) {
+                    if (this._debuggerPathsAreURIs) {
+                        return DebugSession.uri2path(debuggerPath);
+                    }
+                    else {
+                        return DebugSession.path2uri(debuggerPath);
+                    }
+                }
+                return debuggerPath;
+            }
+            static path2uri(str) {
+                let pathName = str.replace(/\\/g, '/');
+                if (pathName[0] !== '/') {
+                    pathName = '/' + pathName;
+                }
+                return encodeURI('file://' + pathName);
+            }
+            static uri2path(url) {
+                return url;
+                //return Url.parse(url).pathname;
+            }
+            /*
+            * If argument starts with '_' it is OK to send its value to telemetry.
+            */
+            static formatPII(format, excludePII, args) {
+                return format.replace(DebugSession._formatPIIRegexp, function (match, paramName) {
+                    if (excludePII && paramName.length > 0 && paramName[0] !== '_') {
+                        return match;
+                    }
+                    return args[paramName] && args.hasOwnProperty(paramName) ?
+                        args[paramName] :
+                        match;
+                });
+            }
+        }
+        DebugSession._formatPIIRegexp = /{([^}]+)}/g;
+        protocol.DebugSession = DebugSession;
+    })(protocol = pxsim.protocol || (pxsim.protocol = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var util;
+    (function (util) {
+        function injectPolyphils() {
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+            if (!String.prototype.startsWith) {
+                Object.defineProperty(String.prototype, 'startsWith', {
+                    value: function (search, pos) {
+                        if (search === undefined || search == null)
+                            return false;
+                        pos = !pos || pos < 0 ? 0 : +pos;
+                        return this.substring(pos, pos + search.length) === search;
+                    }
+                });
+            }
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
+            if (!Array.prototype.fill) {
+                Object.defineProperty(Array.prototype, 'fill', {
+                    writable: true,
+                    enumerable: true,
+                    value: function (value) {
+                        // Steps 1-2.
+                        if (this == null) {
+                            throw new TypeError('this is null or not defined');
+                        }
+                        let O = Object(this);
+                        // Steps 3-5.
+                        let len = O.length >>> 0;
+                        // Steps 6-7.
+                        let start = arguments[1];
+                        let relativeStart = start >> 0;
+                        // Step 8.
+                        let k = relativeStart < 0 ?
+                            Math.max(len + relativeStart, 0) :
+                            Math.min(relativeStart, len);
+                        // Steps 9-10.
+                        let end = arguments[2];
+                        let relativeEnd = end === undefined ?
+                            len : end >> 0;
+                        // Step 11.
+                        let final = relativeEnd < 0 ?
+                            Math.max(len + relativeEnd, 0) :
+                            Math.min(relativeEnd, len);
+                        // Step 12.
+                        while (k < final) {
+                            O[k] = value;
+                            k++;
+                        }
+                        // Step 13.
+                        return O;
+                    }
+                });
+            }
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+            if (!Array.prototype.find) {
+                Object.defineProperty(Array.prototype, 'find', {
+                    writable: true,
+                    enumerable: true,
+                    value: function (predicate) {
+                        // 1. Let O be ? ToObject(this value).
+                        if (this == null) {
+                            throw new TypeError('"this" is null or not defined');
+                        }
+                        let o = Object(this);
+                        // 2. Let len be ? ToLength(? Get(O, "length")).
+                        const len = o.length >>> 0;
+                        // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+                        if (typeof predicate !== 'function') {
+                            throw new TypeError('predicate must be a function');
+                        }
+                        // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+                        const thisArg = arguments[1];
+                        // 5. Let k be 0.
+                        let k = 0;
+                        // 6. Repeat, while k < len
+                        while (k < len) {
+                            // a. Let Pk be ! ToString(k).
+                            // b. Let kValue be ? Get(O, Pk).
+                            // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                            // d. If testResult is true, return kValue.
+                            const kValue = o[k];
+                            if (predicate.call(thisArg, kValue, k, o)) {
+                                return kValue;
+                            }
+                            // e. Increase k by 1.
+                            k++;
+                        }
+                        // 7. Return undefined.
+                        return undefined;
+                    },
+                });
+            }
+            // Polyfill for Uint8Array.slice for IE and Safari
+            // https://tc39.github.io/ecma262/#sec-%typedarray%.prototype.slice
+            // TODO: Move this polyfill to a more appropriate file. It is left here for now because moving it causes a crash in IE; see PXT issue #1301.
+            if (!Uint8Array.prototype.slice) {
+                Object.defineProperty(Uint8Array.prototype, 'slice', {
+                    value: Array.prototype.slice,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint16Array.prototype.slice) {
+                Object.defineProperty(Uint16Array.prototype, 'slice', {
+                    value: Array.prototype.slice,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint32Array.prototype.slice) {
+                Object.defineProperty(Uint32Array.prototype, 'slice', {
+                    value: Array.prototype.slice,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            // https://tc39.github.io/ecma262/#sec-%typedarray%.prototype.fill
+            if (!Uint8Array.prototype.fill) {
+                Object.defineProperty(Uint8Array.prototype, 'fill', {
+                    value: Array.prototype.fill,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint16Array.prototype.fill) {
+                Object.defineProperty(Uint16Array.prototype, 'fill', {
+                    value: Array.prototype.fill,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint32Array.prototype.fill) {
+                Object.defineProperty(Uint32Array.prototype, 'fill', {
+                    value: Array.prototype.fill,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            // https://tc39.github.io/ecma262/#sec-%typedarray%.prototype.some
+            if (!Uint8Array.prototype.some) {
+                Object.defineProperty(Uint8Array.prototype, 'some', {
+                    value: Array.prototype.some,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint16Array.prototype.some) {
+                Object.defineProperty(Uint16Array.prototype, 'some', {
+                    value: Array.prototype.some,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint32Array.prototype.some) {
+                Object.defineProperty(Uint32Array.prototype, 'some', {
+                    value: Array.prototype.some,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            // https://tc39.github.io/ecma262/#sec-%typedarray%.prototype.reverse
+            if (!Uint8Array.prototype.reverse) {
+                Object.defineProperty(Uint8Array.prototype, 'reverse', {
+                    value: Array.prototype.reverse,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint16Array.prototype.reverse) {
+                Object.defineProperty(Uint16Array.prototype, 'reverse', {
+                    value: Array.prototype.reverse,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            if (!Uint32Array.prototype.reverse) {
+                Object.defineProperty(Uint32Array.prototype, 'reverse', {
+                    value: Array.prototype.reverse,
+                    writable: true,
+                    enumerable: true
+                });
+            }
+            // Inject Math imul polyfill
+            if (!Math.imul) {
+                // for explanations see:
+                // http://stackoverflow.com/questions/3428136/javascript-integer-math-incorrect-results (second answer)
+                // (but the code below doesn't come from there; I wrote it myself)
+                // TODO use Math.imul if available
+                Math.imul = function (a, b) {
+                    const ah = (a >>> 16) & 0xffff;
+                    const al = a & 0xffff;
+                    const bh = (b >>> 16) & 0xffff;
+                    const bl = b & 0xffff;
+                    // the shift by 0 fixes the sign on the high part
+                    // the final |0 converts the unsigned value into a signed value
+                    return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
+                };
+            }
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
+            if (typeof Object.assign != 'function') {
+                // Must be writable: true, enumerable: false, configurable: true
+                Object.defineProperty(Object, "assign", {
+                    value: function assign(target, varArgs) {
+                        'use strict';
+                        if (target == null) { // TypeError if undefined or null
+                            throw new TypeError('Cannot convert undefined or null to object');
+                        }
+                        let to = Object(target);
+                        for (let index = 1; index < arguments.length; index++) {
+                            let nextSource = arguments[index];
+                            if (nextSource != null) { // Skip over if undefined or null
+                                for (let nextKey in nextSource) {
+                                    // Avoid bugs when hasOwnProperty is shadowed
+                                    if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                                        to[nextKey] = nextSource[nextKey];
+                                    }
+                                }
+                            }
+                        }
+                        return to;
+                    },
+                    writable: true,
+                    configurable: true
+                });
+            }
+            // https://stackoverflow.com/a/53327815
+            if (!Promise.prototype.finally) {
+                Promise.prototype.finally = Promise.prototype.finally || {
+                    finally(fn) {
+                        const onFinally = (callback) => Promise.resolve(fn()).then(callback);
+                        return this.then(result => onFinally(() => result), reason => onFinally(() => Promise.reject(reason)));
+                    }
+                }.finally;
+            }
+        }
+        util.injectPolyphils = injectPolyphils;
+        class Lazy {
+            constructor(_func) {
+                this._func = _func;
+                this._evaluated = false;
+            }
+            get value() {
+                if (!this._evaluated) {
+                    this._value = this._func();
+                    this._evaluated = true;
+                }
+                return this._value;
+            }
+        }
+        util.Lazy = Lazy;
+        function getNormalizedParts(path) {
+            path = path.replace(/\\/g, "/");
+            const parts = [];
+            path.split("/").forEach(part => {
+                if (part === ".." && parts.length) {
+                    parts.pop();
+                }
+                else if (part && part !== ".") {
+                    parts.push(part);
+                }
+            });
+            return parts;
+        }
+        util.getNormalizedParts = getNormalizedParts;
+        function normalizePath(path) {
+            return getNormalizedParts(path).join("/");
+        }
+        util.normalizePath = normalizePath;
+        function relativePath(fromDir, toFile) {
+            const fParts = getNormalizedParts(fromDir);
+            const tParts = getNormalizedParts(toFile);
+            let i = 0;
+            while (fParts[i] === tParts[i]) {
+                i++;
+                if (i === fParts.length || i === tParts.length) {
+                    break;
+                }
+            }
+            const fRemainder = fParts.slice(i);
+            const tRemainder = tParts.slice(i);
+            for (let i = 0; i < fRemainder.length; i++) {
+                tRemainder.unshift("..");
+            }
+            return tRemainder.join("/");
+        }
+        util.relativePath = relativePath;
+        function pathJoin(...paths) {
+            let result = "";
+            paths.forEach(path => {
+                path.replace(/\\/g, "/");
+                if (path.lastIndexOf("/") === path.length - 1) {
+                    path = path.slice(0, path.length - 1);
+                }
+                result += "/" + path;
+            });
+            return result;
+        }
+        util.pathJoin = pathJoin;
+        function toArray(a) {
+            if (Array.isArray(a)) {
+                return a;
+            }
+            let r = [];
+            for (let i = 0; i < a.length; ++i)
+                r.push(a[i]);
+            return r;
+        }
+        util.toArray = toArray;
+    })(util = pxsim.util || (pxsim.util = {}));
+})(pxsim || (pxsim = {}));
+/// <reference path="./debugProtocol.ts" />
+/// <reference path="./utils.ts" />
+var pxsim;
+(function (pxsim) {
+    function getWarningMessage(msg) {
+        let r = {
+            type: "debugger",
+            subtype: "warning",
+            breakpointIds: [],
+            message: msg
+        };
+        let s = pxsim.runtime.currFrame;
+        while (s != null) {
+            r.breakpointIds.push(s.lastBrkId);
+            s = s.parent;
+        }
+        return r;
+    }
+    pxsim.getWarningMessage = getWarningMessage;
+    class BreakpointMap {
+        constructor(breakpoints) {
+            this.fileMap = {};
+            this.idMap = {};
+            breakpoints.forEach(tuple => {
+                const [id, bp] = tuple;
+                if (!this.fileMap[bp.source.path]) {
+                    this.fileMap[bp.source.path] = [];
+                }
+                this.fileMap[bp.source.path].push(tuple);
+                this.idMap[id] = bp;
+            });
+            for (const file in this.fileMap) {
+                const bps = this.fileMap[file];
+                // Sort the breakpoints to make finding the closest breakpoint to a
+                // given line easier later. Order first by start line and then from
+                // worst to best choice for each line.
+                this.fileMap[file] = bps.sort(([, a], [, b]) => {
+                    if (a.line === b.line) {
+                        if (b.endLine === a.endLine) {
+                            return a.column - b.column;
+                        }
+                        // We want the closest breakpoint, so give preference to breakpoints
+                        // that span fewer lines (i.e. breakpoints that are "tighter" around
+                        // the line being searched for)
+                        return b.endLine - a.endLine;
+                    }
+                    return a.line - b.line;
+                });
+            }
+        }
+        getById(id) {
+            return this.idMap[id];
+        }
+        verifyBreakpoint(path, breakpoint) {
+            const breakpoints = this.fileMap[path];
+            let best;
+            if (breakpoints) {
+                // Breakpoints are pre-sorted for each file. The last matching breakpoint
+                // in the list should be the best match
+                for (const [id, bp] of breakpoints) {
+                    if (bp.line <= breakpoint.line && bp.endLine >= breakpoint.line) {
+                        best = [id, bp];
+                    }
+                }
+            }
+            if (best) {
+                best[1].verified = true;
+                return best;
+            }
+            return [-1, { verified: false }];
+        }
+    }
+    pxsim.BreakpointMap = BreakpointMap;
+    function valToJSON(v, heap) {
+        switch (typeof v) {
+            case "string":
+            case "number":
+            case "boolean":
+                return v;
+            case "function":
+                return {
+                    text: "(function)",
+                    type: "function",
+                };
+            case "undefined":
+                return null;
+            case "object":
+                if (!v)
+                    return null;
+                if (v instanceof pxsim.RefObject) {
+                    if (heap)
+                        heap[v.id] = v;
+                    let preview = pxsim.RefObject.toDebugString(v);
+                    let type = preview.startsWith('[') ? "array" : preview;
+                    return {
+                        id: v.id,
+                        preview: preview,
+                        hasFields: v.fields !== null || preview.startsWith('['),
+                        type: type,
+                    };
+                }
+                if (v._width && v._height) {
+                    return {
+                        text: v._width + 'x' + v._height,
+                        type: "image",
+                    };
+                }
+                return {
+                    text: "(object)",
+                    type: "object",
+                };
+            default:
+                throw new Error();
+        }
+    }
+    function dumpHeap(v, heap, fields, filters) {
+        function frameVars(frame, fields) {
+            const r = {};
+            for (let k of Object.keys(frame)) {
+                // skip members starting with __
+                if (!/^__/.test(k) && /___\d+$/.test(k) && (!filters || filters.indexOf(k) !== -1)) {
+                    r[k] = valToJSON(frame[k], heap);
+                }
+            }
+            if (frame.fields && fields) {
+                // Fields of an object.
+                for (let k of fields) {
+                    k = k.substring(k.lastIndexOf(".") + 1);
+                    r[k] = valToJSON(evalGetter(frame.vtable.iface[k], frame), heap);
+                }
+            }
+            if (frame.fields) {
+                for (let k of Object.keys(frame.fields).filter(field => !field.startsWith('_'))) {
+                    r[k] = valToJSON(frame.fields[k], heap);
+                }
+            }
+            else if (Array.isArray(frame.data)) {
+                // This is an Array.
+                frame.data.forEach((element, index) => {
+                    r[index] = valToJSON(element, heap);
+                });
+            }
+            return r;
+        }
+        return frameVars(v, fields);
+    }
+    pxsim.dumpHeap = dumpHeap;
+    function evalGetter(fn, target) {
+        // This function evaluates a getter, and we assume it doesn't have any side effects.
+        let parentFrame = {};
+        // We create a dummy stack frame
+        let stackFrame = {
+            pc: 0,
+            arg0: target,
+            fn,
+            parent: parentFrame
+        };
+        // And we evaluate the getter
+        while (stackFrame.fn) {
+            stackFrame = stackFrame.fn(stackFrame);
+        }
+        return stackFrame.retval;
+    }
+    function injectEnvironmentGlobals(msg, heap) {
+        const environmentGlobals = pxsim.runtime.environmentGlobals;
+        const keys = Object.keys(environmentGlobals);
+        if (!keys.length)
+            return;
+        const envVars = msg.environmentGlobals = {};
+        Object.keys(environmentGlobals)
+            .forEach(n => envVars[n] = valToJSON(pxsim.runtime.environmentGlobals[n], heap));
+    }
+    pxsim.injectEnvironmentGlobals = injectEnvironmentGlobals;
+    function getBreakpointMsg(s, brkId, userGlobals) {
+        const heap = {};
+        const msg = {
+            type: "debugger",
+            subtype: "breakpoint",
+            breakpointId: brkId,
+            globals: dumpHeap(pxsim.runtime.globals, heap, undefined, userGlobals),
+            stackframes: [],
+        };
+        while (s != null) {
+            let info = getInfoForFrame(s, heap);
+            if (info)
+                msg.stackframes.push(info);
+            s = s.parent;
+        }
+        return { msg, heap };
+    }
+    pxsim.getBreakpointMsg = getBreakpointMsg;
+    function getInfoForFrame(s, heap) {
+        let info = s.fn ? s.fn.info : null;
+        if (info) {
+            let argInfo = {
+                thisParam: valToJSON(s.argL, heap),
+                params: []
+            };
+            if (info.argumentNames) {
+                const args = info.argumentNames;
+                argInfo.params = args.map((paramName, index) => ({
+                    name: paramName,
+                    value: valToJSON(s["arg" + index], heap)
+                }));
+            }
+            return {
+                locals: dumpHeap(s, heap),
+                funcInfo: info,
+                breakpointId: s.lastBrkId,
+                callLocationId: s.callLocIdx,
+                arguments: argInfo
+            };
+        }
+        return undefined;
+    }
+    class SimDebugSession extends pxsim.protocol.DebugSession {
+        constructor(container) {
+            super();
+            let options = {
+                onDebuggerBreakpoint: b => this.onDebuggerBreakpoint(b),
+                onDebuggerWarning: w => this.onDebuggerWarning(w),
+                onDebuggerResume: () => this.onDebuggerResume(),
+                onStateChanged: s => this.onStateChanged(s)
+            };
+            this.driver = new pxsim.SimulatorDriver(container, options);
+        }
+        runCode(js, parts, fnArgs, breakpoints, board) {
+            this.breakpoints = breakpoints;
+            if (this.projectDir) {
+                this.fixBreakpoints();
+            }
+            this.sendEvent(new pxsim.protocol.InitializedEvent());
+            this.driver.run(js, {
+                parts,
+                fnArgs,
+                boardDefinition: board
+            });
+        }
+        stopSimulator(unload = false) {
+            this.driver.stop(unload);
+        }
+        initializeRequest(response, args) {
+            response.body.supportsConditionalBreakpoints = false;
+            response.body.supportsHitConditionalBreakpoints = false;
+            response.body.supportsFunctionBreakpoints = false;
+            response.body.supportsEvaluateForHovers = false;
+            response.body.supportsStepBack = false;
+            response.body.supportsSetVariable = false;
+            response.body.supportsRestartFrame = false;
+            response.body.supportsStepInTargetsRequest = false;
+            response.body.supportsGotoTargetsRequest = false;
+            response.body.supportsCompletionsRequest = false;
+            // This default debug adapter implements the 'configurationDone' request.
+            response.body.supportsConfigurationDoneRequest = true;
+            this.sendResponse(response);
+        }
+        disconnectRequest(response, args) {
+            this.sendResponse(response);
+            this.shutdown();
+        }
+        launchRequest(response, args) {
+            if (!this.projectDir) {
+                this.projectDir = pxsim.util.normalizePath(args.projectDir);
+                if (this.breakpoints) {
+                    this.fixBreakpoints();
+                }
+            }
+            this.sendResponse(response);
+        }
+        setBreakPointsRequest(response, args) {
+            response.body = { breakpoints: [] };
+            const ids = [];
+            args.breakpoints.forEach(requestedBp => {
+                if (this.breakpoints) {
+                    const [id, bp] = this.breakpoints.verifyBreakpoint(pxsim.util.relativePath(this.projectDir, args.source.path), requestedBp);
+                    response.body.breakpoints.push(bp);
+                    if (bp.verified) {
+                        ids.push(id);
+                    }
+                }
+                else {
+                    response.body.breakpoints.push({ verified: false });
+                }
+            });
+            this.driver.setBreakpoints(ids);
+            this.sendResponse(response);
+        }
+        continueRequest(response, args) {
+            this.driver.resume(pxsim.SimulatorDebuggerCommand.Resume);
+            this.sendResponse(response);
+        }
+        nextRequest(response, args) {
+            this.driver.resume(pxsim.SimulatorDebuggerCommand.StepOver);
+            this.sendResponse(response);
+        }
+        stepInRequest(response, args) {
+            this.driver.resume(pxsim.SimulatorDebuggerCommand.StepInto);
+            this.sendResponse(response);
+        }
+        stepOutRequest(response, args) {
+            this.driver.resume(pxsim.SimulatorDebuggerCommand.StepOut);
+            this.sendResponse(response);
+        }
+        pauseRequest(response, args) {
+            this.driver.resume(pxsim.SimulatorDebuggerCommand.Pause);
+            this.sendResponse(response);
+        }
+        threadsRequest(response) {
+            response.body = { threads: [{ id: SimDebugSession.THREAD_ID, name: "main" }] };
+            this.sendResponse(response);
+        }
+        stackTraceRequest(response, args) {
+            if (this.lastBreak) {
+                const frames = this.state.getFrames();
+                response.body = { stackFrames: frames };
+            }
+            this.sendResponse(response);
+        }
+        scopesRequest(response, args) {
+            if (this.state) {
+                response.body = { scopes: this.state.getScopes(args.frameId) };
+            }
+            this.sendResponse(response);
+        }
+        variablesRequest(response, args) {
+            if (this.state) {
+                response.body = { variables: this.state.getVariables(args.variablesReference) };
+            }
+            this.sendResponse(response);
+        }
+        onDebuggerBreakpoint(breakMsg) {
+            this.lastBreak = breakMsg;
+            this.state = new StoppedState(this.lastBreak, this.breakpoints, this.projectDir);
+            if (breakMsg.exceptionMessage) {
+                const message = breakMsg.exceptionMessage.replace(/___\d+/g, '');
+                this.sendEvent(new pxsim.protocol.StoppedEvent("exception", SimDebugSession.THREAD_ID, message));
+            }
+            else {
+                this.sendEvent(new pxsim.protocol.StoppedEvent("breakpoint", SimDebugSession.THREAD_ID));
+            }
+        }
+        onDebuggerWarning(warnMsg) {
+        }
+        onDebuggerResume() {
+            this.sendEvent(new pxsim.protocol.ContinuedEvent(SimDebugSession.THREAD_ID, true));
+        }
+        onStateChanged(state) {
+            switch (state) {
+                case pxsim.SimulatorState.Paused:
+                    // Sending a stopped event here would be redundant
+                    break;
+                case pxsim.SimulatorState.Running:
+                    this.sendEvent(new pxsim.protocol.ContinuedEvent(SimDebugSession.THREAD_ID, true));
+                    break;
+                case pxsim.SimulatorState.Stopped:
+                    this.sendEvent(new pxsim.protocol.TerminatedEvent());
+                    break;
+                //case SimulatorState.Unloaded:
+                //case SimulatorState.Pending:
+                default:
+            }
+        }
+        fixBreakpoints() {
+            // Fix breakpoint locations from the debugger's format to the client's
+            for (const bpId in this.breakpoints.idMap) {
+                const bp = this.breakpoints.idMap[bpId];
+                bp.source.path = pxsim.util.pathJoin(this.projectDir, bp.source.path);
+                bp.line = this.convertDebuggerLineToClient(bp.line);
+                bp.endLine = this.convertDebuggerLineToClient(bp.endLine);
+                bp.column = this.convertDebuggerColumnToClient(bp.column);
+                bp.endColumn = this.convertDebuggerColumnToClient(bp.endColumn);
+            }
+        }
+    }
+    // We only have one thread
+    // TODO: We could theoretically visualize the individual fibers
+    SimDebugSession.THREAD_ID = 1;
+    pxsim.SimDebugSession = SimDebugSession;
+    /**
+     * Maintains the state at the current breakpoint and handles lazy
+     * queries for stack frames, scopes, variables, etc. The protocol
+     * expects requests to be made in the order:
+     *      Frames -> Scopes -> Variables
+     */
+    class StoppedState {
+        constructor(_message, _map, _dir) {
+            this._message = _message;
+            this._map = _map;
+            this._dir = _dir;
+            this._currentId = 1;
+            this._frames = {};
+            this._vars = {};
+            const globalId = this.nextId();
+            this._vars[globalId] = this.getVariableValues(this._message.globals);
+            this._globalScope = {
+                name: "Globals",
+                variablesReference: globalId,
+                expensive: false
+            };
+        }
+        /**
+         * Get stack frames for current breakpoint.
+         */
+        getFrames() {
+            return this._message.stackframes.map((s, i) => {
+                const bp = this._map.getById(s.breakpointId);
+                if (bp) {
+                    this._frames[s.breakpointId] = s;
+                    return {
+                        id: s.breakpointId,
+                        name: s.funcInfo ? s.funcInfo.functionName : (i === 0 ? "main" : "anonymous"),
+                        line: bp.line,
+                        column: bp.column,
+                        endLine: bp.endLine,
+                        endColumn: bp.endLine,
+                        source: bp.source
+                    };
+                }
+                return undefined;
+            }).filter(b => !!b);
+        }
+        /**
+         * Returns scopes visible to the given stack frame.
+         *
+         * TODO: Currently, we only support locals and globals (no closures)
+         */
+        getScopes(frameId) {
+            const frame = this._frames[frameId];
+            if (frame) {
+                const localId = this.nextId();
+                this._vars[localId] = this.getVariableValues(frame.locals);
+                return [{
+                        name: "Locals",
+                        variablesReference: localId,
+                        expensive: false
+                    }, this._globalScope];
+            }
+            return [this._globalScope];
+        }
+        /**
+         * Returns variable information (and object properties)
+         */
+        getVariables(variablesReference) {
+            const lz = this._vars[variablesReference];
+            return (lz && lz.value) || [];
+        }
+        getVariableValues(v) {
+            return new pxsim.util.Lazy(() => {
+                const result = [];
+                for (const name in v) {
+                    const value = v[name];
+                    let vString;
+                    let variablesReference = 0;
+                    if (value === null) {
+                        vString = "null";
+                    }
+                    else if (value === undefined) {
+                        vString = "undefined";
+                    }
+                    else if (typeof value === "object") {
+                        vString = "(object)";
+                        variablesReference = this.nextId();
+                        // Variables should be requested lazily, so reference loops aren't an issue
+                        this._vars[variablesReference] = this.getVariableValues(value);
+                    }
+                    else {
+                        vString = value.toString();
+                    }
+                    // Remove the metadata from the name
+                    const displayName = name.substr(0, name.lastIndexOf("___"));
+                    result.push({
+                        name: displayName,
+                        value: vString,
+                        variablesReference
+                    });
+                }
+                return result;
+            });
+        }
+        nextId() {
+            return this._currentId++;
+        }
+    }
+})(pxsim || (pxsim = {}));
+/// <reference path="../localtypings/pxtparts.d.ts"/>
+/// <reference path="../localtypings/pxtarget.d.ts"/>
+var pxsim;
+(function (pxsim) {
+    function print(delay = 0) {
+        function p() {
+            try {
+                window.print();
+            }
+            catch (e) {
+                // oops
+            }
+        }
+        if (delay)
+            setTimeout(p, delay);
+        else
+            p();
+    }
+    pxsim.print = print;
+    let Embed;
+    (function (Embed) {
+        function start() {
+            window.addEventListener("message", receiveMessage, false);
+            Embed.frameid = window.location.hash.slice(1);
+            initServiceWorker();
+            pxsim.Runtime.postMessage({ type: 'ready', frameid: Embed.frameid });
+        }
+        Embed.start = start;
+        function receiveMessage(event) {
+            let origin = event.origin; // || (<any>event).originalEvent.origin;
+            // TODO: test origins
+            let data = event.data || {};
+            let type = data.type;
+            if (!type)
+                return;
+            switch (type) {
+                case "run":
+                    run(data);
+                    break;
+                case "instructions":
+                    pxsim.instructions.renderInstructions(data);
+                    break;
+                case "stop":
+                    stop();
+                    break;
+                case "mute":
+                    mute(data.mute);
+                    break;
+                case "stopsound":
+                    stopSound();
+                    break;
+                case "print":
+                    print();
+                    break;
+                case 'recorder':
+                    recorder(data);
+                    break;
+                case "screenshot":
+                    pxsim.Runtime.postScreenshotAsync(data);
+                    break;
+                case "custom":
+                    if (pxsim.handleCustomMessage)
+                        pxsim.handleCustomMessage(data);
+                    break;
+                case 'pxteditor':
+                    break; //handled elsewhere
+                case 'debugger':
+                    if (runtime)
+                        runtime.handleDebuggerMsg(data);
+                    break;
+                case 'simulator':
+                    let simData = data;
+                    switch (simData.command) {
+                        case "focus":
+                            tickEvent("simulator.focus", { timestamp: simData.timestamp });
+                            break;
+                        case "blur":
+                            tickEvent("simulator.blur", { timestamp: simData.timestamp });
+                            break;
+                    }
+                default:
+                    queue(data);
+                    break;
+            }
+        }
+        // TODO remove this; this should be using Runtime.runtime which gets
+        // set correctly depending on which runtime is currently running
+        let runtime;
+        function stop() {
+            if (runtime) {
+                runtime.kill();
+                if (runtime.board)
+                    runtime.board.kill();
+            }
+        }
+        Embed.stop = stop;
+        function run(msg) {
+            stop();
+            if (msg.mute)
+                mute(msg.mute);
+            if (msg.localizedStrings)
+                pxsim.localization.setLocalizedStrings(msg.localizedStrings);
+            const rt = new pxsim.Runtime(msg);
+            runtime = rt;
+            rt.board.initAsync(msg)
+                .then(() => {
+                if (rt === runtime) {
+                    rt.run((v) => {
+                        pxsim.dumpLivePointers();
+                        pxsim.Runtime.postMessage({ type: "toplevelcodefinished" });
+                    });
+                }
+                // else: a new runtime was started while this one was still initializing.
+                // This runtime has already been stopped by the beginning of this function.
+            });
+        }
+        Embed.run = run;
+        function mute(mute) {
+            pxsim.AudioContextManager.mute(mute);
+        }
+        function stopSound() {
+            pxsim.AudioContextManager.stopAll();
+        }
+        function queue(msg) {
+            if (!runtime || runtime.dead) {
+                return;
+            }
+            runtime.board.receiveMessage(msg);
+        }
+        function recorder(rec) {
+            if (!runtime)
+                return;
+            switch (rec.action) {
+                case "start":
+                    runtime.startRecording(rec.width);
+                    break;
+                case "stop":
+                    runtime.stopRecording();
+                    break;
+            }
+        }
+    })(Embed = pxsim.Embed || (pxsim.Embed = {}));
+    /**
+     * Log an event to the parent editor (allowSimTelemetry must be enabled in target)
+     * @param id The id of the event
+     * @param data Any custom values associated with this event
+     */
+    function tickEvent(id, data) {
+        postMessageToEditor({
+            type: "pxtsim",
+            action: "event",
+            tick: id,
+            data
+        });
+    }
+    pxsim.tickEvent = tickEvent;
+    /**
+     * Log an error to the parent editor (allowSimTelemetry must be enabled in target)
+     * @param cat The category of the error
+     * @param msg The error message
+     * @param data Any custom values associated with this event
+     */
+    function reportError(cat, msg, data) {
+        postMessageToEditor({
+            type: "pxtsim",
+            action: "event",
+            tick: "error",
+            category: cat,
+            message: msg,
+            data
+        });
+    }
+    pxsim.reportError = reportError;
+    function postMessageToEditor(message) {
+        if (typeof window !== 'undefined' && window.parent && window.parent !== window) {
+            window.parent.postMessage(message, "*");
+        }
+    }
+    function initServiceWorker() {
+        // pxsim is included in both the webapp and the simulator so we need to check if the ---simulator is
+        // present in the window location
+        if ("serviceWorker" in navigator && window.location.href.indexOf("---simulator") !== -1 && !pxsim.U.isLocalHost()) {
+            // We don't have access to the webconfig in pxtsim so we need to extract the ref from the URL
+            const pathname = window.location.pathname;
+            const ref = pathname.substring(1, pathname.indexOf("---"));
+            // Only reload if there is already a service worker installed
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.addEventListener("message", ev => {
+                    const message = ev.data;
+                    // We need to check the ref of the activated service worker so that we don't reload if you have
+                    // index.html and beta open at the same time
+                    if (message && message.type === "serviceworker" && message.state === "activated" && message.ref === ref) {
+                        reload();
+                    }
+                });
+            }
+            const serviceWorkerUrl = window.location.href.replace(/---simulator.*$/, "---simserviceworker");
+            navigator.serviceWorker.register(serviceWorkerUrl).then(function (registration) {
+                console.log("Simulator ServiceWorker registration successful with scope: ", registration.scope);
+            }, function (err) {
+                console.log("Simulator ServiceWorker registration failed: ", err);
+            });
+        }
+    }
+    function reload() {
+        // Continuously send message just in case the editor isn't ready to handle it yet
+        setInterval(() => {
+            pxsim.Runtime.postMessage({ type: "simulator", command: "reload" });
+        }, 3000);
+    }
+    pxsim.reload = reload;
+})(pxsim || (pxsim = {}));
+pxsim.util.injectPolyphils();
+if (typeof window !== 'undefined') {
+    window.addEventListener('load', function (ev) {
+        pxsim.Embed.start();
+    });
+}
+var pxsim;
+(function (pxsim) {
+    var instructions;
+    (function (instructions) {
+        const LOC_LBL_SIZE = 10;
+        const QUANT_LBL_SIZE = 30;
+        const QUANT_LBL = (q) => `${q}x`;
+        const WIRE_QUANT_LBL_SIZE = 20;
+        const LBL_VERT_PAD = 3;
+        const LBL_RIGHT_PAD = 5;
+        const LBL_LEFT_PAD = 5;
+        const REQ_WIRE_HEIGHT = 40;
+        const REQ_CMP_HEIGHT = 50;
+        const REQ_CMP_SCALE = 0.5 * 3;
+        const ORIENTATION = "portrait";
+        const PPI = 96.0;
+        const PAGE_SCALAR = 0.95;
+        const [FULL_PAGE_WIDTH, FULL_PAGE_HEIGHT] = (ORIENTATION == "portrait" ? [PPI * 8.5 * PAGE_SCALAR, PPI * 11.0 * PAGE_SCALAR] : [PPI * 11.0 * PAGE_SCALAR, PPI * 8.5 * PAGE_SCALAR]);
+        const PAGE_MARGIN = PPI * 0.45;
+        const PAGE_WIDTH = FULL_PAGE_WIDTH - PAGE_MARGIN * 2;
+        const PAGE_HEIGHT = FULL_PAGE_HEIGHT - PAGE_MARGIN * 2;
+        const BORDER_COLOR = "gray";
+        const BORDER_RADIUS = 5 * 4;
+        const BORDER_WIDTH = 2 * 2;
+        const [PANEL_ROWS, PANEL_COLS] = [1, 1];
+        const PANEL_MARGIN = 20;
+        const PANEL_PADDING = 8 * 3;
+        const PANEL_WIDTH = PAGE_WIDTH / PANEL_COLS - (PANEL_MARGIN + PANEL_PADDING + BORDER_WIDTH) * PANEL_COLS;
+        const PANEL_HEIGHT = PAGE_HEIGHT / PANEL_ROWS - (PANEL_MARGIN + PANEL_PADDING + BORDER_WIDTH) * PANEL_ROWS;
+        const BOARD_WIDTH = 465;
+        const BOARD_LEFT = (PANEL_WIDTH - BOARD_WIDTH) / 2.0 + PANEL_PADDING;
+        const BOARD_BOT = PANEL_PADDING;
+        const NUM_BOX_SIZE = 120;
+        const NUM_FONT = 80;
+        const NUM_MARGIN = 10;
+        const FRONT_PAGE_BOARD_WIDTH = 400;
+        const PART_SCALAR = 1.7;
+        const PARTS_BOARD_SCALE = 0.17;
+        const PARTS_BB_SCALE = 0.25;
+        const PARTS_CMP_SCALE = 0.3;
+        const PARTS_WIRE_SCALE = 0.23;
+        const STYLE = `
+            .instr-panel {
+                margin: ${PANEL_MARGIN}px;
+                padding: ${PANEL_PADDING}px;
+                border-width: ${BORDER_WIDTH}px;
+                border-color: ${BORDER_COLOR};
+                border-style: solid;
+                border-radius: ${BORDER_RADIUS}px;
+                display: inline-block;
+                width: ${PANEL_WIDTH}px;
+                height: ${PANEL_HEIGHT}px;
+                position: relative;
+                overflow: hidden;
+                page-break-inside: avoid;
+            }
+            .board-svg {
+                margin: 0 auto;
+                display: block;
+                position: absolute;
+                bottom: ${BOARD_BOT}px;
+                left: ${BOARD_LEFT}px;
+            }
+            .panel-num-outer {
+                position: absolute;
+                left: ${-BORDER_WIDTH}px;
+                top: ${-BORDER_WIDTH}px;
+                width: ${NUM_BOX_SIZE}px;
+                height: ${NUM_BOX_SIZE}px;
+                border-width: ${BORDER_WIDTH}px;
+                border-style: solid;
+                border-color: ${BORDER_COLOR};
+                border-radius: ${BORDER_RADIUS}px 0 ${BORDER_RADIUS}px 0;
+            }
+            .panel-num {
+                margin: ${NUM_MARGIN}px 0;
+                text-align: center;
+                font-size: ${NUM_FONT}px;
+            }
+            .cmp-div {
+                display: inline-block;
+            }
+            .reqs-div {
+                margin-left: ${PANEL_PADDING + NUM_BOX_SIZE}px;
+                margin-top: 5px;
+            }
+            .partslist-wire,
+            .partslist-cmp {
+                margin: 10px;
+            }
+            .partslist-wire {
+                display: inline-block;
+            }
+            `;
+        function mkTxt(p, txt, size) {
+            let el = pxsim.svg.elt("text");
+            let [x, y] = p;
+            pxsim.svg.hydrate(el, { x: x, y: y, style: `font-size:${size}px;` });
+            el.textContent = txt;
+            return el;
+        }
+        function mkBoardImgSvg(def) {
+            const boardView = pxsim.visuals.mkBoardView({
+                visual: def.visual,
+                boardDef: def
+            });
+            return boardView.getView();
+        }
+        function mkBBSvg() {
+            const bb = new pxsim.visuals.Breadboard({});
+            return bb.getSVGAndSize();
+        }
+        function wrapSvg(el, opts) {
+            //TODO: Refactor this function; it is too complicated. There is a lot of error-prone math being done
+            // to scale and place all elements which could be simplified with more forethought.
+            let svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            let dims = { l: 0, t: 0, w: 0, h: 0 };
+            let cmpSvgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svgEl.appendChild(cmpSvgEl);
+            cmpSvgEl.appendChild(el.el);
+            let cmpSvgAtts = {
+                "viewBox": `${el.x} ${el.y} ${el.w} ${el.h}`,
+                "preserveAspectRatio": "xMidYMid",
+            };
+            dims.w = el.w;
+            dims.h = el.h;
+            let scale = (scaler) => {
+                dims.h *= scaler;
+                dims.w *= scaler;
+                cmpSvgAtts.width = dims.w;
+                cmpSvgAtts.height = dims.h;
+            };
+            if (opts.cmpScale) {
+                scale(opts.cmpScale);
+            }
+            if (opts.cmpWidth && opts.cmpWidth < dims.w) {
+                scale(opts.cmpWidth / dims.w);
+            }
+            else if (opts.cmpHeight && opts.cmpHeight < dims.h) {
+                scale(opts.cmpHeight / dims.h);
+            }
+            pxsim.svg.hydrate(cmpSvgEl, cmpSvgAtts);
+            let elDims = { l: dims.l, t: dims.t, w: dims.w, h: dims.h };
+            let updateL = (newL) => {
+                if (newL < dims.l) {
+                    let extraW = dims.l - newL;
+                    dims.l = newL;
+                    dims.w += extraW;
+                }
+            };
+            let updateR = (newR) => {
+                let oldR = dims.l + dims.w;
+                if (oldR < newR) {
+                    let extraW = newR - oldR;
+                    dims.w += extraW;
+                }
+            };
+            let updateT = (newT) => {
+                if (newT < dims.t) {
+                    let extraH = dims.t - newT;
+                    dims.t = newT;
+                    dims.h += extraH;
+                }
+            };
+            let updateB = (newB) => {
+                let oldB = dims.t + dims.h;
+                if (oldB < newB) {
+                    let extraH = newB - oldB;
+                    dims.h += extraH;
+                }
+            };
+            //labels
+            let [xOff, yOff] = [-0.3, 0.3]; //HACK: these constants tweak the way "mkTxt" knows how to center the text
+            const txtAspectRatio = [1.4, 1.0];
+            if (opts && opts.top) {
+                let size = opts.topSize;
+                let txtW = size / txtAspectRatio[0];
+                let txtH = size / txtAspectRatio[1];
+                let [cx, y] = [elDims.l + elDims.w / 2, elDims.t - LBL_VERT_PAD - txtH / 2];
+                let lbl = pxsim.visuals.mkTxt(cx, y, size, 0, opts.top, xOff, yOff);
+                pxsim.U.addClass(lbl, "cmp-lbl");
+                svgEl.appendChild(lbl);
+                let len = txtW * opts.top.length;
+                updateT(y - txtH / 2);
+                updateL(cx - len / 2);
+                updateR(cx + len / 2);
+            }
+            if (opts && opts.bot) {
+                let size = opts.botSize;
+                let txtW = size / txtAspectRatio[0];
+                let txtH = size / txtAspectRatio[1];
+                let [cx, y] = [elDims.l + elDims.w / 2, elDims.t + elDims.h + LBL_VERT_PAD + txtH / 2];
+                let lbl = pxsim.visuals.mkTxt(cx, y, size, 0, opts.bot, xOff, yOff);
+                pxsim.U.addClass(lbl, "cmp-lbl");
+                svgEl.appendChild(lbl);
+                let len = txtW * opts.bot.length;
+                updateB(y + txtH / 2);
+                updateL(cx - len / 2);
+                updateR(cx + len / 2);
+            }
+            if (opts && opts.right) {
+                let size = opts.rightSize;
+                let txtW = size / txtAspectRatio[0];
+                let txtH = size / txtAspectRatio[1];
+                let len = txtW * opts.right.length;
+                let [cx, cy] = [elDims.l + elDims.w + LBL_RIGHT_PAD + len / 2, elDims.t + elDims.h / 2];
+                let lbl = pxsim.visuals.mkTxt(cx, cy, size, 0, opts.right, xOff, yOff);
+                pxsim.U.addClass(lbl, "cmp-lbl");
+                svgEl.appendChild(lbl);
+                updateT(cy - txtH / 2);
+                updateR(cx + len / 2);
+                updateB(cy + txtH / 2);
+            }
+            if (opts && opts.left) {
+                let size = opts.leftSize;
+                let txtW = size / txtAspectRatio[0];
+                let txtH = size / txtAspectRatio[1];
+                let len = txtW * opts.left.length;
+                let [cx, cy] = [elDims.l - LBL_LEFT_PAD - len / 2, elDims.t + elDims.h / 2];
+                let lbl = pxsim.visuals.mkTxt(cx, cy, size, 0, opts.left, xOff, yOff);
+                pxsim.U.addClass(lbl, "cmp-lbl");
+                svgEl.appendChild(lbl);
+                updateT(cy - txtH / 2);
+                updateL(cx - len / 2);
+                updateB(cy + txtH / 2);
+            }
+            let svgAtts = {
+                "viewBox": `${dims.l} ${dims.t} ${dims.w} ${dims.h}`,
+                "width": dims.w * PART_SCALAR,
+                "height": dims.h * PART_SCALAR,
+                "preserveAspectRatio": "xMidYMid",
+            };
+            pxsim.svg.hydrate(svgEl, svgAtts);
+            let div = document.createElement("div");
+            div.appendChild(svgEl);
+            return div;
+        }
+        function mkCmpDiv(cmp, opts) {
+            let state = pxsim.runtime.board;
+            let el;
+            if (cmp == "wire") {
+                el = pxsim.visuals.mkWirePart([0, 0], opts.wireClr || "red", opts.crocClips);
+            }
+            else {
+                let partVis = cmp;
+                if (typeof partVis.builtIn == "string") {
+                    let cnstr = state.builtinPartVisuals[partVis.builtIn];
+                    el = cnstr([0, 0]);
+                }
+                else {
+                    el = pxsim.visuals.mkGenericPartSVG(partVis);
+                }
+            }
+            return wrapSvg(el, opts);
+        }
+        function mkBoardProps(allocOpts) {
+            let allocRes = pxsim.allocateDefinitions(allocOpts);
+            let stepToWires = [];
+            let stepToCmps = [];
+            let stepOffset = 1;
+            allocRes.partsAndWires.forEach(cAndWs => {
+                let part = cAndWs.part;
+                let wires = cAndWs.wires;
+                cAndWs.assembly.forEach((step, idx) => {
+                    if (step.part && part)
+                        stepToCmps[stepOffset + idx] = [part];
+                    if (step.wireIndices && step.wireIndices.length > 0 && wires)
+                        stepToWires[stepOffset + idx] = step.wireIndices.map(i => wires[i]);
+                });
+                stepOffset += cAndWs.assembly.length;
+            });
+            let numSteps = stepOffset;
+            let lastStep = numSteps - 1;
+            let allCmps = allocRes.partsAndWires.map(r => r.part).filter(p => !!p);
+            let allWires = allocRes.partsAndWires.map(r => r.wires || []).reduce((p, n) => p.concat(n), []);
+            let colorToWires = {};
+            let allWireColors = [];
+            allWires.forEach(w => {
+                if (!colorToWires[w.color]) {
+                    colorToWires[w.color] = [];
+                    allWireColors.push(w.color);
+                }
+                colorToWires[w.color].push(w);
+            });
+            return {
+                boardDef: allocOpts.boardDef,
+                cmpDefs: allocOpts.partDefs,
+                fnArgs: allocOpts.fnArgs,
+                allAlloc: allocRes,
+                stepToWires: stepToWires,
+                stepToCmps: stepToCmps,
+                allWires: allWires,
+                allCmps: allCmps,
+                lastStep: lastStep,
+                colorToWires: colorToWires,
+                allWireColors: allWireColors,
+            };
+        }
+        function mkBlankBoardAndBreadboard(props, width, buildMode = false) {
+            const state = pxsim.runtime.board;
+            const opts = {
+                state: state,
+                boardDef: props.boardDef,
+                forceBreadboardLayout: true,
+                forceBreadboardRender: props.allAlloc.requiresBreadboard,
+                partDefs: props.cmpDefs,
+                maxWidth: `${width}px`,
+                fnArgs: props.fnArgs,
+                wireframe: buildMode,
+                partsList: []
+            };
+            let boardHost = new pxsim.visuals.BoardHost(pxsim.visuals.mkBoardView({
+                visual: opts.boardDef.visual,
+                boardDef: opts.boardDef,
+                wireframe: opts.wireframe
+            }), opts);
+            let view = boardHost.getView();
+            pxsim.U.addClass(view, "board-svg");
+            //set smiley
+            //HACK
+            // let img = board.board.displayCmp.image;
+            // img.set(1, 0, 255);
+            // img.set(3, 0, 255);
+            // img.set(0, 2, 255);
+            // img.set(1, 3, 255);
+            // img.set(2, 3, 255);
+            // img.set(3, 3, 255);
+            // img.set(4, 2, 255);
+            // board.updateState();
+            return boardHost;
+        }
+        function drawSteps(board, step, props) {
+            let view = board.getView();
+            if (step > 0) {
+                pxsim.U.addClass(view, "grayed");
+            }
+            for (let i = 0; i <= step; i++) {
+                let cmps = props.stepToCmps[i];
+                if (cmps) {
+                    cmps.forEach(partInst => {
+                        let cmp = board.addPart(partInst);
+                        //last step
+                        if (i === step) {
+                            //highlight locations pins
+                            partInst.breadboardConnections.forEach(bbLoc => board.highlightBreadboardPin(bbLoc));
+                            pxsim.U.addClass(cmp.element, "notgrayed");
+                        }
+                    });
+                }
+                let wires = props.stepToWires[i];
+                if (wires) {
+                    wires.forEach(w => {
+                        let wire = board.addWire(w);
+                        if (!wire)
+                            return;
+                        //last step
+                        if (i === step) {
+                            //location highlights
+                            if (w.start.type == "breadboard") {
+                                let lbls = board.highlightBreadboardPin(w.start);
+                            }
+                            else {
+                                board.highlightBoardPin(w.start.pin);
+                            }
+                            if (w.end.type == "breadboard") {
+                                board.highlightBreadboardPin(w.end);
+                            }
+                            else {
+                                board.highlightBoardPin(w.end.pin);
+                            }
+                            //highlight wire
+                            board.highlightWire(wire);
+                        }
+                    });
+                }
+            }
+        }
+        function mkPanel() {
+            //panel
+            let panel = document.createElement("div");
+            pxsim.U.addClass(panel, "instr-panel");
+            return panel;
+        }
+        function mkPartsPanel(props) {
+            let panel = mkPanel();
+            // board and breadboard
+            let boardImg = mkBoardImgSvg(props.boardDef);
+            let board = wrapSvg(boardImg, { left: QUANT_LBL(1), leftSize: QUANT_LBL_SIZE, cmpScale: PARTS_BOARD_SCALE });
+            panel.appendChild(board);
+            let bbRaw = mkBBSvg();
+            let bb = wrapSvg(bbRaw, { left: QUANT_LBL(1), leftSize: QUANT_LBL_SIZE, cmpScale: PARTS_BB_SCALE });
+            panel.appendChild(bb);
+            // components
+            let cmps = props.allCmps;
+            cmps.forEach(c => {
+                let quant = 1;
+                // TODO: don't special case this
+                if (c.visual.builtIn === "buttonpair") {
+                    quant = 2;
+                }
+                let cmp = mkCmpDiv(c.visual, {
+                    left: QUANT_LBL(quant),
+                    leftSize: QUANT_LBL_SIZE,
+                    cmpScale: PARTS_CMP_SCALE,
+                });
+                pxsim.U.addClass(cmp, "partslist-cmp");
+                panel.appendChild(cmp);
+            });
+            // wires
+            props.allWireColors.forEach(clr => {
+                let quant = props.colorToWires[clr].length;
+                let style = props.boardDef.pinStyles[clr] || "female";
+                let cmp = mkCmpDiv("wire", {
+                    left: QUANT_LBL(quant),
+                    leftSize: WIRE_QUANT_LBL_SIZE,
+                    wireClr: clr,
+                    cmpScale: PARTS_WIRE_SCALE,
+                    crocClips: style == "croc"
+                });
+                pxsim.U.addClass(cmp, "partslist-wire");
+                panel.appendChild(cmp);
+            });
+            return panel;
+        }
+        function mkStepPanel(step, props) {
+            let panel = mkPanel();
+            //board
+            let board = mkBlankBoardAndBreadboard(props, BOARD_WIDTH, true);
+            drawSteps(board, step, props);
+            panel.appendChild(board.getView());
+            //number
+            let numDiv = document.createElement("div");
+            pxsim.U.addClass(numDiv, "panel-num-outer");
+            pxsim.U.addClass(numDiv, "noselect");
+            panel.appendChild(numDiv);
+            let num = document.createElement("div");
+            pxsim.U.addClass(num, "panel-num");
+            num.textContent = (step + 1) + "";
+            numDiv.appendChild(num);
+            // add requirements
+            let reqsDiv = document.createElement("div");
+            pxsim.U.addClass(reqsDiv, "reqs-div");
+            panel.appendChild(reqsDiv);
+            let wires = (props.stepToWires[step] || []);
+            let mkLabel = (loc) => {
+                if (loc.type === "breadboard") {
+                    let { row, col } = loc;
+                    return `(${row},${col})`;
+                }
+                else
+                    return loc.pin;
+            };
+            wires.forEach(w => {
+                let croc = false;
+                if (w.end.type == "dalboard") {
+                    croc = props.boardDef.pinStyles[w.end.pin] == "croc";
+                }
+                let cmp = mkCmpDiv("wire", {
+                    top: mkLabel(w.end),
+                    topSize: LOC_LBL_SIZE,
+                    bot: mkLabel(w.start),
+                    botSize: LOC_LBL_SIZE,
+                    wireClr: w.color,
+                    cmpHeight: REQ_WIRE_HEIGHT,
+                    crocClips: croc
+                });
+                pxsim.U.addClass(cmp, "cmp-div");
+                reqsDiv.appendChild(cmp);
+            });
+            let cmps = (props.stepToCmps[step] || []);
+            cmps.forEach(c => {
+                let locs;
+                if (c.visual.builtIn === "buttonpair") {
+                    //TODO: don't special case this
+                    locs = [c.breadboardConnections[0], c.breadboardConnections[2]];
+                }
+                else {
+                    locs = [c.breadboardConnections[0]];
+                }
+                locs.forEach((l, i) => {
+                    let topLbl;
+                    if (l) {
+                        let { row, col } = l;
+                        topLbl = `(${row},${col})`;
+                    }
+                    else {
+                        topLbl = "";
+                    }
+                    let scale = REQ_CMP_SCALE;
+                    if (c.visual.builtIn === "buttonpair")
+                        scale *= 0.5; //TODO: don't special case
+                    let cmp = mkCmpDiv(c.visual, {
+                        top: topLbl,
+                        topSize: LOC_LBL_SIZE,
+                        cmpHeight: REQ_CMP_HEIGHT,
+                        cmpScale: scale
+                    });
+                    pxsim.U.addClass(cmp, "cmp-div");
+                    reqsDiv.appendChild(cmp);
+                });
+            });
+            return panel;
+        }
+        function updateFrontPanel(props) {
+            let panel = document.getElementById("front-panel");
+            let board = mkBlankBoardAndBreadboard(props, FRONT_PAGE_BOARD_WIDTH, false);
+            board.addAll(props.allAlloc);
+            panel.appendChild(board.getView());
+            return [panel, props];
+        }
+        function renderParts(container, options) {
+            if (!options.boardDef.pinStyles)
+                options.boardDef.pinStyles = {};
+            if (options.configData)
+                pxsim.setConfigData(options.configData.cfg, options.configData.cfgKey);
+            const msg = {
+                type: "run",
+                code: "",
+                boardDefinition: options.boardDef,
+                partDefinitions: options.partDefinitions
+            };
+            pxsim.runtime = new pxsim.Runtime(msg);
+            pxsim.runtime.board = null;
+            pxsim.initCurrentRuntime(msg); // TODO it seems Runtime() ctor already calls this?
+            let style = document.createElement("style");
+            style.textContent += STYLE;
+            document.head.appendChild(style);
+            const cmpDefs = options.partDefinitions;
+            //props
+            let dummyBreadboard = new pxsim.visuals.Breadboard({});
+            let props = mkBoardProps({
+                boardDef: options.boardDef,
+                partDefs: cmpDefs,
+                partsList: options.parts,
+                fnArgs: options.fnArgs,
+                getBBCoord: dummyBreadboard.getCoord.bind(dummyBreadboard)
+            });
+            props.allAlloc.requiresBreadboard = true;
+            //front page
+            let frontPanel = updateFrontPanel(props);
+            //all required parts
+            let partsPanel = mkPartsPanel(props);
+            container.appendChild(partsPanel);
+            //steps
+            for (let s = 0; s <= props.lastStep; s++) {
+                let p = mkStepPanel(s, props);
+                container.appendChild(p);
+            }
+            //final
+            //let finalPanel = mkFinalPanel(props);
+            //container.appendChild(finalPanel);
+            if (options.print)
+                pxsim.print(2000);
+        }
+        instructions.renderParts = renderParts;
+        function renderInstructions(msg) {
+            document.getElementById("proj-title").innerText = msg.options.name || "";
+            renderParts(document.body, msg.options);
+        }
+        instructions.renderInstructions = renderInstructions;
+    })(instructions = pxsim.instructions || (pxsim.instructions = {}));
+})(pxsim || (pxsim = {}));
+// APIs for language/runtime support (records, locals, function values)
+var pxsim;
+(function (pxsim) {
+    pxsim.quiet = false;
+    function check(cond, msg = "sim: check failed") {
+        if (!cond) {
+            debugger;
+            throw new Error(msg);
+        }
+    }
+    pxsim.check = check;
+    pxsim.title = "";
+    let cfgKey = {};
+    let cfg = {};
+    function getConfig(id) {
+        if (cfg.hasOwnProperty(id + ""))
+            return cfg[id + ""];
+        return null;
+    }
+    pxsim.getConfig = getConfig;
+    function getConfigKey(id) {
+        if (cfgKey.hasOwnProperty(id))
+            return cfgKey[id];
+        return null;
+    }
+    pxsim.getConfigKey = getConfigKey;
+    function getAllConfigKeys() {
+        return Object.keys(cfgKey);
+    }
+    pxsim.getAllConfigKeys = getAllConfigKeys;
+    function setConfigKey(key, id) {
+        cfgKey[key] = id;
+    }
+    pxsim.setConfigKey = setConfigKey;
+    function setConfig(id, val) {
+        cfg[id] = val;
+    }
+    pxsim.setConfig = setConfig;
+    function setConfigData(cfg_, cfgKey_) {
+        cfg = cfg_;
+        cfgKey = cfgKey_;
+    }
+    pxsim.setConfigData = setConfigData;
+    function getConfigData() {
+        return { cfg, cfgKey };
+    }
+    pxsim.getConfigData = getConfigData;
+    function setTitle(t) {
+        pxsim.title = t;
+    }
+    pxsim.setTitle = setTitle;
+    class RefObject {
+        constructor() {
+            if (pxsim.runtime)
+                this.id = pxsim.runtime.registerLiveObject(this);
+            else
+                this.id = 0;
+        }
+        destroy() { }
+        scan(mark) {
+            throw pxsim.U.userError("scan not implemented");
+        }
+        gcKey() { throw pxsim.U.userError("gcKey not implemented"); }
+        gcSize() { throw pxsim.U.userError("gcSize not implemented"); }
+        gcIsStatic() { return false; }
+        print() {
+            if (pxsim.runtime && pxsim.runtime.refCountingDebug)
+                console.log(`RefObject id:${this.id}`);
+        }
+        // render a debug preview string
+        toDebugString() {
+            return "(object)";
+        }
+        static toAny(o) {
+            if (o && o.toAny)
+                return o.toAny();
+            return o;
+        }
+        static toDebugString(o) {
+            if (o === null)
+                return "null";
+            if (o === undefined)
+                return "undefined;";
+            if (o.vtable && o.vtable.name)
+                return o.vtable.name;
+            if (o.toDebugString)
+                return o.toDebugString();
+            if (typeof o == "string")
+                return JSON.stringify(o);
+            return o.toString();
+        }
+    }
+    pxsim.RefObject = RefObject;
+    class FnWrapper {
+        constructor(func, caps, args) {
+            this.func = func;
+            this.caps = caps;
+            this.args = args;
+        }
+    }
+    pxsim.FnWrapper = FnWrapper;
+    class RefRecord extends RefObject {
+        constructor() {
+            super(...arguments);
+            this.fields = {};
+        }
+        scan(mark) {
+            for (let k of Object.keys(this.fields))
+                mark(k, this.fields[k]);
+        }
+        gcKey() { return this.vtable.name; }
+        gcSize() { return this.vtable.numFields + 1; }
+        destroy() {
+            this.fields = null;
+            this.vtable = null;
+        }
+        print() {
+            if (pxsim.runtime && pxsim.runtime.refCountingDebug)
+                console.log(`RefRecord id:${this.id} (${this.vtable.name})`);
+        }
+    }
+    pxsim.RefRecord = RefRecord;
+    class RefAction extends RefObject {
+        constructor() {
+            super(...arguments);
+            this.fields = [];
+        }
+        scan(mark) {
+            for (let i = 0; i < this.fields.length; ++i)
+                mark("_cap" + i, this.fields[i]);
+        }
+        gcKey() { return pxsim.functionName(this.func); }
+        gcSize() { return this.fields.length + 3; }
+        isRef(idx) {
+            check(0 <= idx && idx < this.fields.length);
+            return idx < this.len;
+        }
+        ldclo(n) {
+            n >>= 2;
+            check(0 <= n && n < this.fields.length);
+            return this.fields[n];
+        }
+        destroy() {
+            this.fields = null;
+            this.func = null;
+        }
+        print() {
+            if (pxsim.runtime && pxsim.runtime.refCountingDebug)
+                console.log(`RefAction id:${this.id} len:${this.fields.length}`);
+        }
+    }
+    pxsim.RefAction = RefAction;
+    let pxtcore;
+    (function (pxtcore) {
+        function seedAddRandom(num) {
+            // nothing yet
+        }
+        pxtcore.seedAddRandom = seedAddRandom;
+        function mkAction(len, fn) {
+            let r = new RefAction();
+            r.len = len;
+            r.func = fn;
+            for (let i = 0; i < len; ++i)
+                r.fields.push(null);
+            return r;
+        }
+        pxtcore.mkAction = mkAction;
+        function runAction(a, args) {
+            let cb = pxsim.getResume();
+            if (a instanceof RefAction) {
+                cb(new FnWrapper(a.func, a.fields, args));
+            }
+            else {
+                // no-closure case
+                cb(new FnWrapper(a, null, args));
+            }
+        }
+        pxtcore.runAction = runAction;
+        let counters = {};
+        // TODO move this somewhere else, so it can be invoked also on data coming from hardware
+        function processPerfCounters(msg) {
+            let r = "";
+            const addfmtr = (s, len) => {
+                r += s.length >= len ? s : ("              " + s).slice(-len);
+            };
+            const addfmtl = (s, len) => {
+                r += s.length >= len ? s : (s + "                         ").slice(0, len);
+            };
+            const addnum = (n) => addfmtr("" + Math.round(n), 6);
+            const addstats = (numstops, us) => {
+                addfmtr(Math.round(us) + "", 8);
+                r += " /";
+                addnum(numstops);
+                r += " =";
+                addnum(us / numstops);
+            };
+            for (let line of msg.split(/\n/)) {
+                if (!line)
+                    continue;
+                if (!/^\d/.test(line))
+                    continue;
+                const fields = line.split(/,/);
+                let pi = counters[fields[2]];
+                if (!pi)
+                    counters[fields[2]] = pi = { stops: 0, us: 0, meds: [] };
+                addfmtl(fields[2], 25);
+                const numstops = parseInt(fields[0]);
+                const us = parseInt(fields[1]);
+                addstats(numstops, us);
+                r += " |";
+                addstats(numstops - pi.stops, us - pi.us);
+                r += " ~";
+                const med = parseInt(fields[3]);
+                addnum(med);
+                if (pi.meds.length > 10)
+                    pi.meds.shift();
+                pi.meds.push(med);
+                const mm = pi.meds.slice();
+                mm.sort((a, b) => a - b);
+                const ubermed = mm[mm.length >> 1];
+                r += " ~~";
+                addnum(ubermed);
+                pi.stops = numstops;
+                pi.us = us;
+                r += "\n";
+            }
+            console.log(r);
+        }
+        function dumpPerfCounters() {
+            if (!pxsim.runtime || !pxsim.runtime.perfCounters)
+                return;
+            let csv = "calls,us,name\n";
+            for (let p of pxsim.runtime.perfCounters) {
+                p.lastFew.sort();
+                const median = p.lastFew[p.lastFew.length >> 1];
+                csv += `${p.numstops},${p.value},${p.name},${median}\n`;
+            }
+            processPerfCounters(csv);
+            // console.log(csv)
+        }
+        pxtcore.dumpPerfCounters = dumpPerfCounters;
+    })(pxtcore = pxsim.pxtcore || (pxsim.pxtcore = {}));
+    class RefRefLocal extends RefObject {
+        constructor() {
+            super(...arguments);
+            this.v = undefined;
+        }
+        scan(mark) {
+            mark("*", this.v);
+        }
+        gcKey() { return "LOC"; }
+        gcSize() { return 2; }
+        destroy() {
+        }
+        print() {
+            if (pxsim.runtime && pxsim.runtime.refCountingDebug)
+                console.log(`RefRefLocal id:${this.id} v:${this.v}`);
+        }
+    }
+    pxsim.RefRefLocal = RefRefLocal;
+    class RefMap extends RefObject {
+        constructor() {
+            super(...arguments);
+            this.vtable = pxsim.mkMapVTable();
+            this.data = [];
+        }
+        scan(mark) {
+            for (let d of this.data) {
+                mark(d.key, d.val);
+            }
+        }
+        gcKey() { return "{...}"; }
+        gcSize() { return this.data.length * 2 + 4; }
+        findIdx(key) {
+            key = key + ""; // make sure it's a string
+            for (let i = 0; i < this.data.length; ++i) {
+                if (this.data[i].key == key)
+                    return i;
+            }
+            return -1;
+        }
+        destroy() {
+            super.destroy();
+            for (let i = 0; i < this.data.length; ++i) {
+                this.data[i].val = 0;
+            }
+            this.data = [];
+        }
+        print() {
+            if (pxsim.runtime && pxsim.runtime.refCountingDebug)
+                console.log(`RefMap id:${this.id} size:${this.data.length}`);
+        }
+        toAny() {
+            const r = {};
+            this.data.forEach(d => {
+                r[d.key] = RefObject.toAny(d.val);
+            });
+            return r;
+        }
+    }
+    pxsim.RefMap = RefMap;
+    function num(v) {
+        return v;
+    }
+    function ref(v) {
+        if (v === undefined)
+            return null;
+        return v;
+    }
+    function dumpLivePointers() {
+        if (pxsim.runtime)
+            pxsim.runtime.dumpLivePointers();
+    }
+    pxsim.dumpLivePointers = dumpLivePointers;
+    let numops;
+    (function (numops) {
+        function toString(v) {
+            if (v === null)
+                return "null";
+            else if (v === undefined)
+                return "undefined";
+            return v.toString();
+        }
+        numops.toString = toString;
+        function toBoolDecr(v) {
+            return !!v;
+        }
+        numops.toBoolDecr = toBoolDecr;
+        function toBool(v) {
+            return !!v;
+        }
+        numops.toBool = toBool;
+    })(numops = pxsim.numops || (pxsim.numops = {}));
+    let langsupp;
+    (function (langsupp) {
+        function toInt(v) { return (v | 0); } // TODO
+        langsupp.toInt = toInt;
+        function toFloat(v) { return v; }
+        langsupp.toFloat = toFloat;
+        function ignore(v) { return v; }
+        langsupp.ignore = ignore;
+    })(langsupp = pxsim.langsupp || (pxsim.langsupp = {}));
+    (function (pxtcore) {
+        function ptrOfLiteral(v) {
+            return v;
+        }
+        pxtcore.ptrOfLiteral = ptrOfLiteral;
+        function debugMemLeaks() {
+            dumpLivePointers();
+        }
+        pxtcore.debugMemLeaks = debugMemLeaks;
+        function templateHash() {
+            return 0;
+        }
+        pxtcore.templateHash = templateHash;
+        function programHash() {
+            return 0;
+        }
+        pxtcore.programHash = programHash;
+        function programName() {
+            return pxsim.title;
+        }
+        pxtcore.programName = programName;
+        function programSize() {
+            return 0;
+        }
+        pxtcore.programSize = programSize;
+        function afterProgramPage() {
+            return 0;
+        }
+        pxtcore.afterProgramPage = afterProgramPage;
+        function getConfig(key, defl) {
+            let r = pxsim.getConfig(key);
+            if (r == null)
+                return defl;
+            return r;
+        }
+        pxtcore.getConfig = getConfig;
+        // these shouldn't generally be called when compiled for simulator
+        // provide implementation to silence warnings and as future-proofing
+        function toInt(n) { return n >> 0; }
+        pxtcore.toInt = toInt;
+        function toUInt(n) { return n >>> 0; }
+        pxtcore.toUInt = toUInt;
+        function toDouble(n) { return n; }
+        pxtcore.toDouble = toDouble;
+        function toFloat(n) { return n; }
+        pxtcore.toFloat = toFloat;
+        function fromInt(n) { return n; }
+        pxtcore.fromInt = fromInt;
+        function fromUInt(n) { return n; }
+        pxtcore.fromUInt = fromUInt;
+        function fromDouble(n) { return n; }
+        pxtcore.fromDouble = fromDouble;
+        function fromFloat(n) { return n; }
+        pxtcore.fromFloat = fromFloat;
+        function fromBool(n) { return !!n; }
+        pxtcore.fromBool = fromBool;
+    })(pxtcore = pxsim.pxtcore || (pxsim.pxtcore = {}));
+    let pxtrt;
+    (function (pxtrt) {
+        function toInt8(v) {
+            return ((v & 0xff) << 24) >> 24;
+        }
+        pxtrt.toInt8 = toInt8;
+        function toInt16(v) {
+            return ((v & 0xffff) << 16) >> 16;
+        }
+        pxtrt.toInt16 = toInt16;
+        function toInt32(v) {
+            return v | 0;
+        }
+        pxtrt.toInt32 = toInt32;
+        function toUInt32(v) {
+            return v >>> 0;
+        }
+        pxtrt.toUInt32 = toUInt32;
+        function toUInt8(v) {
+            return v & 0xff;
+        }
+        pxtrt.toUInt8 = toUInt8;
+        function toUInt16(v) {
+            return v & 0xffff;
+        }
+        pxtrt.toUInt16 = toUInt16;
+        function nullFix(v) {
+            if (v === null || v === undefined || v === false)
+                return 0;
+            if (v === true)
+                return 1;
+            return v;
+        }
+        pxtrt.nullFix = nullFix;
+        function nullCheck(v) {
+            if (v === null || v === undefined)
+                pxsim.U.userError("Dereferencing null/undefined value.");
+        }
+        pxtrt.nullCheck = nullCheck;
+        function panic(code) {
+            pxsim.U.userError("PANIC! Code " + code);
+        }
+        pxtrt.panic = panic;
+        function stringToBool(s) {
+            return s ? 1 : 0;
+        }
+        pxtrt.stringToBool = stringToBool;
+        function ptrToBool(v) {
+            return v ? 1 : 0;
+        }
+        pxtrt.ptrToBool = ptrToBool;
+        function emptyToNull(s) {
+            if (s == "")
+                return 0;
+            return s;
+        }
+        pxtrt.emptyToNull = emptyToNull;
+        function ldlocRef(r) {
+            return (r.v);
+        }
+        pxtrt.ldlocRef = ldlocRef;
+        function stlocRef(r, v) {
+            r.v = v;
+        }
+        pxtrt.stlocRef = stlocRef;
+        function mklocRef() {
+            return new RefRefLocal();
+        }
+        pxtrt.mklocRef = mklocRef;
+        // Store a captured local in a closure. It returns the action, so it can be chained.
+        function stclo(a, idx, v) {
+            check(0 <= idx && idx < a.fields.length);
+            check(a.fields[idx] === null);
+            //console.log(`STCLO [${idx}] = ${v}`)
+            a.fields[idx] = v;
+            return a;
+        }
+        pxtrt.stclo = stclo;
+        function runtimeWarning(msg) {
+            pxsim.Runtime.postMessage(pxsim.getWarningMessage(msg));
+        }
+        pxtrt.runtimeWarning = runtimeWarning;
+        function mkMap() {
+            return new RefMap();
+        }
+        pxtrt.mkMap = mkMap;
+        function mapGet(map, key) {
+            return mapGetByString(map, pxtrt.mapKeyNames[key]);
+        }
+        pxtrt.mapGet = mapGet;
+        function mapSet(map, key, val) {
+            return mapSetByString(map, pxtrt.mapKeyNames[key], val);
+        }
+        pxtrt.mapSet = mapSet;
+        function mapGetByString(map, key) {
+            key += "";
+            if (map instanceof RefRecord) {
+                let r = map;
+                return r.fields[key];
+            }
+            let i = map.findIdx(key);
+            if (i < 0) {
+                return undefined;
+            }
+            return (map.data[i].val);
+        }
+        pxtrt.mapGetByString = mapGetByString;
+        function mapDeleteByString(map, key) {
+            if (!(map instanceof RefMap))
+                pxtrt.panic(923);
+            let i = map.findIdx(key);
+            if (i >= 0)
+                map.data.splice(i, 1);
+            return true;
+        }
+        pxtrt.mapDeleteByString = mapDeleteByString;
+        pxtrt.mapSetGeneric = mapSetByString;
+        pxtrt.mapGetGeneric = mapGetByString;
+        function mapSetByString(map, key, val) {
+            key += "";
+            if (map instanceof RefRecord) {
+                let r = map;
+                r.fields[key] = val;
+                return;
+            }
+            let i = map.findIdx(key);
+            if (i < 0) {
+                map.data.push({
+                    key: key,
+                    val: val,
+                });
+            }
+            else {
+                map.data[i].val = val;
+            }
+        }
+        pxtrt.mapSetByString = mapSetByString;
+        function keysOf(v) {
+            let r = new pxsim.RefCollection();
+            if (v instanceof RefMap)
+                for (let k of v.data) {
+                    r.push(k.key);
+                }
+            return r;
+        }
+        pxtrt.keysOf = keysOf;
+    })(pxtrt = pxsim.pxtrt || (pxsim.pxtrt = {}));
+    (function (pxtcore) {
+        function mkClassInstance(vtable) {
+            check(!!vtable.methods);
+            let r = new RefRecord();
+            r.vtable = vtable;
+            return r;
+        }
+        pxtcore.mkClassInstance = mkClassInstance;
+        function switch_eq(a, b) {
+            if (a == b) {
+                return true;
+            }
+            return false;
+        }
+        pxtcore.switch_eq = switch_eq;
+        function typeOf(obj) {
+            return typeof obj;
+        }
+        pxtcore.typeOf = typeOf;
+    })(pxtcore = pxsim.pxtcore || (pxsim.pxtcore = {}));
+    let thread;
+    (function (thread) {
+        thread.panic = pxtrt.panic;
+        function pause(ms) {
+            let cb = pxsim.getResume();
+            pxsim.runtime.schedule(() => { cb(); }, ms);
+        }
+        thread.pause = pause;
+        function runInBackground(a) {
+            pxsim.runtime.runFiberAsync(a);
+        }
+        thread.runInBackground = runInBackground;
+        function forever(a) {
+            function loop() {
+                pxsim.runtime.runFiberAsync(a)
+                    .then(() => pxsim.U.delay(20))
+                    .then(loop);
+            }
+            pxtrt.nullCheck(a);
+            loop();
+        }
+        thread.forever = forever;
+    })(thread = pxsim.thread || (pxsim.thread = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    // A ref-counted collection of either primitive or ref-counted objects (String, Image,
+    // user-defined record, another collection)
+    class RefCollection extends pxsim.RefObject {
+        constructor() {
+            super();
+            this.data = [];
+        }
+        scan(mark) {
+            for (let i = 0; i < this.data.length; ++i)
+                mark("[" + i + "]", this.data[i]);
+        }
+        gcKey() { return "[...]"; }
+        gcSize() { return this.data.length + 2; }
+        toArray() {
+            return this.data.slice(0);
+        }
+        toAny() {
+            return this.data.map(v => pxsim.RefObject.toAny(v));
+        }
+        toDebugString() {
+            let s = "[";
+            for (let i = 0; i < this.data.length; ++i) {
+                if (i > 0)
+                    s += ",";
+                let newElem = pxsim.RefObject.toDebugString(this.data[i]);
+                if (s.length + newElem.length > 100) {
+                    if (i == 0) {
+                        s += newElem.substr(0, 100);
+                    }
+                    s += "...";
+                    break;
+                }
+                else {
+                    s += newElem;
+                }
+            }
+            s += "]";
+            return s;
+        }
+        destroy() {
+            let data = this.data;
+            for (let i = 0; i < data.length; ++i) {
+                data[i] = 0;
+            }
+            this.data = [];
+        }
+        isValidIndex(x) {
+            return (x >= 0 && x < this.data.length);
+        }
+        push(x) {
+            this.data.push(x);
+        }
+        pop() {
+            return this.data.pop();
+            ;
+        }
+        getLength() {
+            return this.data.length;
+        }
+        setLength(x) {
+            this.data.length = x;
+        }
+        getAt(x) {
+            return this.data[x];
+        }
+        setAt(x, y) {
+            this.data[x] = y;
+        }
+        insertAt(x, y) {
+            this.data.splice(x, 0, y);
+        }
+        removeAt(x) {
+            let ret = this.data.splice(x, 1);
+            return ret[0]; // return the deleted element.
+        }
+        indexOf(x, start) {
+            return this.data.indexOf(x, start);
+        }
+        print() {
+            //console.log(`RefCollection id:${this.id} refs:${this.refcnt} len:${this.data.length} d0:${this.data[0]}`)
+        }
+    }
+    pxsim.RefCollection = RefCollection;
+    let Array_;
+    (function (Array_) {
+        function mk() {
+            return new RefCollection();
+        }
+        Array_.mk = mk;
+        function isArray(c) {
+            return c instanceof RefCollection;
+        }
+        Array_.isArray = isArray;
+        function length(c) {
+            pxsim.pxtrt.nullCheck(c);
+            return c.getLength();
+        }
+        Array_.length = length;
+        function setLength(c, x) {
+            pxsim.pxtrt.nullCheck(c);
+            c.setLength(x);
+        }
+        Array_.setLength = setLength;
+        function push(c, x) {
+            pxsim.pxtrt.nullCheck(c);
+            c.push(x);
+        }
+        Array_.push = push;
+        function pop(c, x) {
+            pxsim.pxtrt.nullCheck(c);
+            let ret = c.pop();
+            // no decr() since we're returning it
+            return ret;
+        }
+        Array_.pop = pop;
+        function getAt(c, x) {
+            pxsim.pxtrt.nullCheck(c);
+            let tmp = c.getAt(x);
+            return tmp;
+        }
+        Array_.getAt = getAt;
+        function removeAt(c, x) {
+            pxsim.pxtrt.nullCheck(c);
+            if (!c.isValidIndex(x))
+                return;
+            // no decr() since we're returning it
+            return c.removeAt(x);
+        }
+        Array_.removeAt = removeAt;
+        function insertAt(c, x, y) {
+            pxsim.pxtrt.nullCheck(c);
+            c.insertAt(x, y);
+        }
+        Array_.insertAt = insertAt;
+        function setAt(c, x, y) {
+            pxsim.pxtrt.nullCheck(c);
+            c.setAt(x, y);
+        }
+        Array_.setAt = setAt;
+        function indexOf(c, x, start) {
+            pxsim.pxtrt.nullCheck(c);
+            return c.indexOf(x, start);
+        }
+        Array_.indexOf = indexOf;
+        function removeElement(c, x) {
+            pxsim.pxtrt.nullCheck(c);
+            let idx = indexOf(c, x, 0);
+            if (idx >= 0) {
+                removeAt(c, idx);
+                return 1;
+            }
+            return 0;
+        }
+        Array_.removeElement = removeElement;
+    })(Array_ = pxsim.Array_ || (pxsim.Array_ = {}));
+    let Math_;
+    (function (Math_) {
+        // for explanations see:
+        // http://stackoverflow.com/questions/3428136/javascript-integer-math-incorrect-results (second answer)
+        // (but the code below doesn't come from there; I wrote it myself)
+        Math_.imul = Math.imul || function (a, b) {
+            const ah = (a >>> 16) & 0xffff;
+            const al = a & 0xffff;
+            const bh = (b >>> 16) & 0xffff;
+            const bl = b & 0xffff;
+            // the shift by 0 fixes the sign on the high part
+            // the final |0 converts the unsigned value into a signed value
+            return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
+        };
+        function idiv(x, y) {
+            return ((x | 0) / (y | 0)) | 0;
+        }
+        Math_.idiv = idiv;
+        function round(n) { return Math.round(n); }
+        Math_.round = round;
+        function roundWithPrecision(x, digits) {
+            digits = digits | 0;
+            // invalid digits input
+            if (digits <= 0)
+                return Math.round(x);
+            if (x == 0)
+                return 0;
+            let r = 0;
+            while (r == 0 && digits < 21) {
+                const d = Math.pow(10, digits++);
+                r = Math.round(x * d + Number.EPSILON) / d;
+            }
+            return r;
+        }
+        Math_.roundWithPrecision = roundWithPrecision;
+        function ceil(n) { return Math.ceil(n); }
+        Math_.ceil = ceil;
+        function floor(n) { return Math.floor(n); }
+        Math_.floor = floor;
+        function sqrt(n) { return Math.sqrt(n); }
+        Math_.sqrt = sqrt;
+        function pow(x, y) {
+            return Math.pow(x, y);
+        }
+        Math_.pow = pow;
+        function clz32(n) { return Math.clz32(n); }
+        Math_.clz32 = clz32;
+        function log(n) { return Math.log(n); }
+        Math_.log = log;
+        function log10(n) { return Math.log10(n); }
+        Math_.log10 = log10;
+        function log2(n) { return Math.log2(n); }
+        Math_.log2 = log2;
+        function exp(n) { return Math.exp(n); }
+        Math_.exp = exp;
+        function sin(n) { return Math.sin(n); }
+        Math_.sin = sin;
+        function sinh(n) { return Math.sinh(n); }
+        Math_.sinh = sinh;
+        function cos(n) { return Math.cos(n); }
+        Math_.cos = cos;
+        function cosh(n) { return Math.cosh(n); }
+        Math_.cosh = cosh;
+        function tan(n) { return Math.tan(n); }
+        Math_.tan = tan;
+        function tanh(n) { return Math.tanh(n); }
+        Math_.tanh = tanh;
+        function asin(n) { return Math.asin(n); }
+        Math_.asin = asin;
+        function asinh(n) { return Math.asinh(n); }
+        Math_.asinh = asinh;
+        function acos(n) { return Math.acos(n); }
+        Math_.acos = acos;
+        function acosh(n) { return Math.acosh(n); }
+        Math_.acosh = acosh;
+        function atan(n) { return Math.atan(n); }
+        Math_.atan = atan;
+        function atanh(x) { return Math.atanh(x); }
+        Math_.atanh = atanh;
+        function atan2(y, x) { return Math.atan2(y, x); }
+        Math_.atan2 = atan2;
+        function trunc(x) { return x > 0 ? Math.floor(x) : Math.ceil(x); }
+        Math_.trunc = trunc;
+        function random() { return Math.random(); }
+        Math_.random = random;
+        function randomRange(min, max) {
+            if (min == max)
+                return min;
+            if (min > max) {
+                let t = min;
+                min = max;
+                max = t;
+            }
+            if (Math.floor(min) == min && Math.floor(max) == max)
+                return min + Math.floor(Math.random() * (max - min + 1));
+            else
+                return min + Math.random() * (max - min);
+        }
+        Math_.randomRange = randomRange;
+    })(Math_ = pxsim.Math_ || (pxsim.Math_ = {}));
+    let Number_;
+    (function (Number_) {
+        function lt(x, y) { return x < y; }
+        Number_.lt = lt;
+        function le(x, y) { return x <= y; }
+        Number_.le = le;
+        function neq(x, y) { return !eq(x, y); }
+        Number_.neq = neq;
+        function eq(x, y) { return pxsim.pxtrt.nullFix(x) == pxsim.pxtrt.nullFix(y); }
+        Number_.eq = eq;
+        function eqDecr(x, y) {
+            if (pxsim.pxtrt.nullFix(x) == pxsim.pxtrt.nullFix(y)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        Number_.eqDecr = eqDecr;
+        function gt(x, y) { return x > y; }
+        Number_.gt = gt;
+        function ge(x, y) { return x >= y; }
+        Number_.ge = ge;
+        function div(x, y) { return Math.floor(x / y) | 0; }
+        Number_.div = div;
+        function mod(x, y) { return x % y; }
+        Number_.mod = mod;
+        function bnot(x) { return ~x; }
+        Number_.bnot = bnot;
+        function toString(x) { return (x + ""); }
+        Number_.toString = toString;
+    })(Number_ = pxsim.Number_ || (pxsim.Number_ = {}));
+    let thumb;
+    (function (thumb) {
+        function adds(x, y) { return (x + y) | 0; }
+        thumb.adds = adds;
+        function subs(x, y) { return (x - y) | 0; }
+        thumb.subs = subs;
+        function divs(x, y) { return Math.floor(x / y) | 0; }
+        thumb.divs = divs;
+        function muls(x, y) { return Math_.imul(x, y); }
+        thumb.muls = muls;
+        function ands(x, y) { return x & y; }
+        thumb.ands = ands;
+        function orrs(x, y) { return x | y; }
+        thumb.orrs = orrs;
+        function eors(x, y) { return x ^ y; }
+        thumb.eors = eors;
+        function lsls(x, y) { return x << y; }
+        thumb.lsls = lsls;
+        function lsrs(x, y) { return x >>> y; }
+        thumb.lsrs = lsrs;
+        function asrs(x, y) { return x >> y; }
+        thumb.asrs = asrs;
+        function bnot(x) { return ~x; }
+        thumb.bnot = bnot;
+        function ignore(v) { return v; }
+        thumb.ignore = ignore;
+    })(thumb = pxsim.thumb || (pxsim.thumb = {}));
+    let avr;
+    (function (avr) {
+        function toInt(v) {
+            return (v << 16) >> 16;
+        }
+        function adds(x, y) { return toInt(x + y); }
+        avr.adds = adds;
+        function subs(x, y) { return toInt(x - y); }
+        avr.subs = subs;
+        function divs(x, y) { return toInt(Math.floor(x / y)); }
+        avr.divs = divs;
+        function muls(x, y) { return toInt(Math_.imul(x, y)); }
+        avr.muls = muls;
+        function ands(x, y) { return toInt(x & y); }
+        avr.ands = ands;
+        function orrs(x, y) { return toInt(x | y); }
+        avr.orrs = orrs;
+        function eors(x, y) { return toInt(x ^ y); }
+        avr.eors = eors;
+        function lsls(x, y) { return toInt(x << y); }
+        avr.lsls = lsls;
+        function lsrs(x, y) { return (x & 0xffff) >>> y; }
+        avr.lsrs = lsrs;
+        function asrs(x, y) { return toInt(x >> y); }
+        avr.asrs = asrs;
+        function bnot(x) { return ~x; }
+        avr.bnot = bnot;
+        function ignore(v) { return v; }
+        avr.ignore = ignore;
+    })(avr = pxsim.avr || (pxsim.avr = {}));
+    let String_;
+    (function (String_) {
+        function stringConv(v) {
+            const cb = pxsim.getResume();
+            if (v instanceof pxsim.RefRecord) {
+                if (v.vtable.toStringMethod) {
+                    pxsim.runtime.runFiberAsync(v.vtable.toStringMethod, v)
+                        .then(() => {
+                        cb(pxsim.runtime.currFrame.retval + "");
+                    });
+                    return;
+                }
+            }
+            cb(v + "");
+        }
+        String_.stringConv = stringConv;
+        function mkEmpty() {
+            return "";
+        }
+        String_.mkEmpty = mkEmpty;
+        function fromCharCode(code) {
+            return (String.fromCharCode(code));
+        }
+        String_.fromCharCode = fromCharCode;
+        function toNumber(s) {
+            return parseFloat(s);
+        }
+        String_.toNumber = toNumber;
+        // TODO check edge-conditions
+        function concat(a, b) {
+            return (a + b);
+        }
+        String_.concat = concat;
+        function substring(s, i, j) {
+            pxsim.pxtrt.nullCheck(s);
+            return (s.slice(i, i + j));
+        }
+        String_.substring = substring;
+        function equals(s1, s2) {
+            return s1 == s2;
+        }
+        String_.equals = equals;
+        function compare(s1, s2) {
+            if (s1 == s2)
+                return 0;
+            if (s1 < s2)
+                return -1;
+            return 1;
+        }
+        String_.compare = compare;
+        function compareDecr(s1, s2) {
+            if (s1 == s2) {
+                return 0;
+            }
+            if (s1 < s2)
+                return -1;
+            return 1;
+        }
+        String_.compareDecr = compareDecr;
+        function length(s) {
+            return s.length;
+        }
+        String_.length = length;
+        function substr(s, start, length) {
+            return (s.substr(start, length));
+        }
+        String_.substr = substr;
+        function inRange(s, i) {
+            pxsim.pxtrt.nullCheck(s);
+            return 0 <= i && i < s.length;
+        }
+        function charAt(s, i) {
+            return (s.charAt(i));
+        }
+        String_.charAt = charAt;
+        function charCodeAt(s, i) {
+            pxsim.pxtrt.nullCheck(s);
+            return inRange(s, i) ? s.charCodeAt(i) : 0;
+        }
+        String_.charCodeAt = charCodeAt;
+        function indexOf(s, searchValue, start) {
+            pxsim.pxtrt.nullCheck(s);
+            if (searchValue == null)
+                return -1;
+            return s.indexOf(searchValue, start);
+        }
+        String_.indexOf = indexOf;
+        function lastIndexOf(s, searchValue, start) {
+            pxsim.pxtrt.nullCheck(s);
+            if (searchValue == null)
+                return -1;
+            return s.lastIndexOf(searchValue, start);
+        }
+        String_.lastIndexOf = lastIndexOf;
+        function includes(s, searchValue, start) {
+            pxsim.pxtrt.nullCheck(s);
+            if (searchValue == null)
+                return false;
+            return s.includes(searchValue, start);
+        }
+        String_.includes = includes;
+    })(String_ = pxsim.String_ || (pxsim.String_ = {}));
+    let Boolean_;
+    (function (Boolean_) {
+        function toString(v) {
+            return v ? "true" : "false";
+        }
+        Boolean_.toString = toString;
+        function bang(v) {
+            return !v;
+        }
+        Boolean_.bang = bang;
+    })(Boolean_ = pxsim.Boolean_ || (pxsim.Boolean_ = {}));
+    class RefBuffer extends pxsim.RefObject {
+        constructor(data) {
+            super();
+            this.data = data;
+            this.isStatic = false;
+        }
+        scan(mark) {
+            // nothing to do
+        }
+        gcKey() { return "Buffer"; }
+        gcSize() { return 2 + (this.data.length + 3 >> 2); }
+        gcIsStatic() { return this.isStatic; }
+        print() {
+            // console.log(`RefBuffer id:${this.id} refs:${this.refcnt} len:${this.data.length} d0:${this.data[0]}`)
+        }
+        toDebugString() {
+            return BufferMethods.toHex(this);
+        }
+    }
+    pxsim.RefBuffer = RefBuffer;
+    let BufferMethods;
+    (function (BufferMethods) {
+        // keep in sync with C++!
+        let NumberFormat;
+        (function (NumberFormat) {
+            NumberFormat[NumberFormat["Int8LE"] = 1] = "Int8LE";
+            NumberFormat[NumberFormat["UInt8LE"] = 2] = "UInt8LE";
+            NumberFormat[NumberFormat["Int16LE"] = 3] = "Int16LE";
+            NumberFormat[NumberFormat["UInt16LE"] = 4] = "UInt16LE";
+            NumberFormat[NumberFormat["Int32LE"] = 5] = "Int32LE";
+            NumberFormat[NumberFormat["Int8BE"] = 6] = "Int8BE";
+            NumberFormat[NumberFormat["UInt8BE"] = 7] = "UInt8BE";
+            NumberFormat[NumberFormat["Int16BE"] = 8] = "Int16BE";
+            NumberFormat[NumberFormat["UInt16BE"] = 9] = "UInt16BE";
+            NumberFormat[NumberFormat["Int32BE"] = 10] = "Int32BE";
+            NumberFormat[NumberFormat["UInt32LE"] = 11] = "UInt32LE";
+            NumberFormat[NumberFormat["UInt32BE"] = 12] = "UInt32BE";
+            NumberFormat[NumberFormat["Float32LE"] = 13] = "Float32LE";
+            NumberFormat[NumberFormat["Float64LE"] = 14] = "Float64LE";
+            NumberFormat[NumberFormat["Float32BE"] = 15] = "Float32BE";
+            NumberFormat[NumberFormat["Float64BE"] = 16] = "Float64BE";
+        })(NumberFormat = BufferMethods.NumberFormat || (BufferMethods.NumberFormat = {}));
+        ;
+        function fmtInfoCore(fmt) {
+            switch (fmt) {
+                case NumberFormat.Int8LE: return -1;
+                case NumberFormat.UInt8LE: return 1;
+                case NumberFormat.Int16LE: return -2;
+                case NumberFormat.UInt16LE: return 2;
+                case NumberFormat.Int32LE: return -4;
+                case NumberFormat.UInt32LE: return 4;
+                case NumberFormat.Int8BE: return -10;
+                case NumberFormat.UInt8BE: return 10;
+                case NumberFormat.Int16BE: return -20;
+                case NumberFormat.UInt16BE: return 20;
+                case NumberFormat.Int32BE: return -40;
+                case NumberFormat.UInt32BE: return 40;
+                case NumberFormat.Float32LE: return 4;
+                case NumberFormat.Float32BE: return 40;
+                case NumberFormat.Float64LE: return 8;
+                case NumberFormat.Float64BE: return 80;
+                default: throw pxsim.U.userError("bad format");
+            }
+        }
+        function fmtInfo(fmt) {
+            let size = fmtInfoCore(fmt);
+            let signed = false;
+            if (size < 0) {
+                signed = true;
+                size = -size;
+            }
+            let swap = false;
+            if (size >= 10) {
+                swap = true;
+                size /= 10;
+            }
+            let isFloat = fmt >= NumberFormat.Float32LE;
+            return { size, signed, swap, isFloat };
+        }
+        function getNumber(buf, fmt, offset) {
+            let inf = fmtInfo(fmt);
+            if (inf.isFloat) {
+                let subarray = buf.data.buffer.slice(offset, offset + inf.size);
+                if (inf.swap) {
+                    let u8 = new Uint8Array(subarray);
+                    u8.reverse();
+                }
+                if (inf.size == 4)
+                    return new Float32Array(subarray)[0];
+                else
+                    return new Float64Array(subarray)[0];
+            }
+            let r = 0;
+            for (let i = 0; i < inf.size; ++i) {
+                r <<= 8;
+                let off = inf.swap ? offset + i : offset + inf.size - i - 1;
+                r |= buf.data[off];
+            }
+            if (inf.signed) {
+                let missingBits = 32 - (inf.size * 8);
+                r = (r << missingBits) >> missingBits;
+            }
+            else {
+                r = r >>> 0;
+            }
+            return r;
+        }
+        BufferMethods.getNumber = getNumber;
+        function setNumber(buf, fmt, offset, r) {
+            let inf = fmtInfo(fmt);
+            if (inf.isFloat) {
+                let arr = new Uint8Array(inf.size);
+                if (inf.size == 4)
+                    new Float32Array(arr.buffer)[0] = r;
+                else
+                    new Float64Array(arr.buffer)[0] = r;
+                if (inf.swap)
+                    arr.reverse();
+                for (let i = 0; i < inf.size; ++i) {
+                    buf.data[offset + i] = arr[i];
+                }
+                return;
+            }
+            for (let i = 0; i < inf.size; ++i) {
+                let off = !inf.swap ? offset + i : offset + inf.size - i - 1;
+                buf.data[off] = (r & 0xff);
+                r >>= 8;
+            }
+        }
+        BufferMethods.setNumber = setNumber;
+        function createBuffer(size) {
+            return new RefBuffer(new Uint8Array(size));
+        }
+        BufferMethods.createBuffer = createBuffer;
+        function createBufferFromHex(hex) {
+            let r = createBuffer(hex.length >> 1);
+            for (let i = 0; i < hex.length; i += 2)
+                r.data[i >> 1] = parseInt(hex.slice(i, i + 2), 16);
+            r.isStatic = true;
+            return r;
+        }
+        BufferMethods.createBufferFromHex = createBufferFromHex;
+        function isReadOnly(buf) {
+            return buf.isStatic;
+        }
+        BufferMethods.isReadOnly = isReadOnly;
+        function getBytes(buf) {
+            // not sure if this is any useful...
+            return buf.data;
+        }
+        BufferMethods.getBytes = getBytes;
+        function inRange(buf, off) {
+            pxsim.pxtrt.nullCheck(buf);
+            return 0 <= off && off < buf.data.length;
+        }
+        function getUint8(buf, off) {
+            return getByte(buf, off);
+        }
+        BufferMethods.getUint8 = getUint8;
+        function getByte(buf, off) {
+            if (inRange(buf, off))
+                return buf.data[off];
+            else
+                return 0;
+        }
+        BufferMethods.getByte = getByte;
+        function setUint8(buf, off, v) {
+            setByte(buf, off, v);
+        }
+        BufferMethods.setUint8 = setUint8;
+        function checkWrite(buf) {
+            if (buf.isStatic)
+                pxsim.U.userError("Writing to read only buffer.");
+        }
+        function setByte(buf, off, v) {
+            if (inRange(buf, off)) {
+                checkWrite(buf);
+                buf.data[off] = v;
+            }
+        }
+        BufferMethods.setByte = setByte;
+        function length(buf) {
+            return buf.data.length;
+        }
+        BufferMethods.length = length;
+        function fill(buf, value, offset = 0, length = -1) {
+            if (offset < 0 || offset > buf.data.length)
+                return;
+            if (length < 0)
+                length = buf.data.length;
+            length = Math.min(length, buf.data.length - offset);
+            checkWrite(buf);
+            buf.data.fill(value, offset, offset + length);
+        }
+        BufferMethods.fill = fill;
+        function slice(buf, offset, length) {
+            offset = Math.min(buf.data.length, offset);
+            if (length < 0)
+                length = buf.data.length;
+            length = Math.min(length, buf.data.length - offset);
+            return new RefBuffer(buf.data.slice(offset, offset + length));
+        }
+        BufferMethods.slice = slice;
+        function toHex(buf) {
+            const hex = "0123456789abcdef";
+            let res = "";
+            for (let i = 0; i < buf.data.length; ++i) {
+                res += hex[buf.data[i] >> 4];
+                res += hex[buf.data[i] & 0xf];
+            }
+            return res;
+        }
+        BufferMethods.toHex = toHex;
+        function toString(buf) {
+            return pxsim.U.fromUTF8Array(buf.data);
+        }
+        BufferMethods.toString = toString;
+        function memmove(dst, dstOff, src, srcOff, len) {
+            if (src.buffer === dst.buffer) {
+                memmove(dst, dstOff, src.slice(srcOff, srcOff + len), 0, len);
+            }
+            else {
+                for (let i = 0; i < len; ++i)
+                    dst[dstOff + i] = src[srcOff + i];
+            }
+        }
+        const INT_MIN = -0x80000000;
+        function shift(buf, offset, start, len) {
+            if (len < 0)
+                len = buf.data.length - start;
+            if (start < 0 || start + len > buf.data.length || start + len < start
+                || len == 0 || offset == 0 || offset == INT_MIN)
+                return;
+            if (len == 0 || offset == 0 || offset == INT_MIN)
+                return;
+            if (offset <= -len || offset >= len) {
+                fill(buf, 0);
+                return;
+            }
+            checkWrite(buf);
+            if (offset < 0) {
+                offset = -offset;
+                memmove(buf.data, start + offset, buf.data, start, len - offset);
+                buf.data.fill(0, start, start + offset);
+            }
+            else {
+                len = len - offset;
+                memmove(buf.data, start, buf.data, start + offset, len);
+                buf.data.fill(0, start + len, start + len + offset);
+            }
+        }
+        BufferMethods.shift = shift;
+        function rotate(buf, offset, start, len) {
+            if (len < 0)
+                len = buf.data.length - start;
+            if (start < 0 || start + len > buf.data.length || start + len < start
+                || len == 0 || offset == 0 || offset == INT_MIN)
+                return;
+            checkWrite(buf);
+            if (offset < 0)
+                offset += len << 8; // try to make it positive
+            offset %= len;
+            if (offset < 0)
+                offset += len;
+            let data = buf.data;
+            let n_first = offset;
+            let first = 0;
+            let next = n_first;
+            let last = len;
+            while (first != next) {
+                let tmp = data[first + start];
+                data[first++ + start] = data[next + start];
+                data[next++ + start] = tmp;
+                if (next == last) {
+                    next = n_first;
+                }
+                else if (first == n_first) {
+                    n_first = next;
+                }
+            }
+        }
+        BufferMethods.rotate = rotate;
+        function write(buf, dstOffset, src, srcOffset = 0, length = -1) {
+            if (length < 0)
+                length = src.data.length;
+            if (srcOffset < 0 || dstOffset < 0 || dstOffset > buf.data.length)
+                return;
+            length = Math.min(src.data.length - srcOffset, buf.data.length - dstOffset);
+            if (length < 0)
+                return;
+            checkWrite(buf);
+            memmove(buf.data, dstOffset, src.data, srcOffset, length);
+        }
+        BufferMethods.write = write;
+    })(BufferMethods = pxsim.BufferMethods || (pxsim.BufferMethods = {}));
+})(pxsim || (pxsim = {}));
+(function (pxsim) {
+    var control;
+    (function (control) {
+        function createBufferFromUTF8(str) {
+            return new pxsim.RefBuffer(pxsim.U.toUTF8Array(str));
+        }
+        control.createBufferFromUTF8 = createBufferFromUTF8;
+    })(control = pxsim.control || (pxsim.control = {}));
+})(pxsim || (pxsim = {}));
+// Localization functions. Please port any modifications over to pxtlib/commonutil.ts
+var pxsim;
+(function (pxsim) {
+    var localization;
+    (function (localization) {
+        let _localizeStrings = {};
+        function setLocalizedStrings(strs) {
+            _localizeStrings = strs || {};
+        }
+        localization.setLocalizedStrings = setLocalizedStrings;
+        let sForPlural = true;
+        function lf(s, ...args) {
+            let lfmt = _localizeStrings[s] || s;
+            if (!sForPlural && lfmt != s && /\d:s\}/.test(lfmt)) {
+                lfmt = lfmt.replace(/\{\d+:s\}/g, "");
+            }
+            lfmt = lfmt.replace(/^\{(id|loc):[^\}]+\}/g, '');
+            return fmt_va(lfmt, args);
+        }
+        localization.lf = lf;
+        // from pxtlib/commonutil.ts
+        function fmt_va(f, args) {
+            if (args.length == 0)
+                return f;
+            return f.replace(/\{([0-9]+)(\:[^\}]+)?\}/g, function (s, n, spec) {
+                let v = args[parseInt(n)];
+                let r = "";
+                let fmtMatch = /^:f(\d*)\.(\d+)/.exec(spec);
+                if (fmtMatch) {
+                    let precision = parseInt(fmtMatch[2]);
+                    let len = parseInt(fmtMatch[1]) || 0;
+                    let fillChar = /^0/.test(fmtMatch[1]) ? "0" : " ";
+                    let num = v.toFixed(precision);
+                    if (len > 0 && precision > 0)
+                        len += precision + 1;
+                    if (len > 0) {
+                        while (num.length < len) {
+                            num = fillChar + num;
+                        }
+                    }
+                    r = num;
+                }
+                else if (spec == ":x") {
+                    r = "0x" + v.toString(16);
+                }
+                else if (v === undefined)
+                    r = "(undef)";
+                else if (v === null)
+                    r = "(null)";
+                else if (v.toString)
+                    r = v.toString();
+                else
+                    r = v + "";
+                if (spec == ":a") {
+                    if (/^\s*[euioah]/.test(r.toLowerCase()))
+                        r = "an " + r;
+                    else if (/^\s*[bcdfgjklmnpqrstvwxz]/.test(r.toLowerCase()))
+                        r = "a " + r;
+                }
+                else if (spec == ":s") {
+                    if (v == 1)
+                        r = "";
+                    else
+                        r = "s";
+                }
+                else if (spec == ":q") {
+                    r = htmlEscape(r);
+                }
+                else if (spec == ":jq") {
+                    r = jsStringQuote(r);
+                }
+                else if (spec == ":uri") {
+                    r = encodeURIComponent(r).replace(/'/g, "%27").replace(/"/g, "%22");
+                }
+                else if (spec == ":url") {
+                    r = encodeURI(r).replace(/'/g, "%27").replace(/"/g, "%22");
+                }
+                else if (spec == ":%") {
+                    r = (v * 100).toFixed(1).toString() + '%';
+                }
+                return r;
+            });
+        }
+        localization.fmt_va = fmt_va;
+        // from pxtlib/commonutil.ts
+        function htmlEscape(_input) {
+            if (!_input)
+                return _input; // null, undefined, empty string test
+            return _input.replace(/([^\w .!?\-$])/g, c => "&#" + c.charCodeAt(0) + ";");
+        }
+        localization.htmlEscape = htmlEscape;
+        // from pxtlib/commonutil.ts
+        function jsStringQuote(s) {
+            return s.replace(/[^\w .!?\-$]/g, (c) => {
+                let h = c.charCodeAt(0).toString(16);
+                return "\\u" + "0000".substr(0, 4 - h.length) + h;
+            });
+        }
+        localization.jsStringQuote = jsStringQuote;
+    })(localization = pxsim.localization || (pxsim.localization = {}));
+})(pxsim || (pxsim = {}));
+/// <reference path="../localtypings/pxtparts.d.ts"/>
+var pxsim;
+(function (pxsim) {
+    const MIN_MESSAGE_WAIT_MS = 200;
+    let tracePauseMs = 0;
+    let U;
+    (function (U) {
+        // Keep these helpers unified with pxtlib/browserutils.ts
+        function containsClass(el, classes) {
+            return splitClasses(classes).every(cls => containsSingleClass(el, cls));
+            function containsSingleClass(el, cls) {
+                if (el.classList) {
+                    return el.classList.contains(cls);
+                }
+                else {
+                    const classes = (el.className + "").split(/\s+/);
+                    return !(classes.indexOf(cls) < 0);
+                }
+            }
+        }
+        U.containsClass = containsClass;
+        function addClass(el, classes) {
+            splitClasses(classes).forEach(cls => addSingleClass(el, cls));
+            function addSingleClass(el, cls) {
+                if (el.classList) {
+                    el.classList.add(cls);
+                }
+                else {
+                    const classes = (el.className + "").split(/\s+/);
+                    if (classes.indexOf(cls) < 0) {
+                        el.className.baseVal += " " + cls;
+                    }
+                }
+            }
+        }
+        U.addClass = addClass;
+        function removeClass(el, classes) {
+            splitClasses(classes).forEach(cls => removeSingleClass(el, cls));
+            function removeSingleClass(el, cls) {
+                if (el.classList) {
+                    el.classList.remove(cls);
+                }
+                else {
+                    el.className.baseVal = (el.className + "")
+                        .split(/\s+/)
+                        .filter(c => c != cls)
+                        .join(" ");
+                }
+            }
+        }
+        U.removeClass = removeClass;
+        function splitClasses(classes) {
+            return classes.split(/\s+/).filter(s => !!s);
+        }
+        function remove(element) {
+            element.parentElement.removeChild(element);
+        }
+        U.remove = remove;
+        function removeChildren(element) {
+            while (element.firstChild)
+                element.removeChild(element.firstChild);
+        }
+        U.removeChildren = removeChildren;
+        function clear(element) {
+            removeChildren(element);
+        }
+        U.clear = clear;
+        function assert(cond, msg = "Assertion failed") {
+            if (!cond) {
+                debugger;
+                throw new Error(msg);
+            }
+        }
+        U.assert = assert;
+        function repeatMap(n, fn) {
+            n = n || 0;
+            let r = [];
+            for (let i = 0; i < n; ++i)
+                r.push(fn(i));
+            return r;
+        }
+        U.repeatMap = repeatMap;
+        function userError(msg) {
+            let e = new Error(msg);
+            e.isUserError = true;
+            throw e;
+        }
+        U.userError = userError;
+        function now() {
+            return Date.now();
+        }
+        U.now = now;
+        let perf;
+        // current time in microseconds
+        function perfNowUs() {
+            if (!perf)
+                perf = typeof performance != "undefined" ?
+                    performance.now.bind(performance) ||
+                        performance.moznow.bind(performance) ||
+                        performance.msNow.bind(performance) ||
+                        performance.webkitNow.bind(performance) ||
+                        performance.oNow.bind(performance) :
+                    Date.now;
+            return perf() * 1000;
+        }
+        U.perfNowUs = perfNowUs;
+        const _nextTickResolvedPromise = Promise.resolve();
+        function nextTick(f) {
+            // .then should run as a microtask / at end of loop
+            _nextTickResolvedPromise.then(f);
+        }
+        U.nextTick = nextTick;
+        async function delay(duration, value) {
+            // eslint-disable-next-line
+            const output = await value;
+            await new Promise(resolve => setTimeout(() => resolve(), duration));
+            return output;
+        }
+        U.delay = delay;
+        function promiseMapAll(values, mapper) {
+            return Promise.all(values.map(v => mapper(v)));
+        }
+        U.promiseMapAll = promiseMapAll;
+        function promiseMapAllSeries(values, mapper) {
+            return promisePoolAsync(1, values, mapper);
+        }
+        U.promiseMapAllSeries = promiseMapAllSeries;
+        async function promisePoolAsync(maxConcurrent, inputValues, handler) {
+            let curr = 0;
+            const promises = [];
+            const output = [];
+            for (let i = 0; i < maxConcurrent; i++) {
+                const thread = (async () => {
+                    while (curr < inputValues.length) {
+                        const id = curr++;
+                        const input = inputValues[id];
+                        output[id] = await handler(input);
+                    }
+                })();
+                promises.push(thread);
+            }
+            try {
+                await Promise.all(promises);
+            }
+            catch (e) {
+                // do not spawn any more promises after pool failed.
+                curr = inputValues.length;
+                throw e;
+            }
+            return output;
+        }
+        U.promisePoolAsync = promisePoolAsync;
+        async function promiseTimeout(ms, promise, msg) {
+            let timeoutId;
+            let res;
+            const timeoutPromise = new Promise((resolve, reject) => {
+                res = resolve;
+                timeoutId = setTimeout(() => {
+                    res = undefined;
+                    clearTimeout(timeoutId);
+                    reject(msg || `Promise timed out after ${ms}ms`);
+                }, ms);
+            });
+            return Promise.race([promise, timeoutPromise])
+                .then(output => {
+                // clear any dangling timeout
+                if (res) {
+                    clearTimeout(timeoutId);
+                    res();
+                }
+                return output;
+            });
+        }
+        U.promiseTimeout = promiseTimeout;
+        // this will take lower 8 bits from each character
+        function stringToUint8Array(input) {
+            let len = input.length;
+            let res = new Uint8Array(len);
+            for (let i = 0; i < len; ++i)
+                res[i] = input.charCodeAt(i) & 0xff;
+            return res;
+        }
+        U.stringToUint8Array = stringToUint8Array;
+        function uint8ArrayToString(input) {
+            let len = input.length;
+            let res = "";
+            for (let i = 0; i < len; ++i)
+                res += String.fromCharCode(input[i]);
+            return res;
+        }
+        U.uint8ArrayToString = uint8ArrayToString;
+        function fromUTF8(binstr) {
+            if (!binstr)
+                return "";
+            // escape function is deprecated
+            let escaped = "";
+            for (let i = 0; i < binstr.length; ++i) {
+                let k = binstr.charCodeAt(i) & 0xff;
+                if (k == 37 || k > 0x7f) {
+                    escaped += "%" + k.toString(16);
+                }
+                else {
+                    escaped += binstr.charAt(i);
+                }
+            }
+            // decodeURIComponent does the actual UTF8 decoding
+            return decodeURIComponent(escaped);
+        }
+        U.fromUTF8 = fromUTF8;
+        function toUTF8(str, cesu8) {
+            let res = "";
+            if (!str)
+                return res;
+            for (let i = 0; i < str.length; ++i) {
+                let code = str.charCodeAt(i);
+                if (code <= 0x7f)
+                    res += str.charAt(i);
+                else if (code <= 0x7ff) {
+                    res += String.fromCharCode(0xc0 | (code >> 6), 0x80 | (code & 0x3f));
+                }
+                else {
+                    if (!cesu8 && 0xd800 <= code && code <= 0xdbff) {
+                        let next = str.charCodeAt(++i);
+                        if (!isNaN(next))
+                            code = 0x10000 + ((code - 0xd800) << 10) + (next - 0xdc00);
+                    }
+                    if (code <= 0xffff)
+                        res += String.fromCharCode(0xe0 | (code >> 12), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f));
+                    else
+                        res += String.fromCharCode(0xf0 | (code >> 18), 0x80 | ((code >> 12) & 0x3f), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f));
+                }
+            }
+            return res;
+        }
+        U.toUTF8 = toUTF8;
+        function toUTF8Array(s) {
+            return (new TextEncoder()).encode(s);
+        }
+        U.toUTF8Array = toUTF8Array;
+        function fromUTF8Array(s) {
+            return (new TextDecoder()).decode(s);
+        }
+        U.fromUTF8Array = fromUTF8Array;
+        function isPxtElectron() {
+            return typeof window != "undefined" && !!window.pxtElectron;
+        }
+        U.isPxtElectron = isPxtElectron;
+        function isIpcRenderer() {
+            return typeof window != "undefined" && !!window.ipcRenderer;
+        }
+        U.isIpcRenderer = isIpcRenderer;
+        function isElectron() {
+            return isPxtElectron() || isIpcRenderer();
+        }
+        U.isElectron = isElectron;
+        function isLocalHost() {
+            try {
+                return typeof window !== "undefined"
+                    && /^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(window.location.href)
+                    && !/nolocalhost=1/.test(window.location.href);
+            }
+            catch (e) {
+                return false;
+            }
+        }
+        U.isLocalHost = isLocalHost;
+        function isLocalHostDev() {
+            return isLocalHost() && !isElectron();
+        }
+        U.isLocalHostDev = isLocalHostDev;
+        function unique(arr, f) {
+            let v = [];
+            let r = {};
+            arr.forEach(e => {
+                let k = f(e);
+                if (!r.hasOwnProperty(k)) {
+                    r[k] = null;
+                    v.push(e);
+                }
+            });
+            return v;
+        }
+        U.unique = unique;
+    })(U = pxsim.U || (pxsim.U = {}));
+    class BreakLoopException {
+    }
+    pxsim.BreakLoopException = BreakLoopException;
+    let pxtcore;
+    (function (pxtcore) {
+        function beginTry(lbl) {
+            pxsim.runtime.currFrame.tryFrame = {
+                parent: pxsim.runtime.currTryFrame(),
+                handlerPC: lbl,
+                handlerFrame: pxsim.runtime.currFrame
+            };
+        }
+        pxtcore.beginTry = beginTry;
+        function endTry() {
+            const s = pxsim.runtime.currFrame;
+            s.tryFrame = s.tryFrame.parent;
+        }
+        pxtcore.endTry = endTry;
+        function throwValue(v) {
+            let tf = pxsim.runtime.currTryFrame();
+            if (!tf)
+                U.userError("unhandled exception: " + v);
+            const s = tf.handlerFrame;
+            pxsim.runtime.currFrame = s;
+            s.pc = tf.handlerPC;
+            s.tryFrame = tf.parent;
+            s.thrownValue = v;
+            s.hasThrownValue = true;
+            throw new BreakLoopException();
+        }
+        pxtcore.throwValue = throwValue;
+        function getThrownValue() {
+            const s = pxsim.runtime.currFrame;
+            U.assert(s.hasThrownValue);
+            s.hasThrownValue = false;
+            return s.thrownValue;
+        }
+        pxtcore.getThrownValue = getThrownValue;
+        function endFinally() {
+            const s = pxsim.runtime.currFrame;
+            if (s.hasThrownValue) {
+                s.hasThrownValue = false;
+                throwValue(s.thrownValue);
+            }
+        }
+        pxtcore.endFinally = endFinally;
+    })(pxtcore = pxsim.pxtcore || (pxsim.pxtcore = {}));
+    function getResume() { return pxsim.runtime.getResume(); }
+    pxsim.getResume = getResume;
+    const SERIAL_BUFFER_LENGTH = 16;
+    class BaseBoard {
+        constructor() {
+            this.messageListeners = [];
+            this.serialOutBuffer = '';
+            this.messages = [];
+            this.lastSerialTime = 0;
+            this.debouncedPostAll = () => {
+                const nowtime = Date.now();
+                if (nowtime - this.lastSerialTime > MIN_MESSAGE_WAIT_MS) {
+                    clearTimeout(this.serialTimeout);
+                    if (this.messages.length) {
+                        Runtime.postMessage({
+                            type: 'bulkserial',
+                            data: this.messages,
+                            id: pxsim.runtime.id,
+                            sim: true
+                        });
+                        this.messages = [];
+                        this.lastSerialTime = nowtime;
+                    }
+                }
+                else {
+                    this.serialTimeout = setTimeout(this.debouncedPostAll, 50);
+                }
+            };
+            // use a stable board id
+            this.id = pxsim.Embed.frameid || ("b" + Math.round(Math.random() * 2147483647));
+            this.bus = new pxsim.EventBus(pxsim.runtime, this);
+        }
+        updateView() { }
+        receiveMessage(msg) {
+            if (!pxsim.runtime || pxsim.runtime.dead)
+                return;
+            this.dispatchMessage(msg);
+        }
+        dispatchMessage(msg) {
+            for (const listener of this.messageListeners)
+                listener(msg);
+        }
+        addMessageListener(listener) {
+            this.messageListeners.push(listener);
+        }
+        get storedState() {
+            if (!this.runOptions)
+                return {};
+            if (!this.runOptions.storedState)
+                this.runOptions.storedState = {};
+            return this.runOptions.storedState;
+        }
+        initAsync(msg) {
+            this.runOptions = msg;
+            return Promise.resolve();
+        }
+        setStoredState(k, value) {
+            if (value == null)
+                delete this.storedState[k];
+            else
+                this.storedState[k] = value;
+            Runtime.postMessage({
+                type: "simulator",
+                command: "setstate",
+                stateKey: k,
+                stateValue: value
+            });
+        }
+        onDebuggerResume() { }
+        screenshotAsync(width) {
+            return Promise.resolve(undefined);
+        }
+        kill() { }
+        writeSerial(s) {
+            this.serialOutBuffer += s;
+            if (/\n/.test(this.serialOutBuffer) || this.serialOutBuffer.length > SERIAL_BUFFER_LENGTH) {
+                this.messages.push({
+                    time: Date.now(),
+                    data: this.serialOutBuffer
+                });
+                this.debouncedPostAll();
+                this.serialOutBuffer = '';
+            }
+        }
+    }
+    pxsim.BaseBoard = BaseBoard;
+    class CoreBoard extends BaseBoard {
+        constructor() {
+            super();
+            // updates
+            this.updateSubscribers = [];
+            this.updateView = () => {
+                this.updateSubscribers.forEach(sub => sub());
+            };
+            this.builtinParts = {};
+            this.builtinVisuals = {};
+            this.builtinPartVisuals = {};
+        }
+        kill() {
+            super.kill();
+            pxsim.AudioContextManager.stopAll();
+        }
+    }
+    pxsim.CoreBoard = CoreBoard;
+    class BareBoard extends BaseBoard {
+    }
+    function initBareRuntime() {
+        pxsim.runtime.board = new BareBoard();
+        let myRT = pxsim;
+        myRT.basic = {
+            pause: pxsim.thread.pause,
+            showNumber: (n) => {
+                let cb = getResume();
+                console.log("SHOW NUMBER:", n);
+                U.nextTick(cb);
+            }
+        };
+        myRT.serial = {
+            writeString: (s) => pxsim.runtime.board.writeSerial(s),
+        };
+        myRT.pins = {
+            createBuffer: pxsim.BufferMethods.createBuffer,
+        };
+        myRT.control = {
+            inBackground: pxsim.thread.runInBackground,
+            createBuffer: pxsim.BufferMethods.createBuffer,
+            dmesg: (s) => console.log("DMESG: " + s),
+            deviceDalVersion: () => "sim",
+            __log: (pri, s) => console.log("LOG: " + s.trim()),
+        };
+    }
+    pxsim.initBareRuntime = initBareRuntime;
+    let LogType;
+    (function (LogType) {
+        LogType[LogType["UserSet"] = 0] = "UserSet";
+        LogType[LogType["BackAdd"] = 1] = "BackAdd";
+        LogType[LogType["BackRemove"] = 2] = "BackRemove";
+    })(LogType || (LogType = {}));
+    class EventQueue {
+        constructor(runtime, valueToArgs) {
+            this.runtime = runtime;
+            this.valueToArgs = valueToArgs;
+            this.max = 5;
+            this.events = [];
+            this.awaiters = [];
+            this._handlers = [];
+            this._addRemoveLog = [];
+        }
+        push(e, notifyOne) {
+            if (this.awaiters.length > 0) {
+                if (notifyOne) {
+                    const aw = this.awaiters.shift();
+                    if (aw)
+                        aw();
+                }
+                else {
+                    const aws = this.awaiters.slice();
+                    this.awaiters = [];
+                    aws.forEach(aw => aw());
+                }
+            }
+            if (this.handlers.length == 0 || this.events.length > this.max)
+                return Promise.resolve();
+            this.events.push(e);
+            // start processing, if not already processing
+            if (!this.lock)
+                return this.poke();
+            else
+                return Promise.resolve();
+        }
+        poke() {
+            this.lock = true;
+            let events = this.events;
+            // all events will be processed by concurrent promisified code below, so start afresh
+            this.events = [];
+            // in order semantics for events and handlers
+            return U.promiseMapAllSeries(events, (value) => {
+                return U.promiseMapAllSeries(this.handlers, (handler) => {
+                    return this.runtime.runFiberAsync(handler, ...(this.valueToArgs ? this.valueToArgs(value) : [value]));
+                });
+            }).then(() => {
+                // if some events arrived while processing above then keep processing
+                if (this.events.length > 0) {
+                    return this.poke();
+                }
+                else {
+                    this.lock = false;
+                    // process the log (synchronous)
+                    this._addRemoveLog.forEach(l => {
+                        if (l.log === LogType.BackAdd) {
+                            this.addHandler(l.act);
+                        }
+                        else if (l.log === LogType.BackRemove) {
+                            this.removeHandler(l.act);
+                        }
+                        else
+                            this.setHandler(l.act);
+                    });
+                    this._addRemoveLog = [];
+                    return Promise.resolve();
+                }
+            });
+        }
+        get handlers() {
+            return this._handlers;
+        }
+        setHandler(a) {
+            if (!this.lock) {
+                this._handlers = [a];
+            }
+            else {
+                this._addRemoveLog.push({ act: a, log: LogType.UserSet });
+            }
+        }
+        addHandler(a) {
+            if (!this.lock) {
+                let index = this._handlers.indexOf(a);
+                // only add if new, just like CODAL
+                if (index == -1) {
+                    this._handlers.push(a);
+                }
+            }
+            else {
+                this._addRemoveLog.push({ act: a, log: LogType.BackAdd });
+            }
+        }
+        removeHandler(a) {
+            if (!this.lock) {
+                let index = this._handlers.indexOf(a);
+                if (index != -1) {
+                    this._handlers.splice(index, 1);
+                }
+            }
+            else {
+                this._addRemoveLog.push({ act: a, log: LogType.BackRemove });
+            }
+        }
+        addAwaiter(awaiter) {
+            this.awaiters.push(awaiter);
+        }
+    }
+    pxsim.EventQueue = EventQueue;
+    // overriden at loadtime by specific implementation
+    pxsim.initCurrentRuntime = undefined;
+    pxsim.handleCustomMessage = undefined;
+    // binds this pointer (in s.arg0) to method implementation (in s.fn)
+    function bind(s) {
+        const thisPtr = s.arg0;
+        const f = s.fn;
+        return (s2) => {
+            let numArgs = 0;
+            while (s2.hasOwnProperty("arg" + numArgs))
+                numArgs++;
+            const sa = s2;
+            for (let i = numArgs; i > 0; i--)
+                sa["arg" + i] = sa["arg" + (i - 1)];
+            s2.arg0 = thisPtr;
+            return f(s2);
+        };
+    }
+    function _leave(s, v) {
+        s.parent.retval = v;
+        return s.parent;
+    }
+    // wraps simulator code as STS code - useful for default event handlers
+    function syntheticRefAction(f) {
+        return pxtcore.mkAction(0, s => _leave(s, f(s)));
+    }
+    pxsim.syntheticRefAction = syntheticRefAction;
+    class TimeoutScheduled {
+        constructor(id, fn, totalRuntime, timestampCall) {
+            this.id = id;
+            this.fn = fn;
+            this.totalRuntime = totalRuntime;
+            this.timestampCall = timestampCall;
+        }
+    }
+    pxsim.TimeoutScheduled = TimeoutScheduled;
+    class PausedTimeout {
+        constructor(fn, timeRemaining) {
+            this.fn = fn;
+            this.timeRemaining = timeRemaining;
+        }
+    }
+    pxsim.PausedTimeout = PausedTimeout;
+    function mkVTable(src) {
+        return {
+            name: src.name,
+            numFields: src.numFields,
+            classNo: src.classNo,
+            methods: src.methods,
+            iface: src.iface,
+            lastSubtypeNo: src.lastSubtypeNo,
+            toStringMethod: src.toStringMethod,
+            maxBgInstances: src.maxBgInstances,
+        };
+    }
+    pxsim.mkVTable = mkVTable;
+    let mapVTable = null;
+    function mkMapVTable() {
+        if (!mapVTable)
+            mapVTable = mkVTable({ name: "_Map", numFields: 0, classNo: 0, lastSubtypeNo: 0, methods: null });
+        return mapVTable;
+    }
+    pxsim.mkMapVTable = mkMapVTable;
+    function functionName(fn) {
+        const fi = fn.info;
+        if (fi)
+            return `${fi.functionName} (${fi.fileName}:${fi.line + 1}:${fi.column + 1})`;
+        return "()";
+    }
+    pxsim.functionName = functionName;
+    class Runtime {
+        constructor(msg) {
+            this.numGlobals = 1000;
+            this.dead = false;
+            this.running = false;
+            this.idleTimer = undefined;
+            this.recording = false;
+            this.recordingTimer = 0;
+            this.recordingLastImageData = undefined;
+            this.recordingWidth = undefined;
+            this.startTime = 0;
+            this.startTimeUs = 0;
+            this.pausedTime = 0;
+            this.lastPauseTimestamp = 0;
+            this.globals = {};
+            this.environmentGlobals = {};
+            this.otherFrames = [];
+            this.loopLock = null;
+            this.loopLockWaitList = [];
+            this.heapSnapshots = [];
+            this.timeoutsScheduled = [];
+            this.timeoutsPausedOnBreakpoint = [];
+            this.pausedOnBreakpoint = false;
+            this.traceDisabled = false;
+            this.perfOffset = 0;
+            this.perfElapsed = 0;
+            this.perfStack = 0;
+            this.refCountingDebug = false;
+            this.refObjId = 1;
+            this.numDisplayUpdates = 0;
+            U.assert(!!pxsim.initCurrentRuntime);
+            this.id = msg.id;
+            this.refCountingDebug = !!msg.refCountingDebug;
+            let threadId = 0;
+            let breakpoints = null;
+            let currResume;
+            let dbgHeap;
+            let dbgResume;
+            let breakFrame = null; // for step-over
+            let lastYield = Date.now();
+            let userGlobals;
+            let __this = this; // ex
+            this.traceDisabled = !!msg.traceDisabled;
+            // this is passed to generated code
+            const evalIface = {
+                runtime: this,
+                oops,
+                doNothing,
+                pxsim,
+                globals: this.globals,
+                setupYield,
+                maybeYield,
+                setupDebugger,
+                isBreakFrame,
+                breakpoint,
+                trace,
+                checkStack,
+                leave: _leave,
+                checkResumeConsumed,
+                setupResume,
+                setupLambda,
+                checkSubtype,
+                failedCast,
+                buildResume,
+                mkVTable,
+                bind,
+                leaveAccessor,
+            };
+            function oops(msg) {
+                throw new Error("sim error: " + msg);
+            }
+            function doNothing(s) {
+                s.pc = -1;
+                return _leave(s, s.parent.retval);
+            }
+            function flushLoopLock() {
+                while (__this.loopLockWaitList.length > 0 && !__this.loopLock) {
+                    let f = __this.loopLockWaitList.shift();
+                    f();
+                }
+            }
+            // Date.now() - 100ns on Chrome mac, 60ns on Safari iPhone XS
+            // yield-- - 7ns on Chrome
+            let yieldReset = () => { };
+            function setupYield(reset) {
+                yieldReset = reset;
+            }
+            function loopForSchedule(s) {
+                const lock = new Object();
+                const pc = s.pc;
+                __this.loopLock = lock;
+                __this.otherFrames.push(s);
+                return () => {
+                    if (__this.dead)
+                        return;
+                    U.assert(s.pc == pc);
+                    U.assert(__this.loopLock === lock);
+                    __this.loopLock = null;
+                    loop(s);
+                    flushLoopLock();
+                };
+            }
+            function maybeYield(s, pc, r0) {
+                // If code is running on a breakpoint, it's because we are evaluating getters;
+                // no need to yield in that case.
+                if (__this.pausedOnBreakpoint)
+                    return false;
+                __this.cleanScheduledExpired();
+                yieldReset();
+                let now = Date.now();
+                if (now - lastYield >= 20) {
+                    lastYield = now;
+                    s.pc = pc;
+                    s.r0 = r0;
+                    setTimeout(loopForSchedule(s), 5);
+                    return true;
+                }
+                return false;
+            }
+            function setupDebugger(numBreakpoints, userCodeGlobals) {
+                breakpoints = new Uint8Array(numBreakpoints);
+                // start running and let user put a breakpoint on start
+                breakpoints[0] = msg.breakOnStart ? 1 : 0;
+                userGlobals = userCodeGlobals;
+                return breakpoints;
+            }
+            function isBreakFrame(s) {
+                if (!breakFrame)
+                    return true; // nothing specified
+                for (let p = breakFrame; p; p = p.parent) {
+                    if (p == s)
+                        return true;
+                }
+                return false;
+            }
+            function breakpoint(s, retPC, brkId, r0) {
+                let lock = {};
+                __this.loopLock = lock;
+                U.assert(!dbgResume);
+                U.assert(!dbgHeap);
+                s.pc = retPC;
+                s.r0 = r0;
+                const { msg, heap } = pxsim.getBreakpointMsg(s, brkId, userGlobals);
+                dbgHeap = heap;
+                pxsim.injectEnvironmentGlobals(msg, heap);
+                Runtime.postMessage(msg);
+                breakpoints[0] = 0;
+                breakFrame = null;
+                __this.pauseScheduled();
+                dbgResume = (m) => {
+                    dbgResume = null;
+                    dbgHeap = null;
+                    if (__this.dead)
+                        return null;
+                    __this.resumeAllPausedScheduled();
+                    __this.board.onDebuggerResume();
+                    pxsim.runtime = __this;
+                    U.assert(s.pc == retPC);
+                    breakpoints[0] = 0;
+                    breakFrame = null;
+                    switch (m.subtype) {
+                        case "resume":
+                            break;
+                        case "stepover":
+                            breakpoints[0] = 1;
+                            breakFrame = s;
+                            break;
+                        case "stepinto":
+                            breakpoints[0] = 1;
+                            break;
+                        case "stepout":
+                            breakpoints[0] = 1;
+                            breakFrame = s.parent || s;
+                            break;
+                    }
+                    U.assert(__this.loopLock == lock);
+                    __this.loopLock = null;
+                    __this.otherFrames.push(s);
+                    loop(s);
+                    flushLoopLock();
+                };
+                return null;
+            }
+            function trace(brkId, s, retPc, info) {
+                setupResume(s, retPc);
+                if (info.functionName === "<main>" || info.fileName === "main.ts") {
+                    if (!pxsim.runtime.traceDisabled) {
+                        const { msg } = pxsim.getBreakpointMsg(s, brkId, userGlobals);
+                        msg.subtype = "trace";
+                        Runtime.postMessage(msg);
+                    }
+                    pxsim.thread.pause(tracePauseMs || 1);
+                }
+                else {
+                    pxsim.thread.pause(0);
+                }
+                checkResumeConsumed();
+            }
+            function handleDebuggerMsg(msg) {
+                switch (msg.subtype) {
+                    case "config":
+                        let cfg = msg;
+                        if (cfg.setBreakpoints && breakpoints) {
+                            breakpoints.fill(0);
+                            for (let n of cfg.setBreakpoints)
+                                breakpoints[n] = 1;
+                        }
+                        break;
+                    case "traceConfig":
+                        let trc = msg;
+                        tracePauseMs = trc.interval;
+                        break;
+                    case "pause":
+                        breakpoints[0] = 1;
+                        breakFrame = null;
+                        break;
+                    case "resume":
+                    case "stepover":
+                    case "stepinto":
+                    case "stepout":
+                        if (dbgResume)
+                            dbgResume(msg);
+                        break;
+                    case "variables":
+                        const vmsg = msg;
+                        let vars = undefined;
+                        if (dbgHeap) {
+                            const v = dbgHeap[vmsg.variablesReference];
+                            if (v !== undefined)
+                                vars = pxsim.dumpHeap(v, dbgHeap, vmsg.fields);
+                        }
+                        Runtime.postMessage({
+                            type: "debugger",
+                            subtype: "variables",
+                            req_seq: msg.seq,
+                            variables: vars
+                        });
+                        break;
+                }
+            }
+            function removeFrame(p) {
+                const frames = __this.otherFrames;
+                for (let i = frames.length - 1; i >= 0; --i) {
+                    if (frames[i] === p) {
+                        frames.splice(i, 1);
+                        return;
+                    }
+                }
+                U.userError("frame cannot be removed!");
+            }
+            function loop(p) {
+                if (__this.dead) {
+                    console.log("Runtime terminated");
+                    return;
+                }
+                U.assert(!__this.loopLock);
+                __this.perfStartRuntime();
+                removeFrame(p);
+                try {
+                    pxsim.runtime = __this;
+                    while (!!p) {
+                        __this.currFrame = p;
+                        __this.currFrame.overwrittenPC = false;
+                        p = p.fn(p);
+                        //if (yieldSteps-- < 0 && maybeYield(p, p.pc, 0)) break;
+                        __this.maybeUpdateDisplay();
+                        if (__this.currFrame.overwrittenPC)
+                            p = __this.currFrame;
+                    }
+                    __this.perfStopRuntime();
+                }
+                catch (e) {
+                    if (e instanceof BreakLoopException) {
+                        U.nextTick(loopForSchedule(__this.currFrame));
+                        return;
+                    }
+                    __this.perfStopRuntime();
+                    if (__this.errorHandler)
+                        __this.errorHandler(e);
+                    else {
+                        console.error("Simulator crashed, no error handler", e.stack);
+                        const { msg, heap } = pxsim.getBreakpointMsg(p, p.lastBrkId, userGlobals);
+                        pxsim.injectEnvironmentGlobals(msg, heap);
+                        msg.exceptionMessage = e.message;
+                        msg.exceptionStack = e.stack;
+                        Runtime.postMessage(msg);
+                        if (__this.postError)
+                            __this.postError(e);
+                    }
+                }
+            }
+            function checkStack(d) {
+                if (d > 100)
+                    U.userError("Stack overflow");
+            }
+            function actionCall(s) {
+                s.depth = s.parent.depth + 1;
+                checkStack(s.depth);
+                s.pc = 0;
+                return s;
+            }
+            function setupTop(cb) {
+                let s = setupTopCore(cb);
+                setupResume(s, 0);
+                return s;
+            }
+            function setupTopCore(cb) {
+                let frame = {
+                    parent: null,
+                    pc: 0,
+                    depth: 0,
+                    threadId: ++threadId,
+                    fn: () => {
+                        if (cb)
+                            cb(frame.retval);
+                        return null;
+                    }
+                };
+                return frame;
+            }
+            function topCall(fn, cb) {
+                U.assert(!!__this.board);
+                U.assert(!__this.running);
+                __this.setRunning(true);
+                let topFrame = setupTopCore(cb);
+                let frame = {
+                    parent: topFrame,
+                    fn: fn,
+                    depth: 0,
+                    pc: 0
+                };
+                __this.otherFrames = [frame];
+                loop(actionCall(frame));
+            }
+            function checkResumeConsumed() {
+                if (currResume)
+                    oops("getResume() not called");
+            }
+            function setupResume(s, retPC) {
+                currResume = buildResume(s, retPC);
+            }
+            function leaveAccessor(s, v) {
+                if (s.stage2Call) {
+                    const s2 = {
+                        pc: 0,
+                        fn: null,
+                        depth: s.depth,
+                        parent: s.parent,
+                    };
+                    let num = 1;
+                    while (s.hasOwnProperty("arg" + num)) {
+                        s2["arg" + (num - 1)] = s["arg" + num];
+                        num++;
+                    }
+                    setupLambda(s2, v);
+                    return s2;
+                }
+                s.parent.retval = v;
+                return s.parent;
+            }
+            function setupLambda(s, a, numShift) {
+                if (numShift) {
+                    const sa = s;
+                    for (let i = 1; i < numShift; ++i)
+                        sa["arg" + (i - 1)] = sa["arg" + i];
+                    delete sa["arg" + (numShift - 1)];
+                }
+                if (a instanceof pxsim.RefAction) {
+                    s.fn = a.func;
+                    s.caps = a.fields;
+                }
+                else if (typeof a == "function") {
+                    s.fn = a;
+                }
+                else {
+                    oops("calling non-function");
+                }
+            }
+            function checkSubtype(v, vt) {
+                if (!v)
+                    return false;
+                const vt2 = v.vtable;
+                if (vt === vt2)
+                    return true;
+                return vt2 && vt.classNo <= vt2.classNo && vt2.classNo <= vt.lastSubtypeNo;
+            }
+            function failedCast(v) {
+                // TODO generate the right panic codes
+                if (pxsim.control && pxsim.control.dmesgValue)
+                    pxsim.control.dmesgValue(v);
+                oops("failed cast on " + v);
+            }
+            function buildResume(s, retPC) {
+                if (currResume)
+                    oops("already has resume");
+                s.pc = retPC;
+                let start = Date.now();
+                __this.otherFrames.push(s);
+                let fn = (v) => {
+                    if (__this.dead)
+                        return;
+                    if (__this.loopLock) {
+                        __this.loopLockWaitList.push(() => fn(v));
+                        return;
+                    }
+                    pxsim.runtime = __this;
+                    let now = Date.now();
+                    if (now - start > 3)
+                        lastYield = now;
+                    U.assert(s.pc == retPC);
+                    if (v instanceof pxsim.FnWrapper) {
+                        let w = v;
+                        let frame = {
+                            parent: s,
+                            fn: w.func,
+                            lambdaArgs: w.args,
+                            pc: 0,
+                            caps: w.caps,
+                            depth: s.depth + 1,
+                        };
+                        // If the function we call never pauses, this would cause the stack
+                        // to grow unbounded.
+                        let lock = {};
+                        __this.loopLock = lock;
+                        removeFrame(s);
+                        __this.otherFrames.push(frame);
+                        return U.nextTick(() => {
+                            U.assert(__this.loopLock === lock);
+                            __this.loopLock = null;
+                            loop(actionCall(frame));
+                            flushLoopLock();
+                        });
+                    }
+                    s.retval = v;
+                    return loop(s);
+                };
+                return fn;
+            }
+            // eslint-disable-next-line
+            const entryPoint = msg.code && eval(msg.code)(evalIface);
+            this.run = (cb) => topCall(entryPoint, cb);
+            this.getResume = () => {
+                if (!currResume)
+                    oops("noresume");
+                let r = currResume;
+                currResume = null;
+                return r;
+            };
+            this.setupTop = setupTop;
+            this.handleDebuggerMsg = handleDebuggerMsg;
+            this.entry = entryPoint;
+            this.overwriteResume = (retPC) => {
+                currResume = null;
+                if (retPC >= 0)
+                    this.currFrame.pc = retPC;
+                this.currFrame.overwrittenPC = true;
+            };
+            pxsim.runtime = this;
+            pxsim.initCurrentRuntime(msg);
+        }
+        registerLiveObject(object) {
+            const id = this.refObjId++;
+            return id;
+        }
+        runningTime() {
+            return U.now() - this.startTime - this.pausedTime;
+        }
+        runningTimeUs() {
+            return 0xffffffff & ((U.perfNowUs() - this.startTimeUs) >> 0);
+        }
+        runFiberAsync(a, arg0, arg1, arg2) {
+            return new Promise((resolve, reject) => U.nextTick(() => {
+                pxsim.runtime = this;
+                this.setupTop(resolve);
+                pxtcore.runAction(a, [arg0, arg1, arg2]);
+            }));
+        }
+        currTryFrame() {
+            for (let p = this.currFrame; p; p = p.parent)
+                if (p.tryFrame)
+                    return p.tryFrame;
+            return null;
+        }
+        traceObjects() {
+            const visited = {};
+            while (this.heapSnapshots.length > 2)
+                this.heapSnapshots.shift();
+            const stt = {
+                count: 0,
+                size: 0,
+                name: "TOTAL"
+            };
+            const statsByType = {
+                "TOTAL": stt
+            };
+            this.heapSnapshots.push({
+                visited,
+                statsByType
+            });
+            function scan(name, v, par = null) {
+                if (!(v instanceof pxsim.RefObject))
+                    return;
+                const obj = v;
+                if (obj.gcIsStatic())
+                    return;
+                const ex = visited[obj.id];
+                if (ex) {
+                    if (par)
+                        ex.pointers.push([par, name]);
+                    return;
+                }
+                const here = { obj, path: null, pointers: [[par, name]] };
+                visited[obj.id] = here;
+                obj.scan((subpath, v) => {
+                    if (v instanceof pxsim.RefObject && !visited[v.id])
+                        scan(subpath, v, here);
+                });
+            }
+            for (let k of Object.keys(this.globals)) {
+                scan(k.replace(/___\d+$/, ""), this.globals[k]);
+            }
+            const frames = this.otherFrames.slice();
+            if (this.currFrame && frames.indexOf(this.currFrame) < 0)
+                frames.unshift(this.currFrame);
+            for (const thread of this.getThreads()) {
+                const thrPath = "Thread-" + this.rootFrame(thread).threadId;
+                for (let s = thread; s; s = s.parent) {
+                    const path = thrPath + "." + functionName(s.fn);
+                    for (let k of Object.keys(s)) {
+                        if (/^(r0|arg\d+|.*___\d+)/.test(k)) {
+                            const v = s[k];
+                            if (v instanceof pxsim.RefObject) {
+                                k = k.replace(/___.*/, "");
+                                scan(path + "." + k, v);
+                            }
+                        }
+                    }
+                    if (s.caps) {
+                        for (let c of s.caps)
+                            scan(path + ".cap", c);
+                    }
+                }
+            }
+            const allObjects = Object.keys(visited).map(k => visited[k]);
+            allObjects.sort((a, b) => b.obj.gcSize() - a.obj.gcSize());
+            const setPath = (inf) => {
+                if (inf.path != null)
+                    return;
+                let short = "";
+                inf.path = "(cycle)";
+                for (let [par, name] of inf.pointers) {
+                    if (par == null) {
+                        inf.path = name;
+                        return;
+                    }
+                    setPath(par);
+                    const newPath = par.path + "." + name;
+                    if (!short || short.length > newPath.length)
+                        short = newPath;
+                }
+                inf.path = short;
+            };
+            allObjects.forEach(setPath);
+            const allStats = [stt];
+            for (const inf of allObjects) {
+                const sz = inf.obj.gcSize();
+                const key = inf.obj.gcKey();
+                if (!statsByType.hasOwnProperty(key)) {
+                    allStats.push(statsByType[key] = {
+                        count: 0,
+                        size: 0,
+                        name: key
+                    });
+                }
+                const st = statsByType[key];
+                st.size += sz;
+                st.count++;
+                stt.size += sz;
+                stt.count++;
+            }
+            allStats.sort((a, b) => a.size - b.size);
+            let objTable = "";
+            const fmt = (n) => ("        " + n.toString()).slice(-7);
+            for (const st of allStats) {
+                objTable += fmt(st.size * 4) + fmt(st.count) + " " + st.name + "\n";
+            }
+            const objInfo = (inf) => fmt(inf.obj.gcSize() * 4) + " " + inf.obj.gcKey() + " " + inf.path;
+            const large = allObjects.slice(0, 20).map(objInfo).join("\n");
+            let leaks = "";
+            if (this.heapSnapshots.length >= 3) {
+                const v0 = this.heapSnapshots[this.heapSnapshots.length - 3].visited;
+                const v1 = this.heapSnapshots[this.heapSnapshots.length - 2].visited;
+                const isBgInstance = (obj) => {
+                    if (!(obj instanceof pxsim.RefRecord))
+                        return false;
+                    if (obj.vtable && obj.vtable.maxBgInstances) {
+                        if (statsByType[obj.gcKey()].count <= obj.vtable.maxBgInstances)
+                            return true;
+                    }
+                    return false;
+                };
+                const leakObjs = allObjects
+                    .filter(inf => !v0[inf.obj.id] && v1[inf.obj.id])
+                    .filter(inf => !isBgInstance(inf.obj));
+                leaks = leakObjs
+                    .map(objInfo).join("\n");
+            }
+            return ("Threads:\n" + this.threadInfo() +
+                "\n\nSummary:\n" + objTable +
+                "\n\nLarge Objects:\n" + large +
+                "\n\nNew Objects:\n" + leaks);
+        }
+        getThreads() {
+            const frames = this.otherFrames.slice();
+            if (this.currFrame && frames.indexOf(this.currFrame) < 0)
+                frames.unshift(this.currFrame);
+            return frames;
+        }
+        rootFrame(f) {
+            let p = f;
+            while (p.parent)
+                p = p.parent;
+            return p;
+        }
+        threadInfo() {
+            const frames = this.getThreads();
+            let info = "";
+            for (let f of frames) {
+                info += `Thread ${this.rootFrame(f).threadId}:\n`;
+                for (let s of pxsim.getBreakpointMsg(f, f.lastBrkId).msg.stackframes) {
+                    let fi = s.funcInfo;
+                    info += `   at ${fi.functionName} (${fi.fileName}:${fi.line + 1}:${fi.column + 1})\n`;
+                }
+                info += "\n";
+            }
+            return info;
+        }
+        static postMessage(data) {
+            if (!data)
+                return;
+            // TODO: origins
+            if (typeof window !== 'undefined' && window.parent && window.parent.postMessage) {
+                window.parent.postMessage(data, "*");
+            }
+            if (Runtime.messagePosted)
+                Runtime.messagePosted(data);
+        }
+        static postScreenshotAsync(opts) {
+            const b = pxsim.runtime && pxsim.runtime.board;
+            const p = b
+                ? b.screenshotAsync().catch(e => {
+                    console.debug(`screenshot failed`);
+                    return undefined;
+                })
+                : Promise.resolve(undefined);
+            return p.then(img => Runtime.postMessage({
+                type: "screenshot",
+                data: img,
+                delay: opts && opts.delay
+            }));
+        }
+        static requestToggleRecording() {
+            const r = pxsim.runtime;
+            if (!r)
+                return;
+            Runtime.postMessage({
+                type: "recorder",
+                action: r.recording ? "stop" : "start"
+            });
+        }
+        restart() {
+            this.kill();
+            setTimeout(() => pxsim.Runtime.postMessage({
+                type: "simulator",
+                command: "restart"
+            }), 500);
+        }
+        kill() {
+            this.dead = true;
+            // TODO fix this
+            this.stopRecording();
+            this.stopIdle();
+            this.setRunning(false);
+        }
+        updateDisplay() {
+            this.board.updateView();
+            this.postFrame();
+        }
+        startRecording(width) {
+            if (this.recording || !this.running)
+                return;
+            this.recording = true;
+            this.recordingTimer = setInterval(() => this.postFrame(), 66);
+            this.recordingLastImageData = undefined;
+            this.recordingWidth = width;
+        }
+        stopRecording() {
+            if (!this.recording)
+                return;
+            if (this.recordingTimer)
+                clearInterval(this.recordingTimer);
+            this.recording = false;
+            this.recordingTimer = 0;
+            this.recordingLastImageData = undefined;
+            this.recordingWidth = undefined;
+        }
+        postFrame() {
+            if (!this.recording || !this.running)
+                return;
+            let time = pxsim.U.now();
+            this.board.screenshotAsync(this.recordingWidth)
+                .then(imageData => {
+                // check for duplicate images
+                if (this.recordingLastImageData && imageData
+                    && this.recordingLastImageData.data.byteLength == imageData.data.byteLength) {
+                    const d0 = this.recordingLastImageData.data;
+                    const d1 = imageData.data;
+                    const n = d0.byteLength;
+                    let i = 0;
+                    for (i = 0; i < n; ++i)
+                        if (d0[i] != d1[i])
+                            break;
+                    if (i == n) // same, don't send update
+                        return;
+                }
+                this.recordingLastImageData = imageData;
+                Runtime.postMessage({
+                    type: "screenshot",
+                    data: imageData,
+                    time
+                });
+            });
+        }
+        queueDisplayUpdate() {
+            this.numDisplayUpdates++;
+        }
+        maybeUpdateDisplay() {
+            if (this.numDisplayUpdates) {
+                this.numDisplayUpdates = 0;
+                this.updateDisplay();
+            }
+        }
+        setRunning(r) {
+            if (this.running != r) {
+                this.running = r;
+                if (this.running) {
+                    this.startTime = U.now();
+                    this.startTimeUs = U.perfNowUs();
+                    Runtime.postMessage({
+                        type: 'status',
+                        frameid: pxsim.Embed.frameid,
+                        runtimeid: this.id,
+                        state: 'running'
+                    });
+                }
+                else {
+                    this.stopRecording();
+                    this.stopIdle();
+                    Runtime.postMessage({
+                        type: 'status',
+                        frameid: pxsim.Embed.frameid,
+                        runtimeid: this.id,
+                        state: 'killed'
+                    });
+                }
+                if (this.stateChanged)
+                    this.stateChanged();
+            }
+        }
+        dumpLivePointers() {
+            return;
+        }
+        setupPerfCounters(names) {
+            if (!names || !names.length)
+                return;
+            this.perfCounters = names.map(s => new PerfCounter(s));
+        }
+        perfStartRuntime() {
+            if (this.perfOffset !== 0) {
+                this.perfStack++;
+            }
+            else {
+                this.perfOffset = U.perfNowUs() - this.perfElapsed;
+            }
+        }
+        perfStopRuntime() {
+            if (this.perfStack) {
+                this.perfStack--;
+            }
+            else {
+                this.perfElapsed = this.perfNow();
+                this.perfOffset = 0;
+            }
+        }
+        perfNow() {
+            if (this.perfOffset === 0)
+                U.userError("bad time now");
+            return (U.perfNowUs() - this.perfOffset) | 0;
+        }
+        startPerfCounter(n) {
+            if (!this.perfCounters)
+                return;
+            const c = this.perfCounters[n];
+            if (c.start)
+                U.userError("startPerf");
+            c.start = this.perfNow();
+        }
+        stopPerfCounter(n) {
+            if (!this.perfCounters)
+                return;
+            const c = this.perfCounters[n];
+            if (!c.start)
+                U.userError("stopPerf");
+            const curr = this.perfNow() - c.start;
+            c.start = 0;
+            // skip outliers
+            // if (c.numstops > 30 && curr > 1.2 * c.value / c.numstops)
+            //    return
+            c.value += curr;
+            c.numstops++;
+            let p = c.lastFewPtr++;
+            if (p >= c.lastFew.length) {
+                p = 0;
+                c.lastFewPtr = 1;
+            }
+            c.lastFew[p] = curr;
+        }
+        startIdle() {
+            // schedules handlers to run every 20ms
+            if (this.idleTimer === undefined) {
+                this.idleTimer = setInterval(() => {
+                    if (!this.running || this.pausedOnBreakpoint)
+                        return;
+                    const bus = this.board.bus;
+                    if (bus)
+                        bus.queueIdle();
+                }, 20);
+            }
+        }
+        stopIdle() {
+            if (this.idleTimer !== undefined) {
+                clearInterval(this.idleTimer);
+                this.idleTimer = undefined;
+            }
+        }
+        // Wrapper for the setTimeout
+        schedule(fn, timeout) {
+            if (timeout <= 0)
+                timeout = 0;
+            if (this.pausedOnBreakpoint) {
+                this.timeoutsPausedOnBreakpoint.push(new PausedTimeout(fn, timeout));
+                return -1;
+            }
+            const timestamp = U.now();
+            const to = new TimeoutScheduled(-1, fn, timeout, timestamp);
+            // We call the timeout function and add its id to the timeouts scheduled.
+            const removeAndExecute = () => {
+                const idx = this.timeoutsScheduled.indexOf(to);
+                if (idx >= 0)
+                    this.timeoutsScheduled.splice(idx, 1);
+                fn();
+            };
+            to.id = setTimeout(removeAndExecute, timeout);
+            this.timeoutsScheduled.push(to);
+            return to.id;
+        }
+        // On breakpoint, pause all timeouts
+        pauseScheduled() {
+            this.pausedOnBreakpoint = true;
+            this.timeoutsScheduled.forEach(ts => {
+                clearTimeout(ts.id);
+                let elapsed = U.now() - ts.timestampCall;
+                let timeRemaining = ts.totalRuntime - elapsed;
+                // Time reamining needs to be at least 1. Setting to 0 causes fibers
+                // to never resume after breaking
+                if (timeRemaining <= 0)
+                    timeRemaining = 1;
+                this.timeoutsPausedOnBreakpoint.push(new PausedTimeout(ts.fn, timeRemaining));
+            });
+            this.lastPauseTimestamp = U.now();
+            this.timeoutsScheduled = [];
+        }
+        // When resuming after a breakpoint, restart all paused timeouts with their remaining time.
+        resumeAllPausedScheduled() {
+            // Takes the list of all fibers paused on a breakpoint and resumes them.
+            this.pausedOnBreakpoint = false;
+            this.timeoutsPausedOnBreakpoint.forEach(pt => {
+                this.schedule(pt.fn, pt.timeRemaining);
+            });
+            if (this.lastPauseTimestamp) {
+                this.pausedTime += U.now() - this.lastPauseTimestamp;
+                this.lastPauseTimestamp = 0;
+            }
+            this.timeoutsPausedOnBreakpoint = [];
+        }
+        // Removes from the timeouts scheduled list all the ones that had been fulfilled.
+        cleanScheduledExpired() {
+            let now = U.now();
+            this.timeoutsScheduled = this.timeoutsScheduled.filter(ts => {
+                let elapsed = now - ts.timestampCall;
+                return ts.totalRuntime > elapsed;
+            });
+        }
+    }
+    pxsim.Runtime = Runtime;
+    class PerfCounter {
+        constructor(name) {
+            this.name = name;
+            this.start = 0;
+            this.numstops = 0;
+            this.value = 0;
+            this.lastFew = new Uint32Array(32);
+            this.lastFewPtr = 0;
+        }
+    }
+    pxsim.PerfCounter = PerfCounter;
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    let SimulatorState;
+    (function (SimulatorState) {
+        SimulatorState[SimulatorState["Unloaded"] = 0] = "Unloaded";
+        SimulatorState[SimulatorState["Stopped"] = 1] = "Stopped";
+        SimulatorState[SimulatorState["Pending"] = 2] = "Pending";
+        SimulatorState[SimulatorState["Starting"] = 3] = "Starting";
+        SimulatorState[SimulatorState["Running"] = 4] = "Running";
+        SimulatorState[SimulatorState["Paused"] = 5] = "Paused";
+        SimulatorState[SimulatorState["Suspended"] = 6] = "Suspended";
+    })(SimulatorState = pxsim.SimulatorState || (pxsim.SimulatorState = {}));
+    let SimulatorDebuggerCommand;
+    (function (SimulatorDebuggerCommand) {
+        SimulatorDebuggerCommand[SimulatorDebuggerCommand["StepInto"] = 0] = "StepInto";
+        SimulatorDebuggerCommand[SimulatorDebuggerCommand["StepOver"] = 1] = "StepOver";
+        SimulatorDebuggerCommand[SimulatorDebuggerCommand["StepOut"] = 2] = "StepOut";
+        SimulatorDebuggerCommand[SimulatorDebuggerCommand["Resume"] = 3] = "Resume";
+        SimulatorDebuggerCommand[SimulatorDebuggerCommand["Pause"] = 4] = "Pause";
+    })(SimulatorDebuggerCommand = pxsim.SimulatorDebuggerCommand || (pxsim.SimulatorDebuggerCommand = {}));
+    const FRAME_DATA_MESSAGE_CHANNEL = "messagechannel";
+    const FRAME_ASPECT_RATIO = "aspectratio";
+    const MESSAGE_SOURCE = "pxtdriver";
+    const PERMANENT = "permanent";
+    class SimulatorDriver {
+        constructor(container, options = {}) {
+            this.container = container;
+            this.options = options;
+            this.themes = ["blue", "red", "green", "yellow"];
+            this.runId = '';
+            this.nextFrameId = 0;
+            this.frameCounter = 0;
+            this.traceInterval = 0;
+            this.breakpointsSet = false;
+            this._runOptions = {};
+            this.state = SimulatorState.Unloaded;
+            this._allowedOrigins = [];
+            this.frameCleanupTimeout = undefined;
+            this.debuggerSeq = 1;
+            this.debuggerResolvers = {};
+            this._allowedOrigins.push(window.location.origin);
+            if (options.parentOrigin) {
+                this._allowedOrigins.push(options.parentOrigin);
+            }
+            this._allowedOrigins.push(this.getSimUrl().origin);
+            const messageSimulators = options === null || options === void 0 ? void 0 : options.messageSimulators;
+            if (messageSimulators) {
+                Object.keys(messageSimulators)
+                    .map(channel => messageSimulators[channel])
+                    .forEach(messageSimulator => {
+                    this._allowedOrigins.push(new URL(messageSimulator.url).origin);
+                    if (messageSimulator.localHostUrl)
+                        this._allowedOrigins.push(new URL(messageSimulator.localHostUrl).origin);
+                });
+            }
+            this._allowedOrigins = pxsim.U.unique(this._allowedOrigins, f => f);
+        }
+        isDebug() {
+            return this._runOptions && !!this._runOptions.debug;
+        }
+        isTracing() {
+            return this._runOptions && !!this._runOptions.trace;
+        }
+        hasParts() {
+            return this._runOptions && this._runOptions.parts && !!this._runOptions.parts.length;
+        }
+        setDirty() {
+            // We suspend the simulator here to stop it from running without
+            // interfering with the user's stopped state. We're not doing this check
+            // in the driver because the driver should be able to switch from any state
+            // to the suspend state, but in this codepath we only want to switch to the
+            // suspended state if we're running
+            if (this.state == pxsim.SimulatorState.Running)
+                this.suspend();
+        }
+        setPending() {
+            this.setState(SimulatorState.Pending);
+        }
+        focus() {
+            const frame = this.simFrames()[0];
+            if (frame)
+                frame.focus();
+        }
+        registerDependentEditor(w) {
+            if (!w)
+                return;
+            if (!this._dependentEditors)
+                this._dependentEditors = [];
+            this._dependentEditors.push(w);
+        }
+        dependentEditors() {
+            if (this._dependentEditors) {
+                this._dependentEditors = this._dependentEditors.filter(w => !!w.parent);
+                if (!this._dependentEditors.length)
+                    this._dependentEditors = undefined;
+            }
+            return this._dependentEditors;
+        }
+        setStarting() {
+            this.setState(SimulatorState.Starting);
+        }
+        setHwDebugger(hw) {
+            if (hw) {
+                // TODO set some visual on the simulator frame
+                // in future the simulator frame could reflect changes in the hardware
+                this.hwdbg = hw;
+                this.setState(SimulatorState.Running);
+                this.container.style.opacity = "0.3";
+            }
+            else {
+                delete this.container.style.opacity;
+                this.hwdbg = null;
+                this.setState(SimulatorState.Running);
+                this.stop();
+            }
+        }
+        handleHwDebuggerMsg(msg) {
+            if (!this.hwdbg)
+                return;
+            this.handleMessage(msg);
+        }
+        setThemes(themes) {
+            pxsim.U.assert(themes && themes.length > 0);
+            this.themes = themes;
+        }
+        startRecording(width) {
+            const frame = this.simFrames()[0];
+            if (!frame)
+                return undefined;
+            this.postMessage({
+                type: 'recorder',
+                action: 'start',
+                source: MESSAGE_SOURCE,
+                width
+            });
+        }
+        stopRecording() {
+            this.postMessage({ type: 'recorder', source: MESSAGE_SOURCE, action: 'stop' });
+        }
+        setFrameState(frame) {
+            const icon = frame.nextElementSibling;
+            const loader = icon.nextElementSibling;
+            // apply state
+            switch (this.state) {
+                case SimulatorState.Pending:
+                case SimulatorState.Starting:
+                    icon.style.display = '';
+                    icon.className = '';
+                    loader.style.display = '';
+                    break;
+                case SimulatorState.Stopped:
+                case SimulatorState.Suspended:
+                    pxsim.U.addClass(frame, (this.state == SimulatorState.Stopped || (this._runOptions && this._runOptions.autoRun))
+                        ? this.stoppedClass : this.invalidatedClass);
+                    if (!this._runOptions || !this._runOptions.autoRun) {
+                        icon.style.display = '';
+                        icon.className = 'videoplay xicon icon';
+                    }
+                    else
+                        icon.style.display = 'none';
+                    loader.style.display = 'none';
+                    this.scheduleFrameCleanup();
+                    break;
+                default:
+                    pxsim.U.removeClass(frame, this.stoppedClass);
+                    pxsim.U.removeClass(frame, this.invalidatedClass);
+                    icon.style.display = 'none';
+                    loader.style.display = 'none';
+                    break;
+            }
+        }
+        setState(state) {
+            if (this.state != state) {
+                this.state = state;
+                this.freeze(this.state == SimulatorState.Paused); // don't allow interaction when pause
+                this.simFrames().forEach(frame => this.setFrameState(frame));
+                if (this.options.onStateChanged)
+                    this.options.onStateChanged(this.state);
+            }
+        }
+        freeze(value) {
+            const cls = "pause-overlay";
+            if (!value) {
+                pxsim.util.toArray(this.container.querySelectorAll(`div.simframe div.${cls}`))
+                    .forEach(overlay => overlay.parentElement.removeChild(overlay));
+            }
+            else {
+                pxsim.util.toArray(this.container.querySelectorAll("div.simframe"))
+                    .forEach(frame => {
+                    if (frame.querySelector(`div.${cls}`))
+                        return;
+                    const div = document.createElement("div");
+                    div.className = cls;
+                    div.onclick = (ev) => {
+                        ev.preventDefault();
+                        return false;
+                    };
+                    frame.appendChild(div);
+                });
+            }
+        }
+        simFrames(skipLoaned = false) {
+            let frames = pxsim.util.toArray(this.container.getElementsByTagName("iframe"));
+            const loanedFrame = this.loanedIFrame();
+            if (loanedFrame && !skipLoaned)
+                frames.unshift(loanedFrame);
+            return frames;
+        }
+        getSimUrl() {
+            const simUrl = this.options.simUrl || (window.pxtConfig || {}).simUrl || `${location.origin}/sim/simulator.html`;
+            try {
+                return new URL(simUrl);
+            }
+            catch (_a) {
+                // Failed to parse set url; try based off origin in case path defined as relative (e.g. /simulator.html)
+                return new URL(simUrl, location.origin);
+            }
+        }
+        postMessage(msg, source, frameID) {
+            var _a;
+            if (this.hwdbg) {
+                this.hwdbg.postMessage(msg);
+                return;
+            }
+            const depEditors = this.dependentEditors();
+            let frames = this.simFrames();
+            if (frameID)
+                frames = frames.filter(f => f.id === frameID);
+            const broadcastmsg = msg;
+            if (source && (broadcastmsg === null || broadcastmsg === void 0 ? void 0 : broadcastmsg.broadcast)) {
+                // if the editor is hosted in a multi-editor setting
+                // don't start extra frames
+                const single = !!((_a = this._currentRuntime) === null || _a === void 0 ? void 0 : _a.single);
+                const parentWindow = window.parent && window.parent !== window.window
+                    ? window.parent : window.opener;
+                if (parentWindow) {
+                    // if message comes from parent already, don't echo
+                    if (source !== parentWindow) {
+                        const parentOrigin = this.options.parentOrigin || window.location.origin;
+                        parentWindow.postMessage(msg, parentOrigin);
+                    }
+                }
+                if (!this.options.nestedEditorSim && !(broadcastmsg === null || broadcastmsg === void 0 ? void 0 : broadcastmsg.toParentIFrameOnly)) {
+                    // send message to other editors
+                    if (depEditors) {
+                        depEditors.forEach(w => {
+                            if (source !== w)
+                                // dependant editors should be in the same origin
+                                w.postMessage(msg, window.location.origin);
+                        });
+                        // start second simulator
+                    }
+                    else if (!single) {
+                        const messageChannel = msg.type === "messagepacket" && msg.channel;
+                        const messageSimulator = messageChannel &&
+                            this.options.messageSimulators &&
+                            this.options.messageSimulators[messageChannel];
+                        // should we start an extension editor?
+                        if (messageSimulator) {
+                            // find a frame already running that simulator
+                            let messageFrame = frames.find(frame => frame.dataset[FRAME_DATA_MESSAGE_CHANNEL] === messageChannel);
+                            // not found, spin a new one
+                            if (!messageFrame) {
+                                const useLocalHost = pxsim.U.isLocalHost() && /localhostmessagesims=1/i.test(window.location.href);
+                                const url = ((useLocalHost && messageSimulator.localHostUrl) || messageSimulator.url)
+                                    .replace("$PARENT_ORIGIN$", encodeURIComponent(this.options.parentOrigin || ""));
+                                let wrapper = this.createFrame(url);
+                                this.container.appendChild(wrapper);
+                                messageFrame = wrapper.firstElementChild;
+                                messageFrame.dataset[FRAME_DATA_MESSAGE_CHANNEL] = messageChannel;
+                                pxsim.U.addClass(wrapper, "simmsg");
+                                pxsim.U.addClass(wrapper, "simmsg" + messageChannel);
+                                if (messageSimulator.permanent)
+                                    messageFrame.dataset[PERMANENT] = "true";
+                                this.startFrame(messageFrame);
+                                frames = this.simFrames(); // refresh
+                            }
+                            // not running the curren run, restart
+                            else if (messageFrame.dataset['runid'] != this.runId) {
+                                this.startFrame(messageFrame);
+                            }
+                        }
+                        else {
+                            // start secondary frame if needed
+                            const mkcdFrames = frames.filter(frame => !frame.dataset[FRAME_DATA_MESSAGE_CHANNEL]);
+                            if (mkcdFrames.length < 2) {
+                                this.container.appendChild(this.createFrame());
+                                frames = this.simFrames();
+                                // there might be an old frame
+                            }
+                            else if (mkcdFrames[1].dataset['runid'] != this.runId) {
+                                this.startFrame(mkcdFrames[1]);
+                            }
+                        }
+                    }
+                }
+            }
+            // now that we have iframe starts,
+            // dispatch message to other frames
+            for (let i = 0; i < frames.length; ++i) {
+                const frame = frames[i];
+                // same frame as source
+                if (source && frame.contentWindow == source)
+                    continue;
+                // frame not in DOM
+                if (!frame.contentWindow)
+                    continue;
+                // finally, send the message
+                this.postMessageCore(frame, msg);
+                // don't start more than 1 recorder
+                if (msg.type == 'recorder'
+                    && msg.action == "start")
+                    break;
+            }
+        }
+        postMessageCore(frame, msg) {
+            var _a, _b, _c, _d;
+            frame.contentWindow.postMessage(msg, frame.dataset['origin']);
+            if (pxsim.U.isLocalHostDev() && ((_b = (_a = pxt) === null || _a === void 0 ? void 0 : _a.appTarget) === null || _b === void 0 ? void 0 : _b.id)) {
+                // If using the production simulator on local serve, the domain might have been
+                // redirected by the CLI server. Also send to the production domain just in case
+                try {
+                    frame.contentWindow.postMessage(msg, `https://trg-${(_d = (_c = pxt) === null || _c === void 0 ? void 0 : _c.appTarget) === null || _d === void 0 ? void 0 : _d.id}.userpxt.io/---simulator`);
+                }
+                catch (e) {
+                    // Ignore exceptions if the target origin doesn't match
+                }
+            }
+        }
+        createFrame(url) {
+            const wrapper = document.createElement("div");
+            wrapper.className = `simframe ui embed`;
+            const frame = document.createElement('iframe');
+            frame.id = 'sim-frame-' + this.nextId();
+            frame.title = pxsim.localization.lf("Simulator");
+            frame.allowFullscreen = true;
+            frame.setAttribute('allow', 'autoplay;microphone');
+            frame.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+            frame.className = 'no-select';
+            const furl = (url || this.getSimUrl()) + '#' + frame.id;
+            frame.src = furl;
+            frame.frameBorder = "0";
+            frame.dataset['runid'] = this.runId;
+            frame.dataset['origin'] = new URL(furl).origin || "*";
+            wrapper.appendChild(frame);
+            const i = document.createElement("i");
+            i.className = "videoplay xicon icon";
+            i.style.display = "none";
+            i.onclick = (ev) => {
+                ev.preventDefault();
+                if (this.state != SimulatorState.Running
+                    && this.state != SimulatorState.Starting) {
+                    // we need to request to restart the simulator
+                    if (this.options.restart)
+                        this.options.restart();
+                    else
+                        this.start();
+                }
+                frame.focus();
+                return false;
+            };
+            wrapper.appendChild(i);
+            const l = document.createElement("div");
+            l.className = "ui active loader";
+            i.style.display = "none";
+            wrapper.appendChild(l);
+            if (this._runOptions)
+                this.applyAspectRatioToFrame(frame);
+            return wrapper;
+        }
+        preload(aspectRatio) {
+            if (!this.simFrames().length) {
+                this.container.appendChild(this.createFrame());
+                this.applyAspectRatio(aspectRatio);
+                this.setStarting();
+            }
+        }
+        stop(unload = false, starting = false) {
+            this.clearDebugger();
+            this.postMessage({ type: 'stop', source: MESSAGE_SOURCE });
+            this.setState(starting ? SimulatorState.Starting : SimulatorState.Stopped);
+            if (unload)
+                this.unload();
+        }
+        suspend() {
+            this.postMessage({ type: 'stop', source: MESSAGE_SOURCE });
+            this.setState(SimulatorState.Suspended);
+        }
+        unload() {
+            this.cancelFrameCleanup();
+            pxsim.U.removeChildren(this.container);
+            this.setState(SimulatorState.Unloaded);
+            this._runOptions = undefined; // forget about program
+            this._currentRuntime = undefined;
+            this.runId = undefined;
+        }
+        mute(mute) {
+            if (this._currentRuntime)
+                this._currentRuntime.mute = mute;
+            this.postMessage({ type: 'mute', source: MESSAGE_SOURCE, mute: mute });
+        }
+        stopSound() {
+            this.postMessage({ type: 'stopsound', source: MESSAGE_SOURCE });
+        }
+        isLoanedSimulator(el) {
+            return !!this.loanedSimulator && this.loanedIFrame() == el;
+        }
+        // returns a simulator iframe that can be hosted anywhere in the page
+        // while a loaned simulator is active, all other iframes are suspended
+        loanSimulator() {
+            if (this.loanedSimulator)
+                return this.loanedSimulator;
+            // reuse first simulator or create new one
+            this.loanedSimulator = this.container.firstElementChild || this.createFrame();
+            if (this.loanedSimulator.parentNode)
+                this.container.removeChild(this.loanedSimulator);
+            return this.loanedSimulator;
+        }
+        unloanSimulator() {
+            if (this.loanedSimulator) {
+                if (this.loanedSimulator.parentNode)
+                    this.loanedSimulator.parentNode.removeChild(this.loanedSimulator);
+                this.container.insertBefore(this.loanedSimulator, this.container.firstElementChild);
+                delete this.loanedSimulator;
+            }
+        }
+        loanedIFrame() {
+            return this.loanedSimulator
+                && this.loanedSimulator.parentNode
+                && this.loanedSimulator.querySelector("iframe");
+        }
+        cancelFrameCleanup() {
+            if (this.frameCleanupTimeout) {
+                clearTimeout(this.frameCleanupTimeout);
+                this.frameCleanupTimeout = undefined;
+            }
+        }
+        scheduleFrameCleanup() {
+            this.cancelFrameCleanup();
+            this.frameCleanupTimeout = setTimeout(() => {
+                this.frameCleanupTimeout = undefined;
+                this.cleanupFrames();
+            }, 5000);
+        }
+        applyAspectRatio(ratio) {
+            if (!ratio && !this._runOptions)
+                return;
+            const frames = this.simFrames();
+            frames.forEach(frame => this.applyAspectRatioToFrame(frame, ratio));
+        }
+        applyAspectRatioToFrame(frame, ratio) {
+            var _a, _b, _c, _d;
+            let r = ratio;
+            // no ratio? try stored ratio
+            if (r === undefined) {
+                const rt = parseFloat(frame.dataset[FRAME_ASPECT_RATIO]);
+                if (!isNaN(rt))
+                    r = rt;
+            }
+            // no ratio?, try messagesims
+            if (r === undefined) {
+                const messageChannel = frame.dataset[FRAME_DATA_MESSAGE_CHANNEL];
+                if (messageChannel) {
+                    const messageSimulatorAspectRatio = (_c = (_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.messageSimulators) === null || _b === void 0 ? void 0 : _b[messageChannel]) === null || _c === void 0 ? void 0 : _c.aspectRatio;
+                    if (messageSimulatorAspectRatio) {
+                        r = messageSimulatorAspectRatio;
+                    }
+                }
+            }
+            // try default from options
+            if (r === undefined)
+                r = ((_d = this._runOptions) === null || _d === void 0 ? void 0 : _d.aspectRatio) || 1.22;
+            // apply to css
+            frame.parentElement.style.paddingBottom =
+                (100 / r) + "%";
+        }
+        cleanupFrames() {
+            // drop unused extras frames after 5 seconds
+            const frames = this.simFrames(true);
+            frames.shift(); // drop first frame
+            frames.filter(frame => !frame.dataset[PERMANENT])
+                .forEach(frame => {
+                if (this.state == SimulatorState.Stopped
+                    || frame.dataset['runid'] != this.runId) {
+                    if (this.options.removeElement)
+                        this.options.removeElement(frame.parentElement);
+                    else
+                        frame.parentElement.remove();
+                }
+            });
+        }
+        hide(completeHandler) {
+            this.suspend();
+            if (!this.options.removeElement)
+                return;
+            const frames = this.simFrames();
+            frames.forEach(frame => {
+                this.options.removeElement(frame.parentElement, completeHandler);
+            });
+            // Execute the complete handler if there are no frames in sim view
+            if (frames.length == 0 && completeHandler) {
+                completeHandler();
+            }
+        }
+        unhide() {
+            if (!this.options.unhideElement)
+                return;
+            const frames = this.simFrames();
+            frames.forEach(frame => {
+                this.options.unhideElement(frame.parentElement);
+            });
+        }
+        run(js, opts = {}) {
+            this._runOptions = opts;
+            this.runId = this.nextId();
+            // store information
+            this._currentRuntime = {
+                type: "run",
+                source: MESSAGE_SOURCE,
+                boardDefinition: opts.boardDefinition,
+                parts: opts.parts,
+                builtinParts: opts.builtinParts,
+                fnArgs: opts.fnArgs,
+                code: js,
+                partDefinitions: opts.partDefinitions,
+                mute: opts.mute,
+                highContrast: opts.highContrast,
+                light: opts.light,
+                cdnUrl: opts.cdnUrl,
+                localizedStrings: opts.localizedStrings,
+                refCountingDebug: opts.refCountingDebug,
+                version: opts.version,
+                clickTrigger: opts.clickTrigger,
+                breakOnStart: opts.breakOnStart,
+                storedState: opts.storedState,
+                ipc: opts.ipc,
+                single: opts.single,
+                dependencies: opts.dependencies
+            };
+            this.start();
+        }
+        restart() {
+            this.stop();
+            this.cleanupFrames();
+            this.start();
+        }
+        areBreakpointsSet() {
+            return this.breakpointsSet;
+        }
+        start() {
+            this.clearDebugger();
+            this.addEventListeners();
+            this.applyAspectRatio();
+            this.scheduleFrameCleanup();
+            if (!this._currentRuntime)
+                return; // nothing to do
+            this.breakpointsSet = false;
+            // first frame
+            let frame = this.simFrames()[0];
+            if (!frame) {
+                let wrapper = this.createFrame();
+                this.container.appendChild(wrapper);
+                frame = wrapper.firstElementChild;
+            }
+            else // reuse simulator
+                this.startFrame(frame);
+            this.debuggingFrame = frame.id;
+            this.setState(SimulatorState.Running);
+            this.setTraceInterval(this.traceInterval);
+        }
+        // ensure _currentRuntime is ready
+        startFrame(frame) {
+            var _a, _b;
+            if (!this._currentRuntime || !frame.contentWindow)
+                return false;
+            const msg = JSON.parse(JSON.stringify(this._currentRuntime));
+            msg.frameCounter = ++this.frameCounter;
+            msg.options = {
+                theme: this.themes[this.nextFrameId++ % this.themes.length],
+                mpRole: (_b = (_a = /[\&\?]mp=(server|client)/i.exec(window.location.href)) === null || _a === void 0 ? void 0 : _a[1]) === null || _b === void 0 ? void 0 : _b.toLowerCase(),
+                hideSimButtons: /hidesimbuttons(?:[:=])1/i.test(window.location.href)
+            };
+            msg.id = `${msg.options.theme}-${this.nextId()}`;
+            frame.dataset['runid'] = this.runId;
+            frame.dataset['runtimeid'] = msg.id;
+            if (frame.id !== this.debuggingFrame) {
+                msg.traceDisabled = true;
+                msg.breakOnStart = false;
+            }
+            this.postMessageCore(frame, msg);
+            if (this.traceInterval)
+                this.setTraceInterval(this.traceInterval);
+            this.applyAspectRatioToFrame(frame);
+            this.setFrameState(frame);
+            return true;
+        }
+        handleMessage(msg, source) {
+            switch (msg.type || '') {
+                case 'ready': {
+                    const frameid = msg.frameid;
+                    const frame = document.getElementById(frameid);
+                    if (frame) {
+                        this.startFrame(frame);
+                        if (this.options.revealElement)
+                            this.options.revealElement(frame);
+                    }
+                    if (this.options.onSimulatorReady)
+                        this.options.onSimulatorReady();
+                    break;
+                }
+                case 'status': {
+                    const frameid = msg.frameid;
+                    const frame = document.getElementById(frameid);
+                    if (frame) {
+                        const stmsg = msg;
+                        if (stmsg.runtimeid == frame.dataset['runtimeid']) {
+                            switch (stmsg.state) {
+                                case "running":
+                                    this.setState(SimulatorState.Running);
+                                    break;
+                                case "killed":
+                                    this.setState(SimulatorState.Stopped);
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case 'simulator':
+                    this.handleSimulatorCommand(msg);
+                    break; //handled elsewhere
+                case 'serial':
+                case 'pxteditor':
+                case 'screenshot':
+                case 'custom':
+                case 'recorder':
+                case 'addextensions':
+                    break; //handled elsewhere
+                case 'aspectratio': {
+                    const asmsg = msg;
+                    const frameid = asmsg.frameid;
+                    const frame = document.getElementById(frameid);
+                    if (frame) {
+                        frame.dataset[FRAME_ASPECT_RATIO] = asmsg.value + "";
+                        this.applyAspectRatioToFrame(frame);
+                    }
+                    break;
+                }
+                case 'debugger':
+                    this.handleDebuggerMessage(msg);
+                    break;
+                case 'toplevelcodefinished':
+                    if (this.options.onTopLevelCodeEnd)
+                        this.options.onTopLevelCodeEnd();
+                    break;
+                default:
+                    this.postMessage(msg, source);
+                    break;
+            }
+        }
+        addEventListeners() {
+            if (!this.listener) {
+                this.listener = (ev) => {
+                    if (this.hwdbg)
+                        return;
+                    if (pxsim.U.isLocalHost()) {
+                        // no-op
+                    }
+                    else {
+                        if (this._allowedOrigins.indexOf(ev.origin) < 0)
+                            return;
+                    }
+                    this.handleMessage(ev.data, ev.source);
+                };
+                window.addEventListener('message', this.listener, false);
+            }
+        }
+        removeEventListeners() {
+            if (this.listener) {
+                window.removeEventListener('message', this.listener, false);
+                this.listener = undefined;
+            }
+        }
+        resume(c) {
+            let msg;
+            switch (c) {
+                case SimulatorDebuggerCommand.Resume:
+                    msg = 'resume';
+                    this.setState(SimulatorState.Running);
+                    break;
+                case SimulatorDebuggerCommand.StepInto:
+                    msg = 'stepinto';
+                    this.setState(SimulatorState.Running);
+                    break;
+                case SimulatorDebuggerCommand.StepOut:
+                    msg = 'stepout';
+                    this.setState(SimulatorState.Running);
+                    break;
+                case SimulatorDebuggerCommand.StepOver:
+                    msg = 'stepover';
+                    this.setState(SimulatorState.Running);
+                    break;
+                case SimulatorDebuggerCommand.Pause:
+                    msg = 'pause';
+                    break;
+                default:
+                    console.debug('unknown command');
+                    return;
+            }
+            this.postMessage({ type: 'debugger', subtype: msg, source: MESSAGE_SOURCE });
+        }
+        setBreakpoints(breakPoints) {
+            this.breakpointsSet = true;
+            this.postDebuggerMessage("config", { setBreakpoints: breakPoints }, undefined, this.debuggingFrame);
+        }
+        setTraceInterval(intervalMs) {
+            this.traceInterval = intervalMs;
+            // Send to all frames so that they all run at the same speed, even though only the debugging sim
+            // will actually send events
+            this.postDebuggerMessage("traceConfig", { interval: intervalMs });
+        }
+        variablesAsync(id, fields) {
+            return this.postDebuggerMessageAsync("variables", { variablesReference: id, fields: fields }, this.debuggingFrame)
+                .then(msg => msg, e => undefined);
+        }
+        handleSimulatorCommand(msg) {
+            if (this.options.onSimulatorCommand)
+                this.options.onSimulatorCommand(msg);
+        }
+        clearDebugger() {
+            const e = new Error("Debugging cancelled");
+            Object.keys(this.debuggerResolvers)
+                .forEach(k => {
+                const { reject } = this.debuggerResolvers[k];
+                reject(e);
+            });
+            this.debuggerResolvers = {};
+            this.debuggerSeq++;
+        }
+        handleDebuggerMessage(msg) {
+            if (msg.subtype !== "trace") {
+                console.log("DBG-MSG", msg.subtype, msg);
+            }
+            // resolve any request
+            if (msg.seq) {
+                const { resolve } = this.debuggerResolvers[msg.seq];
+                if (resolve)
+                    resolve(msg);
+            }
+            switch (msg.subtype) {
+                case "warning":
+                    if (this.options.onDebuggerWarning)
+                        this.options.onDebuggerWarning(msg);
+                    break;
+                case "breakpoint": {
+                    const brk = msg;
+                    if (this.state == SimulatorState.Running) {
+                        if (brk.exceptionMessage) {
+                            this.suspend();
+                        }
+                        else {
+                            this.setState(SimulatorState.Paused);
+                            const frames = this.simFrames(true);
+                            if (frames.length > 1) {
+                                // Make sure all frames pause
+                                this.resume(SimulatorDebuggerCommand.Pause);
+                            }
+                        }
+                        if (this.options.onDebuggerBreakpoint)
+                            this.options.onDebuggerBreakpoint(brk);
+                        let stackTrace = brk.exceptionMessage + "\n";
+                        for (let s of brk.stackframes) {
+                            let fi = s.funcInfo;
+                            stackTrace += `   at ${fi.functionName} (${fi.fileName}:${fi.line + 1}:${fi.column + 1})\n`;
+                        }
+                        if (brk.exceptionMessage)
+                            console.error(stackTrace);
+                    }
+                    else {
+                        console.error("debugger: trying to pause from " + this.state);
+                    }
+                    break;
+                }
+                case "trace": {
+                    const brk = msg;
+                    if (this.state == SimulatorState.Running && this.options.onTraceMessage) {
+                        this.options.onTraceMessage(brk);
+                    }
+                    break;
+                }
+                default:
+                    const seq = msg.req_seq;
+                    if (seq) {
+                        const { resolve } = this.debuggerResolvers[seq];
+                        if (resolve) {
+                            delete this.debuggerResolvers[seq];
+                            resolve(msg);
+                        }
+                    }
+                    break;
+            }
+        }
+        postDebuggerMessageAsync(subtype, data = {}, frameID) {
+            return new Promise((resolve, reject) => {
+                const seq = this.debuggerSeq++;
+                this.debuggerResolvers[seq.toString()] = { resolve, reject };
+                this.postDebuggerMessage(subtype, data, seq, frameID);
+            });
+        }
+        postDebuggerMessage(subtype, data = {}, seq, frameID) {
+            const msg = JSON.parse(JSON.stringify(data));
+            msg.type = "debugger";
+            msg.subtype = subtype;
+            msg.source = MESSAGE_SOURCE;
+            if (seq)
+                msg.seq = seq;
+            this.postMessage(msg, undefined, frameID);
+        }
+        nextId() {
+            return this.nextFrameId++ + (Math.random() + '' + Math.random()).replace(/[^\d]/, '');
+        }
+        get stoppedClass() {
+            return (this.options && this.options.stoppedClass) || "grayscale";
+        }
+        get invalidatedClass() {
+            return (this.options && this.options.invalidatedClass) || "sepia";
+        }
+    }
+    pxsim.SimulatorDriver = SimulatorDriver;
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    ;
+    ;
+    function mkRange(a, b) {
+        let res = [];
+        for (; a < b; a++)
+            res.push(a);
+        return res;
+    }
+    pxsim.mkRange = mkRange;
+    class EventBus {
+        constructor(runtime, board, valueToArgs) {
+            this.runtime = runtime;
+            this.board = board;
+            this.valueToArgs = valueToArgs;
+            this.queues = {};
+            this.backgroundHandlerFlag = false;
+            this.nextNotifyEvent = 1024;
+            this.schedulerID = 15; // DEVICE_ID_SCHEDULER
+            this.idleEventID = 2; // DEVICE_SCHEDULER_EVT_IDLE
+            this.board.addMessageListener(this.handleMessage.bind(this));
+        }
+        handleMessage(msg) {
+            if (msg.type === "eventbus") {
+                const ev = msg;
+                this.queue(ev.id, ev.eventid, ev.value);
+            }
+        }
+        setBackgroundHandlerFlag() {
+            this.backgroundHandlerFlag = true;
+        }
+        setNotify(notifyID, notifyOneID) {
+            this.notifyID = notifyID;
+            this.notifyOneID = notifyOneID;
+        }
+        setIdle(schedulerID, idleEventID) {
+            this.schedulerID = schedulerID;
+            this.idleEventID = idleEventID;
+        }
+        start(id, evid, background, create = false) {
+            let key = (background ? "back" : "fore") + ":" + id + ":" + evid;
+            if (!this.queues[key] && create)
+                this.queues[key] = new pxsim.EventQueue(this.runtime, this.valueToArgs);
+            return this.queues[key];
+        }
+        listen(id, evid, handler) {
+            // special handle for idle, start the idle timeout
+            if (id == this.schedulerID && evid == this.idleEventID)
+                this.runtime.startIdle();
+            let q = this.start(id, evid, this.backgroundHandlerFlag, true);
+            if (this.backgroundHandlerFlag)
+                q.addHandler(handler);
+            else
+                q.setHandler(handler);
+            this.backgroundHandlerFlag = false;
+        }
+        removeBackgroundHandler(handler) {
+            Object.keys(this.queues).forEach((k) => {
+                if (k.startsWith("back:"))
+                    this.queues[k].removeHandler(handler);
+            });
+        }
+        // this handles ANY (0) semantics for id and evid
+        getQueues(id, evid, bg) {
+            let ret = [this.start(0, 0, bg)];
+            if (id == 0 && evid == 0)
+                return ret;
+            if (evid)
+                ret.push(this.start(0, evid, bg));
+            if (id)
+                ret.push(this.start(id, 0, bg));
+            if (id && evid)
+                ret.push(this.start(id, evid, bg));
+            return ret;
+        }
+        queue(id, evid, value = null) {
+            if (pxsim.runtime.pausedOnBreakpoint)
+                return;
+            // special handling for notify one
+            const notifyOne = this.notifyID && this.notifyOneID && id == this.notifyOneID;
+            if (notifyOne)
+                id = this.notifyID;
+            let queues = this.getQueues(id, evid, true).concat(this.getQueues(id, evid, false));
+            this.lastEventValue = evid;
+            this.lastEventTimestampUs = pxsim.U.perfNowUs();
+            pxsim.U.promiseMapAllSeries(queues, q => {
+                if (q)
+                    return q.push(value, notifyOne);
+                else
+                    return Promise.resolve();
+            });
+        }
+        queueIdle() {
+            if (this.schedulerID && this.idleEventID)
+                this.queue(this.schedulerID, this.idleEventID);
+        }
+        // only for foreground handlers
+        wait(id, evid, cb) {
+            let q = this.start(id, evid, false, true);
+            q.addAwaiter(cb);
+        }
+        getLastEventValue() {
+            return this.lastEventValue;
+        }
+        getLastEventTime() {
+            return 0xffffffff & (this.lastEventTimestampUs - pxsim.runtime.startTimeUs);
+        }
+    }
+    pxsim.EventBus = EventBus;
+    class AnimationQueue {
+        constructor(runtime) {
+            this.runtime = runtime;
+            this.queue = [];
+            this.process = () => {
+                let top = this.queue[0];
+                if (!top)
+                    return;
+                if (this.runtime.dead)
+                    return;
+                runtime = this.runtime;
+                let res = top.frame();
+                runtime.queueDisplayUpdate();
+                runtime.maybeUpdateDisplay();
+                if (res === false) {
+                    this.queue.shift();
+                    // if there is already something in the queue, start processing
+                    if (this.queue[0]) {
+                        this.queue[0].setTimeoutHandle = setTimeout(this.process, this.queue[0].interval);
+                    }
+                    // this may push additional stuff
+                    top.whenDone(false);
+                }
+                else {
+                    top.setTimeoutHandle = setTimeout(this.process, top.interval);
+                }
+            };
+        }
+        cancelAll() {
+            let q = this.queue;
+            this.queue = [];
+            for (let a of q) {
+                a.whenDone(true);
+                if (a.setTimeoutHandle) {
+                    clearTimeout(a.setTimeoutHandle);
+                }
+            }
+        }
+        cancelCurrent() {
+            let top = this.queue[0];
+            if (top) {
+                this.queue.shift();
+                top.whenDone(true);
+                if (top.setTimeoutHandle) {
+                    clearTimeout(top.setTimeoutHandle);
+                }
+            }
+        }
+        enqueue(anim) {
+            if (!anim.whenDone)
+                anim.whenDone = () => { };
+            this.queue.push(anim);
+            // we start processing when the queue goes from 0 to 1
+            if (this.queue.length == 1)
+                this.process();
+        }
+        executeAsync(anim) {
+            pxsim.U.assert(!anim.whenDone);
+            return new Promise((resolve, reject) => {
+                anim.whenDone = resolve;
+                this.enqueue(anim);
+            });
+        }
+    }
+    pxsim.AnimationQueue = AnimationQueue;
+    let AudioContextManager;
+    (function (AudioContextManager) {
+        let _frequency = 0;
+        let _context;
+        let _vco;
+        let _vca;
+        let _mute = false; //mute audio
+        // for playing WAV
+        let audio;
+        const channels = [];
+        // All other nodes get connected to this node which is connected to the actual
+        // destination. Used for muting
+        let destination;
+        function context() {
+            if (!_context) {
+                _context = freshContext();
+                if (_context) {
+                    destination = _context.createGain();
+                    destination.connect(_context.destination);
+                    destination.gain.setValueAtTime(1, 0);
+                }
+            }
+            return _context;
+        }
+        function freshContext() {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (window.AudioContext) {
+                try {
+                    // this call my crash.
+                    // SyntaxError: audio resources unavailable for AudioContext construction
+                    return new window.AudioContext();
+                }
+                catch (e) { }
+            }
+            return undefined;
+        }
+        function mute(mute) {
+            _mute = mute;
+            const ctx = context();
+            if (mute) {
+                destination.gain.setTargetAtTime(0, ctx.currentTime, 0.015);
+            }
+            else {
+                destination.gain.setTargetAtTime(1, ctx.currentTime, 0.015);
+            }
+            if (!mute && ctx && ctx.state === "suspended")
+                ctx.resume();
+        }
+        AudioContextManager.mute = mute;
+        function stopTone() {
+            setCurrentToneGain(0);
+            _frequency = 0;
+            if (audio) {
+                audio.pause();
+            }
+        }
+        function stopAll() {
+            stopTone();
+            muteAllChannels();
+        }
+        AudioContextManager.stopAll = stopAll;
+        function stop() {
+            stopTone();
+            clearVca();
+        }
+        AudioContextManager.stop = stop;
+        function clearVca() {
+            if (_vca) {
+                try {
+                    disconnectVca(_vca, _vco);
+                }
+                catch (_a) { }
+                _vca = undefined;
+                _vco = undefined;
+            }
+        }
+        function disconnectVca(gain, osc) {
+            if (gain.gain.value) {
+                gain.gain.setTargetAtTime(0, context().currentTime, 0.015);
+            }
+            setTimeout(() => {
+                gain.disconnect();
+                if (osc)
+                    osc.disconnect();
+            }, 450);
+        }
+        function frequency() {
+            return _frequency;
+        }
+        AudioContextManager.frequency = frequency;
+        const waveForms = [null, "triangle", "sawtooth", "sine"];
+        let noiseBuffer;
+        let rectNoiseBuffer;
+        let cycleNoiseBuffer = [];
+        let squareBuffer = [];
+        function getNoiseBuffer() {
+            if (!noiseBuffer) {
+                const bufferSize = 100000;
+                noiseBuffer = context().createBuffer(1, bufferSize, context().sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                let x = 0xf01ba80;
+                for (let i = 0; i < bufferSize; i++) {
+                    x ^= x << 13;
+                    x ^= x >> 17;
+                    x ^= x << 5;
+                    output[i] = ((x & 1023) / 512.0) - 1.0;
+                }
+            }
+            return noiseBuffer;
+        }
+        function getRectNoiseBuffer() {
+            // Create a square wave filtered by a pseudorandom bit sequence.
+            // This uses four samples per cycle to create square-ish waves.
+            // The Web Audio API's frequency scaling may be using linear
+            // interpolation which would turn a two-sample wave into a triangle.
+            if (!rectNoiseBuffer) {
+                const bufferSize = 131072; // must be a multiple of 4
+                rectNoiseBuffer = context().createBuffer(1, bufferSize, context().sampleRate);
+                const output = rectNoiseBuffer.getChannelData(0);
+                let x = 0xf01ba80;
+                for (let i = 0; i < bufferSize; i += 4) {
+                    // see https://en.wikipedia.org/wiki/Xorshift
+                    x ^= x << 13;
+                    x ^= x >> 17;
+                    x ^= x << 5;
+                    if (x & 0x8000) {
+                        output[i] = 1.0;
+                        output[i + 1] = 1.0;
+                        output[i + 2] = -1.0;
+                        output[i + 3] = -1.0;
+                    }
+                    else {
+                        output[i] = 0.0;
+                        output[i + 1] = 0.0;
+                        output[i + 2] = 0.0;
+                        output[i + 3] = 0.0;
+                    }
+                }
+            }
+            return rectNoiseBuffer;
+        }
+        function getCycleNoiseBuffer(bits) {
+            if (!cycleNoiseBuffer[bits]) {
+                // Buffer size needs to be a multiple of 4x the largest cycle length,
+                // 4*64 in this case.
+                const bufferSize = 1024;
+                const buf = context().createBuffer(1, bufferSize, context().sampleRate);
+                const output = buf.getChannelData(0);
+                // See pxt-common-packages's libs/mixer/melody.cpp for details.
+                // "bits" must be in the range 4..6.
+                const cycle_bits = [0x2df0eb47, 0xc8165a93];
+                const mask_456 = [0xf, 0x1f, 0x3f];
+                for (let i = 0; i < bufferSize; i += 4) {
+                    let cycle = i / 4;
+                    let is_on;
+                    let cycle_mask = mask_456[bits - 4];
+                    cycle &= cycle_mask;
+                    is_on = (cycle_bits[cycle >> 5] & (1 << (cycle & 0x1f))) != 0;
+                    if (is_on) {
+                        output[i] = 1.0;
+                        output[i + 1] = 1.0;
+                        output[i + 2] = -1.0;
+                        output[i + 3] = -1.0;
+                    }
+                    else {
+                        output[i] = 0.0;
+                        output[i + 1] = 0.0;
+                        output[i + 2] = 0.0;
+                        output[i + 3] = 0.0;
+                    }
+                }
+                cycleNoiseBuffer[bits] = buf;
+            }
+            return cycleNoiseBuffer[bits];
+        }
+        function getSquareBuffer(param) {
+            if (!squareBuffer[param]) {
+                const bufferSize = 1024;
+                const buf = context().createBuffer(1, bufferSize, context().sampleRate);
+                const output = buf.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = i < (param / 100 * bufferSize) ? 1 : -1;
+                }
+                squareBuffer[param] = buf;
+            }
+            return squareBuffer[param];
+        }
+        /*
+        #define SW_TRIANGLE 1
+        #define SW_SAWTOOTH 2
+        #define SW_SINE 3
+        #define SW_TUNEDNOISE 4
+        #define SW_NOISE 5
+        #define SW_SQUARE_10 11
+        #define SW_SQUARE_50 15
+        #define SW_SQUARE_CYCLE_16 16
+        #define SW_SQUARE_CYCLE_32 17
+        #define SW_SQUARE_CYCLE_64 18
+        */
+        /*
+         struct SoundInstruction {
+             uint8_t soundWave;
+             uint8_t flags;
+             uint16_t frequency;
+             uint16_t duration;
+             uint16_t startVolume;
+             uint16_t endVolume;
+         };
+         */
+        function getGenerator(waveFormIdx, hz) {
+            let form = waveForms[waveFormIdx];
+            if (form) {
+                let src = context().createOscillator();
+                src.type = form;
+                src.frequency.value = hz;
+                return src;
+            }
+            let buffer;
+            if (waveFormIdx == 4)
+                buffer = getRectNoiseBuffer();
+            else if (waveFormIdx == 5)
+                buffer = getNoiseBuffer();
+            else if (11 <= waveFormIdx && waveFormIdx <= 15)
+                buffer = getSquareBuffer((waveFormIdx - 10) * 10);
+            else if (16 <= waveFormIdx && waveFormIdx <= 18)
+                buffer = getCycleNoiseBuffer((waveFormIdx - 16) + 4);
+            else
+                return null;
+            let node = context().createBufferSource();
+            node.buffer = buffer;
+            node.loop = true;
+            const isFilteredNoise = waveFormIdx == 4 || (16 <= waveFormIdx && waveFormIdx <= 18);
+            if (isFilteredNoise)
+                node.playbackRate.value = hz / (context().sampleRate / 4);
+            else if (waveFormIdx != 5)
+                node.playbackRate.value = hz / (context().sampleRate / 1024);
+            return node;
+        }
+        class Channel {
+            disconnectNodes() {
+                if (this.gain)
+                    disconnectVca(this.gain, this.generator);
+                else if (this.generator) {
+                    this.generator.stop();
+                    this.generator.disconnect();
+                }
+                this.gain = null;
+                this.generator = null;
+            }
+            remove() {
+                const idx = channels.indexOf(this);
+                if (idx >= 0)
+                    channels.splice(idx, 1);
+                this.disconnectNodes();
+            }
+        }
+        let instrStopId = 1;
+        function muteAllChannels() {
+            instrStopId++;
+            while (channels.length)
+                channels[0].remove();
+        }
+        AudioContextManager.muteAllChannels = muteAllChannels;
+        function queuePlayInstructions(when, b) {
+            const prevStop = instrStopId;
+            pxsim.U.delay(when)
+                .then(() => {
+                if (prevStop != instrStopId)
+                    return Promise.resolve();
+                return playInstructionsAsync(b);
+            });
+        }
+        AudioContextManager.queuePlayInstructions = queuePlayInstructions;
+        function playInstructionsAsync(b) {
+            const prevStop = instrStopId;
+            let ctx = context();
+            let idx = 0;
+            let ch = new Channel();
+            let currWave = -1;
+            let currFreq = -1;
+            let timeOff = 0;
+            if (channels.length > 5)
+                channels[0].remove();
+            channels.push(ch);
+            /** Square waves are perceved as much louder than other sounds, so scale it down a bit to make it less jarring **/
+            const scaleVol = (n, isSqWave) => (n / 1024) / 4 * (isSqWave ? .5 : 1);
+            const finish = () => {
+                ch.disconnectNodes();
+                timeOff = 0;
+                currWave = -1;
+                currFreq = -1;
+            };
+            const loopAsync = () => {
+                if (idx >= b.data.length || !b.data[idx])
+                    return pxsim.U.delay(timeOff).then(finish);
+                const soundWaveIdx = b.data[idx];
+                const freq = pxsim.BufferMethods.getNumber(b, pxsim.BufferMethods.NumberFormat.UInt16LE, idx + 2);
+                const duration = pxsim.BufferMethods.getNumber(b, pxsim.BufferMethods.NumberFormat.UInt16LE, idx + 4);
+                const startVol = pxsim.BufferMethods.getNumber(b, pxsim.BufferMethods.NumberFormat.UInt16LE, idx + 6);
+                const endVol = pxsim.BufferMethods.getNumber(b, pxsim.BufferMethods.NumberFormat.UInt16LE, idx + 8);
+                const endFreq = pxsim.BufferMethods.getNumber(b, pxsim.BufferMethods.NumberFormat.UInt16LE, idx + 10);
+                const isSquareWave = 11 <= soundWaveIdx && soundWaveIdx <= 15;
+                const isFilteredNoise = soundWaveIdx == 4 || (16 <= soundWaveIdx && soundWaveIdx <= 18);
+                const scaledStart = scaleVol(startVol, isSquareWave);
+                const scaledEnd = scaleVol(endVol, isSquareWave);
+                if (!ctx || prevStop != instrStopId)
+                    return pxsim.U.delay(duration);
+                if (currWave != soundWaveIdx || currFreq != freq || freq != endFreq) {
+                    if (ch.generator) {
+                        return pxsim.U.delay(timeOff)
+                            .then(() => {
+                            finish();
+                            return loopAsync();
+                        });
+                    }
+                    ch.generator = getGenerator(soundWaveIdx, freq);
+                    if (!ch.generator)
+                        return pxsim.U.delay(duration);
+                    currWave = soundWaveIdx;
+                    currFreq = freq;
+                    ch.gain = ctx.createGain();
+                    ch.gain.gain.value = 0;
+                    ch.gain.gain.setTargetAtTime(scaledStart, _context.currentTime, 0.015);
+                    if (endFreq != freq) {
+                        if (ch.generator.frequency != undefined) {
+                            // If generator is an OscillatorNode
+                            const param = ch.generator.frequency;
+                            param.linearRampToValueAtTime(endFreq, ctx.currentTime + ((timeOff + duration) / 1000));
+                        }
+                        else if (ch.generator.playbackRate != undefined) {
+                            // If generator is an AudioBufferSourceNode
+                            const param = ch.generator.playbackRate;
+                            const bufferSamplesPerWave = isFilteredNoise ? 4 : 1024;
+                            param.linearRampToValueAtTime(endFreq / (context().sampleRate / bufferSamplesPerWave), ctx.currentTime + ((timeOff + duration) / 1000));
+                        }
+                    }
+                    ch.generator.connect(ch.gain);
+                    ch.gain.connect(destination);
+                    ch.generator.start();
+                }
+                idx += 12;
+                ch.gain.gain.setValueAtTime(scaledStart, ctx.currentTime + (timeOff / 1000));
+                timeOff += duration;
+                // To prevent clipping, we ramp to this value slightly earlier than intended. This is so that we
+                // can go for a smooth ramp to 0 in ch.mute() without this operation interrupting it. If we had
+                // more accurate timing this would not be necessary, but we'd probably have to do something like
+                // running a metronome in a webworker to get the level of precision we need
+                const endTime = scaledEnd !== 0 && duration > 50 ? ((timeOff - 50) / 1000) : ((timeOff - 10) / 1000);
+                ch.gain.gain.linearRampToValueAtTime(scaledEnd, ctx.currentTime + endTime);
+                return loopAsync();
+            };
+            return loopAsync()
+                .then(() => ch.remove());
+        }
+        AudioContextManager.playInstructionsAsync = playInstructionsAsync;
+        function tone(frequency, gain) {
+            if (frequency < 0)
+                return;
+            _frequency = frequency;
+            let ctx = context();
+            if (!ctx)
+                return;
+            gain = Math.max(0, Math.min(1, gain));
+            try {
+                if (!_vco) {
+                    _vco = ctx.createOscillator();
+                    _vca = ctx.createGain();
+                    _vca.gain.value = 0;
+                    _vco.type = 'triangle';
+                    _vco.connect(_vca);
+                    _vca.connect(destination);
+                    _vco.start(0);
+                }
+                setCurrentToneGain(gain);
+            }
+            catch (e) {
+                _vco = undefined;
+                _vca = undefined;
+                return;
+            }
+            _vco.frequency.value = frequency;
+            setCurrentToneGain(gain);
+        }
+        AudioContextManager.tone = tone;
+        function setCurrentToneGain(gain) {
+            if (_vca === null || _vca === void 0 ? void 0 : _vca.gain) {
+                _vca.gain.setTargetAtTime(gain, _context.currentTime, 0.015);
+            }
+        }
+        AudioContextManager.setCurrentToneGain = setCurrentToneGain;
+        function uint8ArrayToString(input) {
+            let len = input.length;
+            let res = "";
+            for (let i = 0; i < len; ++i)
+                res += String.fromCharCode(input[i]);
+            return res;
+        }
+        function playBufferAsync(buf) {
+            if (!buf)
+                return Promise.resolve();
+            return new Promise(resolve => {
+                function res() {
+                    if (resolve)
+                        resolve();
+                    resolve = undefined;
+                }
+                const url = "data:audio/wav;base64," + window.btoa(uint8ArrayToString(buf.data));
+                audio = new Audio(url);
+                if (_mute)
+                    audio.volume = 0;
+                audio.onended = () => res();
+                audio.onpause = () => res();
+                audio.onerror = () => res();
+                audio.play();
+            });
+        }
+        AudioContextManager.playBufferAsync = playBufferAsync;
+        const MAX_SCHEDULED_BUFFER_NODES = 3;
+        function playPCMBufferStreamAsync(pull, sampleRate, volume = 0.3, isCancelled) {
+            return new Promise(resolve => {
+                let nodes = [];
+                let nextTime = context().currentTime;
+                let allScheduled = false;
+                const channel = new Channel();
+                channel.gain = context().createGain();
+                channel.gain.gain.value = 0;
+                channel.gain.gain.setValueAtTime(volume, context().currentTime);
+                channel.gain.connect(destination);
+                if (channels.length > 5)
+                    channels[0].remove();
+                channels.push(channel);
+                const checkCancel = () => {
+                    if (isCancelled && isCancelled() || !channel.gain) {
+                        if (resolve)
+                            resolve();
+                        resolve = undefined;
+                        channel.remove();
+                        return true;
+                    }
+                    return false;
+                };
+                // Every time we pull a buffer, schedule a node in the future to play it.
+                // Scheduling the nodes ahead of time sounds much smoother than trying to
+                // do it when the previous node completes (which sounds SUPER choppy in
+                // FireFox).
+                function playNext() {
+                    while (!allScheduled && nodes.length < MAX_SCHEDULED_BUFFER_NODES && !checkCancel()) {
+                        const data = pull();
+                        if (!data || !data.length) {
+                            allScheduled = true;
+                            break;
+                        }
+                        play(data);
+                    }
+                    if ((allScheduled && nodes.length === 0)) {
+                        channel.remove();
+                        if (resolve)
+                            resolve();
+                        resolve = undefined;
+                    }
+                }
+                function play(data) {
+                    if (checkCancel())
+                        return;
+                    const buff = context().createBuffer(1, data.length, sampleRate);
+                    if (buff.copyToChannel) {
+                        buff.copyToChannel(data, 0);
+                    }
+                    else {
+                        const channelBuffer = buff.getChannelData(0);
+                        for (let i = 0; i < data.length; i++) {
+                            channelBuffer[i] = data[i];
+                        }
+                    }
+                    // Audio buffer source nodes are supposedly very cheap, so no need to reuse them
+                    const newNode = context().createBufferSource();
+                    nodes.push(newNode);
+                    newNode.connect(channel.gain);
+                    newNode.buffer = buff;
+                    newNode.addEventListener("ended", () => {
+                        nodes.shift().disconnect();
+                        playNext();
+                    });
+                    newNode.start(nextTime);
+                    nextTime += buff.duration;
+                }
+                playNext();
+            });
+        }
+        AudioContextManager.playPCMBufferStreamAsync = playPCMBufferStreamAsync;
+        function frequencyFromMidiNoteNumber(note) {
+            return 440 * Math.pow(2, (note - 69) / 12);
+        }
+        function sendMidiMessage(buf) {
+            const data = buf.data;
+            if (!data.length) // garbage.
+                return;
+            // no midi access or no midi element,
+            // limited interpretation of midi commands
+            const cmd = data[0] >> 4;
+            const channel = data[0] & 0xf;
+            const noteNumber = data[1] || 0;
+            const noteFrequency = frequencyFromMidiNoteNumber(noteNumber);
+            const velocity = data[2] || 0;
+            //console.log(`midi: cmd ${cmd} channel (-1) ${channel} note ${noteNumber} f ${noteFrequency} v ${velocity}`)
+            // play drums regardless
+            if (cmd == 8 || ((cmd == 9) && (velocity == 0))) { // with MIDI, note on with velocity zero is the same as note off
+                // note off
+                stopTone();
+            }
+            else if (cmd == 9) {
+                // note on -- todo handle velocity
+                tone(noteFrequency, 1);
+                if (channel == 9) // drums don't call noteOff
+                    setTimeout(() => stopTone(), 500);
+            }
+        }
+        AudioContextManager.sendMidiMessage = sendMidiMessage;
+    })(AudioContextManager = pxsim.AudioContextManager || (pxsim.AudioContextManager = {}));
+    function isTouchEnabled() {
+        return typeof window !== "undefined" &&
+            ('ontouchstart' in window // works on most browsers
+                || (navigator && navigator.maxTouchPoints > 0)); // works on IE10/11 and Surface);
+    }
+    pxsim.isTouchEnabled = isTouchEnabled;
+    function hasPointerEvents() {
+        return typeof window != "undefined" && !!window.PointerEvent;
+    }
+    pxsim.hasPointerEvents = hasPointerEvents;
+    pxsim.pointerEvents = hasPointerEvents() ? {
+        up: "pointerup",
+        down: ["pointerdown"],
+        move: "pointermove",
+        enter: "pointerenter",
+        leave: "pointerleave"
+    } : isTouchEnabled() ?
+        {
+            up: "mouseup",
+            down: ["mousedown", "touchstart"],
+            move: "touchmove",
+            enter: "touchenter",
+            leave: "touchend"
+        } :
+        {
+            up: "mouseup",
+            down: ["mousedown"],
+            move: "mousemove",
+            enter: "mouseenter",
+            leave: "mouseleave"
+        };
+})(pxsim || (pxsim = {}));
+(function (pxsim) {
+    var visuals;
+    (function (visuals) {
+        function translateEl(el, xy) {
+            //TODO append translation instead of replacing the full transform
+            pxsim.svg.hydrate(el, { transform: `translate(${xy[0]} ${xy[1]})` });
+        }
+        visuals.translateEl = translateEl;
+        function composeSVG(opts) {
+            let [a, b] = [opts.el1, opts.el2];
+            pxsim.U.assert(a.x == 0 && a.y == 0 && b.x == 0 && b.y == 0, "el1 and el2 x,y offsets not supported");
+            let setXY = (e, x, y) => pxsim.svg.hydrate(e, { x: x, y: y });
+            let setWH = (e, w, h) => {
+                if (w)
+                    pxsim.svg.hydrate(e, { width: w });
+                if (h)
+                    pxsim.svg.hydrate(e, { height: h });
+            };
+            let setWHpx = (e, w, h) => pxsim.svg.hydrate(e, { width: `${w}px`, height: `${h}px` });
+            let scaleUnit = opts.scaleUnit2;
+            let aScalar = opts.scaleUnit2 / opts.scaleUnit1;
+            let bScalar = 1.0;
+            let aw = a.w * aScalar;
+            let ah = a.h * aScalar;
+            setWHpx(a.el, aw, ah);
+            let bw = b.w * bScalar;
+            let bh = b.h * bScalar;
+            setWHpx(b.el, bw, bh);
+            let [mt, mr, mb, ml] = opts.margin;
+            let mm = opts.middleMargin;
+            let innerW = Math.max(aw, bw);
+            let ax = mr + (innerW - aw) / 2.0;
+            let ay = mt;
+            setXY(a.el, ax, ay);
+            let bx = mr + (innerW - bw) / 2.0;
+            let by = ay + ah + mm;
+            setXY(b.el, bx, by);
+            let edges = [ay, ay + ah, by, by + bh];
+            let w = mr + innerW + ml;
+            let h = mt + ah + mm + bh + mb;
+            let host = pxsim.svg.elt("svg", {
+                "version": "1.0",
+                "viewBox": `0 0 ${w} ${h}`,
+                "class": `sim-bb`,
+            });
+            setWH(host, opts.maxWidth, opts.maxHeight);
+            setXY(host, 0, 0);
+            let under = pxsim.svg.child(host, "g");
+            host.appendChild(a.el);
+            host.appendChild(b.el);
+            let over = pxsim.svg.child(host, "g");
+            let toHostCoord1 = (xy) => {
+                let [x, y] = xy;
+                return [x * aScalar + ax, y * aScalar + ay];
+            };
+            let toHostCoord2 = (xy) => {
+                let [x, y] = xy;
+                return [x * bScalar + bx, y * bScalar + by];
+            };
+            return {
+                under: under,
+                over: over,
+                host: host,
+                edges: edges,
+                scaleUnit: scaleUnit,
+                toHostCoord1: toHostCoord1,
+                toHostCoord2: toHostCoord2,
+            };
+        }
+        visuals.composeSVG = composeSVG;
+        function mkScaleFn(originUnit, targetUnit) {
+            return (n) => n * (targetUnit / originUnit);
+        }
+        visuals.mkScaleFn = mkScaleFn;
+        function mkImageSVG(opts) {
+            let scaleFn = mkScaleFn(opts.imageUnitDist, opts.targetUnitDist);
+            let w = scaleFn(opts.width);
+            let h = scaleFn(opts.height);
+            let img = pxsim.svg.elt("image", {
+                width: w,
+                height: h
+            });
+            let href = img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `${opts.image}`);
+            return { el: img, w: w, h: h, x: 0, y: 0 };
+        }
+        visuals.mkImageSVG = mkImageSVG;
+        function findDistSqrd(a, b) {
+            let x = a[0] - b[0];
+            let y = a[1] - b[1];
+            return x * x + y * y;
+        }
+        visuals.findDistSqrd = findDistSqrd;
+        function findClosestCoordIdx(a, bs) {
+            let dists = bs.map(b => findDistSqrd(a, b));
+            let minIdx = dists.reduce((prevIdx, currDist, currIdx, arr) => {
+                return currDist < arr[prevIdx] ? currIdx : prevIdx;
+            }, 0);
+            return minIdx;
+        }
+        visuals.findClosestCoordIdx = findClosestCoordIdx;
+        function mkTxt(cx, cy, size, rot, txt, txtXOffFactor, txtYOffFactor) {
+            let el = pxsim.svg.elt("text");
+            //HACK: these constants (txtXOffFactor, txtYOffFactor) tweak the way this algorithm knows how to center the text
+            txtXOffFactor = txtXOffFactor || -0.33333;
+            txtYOffFactor = txtYOffFactor || 0.3;
+            const xOff = txtXOffFactor * size * txt.length;
+            const yOff = txtYOffFactor * size;
+            pxsim.svg.hydrate(el, {
+                style: `font-size:${size}px;`,
+                transform: `translate(${cx} ${cy}) rotate(${rot}) translate(${xOff} ${yOff})`
+            });
+            pxsim.U.addClass(el, "noselect");
+            el.textContent = txt;
+            return el;
+        }
+        visuals.mkTxt = mkTxt;
+        visuals.GPIO_WIRE_COLORS = ["pink", "orange", "yellow", "green", "purple"];
+        visuals.WIRE_COLOR_MAP = {
+            black: "#514f4d",
+            white: "#fcfdfc",
+            gray: "#acabab",
+            purple: "#a772a1",
+            blue: "#01a6e8",
+            green: "#3cce73",
+            yellow: "#ece600",
+            orange: "#fdb262",
+            red: "#f44f43",
+            brown: "#c89764",
+            pink: "#ff80fa"
+        };
+        function mapWireColor(clr) {
+            return visuals.WIRE_COLOR_MAP[clr] || clr;
+        }
+        visuals.mapWireColor = mapWireColor;
+        ;
+        visuals.PIN_DIST = 15;
+        //expects rgb from 0,255, gives h in [0,360], s in [0, 100], l in [0, 100]
+        function rgbToHsl(rgb) {
+            let [r, g, b] = rgb;
+            let [r$, g$, b$] = [r / 255, g / 255, b / 255];
+            let cMin = Math.min(r$, g$, b$);
+            let cMax = Math.max(r$, g$, b$);
+            let cDelta = cMax - cMin;
+            let h, s, l;
+            let maxAndMin = cMax + cMin;
+            //lum
+            l = (maxAndMin / 2) * 100;
+            if (cDelta === 0)
+                s = h = 0;
+            else {
+                //hue
+                if (cMax === r$)
+                    h = 60 * (((g$ - b$) / cDelta) % 6);
+                else if (cMax === g$)
+                    h = 60 * (((b$ - r$) / cDelta) + 2);
+                else if (cMax === b$)
+                    h = 60 * (((r$ - g$) / cDelta) + 4);
+                //sat
+                if (l > 50)
+                    s = 100 * (cDelta / (2 - maxAndMin));
+                else
+                    s = 100 * (cDelta / maxAndMin);
+            }
+            return [Math.floor(h), Math.floor(s), Math.floor(l)];
+        }
+        visuals.rgbToHsl = rgbToHsl;
+    })(visuals = pxsim.visuals || (pxsim.visuals = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var svg;
+    (function (svg_1) {
+        function parseString(xml) {
+            return new DOMParser().parseFromString(xml, "image/svg+xml").getElementsByTagName("svg").item(0);
+        }
+        svg_1.parseString = parseString;
+        function toDataUri(xml) {
+            return 'data:image/svg+xml,' + encodeURI(xml);
+        }
+        svg_1.toDataUri = toDataUri;
+        let pt;
+        function cursorPoint(pt, svg, evt) {
+            // clientX and clientY are not defined in iOS safari
+            pt.x = evt.clientX != null ? evt.clientX : evt.pageX;
+            pt.y = evt.clientY != null ? evt.clientY : evt.pageY;
+            return pt.matrixTransform(svg.getScreenCTM().inverse());
+        }
+        svg_1.cursorPoint = cursorPoint;
+        function rotateElement(el, originX, originY, degrees) {
+            el.setAttribute('transform', `translate(${originX},${originY}) rotate(${degrees + 90}) translate(${-originX},${-originY})`);
+        }
+        svg_1.rotateElement = rotateElement;
+        function hydrate(el, props) {
+            for (let k in props) {
+                if (k == "title") {
+                    svg.title(el, props[k]);
+                }
+                else
+                    el.setAttributeNS(null, k, props[k]);
+            }
+        }
+        svg_1.hydrate = hydrate;
+        function elt(name, props) {
+            let el = document.createElementNS("http://www.w3.org/2000/svg", name);
+            if (props)
+                svg.hydrate(el, props);
+            return el;
+        }
+        svg_1.elt = elt;
+        function child(parent, name, props) {
+            let el = svg.elt(name, props);
+            parent.appendChild(el);
+            return el;
+        }
+        svg_1.child = child;
+        function mkPath(cls, data, title) {
+            let p = { class: cls, d: data };
+            if (title)
+                p["title"] = title;
+            let el = svg.elt("path");
+            svg.hydrate(el, p);
+            return el;
+        }
+        svg_1.mkPath = mkPath;
+        function path(parent, cls, data, title) {
+            let el = mkPath(cls, data, title);
+            parent.appendChild(el);
+            return el;
+        }
+        svg_1.path = path;
+        function fill(el, c) {
+            el.style.fill = c;
+        }
+        svg_1.fill = fill;
+        function filter(el, c) {
+            el.style.filter = c;
+        }
+        svg_1.filter = filter;
+        function fills(els, c) {
+            els.forEach(el => el.style.fill = c);
+        }
+        svg_1.fills = fills;
+        function isTouchEnabled() {
+            return typeof window !== "undefined" &&
+                ('ontouchstart' in window // works on most browsers
+                    || navigator.maxTouchPoints > 0); // works on IE10/11 and Surface);
+        }
+        svg_1.isTouchEnabled = isTouchEnabled;
+        function onClick(el, click) {
+            let captured = false;
+            pxsim.pointerEvents.down.forEach(evid => el.addEventListener(evid, (ev) => {
+                captured = true;
+                return true;
+            }, false));
+            el.addEventListener(pxsim.pointerEvents.up, (ev) => {
+                if (captured) {
+                    captured = false;
+                    click(ev);
+                    ev.preventDefault();
+                    return false;
+                }
+                return true;
+            }, false);
+        }
+        svg_1.onClick = onClick;
+        function buttonEvents(el, move, start, stop, keydown) {
+            let captured = false;
+            pxsim.pointerEvents.down.forEach(evid => el.addEventListener(evid, (ev) => {
+                captured = true;
+                if (start)
+                    start(ev);
+                return true;
+            }, false));
+            el.addEventListener(pxsim.pointerEvents.move, (ev) => {
+                if (captured) {
+                    if (move)
+                        move(ev);
+                    ev.preventDefault();
+                    return false;
+                }
+                return true;
+            }, false);
+            el.addEventListener(pxsim.pointerEvents.up, (ev) => {
+                captured = false;
+                if (stop)
+                    stop(ev);
+            }, false);
+            el.addEventListener(pxsim.pointerEvents.leave, (ev) => {
+                captured = false;
+                if (stop)
+                    stop(ev);
+            }, false);
+            el.addEventListener('keydown', (ev) => {
+                captured = false;
+                if (keydown)
+                    keydown(ev);
+            });
+        }
+        svg_1.buttonEvents = buttonEvents;
+        function mkLinearGradient(id, horizontal = false) {
+            let gradient = svg.elt("linearGradient");
+            svg.hydrate(gradient, { id: id, x1: "0%", y1: "0%", x2: horizontal ? "100%" : "0%", y2: horizontal ? "0%" : "100%" });
+            let stop1 = svg.child(gradient, "stop", { offset: "0%" });
+            let stop2 = svg.child(gradient, "stop", { offset: "100%" });
+            let stop3 = svg.child(gradient, "stop", { offset: "100%" });
+            let stop4 = svg.child(gradient, "stop", { offset: "100%" });
+            return gradient;
+        }
+        svg_1.mkLinearGradient = mkLinearGradient;
+        function linearGradient(defs, id, horizontal = false) {
+            let lg = mkLinearGradient(id, horizontal);
+            defs.appendChild(lg);
+            return lg;
+        }
+        svg_1.linearGradient = linearGradient;
+        function setGradientColors(lg, start, end) {
+            if (!lg)
+                return;
+            lg.childNodes[0].style.stopColor = start;
+            lg.childNodes[1].style.stopColor = start;
+            lg.childNodes[2].style.stopColor = end;
+            lg.childNodes[3].style.stopColor = end;
+        }
+        svg_1.setGradientColors = setGradientColors;
+        function setGradientValue(lg, percent) {
+            if (lg.childNodes[1].getAttribute("offset") != percent) {
+                lg.childNodes[1].setAttribute("offset", percent);
+                lg.childNodes[2].setAttribute("offset", percent);
+            }
+        }
+        svg_1.setGradientValue = setGradientValue;
+        function animate(el, cls) {
+            pxsim.U.addClass(el, cls);
+            let p = el.parentElement;
+            if (p) {
+                p.removeChild(el);
+                p.appendChild(el);
+            }
+        }
+        svg_1.animate = animate;
+        function mkTitle(txt) {
+            let t = svg.elt("title");
+            t.textContent = txt;
+            return t;
+        }
+        svg_1.mkTitle = mkTitle;
+        function title(el, txt) {
+            let t = mkTitle(txt);
+            el.appendChild(t);
+            return t;
+        }
+        svg_1.title = title;
+        function toHtmlColor(c) {
+            const b = c & 0xFF;
+            const g = (c >> 8) & 0xFF;
+            const r = (c >> 16) & 0xFF;
+            const a = (c >> 24) & 0xFF / 255;
+            return `rgba(${r}, ${g}, ${b}, ${a})`;
+        }
+        svg_1.toHtmlColor = toHtmlColor;
+    })(svg = pxsim.svg || (pxsim.svg = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var codal;
+    (function (codal) {
+        var music;
+        (function (music) {
+            var MusicalIntervals;
+            (function (MusicalIntervals) {
+                // #if CONFIG_ENABLED(JUST_SCALE)
+                // const float MusicalIntervals.chromaticInterval[] = [1.000000, 1.059463, 1.122462, 1.189207, 1.259921, 1.334840, 1.414214, 1.498307, 1.587401, 1.681793, 1.781797, 1.887749];
+                // #else
+                // const float MusicalIntervals.chromaticInterval[] = [1.000000, 1.0417, 1.1250, 1.2000, 1.2500, 1.3333, 1.4063, 1.5000, 1.6000, 1.6667, 1.8000, 1.8750];
+                // #endif
+                MusicalIntervals.chromaticInterval = [1.000000, 1.0417, 1.1250, 1.2000, 1.2500, 1.3333, 1.4063, 1.5000, 1.6000, 1.6667, 1.8000, 1.8750];
+                MusicalIntervals.majorScaleInterval = [MusicalIntervals.chromaticInterval[0], MusicalIntervals.chromaticInterval[2], MusicalIntervals.chromaticInterval[4], MusicalIntervals.chromaticInterval[5], MusicalIntervals.chromaticInterval[7], MusicalIntervals.chromaticInterval[9], MusicalIntervals.chromaticInterval[11]];
+                MusicalIntervals.minorScaleInterval = [MusicalIntervals.chromaticInterval[0], MusicalIntervals.chromaticInterval[2], MusicalIntervals.chromaticInterval[3], MusicalIntervals.chromaticInterval[5], MusicalIntervals.chromaticInterval[7], MusicalIntervals.chromaticInterval[8], MusicalIntervals.chromaticInterval[10]];
+                MusicalIntervals.pentatonicScaleInterval = [MusicalIntervals.chromaticInterval[0], MusicalIntervals.chromaticInterval[2], MusicalIntervals.chromaticInterval[4], MusicalIntervals.chromaticInterval[7], MusicalIntervals.chromaticInterval[9]];
+                MusicalIntervals.majorTriadInterval = [MusicalIntervals.chromaticInterval[0], MusicalIntervals.chromaticInterval[4], MusicalIntervals.chromaticInterval[7]];
+                MusicalIntervals.minorTriadInterval = [MusicalIntervals.chromaticInterval[0], MusicalIntervals.chromaticInterval[3], MusicalIntervals.chromaticInterval[7]];
+                MusicalIntervals.diminishedInterval = [MusicalIntervals.chromaticInterval[0], MusicalIntervals.chromaticInterval[3], MusicalIntervals.chromaticInterval[6], MusicalIntervals.chromaticInterval[9]];
+                MusicalIntervals.wholeToneInterval = [MusicalIntervals.chromaticInterval[0], MusicalIntervals.chromaticInterval[2], MusicalIntervals.chromaticInterval[4], MusicalIntervals.chromaticInterval[6], MusicalIntervals.chromaticInterval[8], MusicalIntervals.chromaticInterval[10]];
+            })(MusicalIntervals = music.MusicalIntervals || (music.MusicalIntervals = {}));
+        })(music = codal.music || (codal.music = {}));
+    })(codal = pxsim.codal || (pxsim.codal = {}));
+})(pxsim || (pxsim = {}));
+(function (pxsim) {
+    var codal;
+    (function (codal) {
+        var music;
+        (function (music) {
+            var MusicalProgressions;
+            (function (MusicalProgressions) {
+                MusicalProgressions.chromatic = { interval: music.MusicalIntervals.chromaticInterval, length: 12 };
+                MusicalProgressions.majorScale = { interval: music.MusicalIntervals.majorScaleInterval, length: 7 };
+                MusicalProgressions.minorScale = { interval: music.MusicalIntervals.minorScaleInterval, length: 7 };
+                MusicalProgressions.pentatonicScale = { interval: music.MusicalIntervals.pentatonicScaleInterval, length: 5 };
+                MusicalProgressions.majorTriad = { interval: music.MusicalIntervals.majorTriadInterval, length: 3 };
+                MusicalProgressions.minorTriad = { interval: music.MusicalIntervals.minorTriadInterval, length: 3 };
+                MusicalProgressions.diminished = { interval: music.MusicalIntervals.diminishedInterval, length: 4 };
+                MusicalProgressions.wholeTone = { interval: music.MusicalIntervals.wholeToneInterval, length: 6 };
+                /**
+                 * Determine the frequency of a given note in a given progressions
+                 *
+                 * @param root The root frequency of the progression
+                 * @param progression The Progression to use
+                 * @param offset The offset (interval) of the note to generate
+                 * @return The frequency of the note requested in Hz.
+                 */
+                function calculateFrequencyFromProgression(root, progression, offset) {
+                    let octave = Math.floor(offset / progression.length);
+                    let index = offset % progression.length;
+                    return root * Math.pow(2, octave) * progression.interval[index];
+                }
+                MusicalProgressions.calculateFrequencyFromProgression = calculateFrequencyFromProgression;
+            })(MusicalProgressions = music.MusicalProgressions || (music.MusicalProgressions = {}));
+        })(music = codal.music || (codal.music = {}));
+    })(codal = pxsim.codal || (pxsim.codal = {}));
+})(pxsim || (pxsim = {}));
+/**
+ * Adapted from lancaster-university/codal-microbit-v2
+ * https://github.com/lancaster-university/codal-microbit-v2/blob/master/source/SoundEmojiSynthesizer.cpp
+ */
+var pxsim;
+(function (pxsim) {
+    var codal;
+    (function (codal) {
+        var music;
+        (function (music) {
+            // https://github.com/lancaster-university/codal-microbit-v2/blob/master/inc/SoundEmojiSynthesizer.h#L30
+            music.EMOJI_SYNTHESIZER_SAMPLE_RATE = 44100;
+            music.EMOJI_SYNTHESIZER_TONE_WIDTH_F = 1024;
+            music.EMOJI_SYNTHESIZER_TONE_WIDTH = 1024;
+            music.EMOJI_SYNTHESIZER_BUFFER_SIZE = 512;
+            music.EMOJI_SYNTHESIZER_TONE_EFFECT_PARAMETERS = 2;
+            music.EMOJI_SYNTHESIZER_TONE_EFFECTS = 3;
+            music.EMOJI_SYNTHESIZER_STATUS_ACTIVE = 0x1;
+            music.EMOJI_SYNTHESIZER_STATUS_OUTPUT_SILENCE_AS_EMPTY = 0x2;
+            music.EMOJI_SYNTHESIZER_STATUS_STOPPING = 0x4;
+            class SoundEmojiSynthesizer {
+                constructor(id, sampleRate = music.EMOJI_SYNTHESIZER_SAMPLE_RATE) {
+                    this.samplesPerStep = [];
+                    this.status = 0;
+                    this.effectPointer = 0;
+                    this.position = 0;
+                    this.bufferSize = music.EMOJI_SYNTHESIZER_BUFFER_SIZE;
+                    this.sampleRate = sampleRate;
+                    this.samplesToWrite = 0;
+                    this.samplesWritten = 0;
+                    this.sampleRange = 1023;
+                    this.orMask = 0;
+                    this.effectPointer = -1;
+                    this.volume = 1;
+                }
+                get effect() {
+                    return this.effectBuffer[this.effectPointer];
+                }
+                play(sound) {
+                    this.effectBuffer = sound;
+                    this.effectPointer = -1;
+                    this.nextSoundEffect();
+                }
+                nextSoundEffect() {
+                    const hadEffect = this.effect != null;
+                    if (this.status & music.EMOJI_SYNTHESIZER_STATUS_STOPPING) {
+                        this.effectPointer = null;
+                        this.effectBuffer = [];
+                    }
+                    // If a sequence of SoundEffects are being played, attempt to move on to the next.
+                    // If not, select the first in the buffer.
+                    if (this.effect)
+                        this.effectPointer++;
+                    else
+                        this.effectPointer = 0;
+                    // Validate that we have a valid sound effect. If not, record that we have nothing to play.
+                    if (this.effectPointer >= this.effectBuffer.length) {
+                        // if we have an effect with a negative duration, reset the buffer (unless there is an update pending)
+                        this.effectPointer = 0;
+                        if (this.effect.duration >= 0) {
+                            this.effectPointer = -1;
+                            this.effectBuffer = [];
+                            this.samplesWritten = 0;
+                            this.samplesToWrite = 0;
+                            this.position = 0;
+                            return hadEffect;
+                        }
+                    }
+                    // We have a valid buffer. Set up our synthesizer to the requested parameters.
+                    this.samplesToWrite = this.determineSampleCount(this.effect.duration);
+                    this.frequency = this.effect.frequency;
+                    this.volume = this.effect.volume;
+                    this.samplesWritten = 0;
+                    // validate and initialise per effect rendering state.
+                    for (let i = 0; i < music.EMOJI_SYNTHESIZER_TONE_EFFECTS; i++) {
+                        this.effect.effects[i].step = 0;
+                        this.effect.effects[i].steps = Math.max(this.effect.effects[i].steps, 1);
+                        this.samplesPerStep[i] = Math.floor(this.samplesToWrite / this.effect.effects[i].steps);
+                    }
+                    return false;
+                }
+                pull() {
+                    let done = false;
+                    let sample;
+                    let bufferEnd;
+                    while (!done) {
+                        if (this.samplesWritten == this.samplesToWrite || this.status & music.EMOJI_SYNTHESIZER_STATUS_STOPPING) {
+                            let renderComplete = this.nextSoundEffect();
+                            // If we have just completed active playout of an effect, and there are no more effects scheduled,
+                            // unblock any fibers that may be waiting to play a sound effect.
+                            if (this.samplesToWrite == 0 || this.status & music.EMOJI_SYNTHESIZER_STATUS_STOPPING) {
+                                done = true;
+                                if (renderComplete || this.status & music.EMOJI_SYNTHESIZER_STATUS_STOPPING) {
+                                    this.status &= ~music.EMOJI_SYNTHESIZER_STATUS_STOPPING;
+                                    // Event(id, DEVICE_SOUND_EMOJI_SYNTHESIZER_EVT_DONE);
+                                    // lock.notify();
+                                }
+                            }
+                        }
+                        // If we have something to do, ensure our buffers are created.
+                        // We defer creation to avoid unnecessary heap allocation when generating silence.
+                        if (((this.samplesWritten < this.samplesToWrite) || !(this.status & music.EMOJI_SYNTHESIZER_STATUS_OUTPUT_SILENCE_AS_EMPTY)) && sample == null) {
+                            this.buffer = new Array(this.bufferSize);
+                            sample = 0;
+                            bufferEnd = this.buffer.length;
+                        }
+                        // Generate some samples with the current this.effect parameters.
+                        while (this.samplesWritten < this.samplesToWrite) {
+                            let skip = ((music.EMOJI_SYNTHESIZER_TONE_WIDTH_F * this.frequency) / this.sampleRate);
+                            let gain = (this.sampleRange * this.volume) / 1024;
+                            let offset = 512 - (512 * gain);
+                            let effectStepEnd = [];
+                            for (let i = 0; i < music.EMOJI_SYNTHESIZER_TONE_EFFECTS; i++) {
+                                effectStepEnd[i] = (this.samplesPerStep[i] * (this.effect.effects[i].step));
+                                if (this.effect.effects[i].step == this.effect.effects[i].steps - 1)
+                                    effectStepEnd[i] = this.samplesToWrite;
+                            }
+                            let stepEndPosition = effectStepEnd[0];
+                            for (let i = 1; i < music.EMOJI_SYNTHESIZER_TONE_EFFECTS; i++)
+                                stepEndPosition = Math.min(stepEndPosition, effectStepEnd[i]);
+                            // Write samples until the end of the next this.effect-step
+                            while (this.samplesWritten < stepEndPosition) {
+                                // Stop processing when we've filled the requested this.buffer
+                                if (sample == bufferEnd) {
+                                    // downStream.pullRequest();
+                                    return this.buffer;
+                                }
+                                // Synthesize a sample
+                                let s = this.effect.tone.tonePrint(this.effect.tone.parameter, Math.max(this.position, 0));
+                                // Apply volume scaling and OR mask (if specified).
+                                this.buffer[sample] = (((s * gain) + offset)); // | this.orMask;
+                                // Move on our pointers.
+                                sample++;
+                                this.samplesWritten++;
+                                this.position += skip;
+                                // Keep our toneprint pointer in range
+                                while (this.position > music.EMOJI_SYNTHESIZER_TONE_WIDTH_F)
+                                    this.position -= music.EMOJI_SYNTHESIZER_TONE_WIDTH_F;
+                            }
+                            // Invoke the this.effect function for any effects that are due.
+                            for (let i = 0; i < music.EMOJI_SYNTHESIZER_TONE_EFFECTS; i++) {
+                                if (this.samplesWritten == effectStepEnd[i]) {
+                                    if (this.effect.effects[i].step < this.effect.effects[i].steps) {
+                                        if (this.effect.effects[i].effect)
+                                            this.effect.effects[i].effect(this, this.effect.effects[i]);
+                                        this.effect.effects[i].step++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // if we have no data to send, return an empty this.buffer (if requested)
+                    if (sample == null) {
+                        this.buffer = [];
+                    }
+                    else {
+                        // Pad the output this.buffer with silence if necessary.
+                        const silence = (this.sampleRange * 0.5); // | this.orMask;
+                        while (sample < bufferEnd) {
+                            this.buffer[sample] = silence;
+                            sample++;
+                        }
+                    }
+                    // Issue a Pull Request so that we are always receiver driven, and we're done.
+                    // downStream.pullRequest();
+                    return this.buffer;
+                }
+                determineSampleCount(playoutTime) {
+                    if (playoutTime < 0)
+                        playoutTime = -playoutTime;
+                    const seconds = playoutTime / 1000;
+                    return Math.floor(this.sampleRate * seconds);
+                }
+                totalDuration() {
+                    let duration = 0;
+                    for (const effect of this.effectBuffer)
+                        duration += effect.duration;
+                    return duration;
+                }
+            }
+            music.SoundEmojiSynthesizer = SoundEmojiSynthesizer;
+        })(music = codal.music || (codal.music = {}));
+    })(codal = pxsim.codal || (pxsim.codal = {}));
+})(pxsim || (pxsim = {}));
+/**
+ * Adapted from lancaster-university/codal-core
+ * https://github.com/lancaster-university/codal-core/blob/master/source/streams/Synthesizer.cpp#L54
+ */
+var pxsim;
+(function (pxsim) {
+    var codal;
+    (function (codal) {
+        var music;
+        (function (music) {
+            var Synthesizer;
+            (function (Synthesizer) {
+                const sineTone = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 11, 12, 13, 13, 14, 15, 16, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 45, 46, 47, 49, 50, 51, 53, 54, 56, 57, 58, 60, 61, 63, 64, 66, 68, 69, 71, 72, 74, 76, 77, 79, 81, 82, 84, 86, 87, 89, 91, 93, 95, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 141, 143, 145, 147, 149, 152, 154, 156, 158, 161, 163, 165, 167, 170, 172, 175, 177, 179, 182, 184, 187, 189, 191, 194, 196, 199, 201, 204, 206, 209, 211, 214, 216, 219, 222, 224, 227, 229, 232, 235, 237, 240, 243, 245, 248, 251, 253, 256, 259, 262, 264, 267, 270, 273, 275, 278, 281, 284, 287, 289, 292, 295, 298, 301, 304, 307, 309, 312, 315, 318, 321, 324, 327, 330, 333, 336, 339, 342, 345, 348, 351, 354, 357, 360, 363, 366, 369, 372, 375, 378, 381, 384, 387, 390, 393, 396, 399, 402, 405, 408, 411, 414, 417, 420, 424, 427, 430, 433, 436, 439, 442, 445, 448, 452, 455, 458, 461, 464, 467, 470, 473, 477, 480, 483, 486, 489, 492, 495, 498, 502, 505, 508, 511, 514, 517, 520, 524, 527, 530, 533, 536, 539, 542, 545, 549, 552, 555, 558, 561, 564, 567, 570, 574, 577, 580, 583, 586, 589, 592, 595, 598, 602, 605, 608, 611, 614, 617, 620, 623, 626, 629, 632, 635, 638, 641, 644, 647, 650, 653, 656, 659, 662, 665, 668, 671, 674, 677, 680, 683, 686, 689, 692, 695, 698, 701, 704, 707, 710, 713, 715, 718, 721, 724, 727, 730, 733, 735, 738, 741, 744, 747, 749, 752, 755, 758, 760, 763, 766, 769, 771, 774, 777, 779, 782, 785, 787, 790, 793, 795, 798, 800, 803, 806, 808, 811, 813, 816, 818, 821, 823, 826, 828, 831, 833, 835, 838, 840, 843, 845, 847, 850, 852, 855, 857, 859, 861, 864, 866, 868, 870, 873, 875, 877, 879, 881, 884, 886, 888, 890, 892, 894, 896, 898, 900, 902, 904, 906, 908, 910, 912, 914, 916, 918, 920, 922, 924, 926, 927, 929, 931, 933, 935, 936, 938, 940, 941, 943, 945, 946, 948, 950, 951, 953, 954, 956, 958, 959, 961, 962, 964, 965, 966, 968, 969, 971, 972, 973, 975, 976, 977, 979, 980, 981, 982, 984, 985, 986, 987, 988, 989, 990, 992, 993, 994, 995, 996, 997, 998, 999, 1000, 1000, 1001, 1002, 1003, 1004, 1005, 1006, 1006, 1007, 1008, 1009, 1009, 1010, 1011, 1011, 1012, 1013, 1013, 1014, 1014, 1015, 1015, 1016, 1016, 1017, 1017, 1018, 1018, 1019, 1019, 1019, 1020, 1020, 1020, 1021, 1021, 1021, 1021, 1022, 1022, 1022, 1022, 1022, 1022, 1022, 1022, 1022, 1022, 1023, 1022];
+                const TONE_WIDTH = 1024;
+                function SineTone(arg, position) {
+                    position |= 0;
+                    let off = TONE_WIDTH - position;
+                    if (off < TONE_WIDTH / 2)
+                        position = off;
+                    return sineTone[position];
+                }
+                Synthesizer.SineTone = SineTone;
+                function SawtoothTone(arg, position) {
+                    return position;
+                }
+                Synthesizer.SawtoothTone = SawtoothTone;
+                function TriangleTone(arg, position) {
+                    return position < 512 ? position * 2 : (1023 - position) * 2;
+                }
+                Synthesizer.TriangleTone = TriangleTone;
+                function NoiseTone(arg, position) {
+                    // deterministic, semi-random noise
+                    let mult = arg[0];
+                    if (mult == 0)
+                        mult = 7919;
+                    return (position * mult) & 1023;
+                }
+                Synthesizer.NoiseTone = NoiseTone;
+                function SquareWaveTone(arg, position) {
+                    return position < 512 ? 1023 : 0;
+                }
+                Synthesizer.SquareWaveTone = SquareWaveTone;
+            })(Synthesizer = music.Synthesizer || (music.Synthesizer = {}));
+        })(music = codal.music || (codal.music = {}));
+    })(codal = pxsim.codal || (pxsim.codal = {}));
+})(pxsim || (pxsim = {}));
+/**
+ * Adapted from lancaster-university/codal-microbit-v2
+ * https://github.com/lancaster-university/codal-microbit-v2/blob/master/source/SoundSynthesizerEffects.cpp
+ */
+var pxsim;
+(function (pxsim) {
+    var codal;
+    (function (codal) {
+        var music;
+        (function (music) {
+            var SoundSynthesizerEffects;
+            (function (SoundSynthesizerEffects) {
+                /*
+                 * Definitions of standard progressions.
+                 */
+                /**
+                 * Root Frequency Interpolation Effect Functions
+                 */
+                function noInterpolation(synth, context) {
+                }
+                SoundSynthesizerEffects.noInterpolation = noInterpolation;
+                // Linear interpolate function.
+                // parameter[0]: end frequency
+                function linearInterpolation(synth, context) {
+                    let interval = (context.parameter[0] - synth.effect.frequency) / context.steps;
+                    synth.frequency = synth.effect.frequency + interval * context.step;
+                }
+                SoundSynthesizerEffects.linearInterpolation = linearInterpolation;
+                // Linear interpolate function.
+                // parameter[0]: end frequency
+                function logarithmicInterpolation(synth, context) {
+                    synth.frequency = synth.effect.frequency + (Math.log10(Math.max(context.step, 0.1)) * (context.parameter[0] - synth.effect.frequency) / 1.95);
+                }
+                SoundSynthesizerEffects.logarithmicInterpolation = logarithmicInterpolation;
+                // Curve interpolate function
+                // parameter[0]: end frequency
+                function curveInterpolation(synth, context) {
+                    synth.frequency = (Math.sin(context.step * 3.12159 / 180.0) * (context.parameter[0] - synth.effect.frequency) + synth.effect.frequency);
+                }
+                SoundSynthesizerEffects.curveInterpolation = curveInterpolation;
+                // Cosine interpolate function
+                // parameter[0]: end frequency
+                function slowVibratoInterpolation(synth, context) {
+                    synth.frequency = Math.sin(context.step / 10) * context.parameter[0] + synth.effect.frequency;
+                }
+                SoundSynthesizerEffects.slowVibratoInterpolation = slowVibratoInterpolation;
+                //warble function
+                // parameter[0]: end frequency
+                function warbleInterpolation(synth, context) {
+                    synth.frequency = (Math.sin(context.step) * (context.parameter[0] - synth.effect.frequency) + synth.effect.frequency);
+                }
+                SoundSynthesizerEffects.warbleInterpolation = warbleInterpolation;
+                // Vibrato function
+                // parameter[0]: end frequency
+                function vibratoInterpolation(synth, context) {
+                    synth.frequency = synth.effect.frequency + Math.sin(context.step) * context.parameter[0];
+                }
+                SoundSynthesizerEffects.vibratoInterpolation = vibratoInterpolation;
+                // Exponential rising function
+                // parameter[0]: end frequency
+                function exponentialRisingInterpolation(synth, context) {
+                    synth.frequency = synth.effect.frequency + Math.sin(0.01745329 * context.step) * context.parameter[0];
+                }
+                SoundSynthesizerEffects.exponentialRisingInterpolation = exponentialRisingInterpolation;
+                // Exponential falling function
+                function exponentialFallingInterpolation(synth, context) {
+                    synth.frequency = synth.effect.frequency + Math.cos(0.01745329 * context.step) * context.parameter[0];
+                }
+                SoundSynthesizerEffects.exponentialFallingInterpolation = exponentialFallingInterpolation;
+                // Argeppio functions
+                function appregrioAscending(synth, context) {
+                    synth.frequency = music.MusicalProgressions.calculateFrequencyFromProgression(synth.effect.frequency, context.parameter_p[0], context.step);
+                }
+                SoundSynthesizerEffects.appregrioAscending = appregrioAscending;
+                function appregrioDescending(synth, context) {
+                    synth.frequency = music.MusicalProgressions.calculateFrequencyFromProgression(synth.effect.frequency, context.parameter_p[0], context.steps - context.step - 1);
+                }
+                SoundSynthesizerEffects.appregrioDescending = appregrioDescending;
+                /**
+                 * Frequency Delta effects
+                 */
+                // Frequency vibrato function
+                // parameter[0]: vibrato frequency multiplier
+                function frequencyVibratoEffect(synth, context) {
+                    if (context.step == 0)
+                        return;
+                    if (context.step % 2 == 0)
+                        synth.frequency /= context.parameter[0];
+                    else
+                        synth.frequency *= context.parameter[0];
+                }
+                SoundSynthesizerEffects.frequencyVibratoEffect = frequencyVibratoEffect;
+                // Volume vibrato function
+                // parameter[0]: vibrato volume multiplier
+                function volumeVibratoEffect(synth, context) {
+                    if (context.step == 0)
+                        return;
+                    if (context.step % 2 == 0)
+                        synth.volume /= context.parameter[0];
+                    else
+                        synth.volume *= context.parameter[0];
+                }
+                SoundSynthesizerEffects.volumeVibratoEffect = volumeVibratoEffect;
+                /**
+                 * Volume Delta effects
+                 */
+                /** Simple ADSR enveleope effect.
+                 * parameter[0]: Centre volume
+                 * parameter[1]: End volume
+                 * effect.volume: start volume
+                 */
+                function adsrVolumeEffect(synth, context) {
+                    let halfSteps = context.steps * 0.5;
+                    if (context.step <= halfSteps) {
+                        let delta = (context.parameter[0] - synth.effect.volume) / halfSteps;
+                        synth.volume = synth.effect.volume + context.step * delta;
+                    }
+                    else {
+                        let delta = (context.parameter[1] - context.parameter[0]) / halfSteps;
+                        synth.volume = context.parameter[0] + (context.step - halfSteps) * delta;
+                    }
+                }
+                SoundSynthesizerEffects.adsrVolumeEffect = adsrVolumeEffect;
+                /**
+                 * Simple volume ramp effect
+                 * parameter[0]: End volume
+                 * effect.volume: start volume
+                 */
+                function volumeRampEffect(synth, context) {
+                    let delta = (context.parameter[0] - synth.effect.volume) / context.steps;
+                    synth.volume = synth.effect.volume + context.step * delta;
+                }
+                SoundSynthesizerEffects.volumeRampEffect = volumeRampEffect;
+            })(SoundSynthesizerEffects = music.SoundSynthesizerEffects || (music.SoundSynthesizerEffects = {}));
+        })(music = codal.music || (codal.music = {}));
+    })(codal = pxsim.codal || (pxsim.codal = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var codal;
+    (function (codal) {
+        var music;
+        (function (music) {
+            let WaveShape;
+            (function (WaveShape) {
+                WaveShape[WaveShape["Sine"] = 0] = "Sine";
+                WaveShape[WaveShape["Sawtooth"] = 1] = "Sawtooth";
+                WaveShape[WaveShape["Triangle"] = 2] = "Triangle";
+                WaveShape[WaveShape["Square"] = 3] = "Square";
+                WaveShape[WaveShape["Noise"] = 4] = "Noise";
+            })(WaveShape = music.WaveShape || (music.WaveShape = {}));
+            let InterpolationEffect;
+            (function (InterpolationEffect) {
+                InterpolationEffect[InterpolationEffect["None"] = 0] = "None";
+                InterpolationEffect[InterpolationEffect["Linear"] = 1] = "Linear";
+                InterpolationEffect[InterpolationEffect["Curve"] = 2] = "Curve";
+                InterpolationEffect[InterpolationEffect["ExponentialRising"] = 5] = "ExponentialRising";
+                InterpolationEffect[InterpolationEffect["ExponentialFalling"] = 6] = "ExponentialFalling";
+                InterpolationEffect[InterpolationEffect["ArpeggioRisingMajor"] = 8] = "ArpeggioRisingMajor";
+                InterpolationEffect[InterpolationEffect["ArpeggioRisingMinor"] = 10] = "ArpeggioRisingMinor";
+                InterpolationEffect[InterpolationEffect["ArpeggioRisingDiminished"] = 12] = "ArpeggioRisingDiminished";
+                InterpolationEffect[InterpolationEffect["ArpeggioRisingChromatic"] = 14] = "ArpeggioRisingChromatic";
+                InterpolationEffect[InterpolationEffect["ArpeggioRisingWholeTone"] = 16] = "ArpeggioRisingWholeTone";
+                InterpolationEffect[InterpolationEffect["ArpeggioFallingMajor"] = 9] = "ArpeggioFallingMajor";
+                InterpolationEffect[InterpolationEffect["ArpeggioFallingMinor"] = 11] = "ArpeggioFallingMinor";
+                InterpolationEffect[InterpolationEffect["ArpeggioFallingDiminished"] = 13] = "ArpeggioFallingDiminished";
+                InterpolationEffect[InterpolationEffect["ArpeggioFallingChromatic"] = 15] = "ArpeggioFallingChromatic";
+                InterpolationEffect[InterpolationEffect["ArpeggioFallingWholeTone"] = 17] = "ArpeggioFallingWholeTone";
+                InterpolationEffect[InterpolationEffect["Logarithmic"] = 18] = "Logarithmic";
+            })(InterpolationEffect = music.InterpolationEffect || (music.InterpolationEffect = {}));
+            let Effect;
+            (function (Effect) {
+                Effect[Effect["None"] = 0] = "None";
+                Effect[Effect["Vibrato"] = 1] = "Vibrato";
+                Effect[Effect["Tremolo"] = 2] = "Tremolo";
+                Effect[Effect["Warble"] = 3] = "Warble";
+            })(Effect = music.Effect || (music.Effect = {}));
+            class Sound {
+                constructor() {
+                    this.src = "000000000000000000000000000000000000000000000000000000000000000000000000";
+                }
+                get wave() {
+                    return this.getValue(0, 1);
+                }
+                set wave(value) {
+                    this.setValue(0, constrain(value, 0, 4), 1);
+                }
+                get volume() {
+                    return this.getValue(1, 4);
+                }
+                set volume(value) {
+                    this.setValue(1, constrain(value, 0, 1023), 4);
+                }
+                get frequency() {
+                    return this.getValue(5, 4);
+                }
+                set frequency(value) {
+                    this.setValue(5, value, 4);
+                }
+                get duration() {
+                    return this.getValue(9, 4);
+                }
+                set duration(value) {
+                    this.setValue(9, value, 4);
+                }
+                get shape() {
+                    return this.getValue(13, 2);
+                }
+                set shape(value) {
+                    this.setValue(13, value, 2);
+                }
+                get endFrequency() {
+                    return this.getValue(18, 4);
+                }
+                set endFrequency(value) {
+                    this.setValue(18, value, 4);
+                }
+                get endVolume() {
+                    return this.getValue(26, 4);
+                }
+                set endVolume(value) {
+                    this.setValue(26, constrain(value, 0, 1023), 4);
+                }
+                get steps() {
+                    return this.getValue(30, 4);
+                }
+                set steps(value) {
+                    this.setValue(30, value, 4);
+                }
+                get fx() {
+                    return this.getValue(34, 2);
+                }
+                set fx(value) {
+                    this.setValue(34, constrain(value, 0, 3), 2);
+                }
+                get fxParam() {
+                    return this.getValue(36, 4);
+                }
+                set fxParam(value) {
+                    this.setValue(36, value, 4);
+                }
+                get fxnSteps() {
+                    return this.getValue(40, 4);
+                }
+                set fxnSteps(value) {
+                    this.setValue(40, value, 4);
+                }
+                get frequencyRandomness() {
+                    return this.getValue(44, 4);
+                }
+                set frequencyRandomness(value) {
+                    this.setValue(44, value, 4);
+                }
+                get endFrequencyRandomness() {
+                    return this.getValue(48, 4);
+                }
+                set endFrequencyRandomness(value) {
+                    this.setValue(48, value, 4);
+                }
+                get volumeRandomness() {
+                    return this.getValue(52, 4);
+                }
+                set volumeRandomness(value) {
+                    this.setValue(52, value, 4);
+                }
+                get endVolumeRandomness() {
+                    return this.getValue(56, 4);
+                }
+                set endVolumeRandomness(value) {
+                    this.setValue(56, value, 4);
+                }
+                get durationRandomness() {
+                    return this.getValue(60, 4);
+                }
+                set durationRandomness(value) {
+                    this.setValue(60, value, 4);
+                }
+                get fxParamRandomness() {
+                    return this.getValue(64, 4);
+                }
+                set fxParamRandomness(value) {
+                    this.setValue(64, value, 4);
+                }
+                get fxnStepsRandomness() {
+                    return this.getValue(68, 4);
+                }
+                set fxnStepsRandomness(value) {
+                    this.setValue(68, value, 4);
+                }
+                copy() {
+                    const result = new Sound();
+                    result.src = this.src.slice(0);
+                    return result;
+                }
+                setValue(offset, value, length) {
+                    value = constrain(value | 0, 0, Math.pow(10, length) - 1);
+                    this.src = this.src.substr(0, offset) + formatNumber(value, length) + this.src.substr(offset + length);
+                }
+                getValue(offset, length) {
+                    return parseInt(this.src.substr(offset, length));
+                }
+            }
+            music.Sound = Sound;
+            function formatNumber(num, length) {
+                let result = num + "";
+                while (result.length < length)
+                    result = "0" + result;
+                return result;
+            }
+            let playing = false;
+            let soundQueue;
+            let cancellationToken = {
+                cancelled: false
+            };
+            function __playSoundExpression(notes, waitTillDone) {
+                if (!soundQueue)
+                    soundQueue = [];
+                const cb = pxsim.getResume();
+                const soundPromise = new Promise((resolve, reject) => {
+                    soundQueue.push({
+                        notes,
+                        onFinished: resolve,
+                        onCancelled: resolve
+                    });
+                });
+                if (!playing) {
+                    playNextSoundAsync();
+                }
+                if (!waitTillDone)
+                    cb();
+                else
+                    soundPromise.then(cb);
+            }
+            music.__playSoundExpression = __playSoundExpression;
+            async function playNextSoundAsync() {
+                if (soundQueue.length) {
+                    playing = true;
+                    const sound = soundQueue.shift();
+                    let currentToken = cancellationToken;
+                    try {
+                        await playSoundExpressionAsync(sound.notes, () => currentToken.cancelled);
+                        if (currentToken.cancelled) {
+                            sound.onCancelled();
+                        }
+                        else {
+                            sound.onFinished();
+                        }
+                    }
+                    catch (_a) {
+                        sound.onCancelled();
+                    }
+                    playNextSoundAsync();
+                }
+                else {
+                    playing = false;
+                }
+            }
+            function clearSoundQueue() {
+                soundQueue = [];
+                cancellationToken.cancelled = true;
+                cancellationToken = {
+                    cancelled: false
+                };
+            }
+            music.clearSoundQueue = clearSoundQueue;
+            function playSoundExpressionAsync(notes, isCancelled, onPull) {
+                const synth = new music.SoundEmojiSynthesizer(0);
+                const soundEffects = parseSoundEffects(notes);
+                synth.play(soundEffects);
+                let cancelled = false;
+                return Promise.race([
+                    delayAsync(synth.totalDuration())
+                        .then(() => {
+                        // If safari didn't allow the sound to play for some reason,
+                        // it will get delayed until the user does something that
+                        // unmutes it. make sure we cancel it so that it doesn't
+                        // play long after it was supposed to
+                        cancelled = true;
+                    }),
+                    pxsim.AudioContextManager.playPCMBufferStreamAsync(() => {
+                        if (!synth.effect)
+                            return undefined;
+                        const buff = synth.pull();
+                        if (onPull)
+                            onPull(synth.frequency, synth.volume);
+                        const arr = new Float32Array(buff.length);
+                        for (let i = 0; i < buff.length; i++) {
+                            // Buffer is (0, 1023) we need to map it to (-1, 1)
+                            arr[i] = ((buff[i] - 512) / 512);
+                        }
+                        return arr;
+                    }, synth.sampleRate, 0.03, () => cancelled || (isCancelled && isCancelled()))
+                ]);
+            }
+            music.playSoundExpressionAsync = playSoundExpressionAsync;
+            function __stopSoundExpressions() {
+                clearSoundQueue();
+                pxsim.AudioContextManager.stopAll();
+            }
+            music.__stopSoundExpressions = __stopSoundExpressions;
+            /**
+             * Adapted from lancaster-university/codal-microbit-v2
+             * https://github.com/lancaster-university/codal-microbit-v2/blob/master/source/SoundExpressions.cpp
+             */
+            function parseSoundEffects(notes) {
+                // https://github.com/lancaster-university/codal-microbit-v2/blob/master/source/SoundExpressions.cpp#L57
+                // 72 characters of sound data comma separated
+                const charsPerEffect = 72;
+                const effectCount = Math.floor((notes.length + 1) / (charsPerEffect + 1));
+                const expectedLength = effectCount * (charsPerEffect + 1) - 1;
+                if (notes.length != expectedLength) {
+                    return [];
+                }
+                const soundEffects = [];
+                for (let i = 0; i < effectCount; ++i) {
+                    const start = i * charsPerEffect + i;
+                    if (start > 0 && notes[start - 1] != ',') {
+                        return [];
+                    }
+                    const effect = blankSoundEffect();
+                    if (!parseSoundExpression(notes.substr(start), effect)) {
+                        return [];
+                    }
+                    soundEffects.push(effect);
+                }
+                return soundEffects;
+            }
+            function parseSoundExpression(soundChars, fx) {
+                // https://github.com/lancaster-university/codal-microbit-v2/blob/master/source/SoundExpressions.cpp#L115
+                // Encoded as a sequence of zero padded decimal strings.
+                // This encoding is worth reconsidering if we can!
+                // The ADSR effect (and perhaps others in future) has two parameters which cannot be expressed.
+                // 72 chars total
+                //  [0] 0-4 wave
+                let wave = parseInt(soundChars.substr(0, 1));
+                //  [1] 0000-1023 volume
+                let effectVolume = parseInt(soundChars.substr(1, 4));
+                //  [5] 0000-9999 frequency
+                let frequency = parseInt(soundChars.substr(5, 4));
+                //  [9] 0000-9999 duration
+                let duration = parseInt(soundChars.substr(9, 4));
+                // [13] 00 shape (specific known values)
+                let shape = parseInt(soundChars.substr(13, 2));
+                // [15] XXX unused/bug. This was startFrequency but we use frequency above.
+                // [18] 0000-9999 end frequency
+                let endFrequency = parseInt(soundChars.substr(18, 4));
+                // [22] XXXX unused. This was start volume but we use volume above.
+                // [26] 0000-1023 end volume
+                let endVolume = parseInt(soundChars.substr(26, 4));
+                // [30] 0000-9999 steps
+                let steps = parseInt(soundChars.substr(30, 4));
+                // [34] 00-03 fx choice
+                let fxChoice = parseInt(soundChars.substr(34, 2));
+                // [36] 0000-9999 fxParam
+                let fxParam = parseInt(soundChars.substr(36, 4));
+                // [40] 0000-9999 fxnSteps
+                let fxnSteps = parseInt(soundChars.substr(40, 4));
+                // Details that encoded randomness to be applied when frame is used:
+                // Can the randomness cause any parameters to go out of range?
+                // [44] 0000-9999 frequency random
+                frequency = applyRandom(frequency, parseInt(soundChars.substr(44, 4)));
+                // [48] 0000-9999 end frequency random
+                endFrequency = applyRandom(endFrequency, parseInt(soundChars.substr(48, 4)));
+                // [52] 0000-9999 volume random
+                effectVolume = applyRandom(effectVolume, parseInt(soundChars.substr(52, 4)));
+                // [56] 0000-9999 end volume random
+                endVolume = applyRandom(endVolume, parseInt(soundChars.substr(56, 4)));
+                // [60] 0000-9999 duration random
+                duration = applyRandom(duration, parseInt(soundChars.substr(60, 4)));
+                // [64] 0000-9999 fxParamRandom
+                fxParam = applyRandom(fxParam, parseInt(soundChars.substr(64, 4)));
+                // [68] 0000-9999 fxnStepsRandom
+                fxnSteps = applyRandom(fxnSteps, parseInt(soundChars.substr(68, 4)));
+                if (frequency == -1 || endFrequency == -1 || effectVolume == -1 || endVolume == -1 || duration == -1 || fxParam == -1 || fxnSteps == -1) {
+                    return false;
+                }
+                let volumeScaleFactor = 1;
+                switch (wave) {
+                    case 0:
+                        fx.tone.tonePrint = music.Synthesizer.SineTone;
+                        break;
+                    case 1:
+                        fx.tone.tonePrint = music.Synthesizer.SawtoothTone;
+                        break;
+                    case 2:
+                        fx.tone.tonePrint = music.Synthesizer.TriangleTone;
+                        break;
+                    case 3:
+                        fx.tone.tonePrint = music.Synthesizer.SquareWaveTone;
+                        break;
+                    case 4:
+                        fx.tone.tonePrint = music.Synthesizer.NoiseTone;
+                        break;
+                }
+                fx.frequency = frequency;
+                fx.duration = duration;
+                fx.effects[0].steps = steps;
+                switch (shape) {
+                    case 0:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.noInterpolation;
+                        break;
+                    case 1:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.linearInterpolation;
+                        fx.effects[0].parameter[0] = endFrequency;
+                        break;
+                    case 2:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.curveInterpolation;
+                        fx.effects[0].parameter[0] = endFrequency;
+                        break;
+                    case 5:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.exponentialRisingInterpolation;
+                        fx.effects[0].parameter[0] = endFrequency;
+                        break;
+                    case 6:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.exponentialFallingInterpolation;
+                        fx.effects[0].parameter[0] = endFrequency;
+                        break;
+                    case 8: // various ascending scales - see next switch
+                    case 10:
+                    case 12:
+                    case 14:
+                    case 16:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.appregrioAscending;
+                        break;
+                    case 9: // various descending scales - see next switch
+                    case 11:
+                    case 13:
+                    case 15:
+                    case 17:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.appregrioDescending;
+                        break;
+                    case 18:
+                        fx.effects[0].effect = music.SoundSynthesizerEffects.logarithmicInterpolation;
+                        fx.effects[0].parameter[0] = endFrequency;
+                        break;
+                }
+                // Scale
+                switch (shape) {
+                    case 8:
+                    case 9:
+                        fx.effects[0].parameter_p[0] = music.MusicalProgressions.majorScale;
+                        break;
+                    case 10:
+                    case 11:
+                        fx.effects[0].parameter_p[0] = music.MusicalProgressions.minorScale;
+                        break;
+                    case 12:
+                    case 13:
+                        fx.effects[0].parameter_p[0] = music.MusicalProgressions.diminished;
+                        break;
+                    case 14:
+                    case 15:
+                        fx.effects[0].parameter_p[0] = music.MusicalProgressions.chromatic;
+                        break;
+                    case 16:
+                    case 17:
+                        fx.effects[0].parameter_p[0] = music.MusicalProgressions.wholeTone;
+                        break;
+                }
+                // Volume envelope
+                let effectVolumeFloat = CLAMP(0, effectVolume, 1023) / 1023.0;
+                let endVolumeFloat = CLAMP(0, endVolume, 1023) / 1023.0;
+                fx.volume = volumeScaleFactor * effectVolumeFloat;
+                fx.effects[1].effect = music.SoundSynthesizerEffects.volumeRampEffect;
+                fx.effects[1].steps = 36;
+                fx.effects[1].parameter[0] = volumeScaleFactor * endVolumeFloat;
+                // Vibrato effect
+                // Steps need to be spread across duration evenly.
+                let normalizedFxnSteps = Math.round(fx.duration / 10000 * fxnSteps);
+                switch (fxChoice) {
+                    case 1:
+                        fx.effects[2].steps = normalizedFxnSteps;
+                        fx.effects[2].effect = music.SoundSynthesizerEffects.frequencyVibratoEffect;
+                        fx.effects[2].parameter[0] = fxParam;
+                        break;
+                    case 2:
+                        fx.effects[2].steps = normalizedFxnSteps;
+                        fx.effects[2].effect = music.SoundSynthesizerEffects.volumeVibratoEffect;
+                        fx.effects[2].parameter[0] = fxParam;
+                        break;
+                    case 3:
+                        fx.effects[2].steps = normalizedFxnSteps;
+                        fx.effects[2].effect = music.SoundSynthesizerEffects.warbleInterpolation;
+                        fx.effects[2].parameter[0] = fxParam;
+                        break;
+                }
+                return true;
+            }
+            music.parseSoundExpression = parseSoundExpression;
+            function random(max) {
+                return Math.floor(Math.random() * max);
+            }
+            function CLAMP(min, value, max) {
+                return Math.min(max, Math.max(min, value));
+            }
+            function applyRandom(value, rand) {
+                if (value < 0 || rand < 0) {
+                    return -1;
+                }
+                const delta = random(rand * 2 + 1) - rand;
+                return Math.abs(value + delta);
+            }
+            function blankSoundEffect() {
+                const res = {
+                    frequency: 0,
+                    volume: 1,
+                    duration: 0,
+                    tone: {
+                        tonePrint: undefined,
+                        parameter: [0]
+                    },
+                    effects: []
+                };
+                for (let i = 0; i < music.EMOJI_SYNTHESIZER_TONE_EFFECTS; i++) {
+                    res.effects.push({
+                        effect: undefined,
+                        step: 0,
+                        steps: 0,
+                        parameter: [],
+                        parameter_p: []
+                    });
+                }
+                return res;
+            }
+            function delayAsync(millis) {
+                return new Promise(resolve => setTimeout(resolve, millis));
+            }
+            function constrain(val, min, max) {
+                return Math.min(Math.max(val, min), max);
+            }
+        })(music = codal.music || (codal.music = {}));
+    })(codal = pxsim.codal || (pxsim.codal = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    class Button {
+        constructor(id) {
+            this.id = id;
+        }
+    }
+    pxsim.Button = Button;
+    class ButtonPairState {
+        constructor(props) {
+            this.props = props;
+            this.usesButtonAB = false;
+            this.aBtn = new Button(this.props.ID_BUTTON_A);
+            this.bBtn = new Button(this.props.ID_BUTTON_B);
+            this.abBtn = new Button(this.props.ID_BUTTON_AB);
+            this.abBtn.virtual = true;
+        }
+    }
+    pxsim.ButtonPairState = ButtonPairState;
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    class CompassState {
+        constructor() {
+            this.usesHeading = false;
+            this.heading = 90;
+        }
+    }
+    pxsim.CompassState = CompassState;
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    class FileSystemState {
+        constructor() {
+            this.files = {};
+        }
+        append(file, content) {
+            this.files[file] = (this.files[file] || "") + content;
+        }
+        remove(file) {
+            delete this.files[file];
+        }
+    }
+    pxsim.FileSystemState = FileSystemState;
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    class LightSensorState {
+        constructor() {
+            this.usesLightLevel = false;
+            this.lightLevel = 128;
+        }
+    }
+    pxsim.LightSensorState = LightSensorState;
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var visuals;
+    (function (visuals) {
+        visuals.mkBoardView = (opts) => {
+            const boardVis = opts.visual;
+            return new visuals.GenericBoardSvg({
+                visualDef: boardVis,
+                boardDef: opts.boardDef,
+                wireframe: opts.wireframe,
+            });
+        };
+        class BoardHost {
+            constructor(view, opts) {
+                this.parts = [];
+                this.boardView = view;
+                this.opts = opts;
+                if (!opts.boardDef.pinStyles)
+                    opts.boardDef.pinStyles = {};
+                this.state = opts.state;
+                let activeComponents = opts.partsList;
+                let useBreadboardView = 0 < activeComponents.length || opts.forceBreadboardLayout;
+                if (useBreadboardView) {
+                    this.breadboard = new visuals.Breadboard({
+                        wireframe: opts.wireframe,
+                    });
+                    const bMarg = opts.boardDef.marginWhenBreadboarding || [0, 0, 40, 0];
+                    const composition = visuals.composeSVG({
+                        el1: this.boardView.getView(),
+                        scaleUnit1: this.boardView.getPinDist(),
+                        el2: this.breadboard.getSVGAndSize(),
+                        scaleUnit2: this.breadboard.getPinDist(),
+                        margin: [bMarg[0], bMarg[1], 20, bMarg[3]],
+                        middleMargin: bMarg[2],
+                        maxWidth: opts.maxWidth,
+                        maxHeight: opts.maxHeight,
+                    });
+                    const under = composition.under;
+                    const over = composition.over;
+                    this.view = composition.host;
+                    const edges = composition.edges;
+                    this.fromMBCoord = composition.toHostCoord1;
+                    this.fromBBCoord = composition.toHostCoord2;
+                    this.partGroup = over;
+                    this.partOverGroup = pxsim.svg.child(this.view, "g");
+                    this.style = pxsim.svg.child(this.view, "style", {});
+                    this.defs = pxsim.svg.child(this.view, "defs", {});
+                    this.wireFactory = new visuals.WireFactory(under, over, edges, this.style, this.getLocCoord.bind(this), this.getPinStyle.bind(this));
+                    const allocRes = pxsim.allocateDefinitions({
+                        boardDef: opts.boardDef,
+                        partDefs: opts.partDefs,
+                        fnArgs: opts.fnArgs,
+                        getBBCoord: this.breadboard.getCoord.bind(this.breadboard),
+                        partsList: activeComponents,
+                    });
+                    if (!allocRes.partsAndWires.length && !opts.forceBreadboardLayout) {
+                        // nothing got allocated, so we rollback the changes.
+                        useBreadboardView = false;
+                    }
+                    else {
+                        this.addAll(allocRes);
+                        if (!allocRes.requiresBreadboard && !opts.forceBreadboardRender)
+                            useBreadboardView = false;
+                        else if (allocRes.hideBreadboard && this.breadboard)
+                            this.breadboard.hide();
+                    }
+                }
+                if (!useBreadboardView) {
+                    // delete any kind of left over
+                    delete this.breadboard;
+                    delete this.wireFactory;
+                    delete this.partOverGroup;
+                    delete this.partGroup;
+                    delete this.style;
+                    delete this.defs;
+                    delete this.fromBBCoord;
+                    delete this.fromMBCoord;
+                    // allocate view
+                    const el = this.boardView.getView().el;
+                    this.view = el;
+                    this.partGroup = pxsim.svg.child(this.view, "g");
+                    this.partOverGroup = pxsim.svg.child(this.view, "g");
+                    if (opts.maxWidth)
+                        pxsim.svg.hydrate(this.view, { width: opts.maxWidth });
+                    if (opts.maxHeight)
+                        pxsim.svg.hydrate(this.view, { height: opts.maxHeight });
+                }
+                this.state.updateSubscribers.push(() => this.updateState());
+            }
+            highlightBoardPin(pinNm) {
+                this.boardView.highlightPin(pinNm);
+            }
+            highlightBreadboardPin(rowCol) {
+                this.breadboard.highlightLoc(rowCol);
+            }
+            highlightWire(wire) {
+                //TODO: move to wiring.ts
+                //underboard wires
+                wire.wires.forEach(e => {
+                    pxsim.U.addClass(e, "highlight");
+                    e.style["visibility"] = "visible";
+                });
+                //un greyed out
+                pxsim.U.addClass(wire.endG, "highlight");
+            }
+            getView() {
+                return this.view;
+            }
+            screenshotAsync(width) {
+                const svg = this.view.cloneNode(true);
+                svg.setAttribute('width', this.view.width.baseVal.value + "");
+                svg.setAttribute('height', this.view.height.baseVal.value + "");
+                const xml = new XMLSerializer().serializeToString(svg);
+                const data = "data:image/svg+xml,"
+                    + encodeURIComponent(xml.replace(/\s+/g, ' ').replace(/"/g, "'"));
+                return new Promise((resolve, reject) => {
+                    const img = document.createElement("img");
+                    img.onload = () => {
+                        const cvs = document.createElement("canvas");
+                        cvs.width = img.width;
+                        cvs.height = img.height;
+                        // check if a width or a height was specified
+                        if (width > 0) {
+                            cvs.width = width;
+                            cvs.height = (img.height * width / img.width) | 0;
+                        }
+                        else if (cvs.width < 200) {
+                            cvs.width *= 2;
+                            cvs.height *= 2;
+                        }
+                        else if (cvs.width > 480) {
+                            cvs.width /= 2;
+                            cvs.height /= 2;
+                        }
+                        const ctx = cvs.getContext("2d");
+                        ctx.drawImage(img, 0, 0, cvs.width, cvs.height);
+                        resolve(ctx.getImageData(0, 0, cvs.width, cvs.height));
+                    };
+                    img.onerror = e => {
+                        console.log(e);
+                        resolve(undefined);
+                    };
+                    img.src = data;
+                });
+            }
+            updateState() {
+                this.parts.forEach(c => c.updateState());
+            }
+            getBBCoord(rowCol) {
+                let bbCoord = this.breadboard.getCoord(rowCol);
+                return this.fromBBCoord(bbCoord);
+            }
+            getPinCoord(pin) {
+                let boardCoord = this.boardView.getCoord(pin);
+                if (!boardCoord) {
+                    console.error(`Unable to find coord for pin: ${pin}`);
+                    return undefined;
+                }
+                return this.fromMBCoord(boardCoord);
+            }
+            getLocCoord(loc) {
+                let coord;
+                if (loc.type === "breadboard") {
+                    let rowCol = loc;
+                    coord = this.getBBCoord(rowCol);
+                }
+                else {
+                    let pinNm = loc.pin;
+                    coord = this.getPinCoord(pinNm);
+                }
+                if (!coord)
+                    console.debug("Unknown location: " + name);
+                return coord;
+            }
+            getPinStyle(loc) {
+                if (loc.type == "breadboard")
+                    return "female";
+                else
+                    return this.opts.boardDef.pinStyles[loc.pin] || "female";
+            }
+            addPart(partInst) {
+                let part = null;
+                if (partInst.simulationBehavior) {
+                    //TODO: seperate simulation behavior from builtin visual
+                    let builtinBehavior = partInst.simulationBehavior;
+                    let cnstr = this.state.builtinVisuals[builtinBehavior];
+                    let stateFn = this.state.builtinParts[builtinBehavior];
+                    part = cnstr();
+                    part.init(this.state.bus, stateFn, this.view, partInst.params);
+                }
+                else {
+                    let vis = partInst.visual;
+                    part = new visuals.GenericPart(vis);
+                }
+                this.parts.push(part);
+                this.partGroup.appendChild(part.element);
+                if (part.overElement)
+                    this.partOverGroup.appendChild(part.overElement);
+                if (part.defs)
+                    part.defs.forEach(d => this.defs.appendChild(d));
+                this.style.textContent += part.style || "";
+                let colIdx = partInst.startColumnIdx;
+                let rowIdx = partInst.startRowIdx;
+                let row = visuals.getRowName(rowIdx);
+                let col = visuals.getColumnName(colIdx);
+                let xOffset = partInst.bbFit.xOffset / partInst.visual.pinDistance;
+                let yOffset = partInst.bbFit.yOffset / partInst.visual.pinDistance;
+                let rowCol = {
+                    type: "breadboard",
+                    row: row,
+                    col: col,
+                    xOffset: xOffset,
+                    yOffset: yOffset
+                };
+                let coord = this.getBBCoord(rowCol);
+                part.moveToCoord(coord);
+                let getCmpClass = (type) => `sim-${type}-cmp`;
+                let cls = getCmpClass(partInst.name);
+                pxsim.U.addClass(part.element, cls);
+                pxsim.U.addClass(part.element, "sim-cmp");
+                part.updateTheme();
+                part.updateState();
+                return part;
+            }
+            addWire(inst) {
+                return this.wireFactory.addWire(inst.start, inst.end, inst.color);
+            }
+            addAll(allocRes) {
+                allocRes.partsAndWires.forEach(pAndWs => {
+                    const wires = pAndWs.wires;
+                    const wiresOk = wires && wires.every(w => this.wireFactory.checkWire(w.start, w.end));
+                    if (wiresOk) // try to add all the wires
+                        wires.forEach(w => allocRes.wires.push(this.addWire(w)));
+                    let part = pAndWs.part;
+                    if (part && (!wires || wiresOk))
+                        allocRes.parts.push(this.addPart(part));
+                });
+                // at least one wire
+                allocRes.requiresBreadboard = !!allocRes.wires.length
+                    || !!allocRes.parts.length;
+            }
+        }
+        visuals.BoardHost = BoardHost;
+    })(visuals = pxsim.visuals || (pxsim.visuals = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var visuals;
+    (function (visuals) {
+        // The distance between the center of two pins. This is the constant on which everything else is based.
+        const PIN_DIST = 15;
+        // CSS styling for the breadboard
+        const BLUE = "#1AA5D7";
+        const RED = "#DD4BA0";
+        const BREADBOARD_CSS = `
+        /* bread board */
+        .sim-bb-background {
+            fill:#E0E0E0;
+        }
+        .sim-bb-pin {
+            fill:#999;
+        }
+        .sim-bb-pin-hover {
+            visibility: hidden;
+            pointer-events: all;
+            stroke-width: ${PIN_DIST / 2}px;
+            stroke: transparent;
+            fill: #777;
+        }
+        .sim-bb-pin-hover:hover {
+            visibility: visible;
+            fill:#444;
+        }
+        .sim-bb-group-wire {
+            stroke: #999;
+            stroke-width: ${PIN_DIST / 4}px;
+            visibility: hidden;
+        }
+        .sim-bb-pin-group {
+            pointer-events: all;
+        }
+        .sim-bb-label,
+        .sim-bb-label-hover {
+            font-family:"Lucida Console", Monaco, monospace;
+            fill:#555;
+            pointer-events: all;
+            stroke-width: 0;
+            cursor: default;
+        }
+        .sim-bb-label-hover {
+            visibility: hidden;
+            fill:#000;
+            font-weight: bold;
+        }
+        .sim-bb-bar {
+            stroke-width: 0;
+        }
+        .sim-bb-blue {
+            fill:${BLUE};
+            stroke:${BLUE}
+        }
+        .sim-bb-red {
+            fill:${RED};
+            stroke:${RED};
+        }
+        .sim-bb-pin-group:hover .sim-bb-pin-hover,
+        .sim-bb-pin-group:hover .sim-bb-group-wire,
+        .sim-bb-pin-group:hover .sim-bb-label-hover {
+            visibility: visible;
+        }
+        .sim-bb-pin-group:hover .sim-bb-label {
+            visibility: hidden;
+        }
+        /* outline mode */
+        .sim-bb-outline .sim-bb-background {
+            stroke-width: ${PIN_DIST / 7}px;
+            fill: #FFF;
+            stroke: #000;
+        }
+        .sim-bb-outline .sim-bb-mid-channel {
+            fill: #FFF;
+            stroke: #888;
+            stroke-width: 2px;
+        }
+        /* grayed out */
+        .grayed .sim-bb-background {
+            stroke-width: ${PIN_DIST / 5}px;
+        }
+        .grayed .sim-bb-red,
+        .grayed .sim-bb-blue {
+            fill: #BBB;
+        }
+        .grayed .sim-bb-bar {
+            fill: #FFF;
+        }
+        .grayed .sim-bb-pin {
+            fill: #000;
+            stroke: #FFF;
+            stroke-width: 3px;
+        }
+        .grayed .sim-bb-label {
+            fill: none;
+        }
+        .grayed .sim-bb-background {
+            stroke-width: ${PIN_DIST / 2}px;
+            stroke: #555;
+        }
+        .grayed .sim-bb-group-wire {
+            stroke: #DDD;
+        }
+        .grayed .sim-bb-channel {
+            visibility: hidden;
+        }
+        /* highlighted */
+        .sim-bb-label.highlight {
+            visibility: hidden;
+        }
+        .sim-bb-label-hover.highlight {
+            visibility: visible;
+        }
+        .sim-bb-blue.highlight {
+            fill:${BLUE};
+        }
+        .sim-bb-red.highlight {
+            fill:${RED};
+        }
+        .sim-bb-bar.highlight {
+            stroke-width: 0px;
+        }
+        `;
+        // Pin rows and coluns
+        visuals.BREADBOARD_MID_ROWS = 10;
+        visuals.BREADBOARD_MID_COLS = 30;
+        const MID_ROW_GAPS = [4, 4];
+        const MID_ROW_AND_GAPS = visuals.BREADBOARD_MID_ROWS + MID_ROW_GAPS.length;
+        const BAR_ROWS = 2;
+        const BAR_COLS = 25;
+        const POWER_ROWS = BAR_ROWS * 2;
+        const POWER_COLS = BAR_COLS * 2;
+        const BAR_COL_GAPS = [4, 9, 14, 19];
+        const BAR_COL_AND_GAPS = BAR_COLS + BAR_COL_GAPS.length;
+        // Essential dimensions
+        const WIDTH = PIN_DIST * (visuals.BREADBOARD_MID_COLS + 3);
+        const HEIGHT = PIN_DIST * (MID_ROW_AND_GAPS + POWER_ROWS + 5.5);
+        const MID_RATIO = 2.0 / 3.0;
+        const BAR_RATIO = (1.0 - MID_RATIO) * 0.5;
+        const MID_HEIGHT = HEIGHT * MID_RATIO;
+        const BAR_HEIGHT = HEIGHT * BAR_RATIO;
+        // Pin grids
+        const MID_GRID_WIDTH = (visuals.BREADBOARD_MID_COLS - 1) * PIN_DIST;
+        const MID_GRID_HEIGHT = (MID_ROW_AND_GAPS - 1) * PIN_DIST;
+        const MID_GRID_X = (WIDTH - MID_GRID_WIDTH) / 2.0;
+        const MID_GRID_Y = BAR_HEIGHT + (MID_HEIGHT - MID_GRID_HEIGHT) / 2.0;
+        const BAR_GRID_HEIGHT = (BAR_ROWS - 1) * PIN_DIST;
+        const BAR_GRID_WIDTH = (BAR_COL_AND_GAPS - 1) * PIN_DIST;
+        const BAR_TOP_GRID_X = (WIDTH - BAR_GRID_WIDTH) / 2.0;
+        const BAR_TOP_GRID_Y = (BAR_HEIGHT - BAR_GRID_HEIGHT) / 2.0;
+        const BAR_BOT_GRID_X = BAR_TOP_GRID_X;
+        const BAR_BOT_GRID_Y = BAR_TOP_GRID_Y + BAR_HEIGHT + MID_HEIGHT;
+        // Individual pins
+        const PIN_HOVER_SCALAR = 1.3;
+        const PIN_WIDTH = PIN_DIST / 2.5;
+        const PIN_ROUNDING = PIN_DIST / 7.5;
+        // Labels
+        const PIN_LBL_SIZE = PIN_DIST * 0.7;
+        const PIN_LBL_HOVER_SCALAR = 1.3;
+        const PLUS_LBL_SIZE = PIN_DIST * 1.7;
+        const MINUS_LBL_SIZE = PIN_DIST * 2;
+        const POWER_LBL_OFFSET = PIN_DIST * 0.8;
+        const MINUS_LBL_EXTRA_OFFSET = PIN_DIST * 0.07;
+        const LBL_ROTATION = -90;
+        // Channels
+        const CHANNEL_HEIGHT = PIN_DIST * 1.0;
+        const SMALL_CHANNEL_HEIGHT = PIN_DIST * 0.05;
+        // Background
+        const BACKGROUND_ROUNDING = PIN_DIST * 0.3;
+        // Row and column helpers
+        const alphabet = "abcdefghij".split("").reverse();
+        function getColumnName(colIdx) { return `${colIdx + 1}`; }
+        visuals.getColumnName = getColumnName;
+        ;
+        function getRowName(rowIdx) { return alphabet[rowIdx]; }
+        visuals.getRowName = getRowName;
+        ;
+        ;
+        ;
+        function mkGrid(opts) {
+            let xOff = opts.xOffset || 0;
+            let yOff = opts.yOffset || 0;
+            let allPins = [];
+            let grid = pxsim.svg.elt("g");
+            let colIdxOffset = opts.colStartIdx || 0;
+            let rowIdxOffset = opts.rowStartIdx || 0;
+            let copyArr = (arr) => arr ? arr.slice(0, arr.length) : [];
+            let removeAll = (arr, e) => {
+                let res = 0;
+                let idx;
+                /* eslint-disable no-cond-assign */
+                while (0 <= (idx = arr.indexOf(e))) {
+                    /* eslint-enable no-cond-assign */
+                    arr.splice(idx, 1);
+                    res += 1;
+                }
+                return res;
+            };
+            let rowGaps = 0;
+            let rowIdxsWithGap = copyArr(opts.rowIdxsWithGap);
+            for (let i = 0; i < opts.rowCount; i++) {
+                let colGaps = 0;
+                let colIdxsWithGap = copyArr(opts.colIdxsWithGap);
+                let cy = yOff + i * opts.pinDist + rowGaps * opts.pinDist;
+                let rowIdx = i + rowIdxOffset;
+                for (let j = 0; j < opts.colCount; j++) {
+                    let cx = xOff + j * opts.pinDist + colGaps * opts.pinDist;
+                    let colIdx = j + colIdxOffset;
+                    const addEl = (pin) => {
+                        pxsim.svg.hydrate(pin.el, pin.el.tagName == "circle"
+                            ? { cx, cy }
+                            : { x: cx - pin.w * 0.5, y: cy - pin.h * 0.5 });
+                        grid.appendChild(pin.el);
+                        return pin.el;
+                    };
+                    let el = addEl(opts.mkPin());
+                    let hoverEl = addEl(opts.mkHoverPin());
+                    let row = opts.getRowName(rowIdx);
+                    let col = opts.getColName(colIdx);
+                    let group = opts.getGroupName ? opts.getGroupName(rowIdx, colIdx) : null;
+                    let gridPin = { el: el, hoverEl: hoverEl, cx: cx, cy: cy, row: row, col: col, group: group };
+                    allPins.push(gridPin);
+                    //column gaps
+                    colGaps += removeAll(colIdxsWithGap, colIdx);
+                }
+                //row gaps
+                rowGaps += removeAll(rowIdxsWithGap, rowIdx);
+            }
+            return { g: grid, allPins: allPins };
+        }
+        visuals.mkGrid = mkGrid;
+        function mkBBPin() {
+            let el = pxsim.svg.elt("rect");
+            let width = PIN_WIDTH;
+            pxsim.svg.hydrate(el, {
+                class: "sim-bb-pin",
+                rx: PIN_ROUNDING,
+                ry: PIN_ROUNDING,
+                width: width,
+                height: width
+            });
+            return { el: el, w: width, h: width, x: 0, y: 0 };
+        }
+        function mkBBHoverPin() {
+            let el = pxsim.svg.elt("rect");
+            let width = PIN_WIDTH * PIN_HOVER_SCALAR;
+            pxsim.svg.hydrate(el, {
+                class: "sim-bb-pin-hover",
+                rx: PIN_ROUNDING,
+                ry: PIN_ROUNDING,
+                width: width,
+                height: width,
+            });
+            return { el: el, w: width, h: width, x: 0, y: 0 };
+        }
+        ;
+        function mkBBLabel(cx, cy, size, rotation, txt, group, extraClasses) {
+            //lbl
+            let el = visuals.mkTxt(cx, cy, size, rotation, txt);
+            pxsim.U.addClass(el, "sim-bb-label");
+            if (extraClasses)
+                extraClasses.forEach(c => pxsim.U.addClass(el, c));
+            //hover lbl
+            let hoverEl = visuals.mkTxt(cx, cy, size * PIN_LBL_HOVER_SCALAR, rotation, txt);
+            pxsim.U.addClass(hoverEl, "sim-bb-label-hover");
+            if (extraClasses)
+                extraClasses.forEach(c => pxsim.U.addClass(hoverEl, c));
+            let lbl = { el: el, hoverEl: hoverEl, txt: txt, group: group };
+            return lbl;
+        }
+        ;
+        class Breadboard {
+            constructor(opts) {
+                //truth
+                this.allPins = [];
+                this.allLabels = [];
+                this.allPowerBars = [];
+                //quick lookup caches
+                this.rowColToPin = {};
+                this.rowColToLbls = {};
+                this.buildDom();
+                if (opts.wireframe)
+                    pxsim.U.addClass(this.bb, "sim-bb-outline");
+            }
+            hide() {
+                this.bb.style.display = 'none';
+            }
+            updateLocation(x, y) {
+                pxsim.svg.hydrate(this.bb, {
+                    x: `${x}px`,
+                    y: `${y}px`,
+                });
+            }
+            getPin(row, col) {
+                let colToPin = this.rowColToPin[row];
+                if (!colToPin)
+                    return null;
+                let pin = colToPin[col];
+                if (!pin)
+                    return null;
+                return pin;
+            }
+            getCoord(rowCol) {
+                let { row, col, xOffset, yOffset } = rowCol;
+                let pin = this.getPin(row, col);
+                if (!pin)
+                    return null;
+                let xOff = (xOffset || 0) * PIN_DIST;
+                let yOff = (yOffset || 0) * PIN_DIST;
+                return [pin.cx + xOff, pin.cy + yOff];
+            }
+            getPinDist() {
+                return PIN_DIST;
+            }
+            buildDom() {
+                this.bb = pxsim.svg.elt("svg", {
+                    "version": "1.0",
+                    "viewBox": `0 0 ${WIDTH} ${HEIGHT}`,
+                    "class": `sim-bb`,
+                    "width": WIDTH + "px",
+                    "height": HEIGHT + "px",
+                });
+                this.styleEl = pxsim.svg.child(this.bb, "style", {});
+                this.styleEl.textContent += BREADBOARD_CSS;
+                this.defs = pxsim.svg.child(this.bb, "defs", {});
+                //background
+                pxsim.svg.child(this.bb, "rect", { class: "sim-bb-background", width: WIDTH, height: HEIGHT, rx: BACKGROUND_ROUNDING, ry: BACKGROUND_ROUNDING });
+                //mid channel
+                let channelGid = "sim-bb-channel-grad";
+                let channelGrad = pxsim.svg.elt("linearGradient");
+                pxsim.svg.hydrate(channelGrad, { id: channelGid, x1: "0%", y1: "0%", x2: "0%", y2: "100%" });
+                this.defs.appendChild(channelGrad);
+                let channelDark = "#AAA";
+                let channelLight = "#CCC";
+                let stop1 = pxsim.svg.child(channelGrad, "stop", { offset: "0%", style: `stop-color: ${channelDark};` });
+                let stop2 = pxsim.svg.child(channelGrad, "stop", { offset: "20%", style: `stop-color: ${channelLight};` });
+                let stop3 = pxsim.svg.child(channelGrad, "stop", { offset: "80%", style: `stop-color: ${channelLight};` });
+                let stop4 = pxsim.svg.child(channelGrad, "stop", { offset: "100%", style: `stop-color: ${channelDark};` });
+                const mkChannel = (cy, h, cls) => {
+                    let channel = pxsim.svg.child(this.bb, "rect", { class: `sim-bb-channel ${cls || ""}`, y: cy - h / 2, width: WIDTH, height: h });
+                    channel.setAttribute("fill", `url(#${channelGid})`);
+                    return channel;
+                };
+                mkChannel(BAR_HEIGHT + MID_HEIGHT / 2, CHANNEL_HEIGHT, "sim-bb-mid-channel");
+                mkChannel(BAR_HEIGHT, SMALL_CHANNEL_HEIGHT, "sim-bb-sml-channel");
+                mkChannel(BAR_HEIGHT + MID_HEIGHT, SMALL_CHANNEL_HEIGHT, "sim-bb-sml-channel");
+                //-----pins
+                const getMidTopOrBot = (rowIdx) => rowIdx < visuals.BREADBOARD_MID_ROWS / 2.0 ? "b" : "t";
+                const getBarTopOrBot = (colIdx) => colIdx < POWER_COLS / 2.0 ? "b" : "t";
+                const getMidGroupName = (rowIdx, colIdx) => {
+                    let botOrTop = getMidTopOrBot(rowIdx);
+                    let colNm = getColumnName(colIdx);
+                    return `${botOrTop}${colNm}`;
+                };
+                const getBarRowName = (rowIdx) => rowIdx === 0 ? "-" : "+";
+                const getBarGroupName = (rowIdx, colIdx) => {
+                    let botOrTop = getBarTopOrBot(colIdx);
+                    let rowName = getBarRowName(rowIdx);
+                    return `${rowName}${botOrTop}`;
+                };
+                //mid grid
+                let midGridRes = mkGrid({
+                    xOffset: MID_GRID_X,
+                    yOffset: MID_GRID_Y,
+                    rowCount: visuals.BREADBOARD_MID_ROWS,
+                    colCount: visuals.BREADBOARD_MID_COLS,
+                    pinDist: PIN_DIST,
+                    mkPin: mkBBPin,
+                    mkHoverPin: mkBBHoverPin,
+                    getRowName: getRowName,
+                    getColName: getColumnName,
+                    getGroupName: getMidGroupName,
+                    rowIdxsWithGap: MID_ROW_GAPS,
+                });
+                let midGridG = midGridRes.g;
+                this.allPins = this.allPins.concat(midGridRes.allPins);
+                //bot bar
+                let botBarGridRes = mkGrid({
+                    xOffset: BAR_BOT_GRID_X,
+                    yOffset: BAR_BOT_GRID_Y,
+                    rowCount: BAR_ROWS,
+                    colCount: BAR_COLS,
+                    pinDist: PIN_DIST,
+                    mkPin: mkBBPin,
+                    mkHoverPin: mkBBHoverPin,
+                    getRowName: getBarRowName,
+                    getColName: getColumnName,
+                    getGroupName: getBarGroupName,
+                    colIdxsWithGap: BAR_COL_GAPS,
+                });
+                let botBarGridG = botBarGridRes.g;
+                this.allPins = this.allPins.concat(botBarGridRes.allPins);
+                //top bar
+                let topBarGridRes = mkGrid({
+                    xOffset: BAR_TOP_GRID_X,
+                    yOffset: BAR_TOP_GRID_Y,
+                    rowCount: BAR_ROWS,
+                    colCount: BAR_COLS,
+                    colStartIdx: BAR_COLS,
+                    pinDist: PIN_DIST,
+                    mkPin: mkBBPin,
+                    mkHoverPin: mkBBHoverPin,
+                    getRowName: getBarRowName,
+                    getColName: getColumnName,
+                    getGroupName: getBarGroupName,
+                    colIdxsWithGap: BAR_COL_GAPS.map(g => g + BAR_COLS),
+                });
+                let topBarGridG = topBarGridRes.g;
+                this.allPins = this.allPins.concat(topBarGridRes.allPins);
+                //tooltip
+                this.allPins.forEach(pin => {
+                    let { el, row, col, hoverEl } = pin;
+                    let title = `(${row},${col})`;
+                    pxsim.svg.hydrate(el, { title: title });
+                    pxsim.svg.hydrate(hoverEl, { title: title });
+                });
+                //catalog pins
+                this.allPins.forEach(pin => {
+                    let colToPin = this.rowColToPin[pin.row];
+                    if (!colToPin)
+                        colToPin = this.rowColToPin[pin.row] = {};
+                    colToPin[pin.col] = pin;
+                });
+                //-----labels
+                const mkBBLabelAtPin = (row, col, xOffset, yOffset, txt, group) => {
+                    let size = PIN_LBL_SIZE;
+                    let rotation = LBL_ROTATION;
+                    let loc = this.getCoord({ type: "breadboard", row: row, col: col });
+                    let [cx, cy] = loc;
+                    let t = mkBBLabel(cx + xOffset, cy + yOffset, size, rotation, txt, group);
+                    return t;
+                };
+                //columns
+                for (let colIdx = 0; colIdx < visuals.BREADBOARD_MID_COLS; colIdx++) {
+                    let colNm = getColumnName(colIdx);
+                    //top
+                    let rowTIdx = 0;
+                    let rowTNm = getRowName(rowTIdx);
+                    let groupT = getMidGroupName(rowTIdx, colIdx);
+                    let lblT = mkBBLabelAtPin(rowTNm, colNm, 0, -PIN_DIST, colNm, groupT);
+                    this.allLabels.push(lblT);
+                    //bottom
+                    let rowBIdx = visuals.BREADBOARD_MID_ROWS - 1;
+                    let rowBNm = getRowName(rowBIdx);
+                    let groupB = getMidGroupName(rowBIdx, colIdx);
+                    let lblB = mkBBLabelAtPin(rowBNm, colNm, 0, +PIN_DIST, colNm, groupB);
+                    this.allLabels.push(lblB);
+                }
+                //rows
+                for (let rowIdx = 0; rowIdx < visuals.BREADBOARD_MID_ROWS; rowIdx++) {
+                    let rowNm = getRowName(rowIdx);
+                    //top
+                    let colTIdx = 0;
+                    let colTNm = getColumnName(colTIdx);
+                    let lblT = mkBBLabelAtPin(rowNm, colTNm, -PIN_DIST, 0, rowNm);
+                    this.allLabels.push(lblT);
+                    //top
+                    let colBIdx = visuals.BREADBOARD_MID_COLS - 1;
+                    let colBNm = getColumnName(colBIdx);
+                    let lblB = mkBBLabelAtPin(rowNm, colBNm, +PIN_DIST, 0, rowNm);
+                    this.allLabels.push(lblB);
+                }
+                //+- labels
+                let botPowerLabels = [
+                    //BL
+                    mkBBLabel(0 + POWER_LBL_OFFSET + MINUS_LBL_EXTRA_OFFSET, BAR_HEIGHT + MID_HEIGHT + POWER_LBL_OFFSET, MINUS_LBL_SIZE, LBL_ROTATION, `-`, getBarGroupName(0, 0), [`sim-bb-blue`]),
+                    mkBBLabel(0 + POWER_LBL_OFFSET, BAR_HEIGHT + MID_HEIGHT + BAR_HEIGHT - POWER_LBL_OFFSET, PLUS_LBL_SIZE, LBL_ROTATION, `+`, getBarGroupName(1, 0), [`sim-bb-red`]),
+                    //BR
+                    mkBBLabel(WIDTH - POWER_LBL_OFFSET + MINUS_LBL_EXTRA_OFFSET, BAR_HEIGHT + MID_HEIGHT + POWER_LBL_OFFSET, MINUS_LBL_SIZE, LBL_ROTATION, `-`, getBarGroupName(0, BAR_COLS - 1), [`sim-bb-blue`]),
+                    mkBBLabel(WIDTH - POWER_LBL_OFFSET, BAR_HEIGHT + MID_HEIGHT + BAR_HEIGHT - POWER_LBL_OFFSET, PLUS_LBL_SIZE, LBL_ROTATION, `+`, getBarGroupName(1, BAR_COLS - 1), [`sim-bb-red`]),
+                ];
+                this.allLabels = this.allLabels.concat(botPowerLabels);
+                let topPowerLabels = [
+                    //TL
+                    mkBBLabel(0 + POWER_LBL_OFFSET + MINUS_LBL_EXTRA_OFFSET, 0 + POWER_LBL_OFFSET, MINUS_LBL_SIZE, LBL_ROTATION, `-`, getBarGroupName(0, BAR_COLS), [`sim-bb-blue`]),
+                    mkBBLabel(0 + POWER_LBL_OFFSET, BAR_HEIGHT - POWER_LBL_OFFSET, PLUS_LBL_SIZE, LBL_ROTATION, `+`, getBarGroupName(1, BAR_COLS), [`sim-bb-red`]),
+                    //TR
+                    mkBBLabel(WIDTH - POWER_LBL_OFFSET + MINUS_LBL_EXTRA_OFFSET, 0 + POWER_LBL_OFFSET, MINUS_LBL_SIZE, LBL_ROTATION, `-`, getBarGroupName(0, POWER_COLS - 1), [`sim-bb-blue`]),
+                    mkBBLabel(WIDTH - POWER_LBL_OFFSET, BAR_HEIGHT - POWER_LBL_OFFSET, PLUS_LBL_SIZE, LBL_ROTATION, `+`, getBarGroupName(1, POWER_COLS - 1), [`sim-bb-red`]),
+                ];
+                this.allLabels = this.allLabels.concat(topPowerLabels);
+                //catalog lbls
+                let lblNmToLbls = {};
+                this.allLabels.forEach(lbl => {
+                    let { el, txt } = lbl;
+                    let lbls = lblNmToLbls[txt] = lblNmToLbls[txt] || [];
+                    lbls.push(lbl);
+                });
+                const isPowerPin = (pin) => pin.row === "-" || pin.row === "+";
+                this.allPins.forEach(pin => {
+                    let { row, col, group } = pin;
+                    let colToLbls = this.rowColToLbls[row] || (this.rowColToLbls[row] = {});
+                    let lbls = colToLbls[col] || (colToLbls[col] = []);
+                    if (isPowerPin(pin)) {
+                        //power pins
+                        let isBot = Number(col) <= BAR_COLS;
+                        if (isBot)
+                            botPowerLabels.filter(l => l.group == pin.group).forEach(l => lbls.push(l));
+                        else
+                            topPowerLabels.filter(l => l.group == pin.group).forEach(l => lbls.push(l));
+                    }
+                    else {
+                        //mid pins
+                        let rowLbls = lblNmToLbls[row];
+                        rowLbls.forEach(l => lbls.push(l));
+                        let colLbls = lblNmToLbls[col];
+                        colLbls.forEach(l => lbls.push(l));
+                    }
+                });
+                //-----blue & red lines
+                const lnLen = BAR_GRID_WIDTH + PIN_DIST * 1.5;
+                const lnThickness = PIN_DIST / 5.0;
+                const lnYOff = PIN_DIST * 0.6;
+                const lnXOff = (lnLen - BAR_GRID_WIDTH) / 2.0;
+                const mkPowerLine = (x, y, group, cls) => {
+                    let ln = pxsim.svg.elt("rect");
+                    pxsim.svg.hydrate(ln, {
+                        class: `sim-bb-bar ${cls}`,
+                        x: x,
+                        y: y - lnThickness / 2.0,
+                        width: lnLen,
+                        height: lnThickness
+                    });
+                    let bar = { el: ln, group: group };
+                    return bar;
+                };
+                let barLines = [
+                    //top
+                    mkPowerLine(BAR_BOT_GRID_X - lnXOff, BAR_BOT_GRID_Y - lnYOff, getBarGroupName(0, POWER_COLS - 1), "sim-bb-blue"),
+                    mkPowerLine(BAR_BOT_GRID_X - lnXOff, BAR_BOT_GRID_Y + PIN_DIST + lnYOff, getBarGroupName(1, POWER_COLS - 1), "sim-bb-red"),
+                    //bot
+                    mkPowerLine(BAR_TOP_GRID_X - lnXOff, BAR_TOP_GRID_Y - lnYOff, getBarGroupName(0, 0), "sim-bb-blue"),
+                    mkPowerLine(BAR_TOP_GRID_X - lnXOff, BAR_TOP_GRID_Y + PIN_DIST + lnYOff, getBarGroupName(1, 0), "sim-bb-red"),
+                ];
+                this.allPowerBars = this.allPowerBars.concat(barLines);
+                //attach power bars
+                this.allPowerBars.forEach(b => this.bb.appendChild(b.el));
+                //-----electrically connected groups
+                //make groups
+                let allGrpNms = this.allPins.map(p => p.group).filter((g, i, a) => a.indexOf(g) == i);
+                let groups = allGrpNms.map(grpNm => {
+                    let g = pxsim.svg.elt("g");
+                    return g;
+                });
+                groups.forEach(g => pxsim.U.addClass(g, "sim-bb-pin-group"));
+                groups.forEach((g, i) => pxsim.U.addClass(g, `group-${allGrpNms[i]}`));
+                let grpNmToGroup = {};
+                allGrpNms.forEach((g, i) => grpNmToGroup[g] = groups[i]);
+                //group pins and add connecting wire
+                let grpNmToPins = {};
+                this.allPins.forEach((p, i) => {
+                    let g = p.group;
+                    let pins = grpNmToPins[g] || (grpNmToPins[g] = []);
+                    pins.push(p);
+                });
+                //connecting wire
+                allGrpNms.forEach(grpNm => {
+                    let pins = grpNmToPins[grpNm];
+                    let [xs, ys] = [pins.map(p => p.cx), pins.map(p => p.cy)];
+                    let minFn = (arr) => arr.reduce((a, b) => a < b ? a : b);
+                    let maxFn = (arr) => arr.reduce((a, b) => a > b ? a : b);
+                    let [minX, maxX, minY, maxY] = [minFn(xs), maxFn(xs), minFn(ys), maxFn(ys)];
+                    let wire = pxsim.svg.elt("rect");
+                    let width = Math.max(maxX - minX, 0.0001 /*rects with no width aren't displayed*/);
+                    let height = Math.max(maxY - minY, 0.0001);
+                    pxsim.svg.hydrate(wire, { x: minX, y: minY, width: width, height: height });
+                    pxsim.U.addClass(wire, "sim-bb-group-wire");
+                    let g = grpNmToGroup[grpNm];
+                    g.appendChild(wire);
+                });
+                //group pins
+                this.allPins.forEach(p => {
+                    let g = grpNmToGroup[p.group];
+                    g.appendChild(p.el);
+                    g.appendChild(p.hoverEl);
+                });
+                //group lbls
+                let miscLblGroup = pxsim.svg.elt("g");
+                pxsim.svg.hydrate(miscLblGroup, { class: "sim-bb-group-misc" });
+                groups.push(miscLblGroup);
+                this.allLabels.forEach(l => {
+                    if (l.group) {
+                        let g = grpNmToGroup[l.group];
+                        g.appendChild(l.el);
+                        g.appendChild(l.hoverEl);
+                    }
+                    else {
+                        miscLblGroup.appendChild(l.el);
+                        miscLblGroup.appendChild(l.hoverEl);
+                    }
+                });
+                //attach to bb
+                groups.forEach(g => this.bb.appendChild(g)); //attach to breadboard
+            }
+            getSVGAndSize() {
+                return { el: this.bb, y: 0, x: 0, w: WIDTH, h: HEIGHT };
+            }
+            highlightLoc(rowCol) {
+                let { row, col } = rowCol;
+                let pin = this.rowColToPin[row][col];
+                let { cx, cy } = pin;
+                let lbls = this.rowColToLbls[row][col];
+                const highlightLbl = (lbl) => {
+                    pxsim.U.addClass(lbl.el, "highlight");
+                    pxsim.U.addClass(lbl.hoverEl, "highlight");
+                };
+                lbls.forEach(highlightLbl);
+            }
+        }
+        visuals.Breadboard = Breadboard;
+    })(visuals = pxsim.visuals || (pxsim.visuals = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var visuals;
+    (function (visuals) {
+        visuals.BOARD_SYTLE = `
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none;   /* Chrome/Safari/Opera */
+            -khtml-user-select: none;    /* Konqueror */
+            -moz-user-select: none;      /* Firefox */
+            -ms-user-select: none;       /* Internet Explorer/Microsoft Edge */
+            user-select: none;           /* Non-prefixed version, currently
+                                            not supported by any browser */
+        }
+
+        .sim-board-pin {
+            fill:#999;
+            stroke:#000;
+            stroke-width:${visuals.PIN_DIST / 3.0}px;
+        }
+        .sim-board-pin-lbl {
+            fill: #333;
+        }
+        .gray-cover {
+            fill:#FFF;
+            opacity: 0.3;
+            stroke-width:0;
+            visibility: hidden;
+        }
+        .sim-board-pin-hover {
+            visibility: hidden;
+            pointer-events: all;
+            stroke-width:${visuals.PIN_DIST / 6.0}px;
+        }
+        .sim-board-pin-hover:hover {
+            visibility: visible;
+        }
+        .sim-board-pin-lbl {
+            visibility: hidden;
+        }
+        .sim-board-outline .sim-board-pin-lbl {
+            visibility: visible;
+        }
+        .sim-board-pin-lbl {
+            fill: #555;
+        }
+        .sim-board-pin-lbl-hover {
+            fill: red;
+        }
+        .sim-board-outline .sim-board-pin-lbl-hover {
+            fill: black;
+        }
+        .sim-board-pin-lbl,
+        .sim-board-pin-lbl-hover {
+            font-family:"Lucida Console", Monaco, monospace;
+            pointer-events: all;
+            stroke-width: 0;
+        }
+        .sim-board-pin-lbl-hover {
+            visibility: hidden;
+        }
+        .sim-board-outline .sim-board-pin-hover:hover + .sim-board-pin-lbl,
+        .sim-board-pin-lbl.highlight {
+            visibility: hidden;
+        }
+        .sim-board-outline .sim-board-pin-hover:hover + * + .sim-board-pin-lbl-hover,
+        .sim-board-pin-lbl-hover.highlight {
+            visibility: visible;
+        }
+        /* Graying out */
+        .grayed .sim-board-pin-lbl:not(.highlight) {
+            fill: #AAA;
+        }
+        .grayed .sim-board-pin:not(.highlight) {
+            fill:#BBB;
+            stroke:#777;
+        }
+        .grayed .gray-cover {
+            visibility: inherit;
+        }
+        .grayed .sim-cmp:not(.notgrayed) {
+            opacity: 0.3;
+        }
+        /* Highlighting */
+        .sim-board-pin-lbl.highlight {
+            fill: #000;
+            font-weight: bold;
+        }
+        .sim-board-pin.highlight {
+            fill:#999;
+            stroke:#000;
+        }
+        `;
+        const PIN_LBL_SIZE = visuals.PIN_DIST * 0.7;
+        const PIN_LBL_HOVER_SIZE = PIN_LBL_SIZE * 1.5;
+        const SQUARE_PIN_WIDTH = visuals.PIN_DIST * 0.66666;
+        const SQUARE_PIN_HOVER_WIDTH = visuals.PIN_DIST * 0.66666 + visuals.PIN_DIST / 3.0;
+        let nextBoardId = 0;
+        class GenericBoardSvg {
+            constructor(props) {
+                this.props = props;
+                // pins & labels
+                //(truth)
+                this.allPins = [];
+                this.allLabels = [];
+                //(cache)
+                this.pinNmToLbl = {};
+                this.pinNmToPin = {};
+                //TODO: handle wireframe mode
+                this.id = nextBoardId++;
+                let visDef = props.visualDef;
+                let imgHref = props.wireframe && visDef.outlineImage ? visDef.outlineImage : visDef.image;
+                let boardImgAndSize = visuals.mkImageSVG({
+                    image: imgHref,
+                    width: visDef.width,
+                    height: visDef.height,
+                    imageUnitDist: visDef.pinDist,
+                    targetUnitDist: visuals.PIN_DIST
+                });
+                let scaleFn = visuals.mkScaleFn(visDef.pinDist, visuals.PIN_DIST);
+                this.width = boardImgAndSize.w;
+                this.height = boardImgAndSize.h;
+                let img = boardImgAndSize.el;
+                this.element = pxsim.svg.elt("svg");
+                pxsim.svg.hydrate(this.element, {
+                    "version": "1.0",
+                    "viewBox": `0 0 ${this.width} ${this.height}`,
+                    "class": `sim sim-board-id-${this.id}`,
+                    "x": "0px",
+                    "y": "0px"
+                });
+                if (props.wireframe)
+                    pxsim.U.addClass(this.element, "sim-board-outline");
+                this.style = pxsim.svg.child(this.element, "style", {});
+                this.style.textContent += visuals.BOARD_SYTLE;
+                this.defs = pxsim.svg.child(this.element, "defs", {});
+                this.g = pxsim.svg.elt("g");
+                this.element.appendChild(this.g);
+                // main board
+                this.g.appendChild(img);
+                this.background = img;
+                pxsim.svg.hydrate(img, { class: "sim-board" });
+                // does not look great
+                //let backgroundCover = this.mkGrayCover(0, 0, this.width, this.height);
+                //this.g.appendChild(backgroundCover);
+                // ----- pins
+                const mkRoundPin = () => {
+                    let el = pxsim.svg.elt("circle");
+                    let width = SQUARE_PIN_WIDTH;
+                    pxsim.svg.hydrate(el, {
+                        class: "sim-board-pin",
+                        r: width / 2,
+                    });
+                    return { el: el, w: width, h: width, x: 0, y: 0 };
+                };
+                const mkRoundHoverPin = () => {
+                    let el = pxsim.svg.elt("circle");
+                    let width = SQUARE_PIN_HOVER_WIDTH;
+                    pxsim.svg.hydrate(el, {
+                        class: "sim-board-pin-hover",
+                        r: width / 2
+                    });
+                    return { el: el, w: width, h: width, x: 0, y: 0 };
+                };
+                const mkSquarePin = () => {
+                    let el = pxsim.svg.elt("rect");
+                    let width = SQUARE_PIN_WIDTH;
+                    pxsim.svg.hydrate(el, {
+                        class: "sim-board-pin",
+                        width: width,
+                        height: width,
+                    });
+                    return { el: el, w: width, h: width, x: 0, y: 0 };
+                };
+                const mkSquareHoverPin = () => {
+                    let el = pxsim.svg.elt("rect");
+                    let width = SQUARE_PIN_HOVER_WIDTH;
+                    pxsim.svg.hydrate(el, {
+                        class: "sim-board-pin-hover",
+                        width: width,
+                        height: width
+                    });
+                    return { el: el, w: width, h: width, x: 0, y: 0 };
+                };
+                const mkPinBlockGrid = (pinBlock, blockIdx) => {
+                    let xOffset = scaleFn(pinBlock.x) + visuals.PIN_DIST / 2.0;
+                    let yOffset = scaleFn(pinBlock.y) + visuals.PIN_DIST / 2.0;
+                    let rowCount = 1;
+                    let colCount = pinBlock.labels.length;
+                    let getColName = (colIdx) => pinBlock.labels[colIdx];
+                    let getRowName = () => `${blockIdx + 1}`;
+                    let getGroupName = () => pinBlock.labels.join(" ");
+                    let gridRes = visuals.mkGrid({
+                        xOffset: xOffset,
+                        yOffset: yOffset,
+                        rowCount: rowCount,
+                        colCount: colCount,
+                        pinDist: visuals.PIN_DIST,
+                        mkPin: visDef.useCrocClips ? mkRoundPin : mkSquarePin,
+                        mkHoverPin: visDef.useCrocClips ? mkRoundHoverPin : mkSquareHoverPin,
+                        getRowName: getRowName,
+                        getColName: getColName,
+                        getGroupName: getGroupName,
+                    });
+                    let pins = gridRes.allPins;
+                    let pinsG = gridRes.g;
+                    pxsim.U.addClass(gridRes.g, "sim-board-pin-group");
+                    return gridRes;
+                };
+                let pinBlocks = visDef.pinBlocks.map(mkPinBlockGrid);
+                let pinToBlockDef = [];
+                pinBlocks.forEach((blk, blkIdx) => blk.allPins.forEach((p, pIdx) => {
+                    this.allPins.push(p);
+                    pinToBlockDef.push(visDef.pinBlocks[blkIdx]);
+                }));
+                //tooltip
+                this.allPins.forEach(p => {
+                    let tooltip = p.col;
+                    pxsim.svg.hydrate(p.el, { title: tooltip });
+                    pxsim.svg.hydrate(p.hoverEl, { title: tooltip });
+                });
+                //catalog pins
+                this.allPins.forEach(p => {
+                    this.pinNmToPin[p.col] = p;
+                });
+                // ----- labels
+                const mkLabelTxtEl = (pinX, pinY, size, txt, pos) => {
+                    //TODO: extract constants
+                    let lblY;
+                    let lblX;
+                    if (pos === "below") {
+                        let lblLen = size * 0.25 * txt.length;
+                        lblX = pinX;
+                        lblY = pinY + 12 + lblLen;
+                    }
+                    else {
+                        let lblLen = size * 0.32 * txt.length;
+                        lblX = pinX;
+                        lblY = pinY - 11 - lblLen;
+                    }
+                    let el = visuals.mkTxt(lblX, lblY, size, -90, txt);
+                    return el;
+                };
+                const mkLabel = (pinX, pinY, txt, pos) => {
+                    let el = mkLabelTxtEl(pinX, pinY, PIN_LBL_SIZE, txt, pos);
+                    pxsim.U.addClass(el, "sim-board-pin-lbl");
+                    let hoverEl = mkLabelTxtEl(pinX, pinY, PIN_LBL_HOVER_SIZE, txt, pos);
+                    pxsim.U.addClass(hoverEl, "sim-board-pin-lbl-hover");
+                    let label = { el: el, hoverEl: hoverEl, txt: txt };
+                    return label;
+                };
+                this.allLabels = this.allPins.map((p, pIdx) => {
+                    let blk = pinToBlockDef[pIdx];
+                    return mkLabel(p.cx, p.cy, p.col, blk.labelPosition || "above");
+                });
+                //catalog labels
+                this.allPins.forEach((pin, pinIdx) => {
+                    let lbl = this.allLabels[pinIdx];
+                    this.pinNmToLbl[pin.col] = lbl;
+                });
+                //attach pins & labels
+                this.allPins.forEach((p, idx) => {
+                    let lbl = this.allLabels[idx];
+                    //pins and labels must be adjacent for hover CSS
+                    this.g.appendChild(p.el);
+                    this.g.appendChild(p.hoverEl);
+                    this.g.appendChild(lbl.el);
+                    this.g.appendChild(lbl.hoverEl);
+                });
+            }
+            findPin(pinNm) {
+                let pin = this.pinNmToPin[pinNm];
+                if (!pin && this.props.boardDef.gpioPinMap) {
+                    pinNm = this.props.boardDef.gpioPinMap[pinNm];
+                    if (pinNm)
+                        pin = this.pinNmToPin[pinNm];
+                }
+                return pin;
+            }
+            findPinLabel(pinNm) {
+                let pin = this.pinNmToLbl[pinNm];
+                if (!pin && this.props.boardDef.gpioPinMap) {
+                    pinNm = this.props.boardDef.gpioPinMap[pinNm];
+                    if (pinNm)
+                        pin = this.pinNmToLbl[pinNm];
+                }
+                return pin;
+            }
+            getCoord(pinNm) {
+                let pin = this.findPin(pinNm);
+                if (!pin)
+                    return null;
+                return [pin.cx, pin.cy];
+            }
+            mkGrayCover(x, y, w, h) {
+                let rect = pxsim.svg.elt("rect");
+                pxsim.svg.hydrate(rect, { x: x, y: y, width: w, height: h, class: "gray-cover" });
+                return rect;
+            }
+            getView() {
+                return { el: this.element, w: this.width, h: this.height, x: 0, y: 0 };
+            }
+            getPinDist() {
+                return visuals.PIN_DIST;
+            }
+            highlightPin(pinNm) {
+                let lbl = this.findPinLabel(pinNm);
+                let pin = this.findPin(pinNm);
+                if (lbl && pin) {
+                    pxsim.U.addClass(lbl.el, "highlight");
+                    pxsim.U.addClass(lbl.hoverEl, "highlight");
+                    pxsim.U.addClass(pin.el, "highlight");
+                    pxsim.U.addClass(pin.hoverEl, "highlight");
+                }
+            }
+        }
+        visuals.GenericBoardSvg = GenericBoardSvg;
+    })(visuals = pxsim.visuals || (pxsim.visuals = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var visuals;
+    (function (visuals) {
+        function mkGenericPartSVG(partVisual) {
+            let imgAndSize = visuals.mkImageSVG({
+                image: partVisual.image,
+                width: partVisual.width,
+                height: partVisual.height,
+                imageUnitDist: partVisual.pinDistance,
+                targetUnitDist: visuals.PIN_DIST
+            });
+            return imgAndSize;
+        }
+        visuals.mkGenericPartSVG = mkGenericPartSVG;
+        class GenericPart {
+            constructor(partVisual) {
+                this.style = "";
+                this.defs = [];
+                let imgAndSize = mkGenericPartSVG(partVisual);
+                let img = imgAndSize.el;
+                this.element = pxsim.svg.elt("g");
+                this.element.appendChild(img);
+            }
+            moveToCoord(xy) {
+                visuals.translateEl(this.element, xy);
+            }
+            //unused
+            init(bus, state, svgEl) { }
+            updateState() { }
+            updateTheme() { }
+        }
+        visuals.GenericPart = GenericPart;
+    })(visuals = pxsim.visuals || (pxsim.visuals = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var visuals;
+    (function (visuals) {
+        const WIRE_WIDTH = visuals.PIN_DIST / 2.5;
+        const BB_WIRE_SMOOTH = 0.7;
+        const INSTR_WIRE_SMOOTH = 0.8;
+        const WIRE_PART_CURVE_OFF = 15;
+        const WIRE_PART_LENGTH = 100;
+        visuals.WIRES_CSS = `
+        .sim-bb-wire {
+            fill:none;
+            stroke-linecap: round;
+            stroke-width:${WIRE_WIDTH}px;
+            pointer-events: none;
+        }
+        .sim-bb-wire-end {
+            stroke:#333;
+            fill:#333;
+        }
+        .sim-bb-wire-bare-end {
+            fill: #ccc;
+        }
+        .sim-bb-wire-hover {
+            stroke-width: ${WIRE_WIDTH}px;
+            visibility: hidden;
+            stroke-dasharray: ${visuals.PIN_DIST / 10.0},${visuals.PIN_DIST / 1.5};
+            /*stroke-opacity: 0.4;*/
+        }
+        .grayed .sim-bb-wire-ends-g:not(.highlight) .sim-bb-wire-end {
+            stroke: #777;
+            fill: #777;
+        }
+        .grayed .sim-bb-wire:not(.highlight) {
+            stroke: #CCC;
+        }
+        .sim-bb-wire-ends-g:hover .sim-bb-wire-end {
+            stroke: red;
+            fill: red;
+        }
+        .sim-bb-wire-ends-g:hover .sim-bb-wire-bare-end {
+            stroke: #FFF;
+            fill: #FFF;
+        }
+        `;
+        function cssEncodeColor(color) {
+            //HACK/TODO: do real CSS encoding.
+            return color
+                .replace(/\#/g, "-")
+                .replace(/\(/g, "-")
+                .replace(/\)/g, "-")
+                .replace(/\,/g, "-")
+                .replace(/\./g, "-")
+                .replace(/\s/g, "");
+        }
+        let WireEndStyle;
+        (function (WireEndStyle) {
+            WireEndStyle[WireEndStyle["BBJumper"] = 0] = "BBJumper";
+            WireEndStyle[WireEndStyle["OpenJumper"] = 1] = "OpenJumper";
+            WireEndStyle[WireEndStyle["Croc"] = 2] = "Croc";
+        })(WireEndStyle = visuals.WireEndStyle || (visuals.WireEndStyle = {}));
+        function mkWirePart(cp, clr, croc = false) {
+            let g = pxsim.svg.elt("g");
+            let [cx, cy] = cp;
+            let offset = WIRE_PART_CURVE_OFF;
+            let p1 = [cx - offset, cy - WIRE_PART_LENGTH / 2];
+            let p2 = [cx + offset, cy + WIRE_PART_LENGTH / 2];
+            clr = visuals.mapWireColor(clr);
+            let e1;
+            if (croc)
+                e1 = mkCrocEnd(p1, true, clr);
+            else
+                e1 = mkOpenJumperEnd(p1, true, clr);
+            let s = mkWirePartSeg(p1, p2, clr);
+            let e2 = mkOpenJumperEnd(p2, false, clr);
+            g.appendChild(s.el);
+            g.appendChild(e1.el);
+            g.appendChild(e2.el);
+            let l = Math.min(e1.x, e2.x);
+            let r = Math.max(e1.x + e1.w, e2.x + e2.w);
+            let t = Math.min(e1.y, e2.y);
+            let b = Math.max(e1.y + e1.h, e2.y + e2.h);
+            return { el: g, x: l, y: t, w: r - l, h: b - t };
+        }
+        visuals.mkWirePart = mkWirePart;
+        function mkCurvedWireSeg(p1, p2, smooth, clrClass) {
+            const coordStr = (xy) => { return `${xy[0]}, ${xy[1]}`; };
+            let [x1, y1] = p1;
+            let [x2, y2] = p2;
+            let yLen = (y2 - y1);
+            let c1 = [x1, y1 + yLen * smooth];
+            let c2 = [x2, y2 - yLen * smooth];
+            let w = pxsim.svg.mkPath("sim-bb-wire", `M${coordStr(p1)} C${coordStr(c1)} ${coordStr(c2)} ${coordStr(p2)}`);
+            pxsim.U.addClass(w, `wire-stroke-${clrClass}`);
+            return w;
+        }
+        function mkWirePartSeg(p1, p2, clr) {
+            //TODO: merge with mkCurvedWireSeg
+            const coordStr = (xy) => { return `${xy[0]}, ${xy[1]}`; };
+            let [x1, y1] = p1;
+            let [x2, y2] = p2;
+            let yLen = (y2 - y1);
+            let c1 = [x1, y1 + yLen * .8];
+            let c2 = [x2, y2 - yLen * .8];
+            let e = pxsim.svg.mkPath("sim-bb-wire", `M${coordStr(p1)} C${coordStr(c1)} ${coordStr(c2)} ${coordStr(p2)}`);
+            e.style["stroke"] = clr;
+            return { el: e, x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.abs(x1 - x2), h: Math.abs(y1 - y2) };
+        }
+        function mkWireSeg(p1, p2, clrClass) {
+            const coordStr = (xy) => { return `${xy[0]}, ${xy[1]}`; };
+            let w = pxsim.svg.mkPath("sim-bb-wire", `M${coordStr(p1)} L${coordStr(p2)}`);
+            pxsim.U.addClass(w, `wire-stroke-${clrClass}`);
+            return w;
+        }
+        function mkBBJumperEnd(p, clrClass) {
+            const endW = visuals.PIN_DIST / 4;
+            let w = pxsim.svg.elt("circle");
+            let x = p[0];
+            let y = p[1];
+            let r = WIRE_WIDTH / 2 + endW / 2;
+            pxsim.svg.hydrate(w, { cx: x, cy: y, r: r, class: "sim-bb-wire-end" });
+            pxsim.U.addClass(w, `wire-fill-${clrClass}`);
+            w.style["stroke-width"] = `${endW}px`;
+            return w;
+        }
+        function mkOpenJumperEnd(p, top, clr) {
+            let k = visuals.PIN_DIST * 0.24;
+            let plasticLength = k * 10;
+            let plasticWidth = k * 2;
+            let metalLength = k * 6;
+            let metalWidth = k;
+            const strokeWidth = visuals.PIN_DIST / 4.0;
+            let [cx, cy] = p;
+            let o = top ? -1 : 1;
+            let g = pxsim.svg.elt("g");
+            let el = pxsim.svg.elt("rect");
+            let h1 = plasticLength;
+            let w1 = plasticWidth;
+            let x1 = cx - w1 / 2;
+            let y1 = cy - (h1 / 2);
+            pxsim.svg.hydrate(el, { x: x1, y: y1, width: w1, height: h1, rx: 0.5, ry: 0.5, class: "sim-bb-wire-end" });
+            el.style["stroke-width"] = `${strokeWidth}px`;
+            let el2 = pxsim.svg.elt("rect");
+            let h2 = metalLength;
+            let w2 = metalWidth;
+            let cy2 = cy + o * (h1 / 2 + h2 / 2);
+            let x2 = cx - w2 / 2;
+            let y2 = cy2 - (h2 / 2);
+            pxsim.svg.hydrate(el2, { x: x2, y: y2, width: w2, height: h2, class: "sim-bb-wire-bare-end" });
+            el2.style["fill"] = `#bbb`;
+            g.appendChild(el2);
+            g.appendChild(el);
+            return { el: g, x: x1 - strokeWidth, y: Math.min(y1, y2), w: w1 + strokeWidth * 2, h: h1 + h2 };
+        }
+        function mkSmallMBPinEnd(p, top, clr) {
+            //HACK
+            //TODO: merge with mkOpenJumperEnd()
+            let k = visuals.PIN_DIST * 0.24;
+            let plasticLength = k * 4;
+            let plasticWidth = k * 1.2;
+            let metalLength = k * 10;
+            let metalWidth = k;
+            const strokeWidth = visuals.PIN_DIST / 4.0;
+            let [cx, cy] = p;
+            let yOffset = 10;
+            let o = top ? -1 : 1;
+            let g = pxsim.svg.elt("g");
+            let el = pxsim.svg.elt("rect");
+            let h1 = plasticLength;
+            let w1 = plasticWidth;
+            let x1 = cx - w1 / 2;
+            let y1 = cy + yOffset - (h1 / 2);
+            pxsim.svg.hydrate(el, { x: x1, y: y1, width: w1, height: h1, rx: 0.5, ry: 0.5, class: "sim-bb-wire-end" });
+            el.style["stroke-width"] = `${strokeWidth}px`;
+            let el2 = pxsim.svg.elt("rect");
+            let h2 = metalLength;
+            let w2 = metalWidth;
+            let cy2 = cy + yOffset + o * (h1 / 2 + h2 / 2);
+            let x2 = cx - w2 / 2;
+            let y2 = cy2 - (h2 / 2);
+            pxsim.svg.hydrate(el2, { x: x2, y: y2, width: w2, height: h2, class: "sim-bb-wire-bare-end" });
+            el2.style["fill"] = `#bbb`;
+            g.appendChild(el2);
+            g.appendChild(el);
+            return { el: g, x: x1 - strokeWidth, y: Math.min(y1, y2), w: w1 + strokeWidth * 2, h: h1 + h2 };
+        }
+        function mkCrocEnd(p, top, clr) {
+            //TODO: merge with mkOpenJumperEnd()
+            let k = visuals.PIN_DIST * 0.24;
+            const plasticWidth = k * 4;
+            const plasticLength = k * 10.0;
+            const metalWidth = k * 3.5;
+            const metalHeight = k * 3.5;
+            const pointScalar = .15;
+            const baseScalar = .3;
+            const taperScalar = .7;
+            const strokeWidth = visuals.PIN_DIST / 4.0;
+            let [cx, cy] = p;
+            let o = top ? -1 : 1;
+            let g = pxsim.svg.elt("g");
+            let el = pxsim.svg.elt("polygon");
+            let h1 = plasticLength;
+            let w1 = plasticWidth;
+            let x1 = cx - w1 / 2;
+            let y1 = cy - (h1 / 2);
+            let mkPnt = (xy) => `${xy[0]},${xy[1]}`;
+            let mkPnts = (...xys) => xys.map(xy => mkPnt(xy)).join(" ");
+            const topScalar = top ? pointScalar : baseScalar;
+            const midScalar = top ? taperScalar : (1 - taperScalar);
+            const botScalar = top ? baseScalar : pointScalar;
+            pxsim.svg.hydrate(el, {
+                points: mkPnts([x1 + w1 * topScalar, y1], //TL
+                [x1 + w1 * (1 - topScalar), y1], //TR
+                [x1 + w1, y1 + h1 * midScalar], //MR
+                [x1 + w1 * (1 - botScalar), y1 + h1], //BR
+                [x1 + w1 * botScalar, y1 + h1], //BL
+                [x1, y1 + h1 * midScalar]) //ML
+            });
+            pxsim.svg.hydrate(el, { rx: 0.5, ry: 0.5, class: "sim-bb-wire-end" });
+            el.style["stroke-width"] = `${strokeWidth}px`;
+            let el2 = pxsim.svg.elt("rect");
+            let h2 = metalWidth;
+            let w2 = metalHeight;
+            let cy2 = cy + o * (h1 / 2 + h2 / 2);
+            let x2 = cx - w2 / 2;
+            let y2 = cy2 - (h2 / 2);
+            pxsim.svg.hydrate(el2, { x: x2, y: y2, width: w2, height: h2, class: "sim-bb-wire-bare-end" });
+            g.appendChild(el2);
+            g.appendChild(el);
+            return { el: g, x: x1 - strokeWidth, y: Math.min(y1, y2), w: w1 + strokeWidth * 2, h: h1 + h2 };
+        }
+        //TODO: make this stupid class obsolete
+        class WireFactory {
+            constructor(underboard, overboard, boardEdges, styleEl, getLocCoord, getPinStyle) {
+                this.nextWireId = 0;
+                this.styleEl = styleEl;
+                this.styleEl.textContent += visuals.WIRES_CSS;
+                this.underboard = underboard;
+                this.overboard = overboard;
+                this.boardEdges = boardEdges;
+                this.getLocCoord = getLocCoord;
+                this.getPinStyle = getPinStyle;
+            }
+            indexOfMin(vs) {
+                let minIdx = 0;
+                let min = vs[0];
+                for (let i = 1; i < vs.length; i++) {
+                    if (vs[i] < min) {
+                        min = vs[i];
+                        minIdx = i;
+                    }
+                }
+                return minIdx;
+            }
+            closestEdgeIdx(p) {
+                let dists = this.boardEdges.map(e => Math.abs(p[1] - e));
+                let edgeIdx = this.indexOfMin(dists);
+                return edgeIdx;
+            }
+            closestEdge(p) {
+                return this.boardEdges[this.closestEdgeIdx(p)];
+            }
+            drawWire(pin1, pin2, color) {
+                let wires = [];
+                let g = pxsim.svg.child(this.overboard, "g", { class: "sim-bb-wire-group" });
+                const closestPointOffBoard = (p) => {
+                    const offset = visuals.PIN_DIST / 2;
+                    let e = this.closestEdge(p);
+                    let y;
+                    if (e - p[1] < 0)
+                        y = e - offset;
+                    else
+                        y = e + offset;
+                    return [p[0], y];
+                };
+                let wireId = this.nextWireId++;
+                let clrClass = cssEncodeColor(color);
+                let end1 = mkBBJumperEnd(pin1, clrClass);
+                let end2 = mkBBJumperEnd(pin2, clrClass);
+                let endG = pxsim.svg.child(g, "g", { class: "sim-bb-wire-ends-g" });
+                endG.appendChild(end1);
+                endG.appendChild(end2);
+                let edgeIdx1 = this.closestEdgeIdx(pin1);
+                let edgeIdx2 = this.closestEdgeIdx(pin2);
+                if (edgeIdx1 == edgeIdx2) {
+                    let seg = mkWireSeg(pin1, pin2, clrClass);
+                    g.appendChild(seg);
+                    wires.push(seg);
+                }
+                else {
+                    let offP1 = closestPointOffBoard(pin1);
+                    let offP2 = closestPointOffBoard(pin2);
+                    let offSeg1 = mkWireSeg(pin1, offP1, clrClass);
+                    let offSeg2 = mkWireSeg(pin2, offP2, clrClass);
+                    let midSeg;
+                    let midSegHover;
+                    let isBetweenMiddleTwoEdges = (edgeIdx1 == 1 || edgeIdx1 == 2) && (edgeIdx2 == 1 || edgeIdx2 == 2);
+                    if (isBetweenMiddleTwoEdges) {
+                        midSeg = mkCurvedWireSeg(offP1, offP2, BB_WIRE_SMOOTH, clrClass);
+                        midSegHover = mkCurvedWireSeg(offP1, offP2, BB_WIRE_SMOOTH, clrClass);
+                    }
+                    else {
+                        midSeg = mkWireSeg(offP1, offP2, clrClass);
+                        midSegHover = mkWireSeg(offP1, offP2, clrClass);
+                    }
+                    pxsim.U.addClass(midSegHover, "sim-bb-wire-hover");
+                    g.appendChild(offSeg1);
+                    wires.push(offSeg1);
+                    g.appendChild(offSeg2);
+                    wires.push(offSeg2);
+                    this.underboard.appendChild(midSeg);
+                    wires.push(midSeg);
+                    g.appendChild(midSegHover);
+                    wires.push(midSegHover);
+                    //set hover mechanism
+                    let wireIdClass = `sim-bb-wire-id-${wireId}`;
+                    const setId = (e) => pxsim.U.addClass(e, wireIdClass);
+                    setId(endG);
+                    setId(midSegHover);
+                    this.styleEl.textContent += `
+                    .${wireIdClass}:hover ~ .${wireIdClass}.sim-bb-wire-hover {
+                        visibility: visible;
+                    }`;
+                }
+                // wire colors
+                let colorCSS = `
+                .wire-stroke-${clrClass} {
+                    stroke: ${visuals.mapWireColor(color)};
+                }
+                .wire-fill-${clrClass} {
+                    fill: ${visuals.mapWireColor(color)};
+                }
+                `;
+                this.styleEl.textContent += colorCSS;
+                return { endG: endG, end1: end1, end2: end2, wires: wires };
+            }
+            drawWireWithCrocs(pin1, pin2, color, smallPin = false) {
+                //TODO: merge with drawWire()
+                const PIN_Y_OFF = 40;
+                const CROC_Y_OFF = -17;
+                let wires = [];
+                let g = pxsim.svg.child(this.overboard, "g", { class: "sim-bb-wire-group" });
+                const closestPointOffBoard = (p) => {
+                    const offset = visuals.PIN_DIST / 2;
+                    let e = this.closestEdge(p);
+                    let y;
+                    if (e - p[1] < 0)
+                        y = e - offset;
+                    else
+                        y = e + offset;
+                    return [p[0], y];
+                };
+                let wireId = this.nextWireId++;
+                let clrClass = cssEncodeColor(color);
+                let end1 = mkBBJumperEnd(pin1, clrClass);
+                let pin2orig = pin2;
+                let [x2, y2] = pin2;
+                pin2 = [x2, y2 + PIN_Y_OFF]; //HACK
+                [x2, y2] = pin2;
+                let endCoord2 = [x2, y2 + CROC_Y_OFF];
+                let end2AndSize;
+                if (smallPin)
+                    end2AndSize = mkSmallMBPinEnd(endCoord2, true, color);
+                else
+                    end2AndSize = mkCrocEnd(endCoord2, true, color);
+                let end2 = end2AndSize.el;
+                let endG = pxsim.svg.child(g, "g", { class: "sim-bb-wire-ends-g" });
+                endG.appendChild(end1);
+                //endG.appendChild(end2);
+                let edgeIdx1 = this.closestEdgeIdx(pin1);
+                let edgeIdx2 = this.closestEdgeIdx(pin2orig);
+                if (edgeIdx1 == edgeIdx2) {
+                    let seg = mkWireSeg(pin1, pin2, clrClass);
+                    g.appendChild(seg);
+                    wires.push(seg);
+                }
+                else {
+                    let offP1 = closestPointOffBoard(pin1);
+                    //let offP2 = closestPointOffBoard(pin2orig);
+                    let offSeg1 = mkWireSeg(pin1, offP1, clrClass);
+                    //let offSeg2 = mkWireSeg(pin2, offP2, clrClass);
+                    let midSeg;
+                    let midSegHover;
+                    let isBetweenMiddleTwoEdges = (edgeIdx1 == 1 || edgeIdx1 == 2) && (edgeIdx2 == 1 || edgeIdx2 == 2);
+                    if (isBetweenMiddleTwoEdges) {
+                        midSeg = mkCurvedWireSeg(offP1, pin2, BB_WIRE_SMOOTH, clrClass);
+                        midSegHover = mkCurvedWireSeg(offP1, pin2, BB_WIRE_SMOOTH, clrClass);
+                    }
+                    else {
+                        midSeg = mkWireSeg(offP1, pin2, clrClass);
+                        midSegHover = mkWireSeg(offP1, pin2, clrClass);
+                    }
+                    pxsim.U.addClass(midSegHover, "sim-bb-wire-hover");
+                    g.appendChild(offSeg1);
+                    wires.push(offSeg1);
+                    // g.appendChild(offSeg2);
+                    // wires.push(offSeg2);
+                    this.underboard.appendChild(midSeg);
+                    wires.push(midSeg);
+                    //g.appendChild(midSegHover);
+                    //wires.push(midSegHover);
+                    //set hover mechanism
+                    let wireIdClass = `sim-bb-wire-id-${wireId}`;
+                    const setId = (e) => pxsim.U.addClass(e, wireIdClass);
+                    setId(endG);
+                    setId(midSegHover);
+                    this.styleEl.textContent += `
+                    .${wireIdClass}:hover ~ .${wireIdClass}.sim-bb-wire-hover {
+                        visibility: visible;
+                    }`;
+                }
+                endG.appendChild(end2); //HACK
+                // wire colors
+                let colorCSS = `
+                .wire-stroke-${clrClass} {
+                    stroke: ${visuals.mapWireColor(color)};
+                }
+                .wire-fill-${clrClass} {
+                    fill: ${visuals.mapWireColor(color)};
+                }
+                `;
+                this.styleEl.textContent += colorCSS;
+                return { endG: endG, end1: end1, end2: end2, wires: wires };
+            }
+            checkWire(start, end) {
+                let startLoc = this.getLocCoord(start);
+                let endLoc = this.getLocCoord(end);
+                return !!startLoc && !!endLoc;
+            }
+            addWire(start, end, color) {
+                let startLoc = this.getLocCoord(start);
+                let endLoc = this.getLocCoord(end);
+                if (!startLoc || !endLoc) {
+                    console.debug(`unable to allocate wire for ${start} or ${end}`);
+                    return undefined;
+                }
+                //let startStyle = this.getPinStyle(start);
+                let endStyle = this.getPinStyle(end);
+                let wireEls;
+                if (end.type == "dalboard" && endStyle == "croc") {
+                    wireEls = this.drawWireWithCrocs(startLoc, endLoc, color);
+                }
+                else {
+                    wireEls = this.drawWire(startLoc, endLoc, color);
+                }
+                return wireEls;
+            }
+        }
+        visuals.WireFactory = WireFactory;
+    })(visuals = pxsim.visuals || (pxsim.visuals = {}));
+})(pxsim || (pxsim = {}));

@@ -8,7 +8,7 @@
     <script type="text/javascript">
     if(/[&?]translate=1/.test(window.location.href)) {
 		var _jipt = [];
-        _jipt.push(['project', 'kindscript']);
+        _jipt.push(['project', 'makecode']);
         _jipt.push(['escape', function() {
             window.location.href = window.location.href.replace(/[$\?]translate=1/, '');
         }]);
@@ -105,7 +105,7 @@
     "gifworkerjs": "/pxt-sample/gifjs/gif.worker.js",
     "serviceworkerjs": "/pxt-sample/serviceworker.js",
     "typeScriptWorkerJs": "/pxt-sample/tsworker.js",
-    "pxtVersion": "7.4.21",
+    "pxtVersion": "7.5.46",
     "pxtRelId": "localDirRelId",
     "pxtCdnUrl": "/pxt-sample/",
     "commitCdnUrl": "/pxt-sample/",
@@ -124,6 +124,7 @@
     "multiUrl": "/pxt-sample/multi.html",
     "asseteditorUrl": "/pxt-sample/asseteditor.html",
     "skillmapUrl": "/pxt-sample/skillmap.html",
+    "authcodeUrl": "/pxt-sample/authcode.html",
     "isStatic": true
 };
     </script>
@@ -158,7 +159,7 @@
         var pageTitle = isScriptPage(location) ? "Share Page" : null;
         appInsights.trackPageView(pageTitle, scrubUrl(location), {urlReferrer: scrubUrl(document.referrer.toString())});
 
-        var scriptIdRegex = /(?:\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
+        var scriptIdRegex = /(?:S?\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
         // Check if the current page contains a share URL
         function isScriptPage(url) {
             return !!url.match(scriptIdRegex);

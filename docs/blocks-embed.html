@@ -95,7 +95,7 @@
         <div class="item">
             <form id="tocsearch1" class="search" role="form" method="get" action="https://www.bing.com/search">
                 <div class="ui fluid icon input">
-                    <input type="hidden" name="q1" value="site:http://microsoft.github.io/pxt-sample/" />
+                    <input type="hidden" name="q1" value="site:https://sdk40010.github.io/pxt-sample/" />
                     
                 <input type="search" name="q" placeholder="Search..." aria-label="Search Documentation">
                 <i onclick="document.getElementById('tocsearch1').submit();" tabindex="0" class="search link icon" aria-label="Search" role="button"></i>
@@ -386,7 +386,7 @@ A quick solution is take screenshots of the snippets but that approach can quick
 <li>add the following entry in the <code>_config.yml</code></li>
 </ul>
 <pre><code>  makecode:
-    home_url: http://microsoft.github.io/pxt-sample/</code></pre><ul>
+    home_url: https://sdk40010.github.io/pxt-sample/</code></pre><ul>
 <li>copy the following text at the bottom of your <code>README.md</code> file<pre><code>&lt;script src=&quot;https://makecode.com/gh-pages-embed.js&quot;&gt;&lt;/script&gt;&lt;script&gt;makeCodeRender(&quot;{{ site.makecode.home_url }}&quot;, &quot;{{ site.github.owner_name }}/{{ site.github.repository_name }}&quot;);&lt;/script&gt;</code></pre></li>
 </ul>
 <h2 id="other-plugins">Other Plugins</h2><p>Here is an integration sample:</p>
@@ -488,7 +488,7 @@ basic.showString(&quot;Hello World&quot;)
         type: &quot;renderblocks&quot;,
         id: pre.id,
         code: pre.innerText
-    }, &quot;http://microsoft.github.io/pxt-sample/&quot;);
+    }, &quot;https://sdk40010.github.io/pxt-sample/&quot;);
 }</code></pre>
 <h3 id="create-the-code-iframe-code-renderer">Create the <code>iframe</code> renderer</h3><p>Finally, the rendering <code>iframe</code> is added to the HTML DOM and is hidden so that it does not interfere with the outer document page.</p>
 <pre><code class="lang-typescript-ignore">function makeCodeInjectRenderer() {
@@ -499,7 +499,7 @@ basic.showString(&quot;Hello World&quot;)
     f.style.bottom = 0;
     f.style.width = &quot;1px&quot;;
     f.style.height = &quot;1px&quot;;            
-    f.src = &quot;http://microsoft.github.io/pxt-sample/--docs?render=1&quot;
+    f.src = &quot;https://sdk40010.github.io/pxt-sample/--docs?render=1&quot;
     document.body.appendChild(f);
 }
 
@@ -567,7 +567,7 @@ for (let i = 0; i &lt; 10; i++) {
 &lt;/div&gt;
 
 &lt;script&gt;
-var makecodeUrl = &quot;http://microsoft.github.io/pxt-sample/&quot;;
+var makecodeUrl = &quot;https://sdk40010.github.io/pxt-sample/&quot;;
 var blocksClass = &quot;blocks&quot;;
 
 var injectRenderer = function () {
@@ -589,7 +589,7 @@ function makeCodeRenderPre(pre) {
         type: &quot;renderblocks&quot;,
         id: pre.id,
         code: pre.innerText
-    }, &quot;http://microsoft.github.io/pxt-sample/&quot;);
+    }, &quot;https://sdk40010.github.io/pxt-sample/&quot;);
 }
 
 var attachBlocksListener = function () {
@@ -640,7 +640,7 @@ leave the <code>code</code> attribute empty and pass the shared project id in a 
     options: {
         packageId: pre.getAttribute(&quot;data-packageid&quot;)
     }
-}, &quot;http://microsoft.github.io/pxt-sample/&quot;);</code></pre><ul>
+}, &quot;https://sdk40010.github.io/pxt-sample/&quot;);</code></pre><ul>
 <li><a target="_blank" rel="nofollow noopener" href="https://jsfiddle.net/L8msdjpu/3/">HTML only</a></li>
 </ul>
 <h2 id="lazy-loading">Lazy loading</h2><p>You can detect whether you have any snippet on your page before loading the rendering <code>iframe</code>.</p>
@@ -682,7 +682,7 @@ leave the <code>code</code> attribute empty and pass the shared project id in a 
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2021 Microsoft</span>
+            <span class="item">© 2022 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>
@@ -844,7 +844,7 @@ leave the <code>code</code> attribute empty and pass the shared project id in a 
         var pageTitle = isScriptPage(location) ? "Share Page" : null;
         appInsights.trackPageView(pageTitle, scrubUrl(location), {urlReferrer: scrubUrl(document.referrer.toString())});
 
-        var scriptIdRegex = /(?:\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
+        var scriptIdRegex = /(?:S?\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
         // Check if the current page contains a share URL
         function isScriptPage(url) {
             return !!url.match(scriptIdRegex);

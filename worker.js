@@ -1,1 +1,371 @@
-importScripts("/pxt-sample/pxtworker.js");let pm=postMessage;"undefined"==typeof btoa&&(ts.pxtc.encodeBase64=function(e){function r(e){return e<=25?e+65:e<=51?e+71:e<=61?e-4:62==e?43:47}let t=new Array,o=0,n=0;for(let i=0;i<e.length;i++){let a=e.charCodeAt(i);if(a>255)return;0==o?(t.push(String.fromCharCode(r(a>>2))),o=1,n=(3&a)<<4):1==o?(t.push(String.fromCharCode(r(n|a>>4))),o=2,n=(15&a)<<2):2==o&&(t.push(String.fromCharCode(r(n|a>>6),r(63&a))),o=0,n=0)}return 1==o?t.push(String.fromCharCode(r(n),61,61)):2==o&&t.push(String.fromCharCode(r(n),61)),t.join("")}),"undefined"==typeof atob&&(ts.pxtc.decodeBase64=function(e){function r(e){return 47==e?63:43==e?62:e<=57?e+4:e<=90?e-65:e-71}function t(e,r,t){let o=0;for(let t=0;t<=e-r;t++)o=1+(o<<1);return t>>r&o}let o=new Array,n=!0,i=!1,a=!1,p=!1,l=!1,y=!1,s=0,u=new RegExp("^([A-Za-z0-9+/=])$");for(let f=0;f<e.length;f++){let c=e.charCodeAt(f);if(!String.fromCharCode(c).match(u)||61==c&&(n||i)||61==c&&0!=s||61!=c&&l||y)return;n?(s=r(c)<<2,n=!1,i=!0,a=!1,p=!1,l=!1,y=!1):i?(o.push(String.fromCharCode(s|t(5,4,r(c)))),s=(15&r(c))<<4,n=!1,i=!1,a=!0,p=!1,l=!1,y=!1):a?61==c?(s=0,n=!1,i=!1,a=!1,p=!1,l=!0,y=!1):(o.push(String.fromCharCode(s|t(5,2,r(c)))),s=(3&r(c))<<6,n=!1,i=!1,a=!1,p=!0,l=!1,y=!1):p?61==c?(s=0,n=!1,i=!1,a=!1,p=!1,l=!1,y=!0):(o.push(String.fromCharCode(s|r(c))),s=0,n=!0,i=!1,a=!1,p=!1,l=!1,y=!1):l&&(s=0,n=!1,i=!1,a=!1,p=!1,l=!1,y=!0)}if(!n&&!y)return;return o.join("")}),String.prototype.startsWith||Object.defineProperty(String.prototype,"startsWith",{value:function(e,r){return void 0!==e&&null!=e&&(r=!r||r<0?0:+r,this.substring(r,r+e.length)===e)}}),Uint8Array.prototype.slice||Object.defineProperty(Uint8Array.prototype,"slice",{value:Array.prototype.slice,writable:!0,enumerable:!0}),Uint16Array.prototype.slice||Object.defineProperty(Uint16Array.prototype,"slice",{value:Array.prototype.slice,writable:!0,enumerable:!0}),Uint32Array.prototype.slice||Object.defineProperty(Uint32Array.prototype,"slice",{value:Array.prototype.slice,writable:!0,enumerable:!0}),Uint8Array.prototype.some||Object.defineProperty(Uint8Array.prototype,"some",{value:Array.prototype.some,writable:!0,enumerable:!0}),Uint16Array.prototype.some||Object.defineProperty(Uint16Array.prototype,"some",{value:Array.prototype.some,writable:!0,enumerable:!0}),Uint32Array.prototype.some||Object.defineProperty(Uint32Array.prototype,"some",{value:Array.prototype.some,writable:!0,enumerable:!0}),Uint8Array.prototype.reverse||Object.defineProperty(Uint8Array.prototype,"reverse",{value:Array.prototype.reverse,writable:!0,enumerable:!0}),Uint16Array.prototype.reverse||Object.defineProperty(Uint16Array.prototype,"reverse",{value:Array.prototype.reverse,writable:!0,enumerable:!0}),Uint32Array.prototype.reverse||Object.defineProperty(Uint32Array.prototype,"reverse",{value:Array.prototype.reverse,writable:!0,enumerable:!0}),Uint8Array.prototype.fill||Object.defineProperty(Uint8Array.prototype,"fill",{writable:!0,enumerable:!0,value:function(e){if(null==this)throw new TypeError("this is null or not defined");let r=Object(this),t=r.length>>>0,o=arguments[1],n=o>>0,i=n<0?Math.max(t+n,0):Math.min(n,t),a=arguments[2],p=void 0===a?t:a>>0,l=p<0?Math.max(t+p,0):Math.min(p,t);for(;i<l;)r[i]=e,i++;return r}}),Array.prototype.find||Object.defineProperty(Array.prototype,"find",{writable:!0,enumerable:!0,value:function(e){if(null==this)throw new TypeError('"this" is null or not defined');let r=Object(this);const t=r.length>>>0;if("function"!=typeof e)throw new TypeError("predicate must be a function");const o=arguments[1];let n=0;for(;n<t;){const t=r[n];if(e.call(o,t,n,r))return t;n++}}}),Math.imul||(Math.imul=function(e,r){const t=65535&e,o=65535&r;return t*o+((e>>>16&65535)*o+t*(r>>>16&65535)<<16>>>0)|0}),"function"!=typeof Object.assign&&Object.defineProperty(Object,"assign",{value:function(e,r){"use strict";if(null==e)throw new TypeError("Cannot convert undefined or null to object");let t=Object(e);for(let e=1;e<arguments.length;e++){let r=arguments[e];if(null!=r)for(let e in r)Object.prototype.hasOwnProperty.call(r,e)&&(t[e]=r[e])}return t},writable:!0,configurable:!0}),Promise.prototype.finally||(Promise.prototype.finally=Promise.prototype.finally||{finally(e){const r=r=>Promise.resolve(e()).then(r);return this.then((e=>r((()=>e))),(e=>r((()=>Promise.reject(e)))))}}.finally),onmessage=e=>{let r=pxtc.service.performOperation(e.data.op,e.data.arg);pm({op:e.data.op,id:e.data.id,result:JSON.parse(JSON.stringify(r))})},pm({id:"ready"});
+/// <reference path="../../built/pxtlib.d.ts"/>
+/// <reference path="../../built/pxtcompiler.d.ts"/>
+/// <reference path="../../built/pxtpy.d.ts"/>
+importScripts("/pxt-sample/pxtworker.js");
+let pm = postMessage;
+// work around safari not providing bta
+if (typeof btoa === "undefined") {
+    // http://www.rise4fun.com/Bek/base64encode
+    ts.pxtc.encodeBase64 = function (_input) {
+        function _base64(_x) { return ((_x <= 0x19) ? (_x + 0x41) : ((_x <= 0x33) ? (_x + 0x47) : ((_x <= 0x3D) ? (_x - 0x4) : ((_x == 0x3E) ? 0x2B : 0x2F)))); }
+        ;
+        let result = new Array();
+        let _q = 0x0;
+        let _r = 0x0;
+        for (let _i = 0; _i < _input.length; _i++) {
+            let _x = _input.charCodeAt(_i);
+            if ((_x > 0xFF)) {
+                //throw { name: 'InvalidCharacter' };
+                return undefined;
+            }
+            else if ((_q == 0x0)) {
+                result.push(String.fromCharCode(_base64((_x >> 0x2))));
+                _q = 0x1;
+                _r = ((_x & 0x3) << 0x4);
+            }
+            else if ((_q == 0x1)) {
+                result.push(String.fromCharCode(_base64((_r | (_x >> 0x4)))));
+                _q = 0x2;
+                _r = ((_x & 0xF) << 0x2);
+            }
+            else if ((_q == 0x2)) {
+                result.push(String.fromCharCode(_base64((_r | (_x >> 0x6))), _base64((_x & 0x3F))));
+                _q = 0x0;
+                _r = 0x0;
+            }
+        }
+        if ((_q == 0x1)) {
+            result.push(String.fromCharCode(_base64(_r), 0x3D, 0x3D));
+        }
+        else if ((_q == 0x2)) {
+            result.push(String.fromCharCode(_base64(_r), 0x3D));
+        }
+        return result.join('');
+    };
+}
+// work around safari not providing atob
+if (typeof atob === "undefined") {
+    //http://www.rise4fun.com/Bek/Cbl
+    ts.pxtc.decodeBase64 = function (_input) {
+        function _D(_x) { return ((_x == 0x2F) ? 0x3F : ((_x == 0x2B) ? 0x3E : ((_x <= 0x39) ? (_x + 0x4) : ((_x <= 0x5A) ? (_x - 0x41) : (_x - 0x47))))); }
+        ;
+        function _Bits(m, n, c) {
+            let mask = 0;
+            for (let i = 0; i <= (m - n); i++) {
+                mask = (mask << 1) + 1;
+            }
+            return (c >> n) & mask;
+        }
+        ;
+        let result = new Array();
+        let _q0 = true;
+        let _q1 = false;
+        let _q2 = false;
+        let _q3 = false;
+        let _q4 = false;
+        let _q5 = false;
+        let _r = 0x0;
+        let rx = new RegExp("^([A-Za-z0-9+/=])$");
+        for (let _i = 0; _i < _input.length; _i++) {
+            let _x = _input.charCodeAt(_i);
+            if ((!String.fromCharCode(_x).match(rx) || ((_x == 0x3D) && (_q0 || _q1)) || ((_x == 0x3D) && !(_r == 0x0)) || (!(_x == 0x3D) && _q4) || _q5)) {
+                // throw { name: 'InvalidInput' };
+                return undefined;
+            }
+            else if (_q0) {
+                _r = (_D(_x) << 0x2);
+                _q0 = false;
+                _q1 = true;
+                _q2 = false;
+                _q3 = false;
+                _q4 = false;
+                _q5 = false;
+            }
+            else if (_q1) {
+                result.push(String.fromCharCode((_r | _Bits(0x5, 0x4, _D(_x)))));
+                _r = ((_D(_x) & 0xF) << 0x4);
+                _q0 = false;
+                _q1 = false;
+                _q2 = true;
+                _q3 = false;
+                _q4 = false;
+                _q5 = false;
+            }
+            else if (_q2) {
+                if ((_x == 0x3D)) {
+                    _r = 0x0;
+                    _q0 = false;
+                    _q1 = false;
+                    _q2 = false;
+                    _q3 = false;
+                    _q4 = true;
+                    _q5 = false;
+                }
+                else {
+                    result.push(String.fromCharCode((_r | _Bits(0x5, 0x2, _D(_x)))));
+                    _r = ((_D(_x) & 0x3) << 0x6);
+                    _q0 = false;
+                    _q1 = false;
+                    _q2 = false;
+                    _q3 = true;
+                    _q4 = false;
+                    _q5 = false;
+                }
+            }
+            else if (_q3) {
+                if ((_x == 0x3D)) {
+                    _r = 0x0;
+                    _q0 = false;
+                    _q1 = false;
+                    _q2 = false;
+                    _q3 = false;
+                    _q4 = false;
+                    _q5 = true;
+                }
+                else {
+                    result.push(String.fromCharCode((_r | _D(_x))));
+                    _r = 0x0;
+                    _q0 = true;
+                    _q1 = false;
+                    _q2 = false;
+                    _q3 = false;
+                    _q4 = false;
+                    _q5 = false;
+                }
+            }
+            else if (_q4) {
+                _r = 0x0;
+                _q0 = false;
+                _q1 = false;
+                _q2 = false;
+                _q3 = false;
+                _q4 = false;
+                _q5 = true;
+            }
+        }
+        if (!(_q0 || _q5)) {
+            //throw { name: 'InvalidInput' };
+            return undefined;
+        }
+        const r = result.join('');
+        return r;
+    };
+}
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+if (!String.prototype.startsWith) {
+    Object.defineProperty(String.prototype, 'startsWith', {
+        value: function (search, pos) {
+            if (search === undefined || search == null)
+                return false;
+            pos = !pos || pos < 0 ? 0 : +pos;
+            return this.substring(pos, pos + search.length) === search;
+        }
+    });
+}
+// Polyfill for Uint8Array.slice for IE and Safari
+// https://tc39.github.io/ecma262/#sec-%typedarray%.prototype.slice
+if (!Uint8Array.prototype.slice) {
+    Object.defineProperty(Uint8Array.prototype, 'slice', {
+        value: Array.prototype.slice,
+        writable: true,
+        enumerable: true
+    });
+}
+if (!Uint16Array.prototype.slice) {
+    Object.defineProperty(Uint16Array.prototype, 'slice', {
+        value: Array.prototype.slice,
+        writable: true,
+        enumerable: true
+    });
+}
+if (!Uint32Array.prototype.slice) {
+    Object.defineProperty(Uint32Array.prototype, 'slice', {
+        value: Array.prototype.slice,
+        writable: true,
+        enumerable: true
+    });
+}
+// https://tc39.github.io/ecma262/#sec-%typedarray%.prototype.some
+if (!Uint8Array.prototype.some) {
+    Object.defineProperty(Uint8Array.prototype, 'some', {
+        value: Array.prototype.some,
+        writable: true,
+        enumerable: true
+    });
+}
+if (!Uint16Array.prototype.some) {
+    Object.defineProperty(Uint16Array.prototype, 'some', {
+        value: Array.prototype.some,
+        writable: true,
+        enumerable: true
+    });
+}
+if (!Uint32Array.prototype.some) {
+    Object.defineProperty(Uint32Array.prototype, 'some', {
+        value: Array.prototype.some,
+        writable: true,
+        enumerable: true
+    });
+}
+// https://tc39.github.io/ecma262/#sec-%typedarray%.prototype.reverse
+if (!Uint8Array.prototype.reverse) {
+    Object.defineProperty(Uint8Array.prototype, 'reverse', {
+        value: Array.prototype.reverse,
+        writable: true,
+        enumerable: true
+    });
+}
+if (!Uint16Array.prototype.reverse) {
+    Object.defineProperty(Uint16Array.prototype, 'reverse', {
+        value: Array.prototype.reverse,
+        writable: true,
+        enumerable: true
+    });
+}
+if (!Uint32Array.prototype.reverse) {
+    Object.defineProperty(Uint32Array.prototype, 'reverse', {
+        value: Array.prototype.reverse,
+        writable: true,
+        enumerable: true
+    });
+}
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
+if (!Uint8Array.prototype.fill) {
+    Object.defineProperty(Uint8Array.prototype, 'fill', {
+        writable: true,
+        enumerable: true,
+        value: function (value) {
+            // Steps 1-2.
+            if (this == null) {
+                throw new TypeError('this is null or not defined');
+            }
+            let O = Object(this);
+            // Steps 3-5.
+            let len = O.length >>> 0;
+            // Steps 6-7.
+            let start = arguments[1];
+            let relativeStart = start >> 0;
+            // Step 8.
+            let k = relativeStart < 0 ?
+                Math.max(len + relativeStart, 0) :
+                Math.min(relativeStart, len);
+            // Steps 9-10.
+            let end = arguments[2];
+            let relativeEnd = end === undefined ?
+                len : end >> 0;
+            // Step 11.
+            let final = relativeEnd < 0 ?
+                Math.max(len + relativeEnd, 0) :
+                Math.min(relativeEnd, len);
+            // Step 12.
+            while (k < final) {
+                O[k] = value;
+                k++;
+            }
+            // Step 13.
+            return O;
+        }
+    });
+}
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+if (!Array.prototype.find) {
+    Object.defineProperty(Array.prototype, 'find', {
+        writable: true,
+        enumerable: true,
+        value: function (predicate) {
+            // 1. Let O be ? ToObject(this value).
+            if (this == null) {
+                throw new TypeError('"this" is null or not defined');
+            }
+            let o = Object(this);
+            // 2. Let len be ? ToLength(? Get(O, "length")).
+            const len = o.length >>> 0;
+            // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+            if (typeof predicate !== 'function') {
+                throw new TypeError('predicate must be a function');
+            }
+            // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+            const thisArg = arguments[1];
+            // 5. Let k be 0.
+            let k = 0;
+            // 6. Repeat, while k < len
+            while (k < len) {
+                // a. Let Pk be ! ToString(k).
+                // b. Let kValue be ? Get(O, Pk).
+                // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+                // d. If testResult is true, return kValue.
+                const kValue = o[k];
+                if (predicate.call(thisArg, kValue, k, o)) {
+                    return kValue;
+                }
+                // e. Increase k by 1.
+                k++;
+            }
+            // 7. Return undefined.
+            return undefined;
+        },
+    });
+}
+// Inject Math imul polyfill
+if (!Math.imul) {
+    // for explanations see:
+    // http://stackoverflow.com/questions/3428136/javascript-integer-math-incorrect-results (second answer)
+    // (but the code below doesn't come from there; I wrote it myself)
+    // TODO use Math.imul if available
+    Math.imul = function (a, b) {
+        const ah = (a >>> 16) & 0xffff;
+        const al = a & 0xffff;
+        const bh = (b >>> 16) & 0xffff;
+        const bl = b & 0xffff;
+        // the shift by 0 fixes the sign on the high part
+        // the final |0 converts the unsigned value into a signed value
+        return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
+    };
+}
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
+if (typeof Object.assign != 'function') {
+    // Must be writable: true, enumerable: false, configurable: true
+    Object.defineProperty(Object, "assign", {
+        value: function assign(target, varArgs) {
+            'use strict';
+            if (target == null) { // TypeError if undefined or null
+                throw new TypeError('Cannot convert undefined or null to object');
+            }
+            let to = Object(target);
+            for (let index = 1; index < arguments.length; index++) {
+                let nextSource = arguments[index];
+                if (nextSource != null) { // Skip over if undefined or null
+                    for (let nextKey in nextSource) {
+                        // Avoid bugs when hasOwnProperty is shadowed
+                        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                            to[nextKey] = nextSource[nextKey];
+                        }
+                    }
+                }
+            }
+            return to;
+        },
+        writable: true,
+        configurable: true
+    });
+}
+// https://stackoverflow.com/a/53327815
+if (!Promise.prototype.finally) {
+    Promise.prototype.finally = Promise.prototype.finally || {
+        finally(fn) {
+            const onFinally = (callback) => Promise.resolve(fn()).then(callback);
+            return this.then(result => onFinally(() => result), reason => onFinally(() => Promise.reject(reason)));
+        }
+    }.finally;
+}
+onmessage = ev => {
+    let res = pxtc.service.performOperation(ev.data.op, ev.data.arg);
+    pm({
+        op: ev.data.op,
+        id: ev.data.id,
+        result: JSON.parse(JSON.stringify(res))
+    });
+};
+pm({
+    id: "ready"
+});

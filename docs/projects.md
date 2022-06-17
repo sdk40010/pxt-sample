@@ -3,13 +3,18 @@
 ```codecard
 [
     {
-        "name": "Examples",
-        "url": "/examples"
+        "name": "チュートリアル",
+        "url": "/tutorials"
+    },
+    {
+        "name": "スキルマップ",
+        "url": "/skillmaps"
     }
 ]
 ```
 
 ## See Also
 
-[Examples](/examples)
+[チュートリアル](/tutorials),
+[スキルマップ](/skillmaps)
 

@@ -98,7 +98,7 @@ numbers, strings, structures, boolean values, and the like." />
         <div class="item">
             <form id="tocsearch1" class="search" role="form" method="get" action="https://www.bing.com/search">
                 <div class="ui fluid icon input">
-                    <input type="hidden" name="q1" value="site:http://microsoft.github.io/pxt-sample/" />
+                    <input type="hidden" name="q1" value="site:https://sdk40010.github.io/pxt-sample/" />
                     
                 <input type="search" name="q" placeholder="Search..." aria-label="Search Documentation">
                 <i onclick="document.getElementById('tocsearch1').submit();" tabindex="0" class="search link icon" aria-label="Search" role="button"></i>
@@ -427,7 +427,7 @@ In the first, you use the type of the elements followed by <code>[]</code> to de
 
     <div class="ui info message">
         <div class="content">
-            <p>For the unknown macro, all elements of an array must have the same type.</p>
+            <p>For the Turtle Graphics, all elements of an array must have the same type.</p>
 
         </div>
     </div>
@@ -443,7 +443,7 @@ let c: Color = Color.Green;</code></pre>
 <p>Or, even manually set all the values in the enum:</p>
 <pre><code class="lang-typescript">enum Color {Red = 1, Green = 2, Blue = 4}
 let c: Color = Color.Green;</code></pre>
-<h2 id="any">Any</h2><p>The TypeScript type <code>any</code> is not supported in the unknown macro.</p>
+<h2 id="any">Any</h2><p>The TypeScript type <code>any</code> is not supported in the Turtle Graphics.</p>
 <h2 id="void">Void</h2><p><code>void</code> is the absence of any type at all.
 You may commonly see this as the return type of functions that do not return a value:</p>
 <pre><code class="lang-typescript">function warnUser(): void {
@@ -507,7 +507,7 @@ while (!received) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2021 Microsoft</span>
+            <span class="item">© 2022 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>
@@ -669,7 +669,7 @@ while (!received) {
         var pageTitle = isScriptPage(location) ? "Share Page" : null;
         appInsights.trackPageView(pageTitle, scrubUrl(location), {urlReferrer: scrubUrl(document.referrer.toString())});
 
-        var scriptIdRegex = /(?:\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
+        var scriptIdRegex = /(?:S?\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
         // Check if the current page contains a share URL
         function isScriptPage(url) {
             return !!url.match(scriptIdRegex);

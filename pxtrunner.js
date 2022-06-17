@@ -1,1 +1,2534 @@
-var pxt;!function(e){!function(t){t.startDebuggerAsync=function(e){new n(e).start()};class n{constructor(e){this.container=e,this.pkgLoaded=!1,this.intervalRunning=!1}start(){this.initializeWebsocket(),this.intervalRunning||(this.intervalRunning=!0,this.intervalId=setInterval((()=>{if(!this.ws)try{this.initializeWebsocket()}catch(e){console.warn(`Connection to server failed, retrying in ${n.RETRY_MS} ms`)}}),n.RETRY_MS)),this.session=new pxsim.SimDebugSession(this.container),this.session.start(this)}initializeWebsocket(){e.BrowserUtils.isLocalHost()&&e.Cloud.localToken&&(e.debug("initializing debug pipe"),this.ws=new WebSocket("ws://localhost:3234/"+e.Cloud.localToken+"/simdebug"),this.ws.onopen=t=>{e.debug("debug: socket opened")},this.ws.onclose=t=>{e.debug("debug: socket closed"),this.closeListener&&this.closeListener(),this.session.stopSimulator(),this.ws=void 0},this.ws.onerror=t=>{e.debug("debug: socket closed due to error"),this.errorListener&&this.errorListener(t.type),this.session.stopSimulator(),this.ws=void 0},this.ws.onmessage=t=>{let n;try{n=JSON.parse(t.data)}catch(t){e.debug("debug: could not parse message")}n&&("runner"===n.type?this.handleRunnerMessage(n):("request"===n.type&&"launch"===n.command&&this.sendRunnerMessage("configure",{projectDir:n.arguments.projectDir}),this.dataListener(n)))})}send(e){this.ws.send(e)}onData(e){this.dataListener=e}onError(e){this.errorListener=e}onClose(e){this.closeListener=e}close(){this.session&&this.session.stopSimulator(!0),this.intervalRunning&&(clearInterval(this.intervalId),this.intervalId=void 0),this.ws&&this.ws.close()}handleRunnerMessage(e){switch(e.subtype){case"ready":this.sendRunnerMessage("ready");break;case"runcode":this.runCode(e)}}runCode(t){const n=[];t.breakpoints.forEach((e=>{n.push([e.id,{verified:!0,line:e.line,column:e.column,endLine:e.endLine,endColumn:e.endColumn,source:{path:e.fileName}}])})),this.session.runCode(t.code,t.usedParts,t.usedArguments,new pxsim.BreakpointMap(n),e.appTarget.simulator.boardDefinition)}sendRunnerMessage(e,t={}){t.subtype=e,t.type="runner",this.send(JSON.stringify(t))}}n.RETRY_MS=2500,t.DebugRunner=n}(e.runner||(e.runner={}))}(pxt||(pxt={})),function(e){!function(t){function n(){return{blocksAspectRatio:window.innerHeight<window.innerWidth?1.62:1/1.62,snippetClass:"lang-blocks",signatureClass:"lang-sig",blocksClass:"lang-block",blocksXmlClass:"lang-blocksxml",diffBlocksXmlClass:"lang-diffblocksxml",diffClass:"lang-diff",diffStaticPythonClass:"lang-diffspy",diffBlocksClass:"lang-diffblocks",staticPythonClass:"lang-spy",simulatorClass:"lang-sim",linksClass:"lang-cards",namespacesClass:"lang-namespaces",apisClass:"lang-apis",codeCardClass:"lang-codecard",packageClass:"lang-package",jresClass:"lang-jres",assetJSONClass:"lang-assetsjson",projectClass:"lang-project",snippetReplaceParent:!0,simulator:!0,showEdit:!0,hex:!0,tutorial:!1,showJavaScript:!1,hexName:e.appTarget.id}}function s(e){"undefined"!=typeof hljs&&(e.hasClass("highlight")?hljs.highlightBlock(e[0]):e.find("code.highlight").each((function(e,t){hljs.highlightBlock(t)})),i(e))}function i(t){t.find("span.hljs-comment:contains(@highlight)").each(((t,n)=>{try{!function(e){const t=$(e),n=document.createElement("span");n.className="highlight-line";let s=e.nextSibling;if(!s||s.nodeType!=Node.TEXT_NODE)return;let i=s.textContent,o=i.indexOf("\n");if(o<0)return;s.textContent=i.substring(0,o+1),$(document.createTextNode(i.substring(o+1).replace(/^\s+/,""))).insertAfter($(s)),s=s.nextSibling;for(;s;){let e=s.nextSibling;if(s.nodeType==Node.TEXT_NODE){i=s.textContent;const t=i.indexOf("\n");if(!(t<0)){n.appendChild(document.createTextNode(i.substring(0,t))),s.textContent=i.substring(t+1);break}n.appendChild(s),s=e}else n.appendChild(s),s=e}$(n).insertAfter(t),t.remove()}(n)}catch(t){e.reportException(t)}}))}function o(e,t){e.append($('<div class="ui content blocks"/>').append(t))}function a(e,t,n){e.append($('<div class="ui content js"><div class="subheading"><i class="ui icon xicon js"></i>JavaScript</div></div>').append(t)),s(t)}function r(e,t,n){e.append($('<div class="ui content py"><div class="subheading"><i class="ui icon xicon python"></i>Python</div></div>').append(t)),s(t)}function l(e,t){const n=$('<a class="item" role="button" tabindex="0"><i role="presentation" aria-hidden="true"></i><span class="ui desktop only"></span></a>');return n.attr("aria-label",e),n.attr("title",e),n.find("i").attr("class",t),n.find("span").text(e),n.keypress((e=>{const t="number"==typeof e.which?e.which:e.keyCode;13!==t&&32!==t||(e.preventDefault(),e.currentTarget.click())})),n}function c(t,n,s,i,c,d,p={}){let u=$('<div class="ui bottom attached tabular icon small compact menu hideprint"> <div class="right icon menu"></div></div>'),m=$('<div class="ui top attached segment codewidget"></div>'),g=u.find(".right.menu");const h=e.appTarget.appTheme||{};if(p.showEdit&&!h.hideDocsEdit&&d){const n=l(lf("Edit"),"edit icon"),{package:s,compileBlocks:o,compilePython:a}=d,r=s.host();if(c&&o?(s.setPreferredEditor(e.BLOCKS_PROJECT_NAME),r.writeFile(s,e.MAIN_BLOCKS,o.outfiles[e.MAIN_BLOCKS])):i&&a?(s.setPreferredEditor(e.PYTHON_PROJECT_NAME),r.writeFile(s,e.MAIN_PY,o.outfiles[e.MAIN_PY])):s.setPreferredEditor(e.JAVASCRIPT_PROJECT_NAME),t.assetJSON)for(const e of Object.keys(t.assetJSON))s.config.files.indexOf(e)<0&&s.config.files.push(e),r.writeFile(s,e,t.assetJSON[e]);const p=s.compressToFileAsync();n.click((()=>{e.tickEvent("docs.btn",{button:"edit"}),p.then((n=>{window.open(`${function(t){return(t.pxtUrl||e.appTarget.appTheme.homeUrl||"").replace(/\/$/,"")}(t)}/#project:${ts.pxtc.encodeBase64(e.Util.uint8ArrayToString(n))}`,"pxt")}))})),g.append(n)}if(t.showJavaScript||!c&&!i?(m.append(s),k(),y()):c?(m.append(c),b(),y()):i&&(m.append(i),k(),b()),p.run&&!h.hideDocsSimulator){let n=l(lf("Run"),"play icon").click((()=>{if(e.tickEvent("docs.btn",{button:"sim"}),m.find(".sim")[0])m.find(".sim").remove(),w(m);else{let n="81.97%";e.appTarget.simulator&&(n=100/e.appTarget.simulator.aspectRatio+"%");const i=t.package?"&deps="+encodeURIComponent(t.package):"",o=v(t)+"#nofooter=1"+i,a=t.assetJSON?`data-assets="${encodeURIComponent(JSON.stringify(t.assetJSON))}"`:"",r=encodeURIComponent(s.text());let l=$(`<div class="ui card sim"><div class="ui content"><div style="position:relative;height:0;padding-bottom:${n};overflow:hidden;"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" src="${o}" data-code="${r}" ${a} allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin" frameborder="0"></iframe></div></div></div>`);m.append(l),w(l)}}));g.append(n)}if(p.hexname&&p.hex){let t=l(lf("Download"),"download icon").click((()=>{e.tickEvent("docs.btn",{button:"hex"}),e.BrowserUtils.browserDownloadBinText(p.hex,p.hexname,{contentType:e.appTarget.compile.hexMimeType})}));g.append(t)}let f=$("<div class=codesnippet></div>");function k(){if(!c)return;const t=l(lf("Blocks"),"icon xicon blocks").click((()=>{e.tickEvent("docs.btn",{button:"blocks"}),m.find(".blocks")[0]?(m.find(".blocks").remove(),w(m)):(o(s?s.parent():m,c),w(c))}));g.append(t)}function b(){if(s)if(p.showJs)a(m,s);else{const t=l("JavaScript","icon xicon js").click((()=>{e.tickEvent("docs.btn",{button:"js"}),m.find(".js")[0]?(m.find(".js").remove(),w(m)):(a(c?c.parent():m,s),w(s))}));g.append(t)}}function y(){if(i)if(p.showPy)r(m,i);else{const t=l("Python","icon xicon python").click((()=>{e.tickEvent("docs.btn",{button:"py"}),m.find(".py")[0]?(m.find(".py").remove(),w(m)):(r(c?c.parent():m,i),w(i))}));g.append(t)}}function w(e){var t;null===(t=e[0])||void 0===t||t.scrollIntoView({behavior:"smooth",block:"center"})}g.children().length&&f.append(u),f.append(m),n.replaceWith(f)}t.defaultClientRenderOptions=n;let d,p=[];function u(t,n,s){if(!t)return Promise.resolve();let i=$("."+t).first();return i[0]?(s.emPixels||(s.emPixels=18),s.layout||(s.layout=e.blocks.BlockLayout.Align),s.splitSvg=!0,p.push({el:i,source:i.text(),options:s,render:n}),i.addClass("lang-shadow"),i.removeClass(t),u(t,n,s)):Promise.resolve()}function m(e){if(!e||e.kind!=ts.SyntaxKind.ExpressionStatement)return null;let t=e;if(!t.expression||t.expression.kind!=ts.SyntaxKind.CallExpression)return null;let n=t.expression;return pxtc.pxtInfo(n).callInfo}function g(t){return d||(d=e.runner.decompileSnippetAsync("",t)),d}function h(t,n){if(!n)return;const s=/^\/(v\d+)/.exec(n.url),i=/^\/(v\d+)/.exec(window.location.pathname),o=/#doc/i.test(window.location.href);n.url&&!s&&i&&!o&&(n.url=`/${i[1]}/${n.url}`),t.append(e.docs.codeCard.render(n,{hideHeader:!0,shortName:!0}))}function f(t,n,s){const i=n.attributes,o=!i.blockHidden&&Blockly.Blocks[i.blockId];if(null==o?void 0:o.codeCard){const n=e.U.clone(o.codeCard);s&&(n.style=s),h(t,n)}else h(t,{name:n.qName,description:i.jsDoc,url:i.help||void 0,style:s})}function k(t,n,s,i){return u(n,((t,n)=>{const o=n.compileProgram;if(!o)return;const a=o.getSourceFile(e.MAIN_TS).statements.slice(0),r=$("<div />").addClass("ui cards");r.attr("role","listbox"),a.forEach((t=>{const s=t.kind,o=m(t);if(o&&n.apiInfo&&n.apiInfo.byQName[o.qName]){const e=n.apiInfo.byQName[o.qName],t=e.attributes,s=Blockly.Blocks[t.blockId];if(i){const i=e,o=n.compileBlocks.blocksInfo.apis.byQName[i.namespace];h(r,{name:o.attributes.blockNamespace||o.name,url:o.attributes.help||"reference/"+(o.attributes.blockNamespace||o.name).toLowerCase(),description:o.attributes.jsDoc,blocksXml:s&&s.codeCard?s.codeCard.blocksXml:t.blockId?`<xml xmlns="http://www.w3.org/1999/xhtml"><block type="${t.blockId}"></block></xml>`:void 0})}else f(r,e)}else switch(s){case ts.SyntaxKind.ExpressionStatement:{const n=t;switch(n.expression.kind){case ts.SyntaxKind.TrueKeyword:case ts.SyntaxKind.FalseKeyword:h(r,{name:"Boolean",url:"blocks/logic/boolean",description:lf("True or false values"),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="logic_boolean"><field name="BOOL">TRUE</field></block></xml>'});break;default:e.debug(`card expr kind: ${n.expression.kind}`)}break}case ts.SyntaxKind.IfStatement:h(r,{name:i?"Logic":"if",url:"blocks/logic"+(i?"":"/if"),description:i?lf("Logic operators and constants"):lf("Conditional statement"),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_if"></block></xml>'});break;case ts.SyntaxKind.WhileStatement:h(r,{name:i?"Loops":"while",url:"blocks/loops"+(i?"":"/while"),description:i?lf("Loops and repetition"):lf("Repeat code while a condition is true."),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="device_while"></block></xml>'});break;case ts.SyntaxKind.ForOfStatement:h(r,{name:i?"Loops":"for of",url:"blocks/loops"+(i?"":"/for-of"),description:i?lf("Loops and repetition"):lf("Repeat code for each item in a list."),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_for_of"></block></xml>'});break;case ts.SyntaxKind.BreakStatement:h(r,{name:i?"Loops":"break",url:"blocks/loops"+(i?"":"/break"),description:i?lf("Loops and repetition"):lf("Break out of the current loop."),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="break_keyword"></block></xml>'});break;case ts.SyntaxKind.ContinueStatement:h(r,{name:i?"Loops":"continue",url:"blocks/loops"+(i?"":"/continue"),description:i?lf("Loops and repetition"):lf("Skip iteration and continue the current loop."),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="continue_keyboard"></block></xml>'});break;case ts.SyntaxKind.ForStatement:{let e=t,n=!0;3==e.condition.getChildCount()&&(n=!("0"==e.condition.getChildAt(0).getText()||e.condition.getChildAt(1).kind==ts.SyntaxKind.LessThanToken)),h(r,n?{name:i?"Loops":"for",url:"blocks/loops"+(i?"":"/for"),description:i?lf("Loops and repetition"):lf("Repeat code for a given number of times using an index."),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_simple_for"></block></xml>'}:{name:i?"Loops":"repeat",url:"blocks/loops"+(i?"":"/repeat"),description:i?lf("Loops and repetition"):lf("Repeat code for a given number of times."),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_repeat_ext"></block></xml>'});break}case ts.SyntaxKind.VariableStatement:h(r,{name:i?"Variables":"variable declaration",url:"blocks/variables"+(i?"":"/assign"),description:i?lf("Variables"):lf("Assign a value to a named variable."),blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml"><block type="variables_set"></block></xml>'});break;default:e.debug(`card kind: ${s}`)}})),s&&(t=t.parent()),t.replaceWith(r)}),{package:t.package,aspectRatio:t.blocksAspectRatio,assets:t.assetJSON})}function b(t,n){if(!t)return Promise.resolve();let s=$("."+t).first();if(!s[0])return Promise.resolve();s.removeClass(t);const i=e.gallery.parseCodeCardsHtml(s[0]);return i||s.append($("<div/>").addClass("ui segment warning").text("invalid codecard format")),n.snippetReplaceParent&&(s=s.parent()),function(t,n,s){if(!n||0==n.length)return Promise.resolve();if(0==n.length){let i=e.docs.codeCard.render(n[0],s);t.replaceWith(i)}else{let i=document.createElement("div");i.className="ui cards",i.setAttribute("role","listbox"),n.forEach((t=>{const n=/^\/(v\d+)/.exec(t.url),o=/^\/(v\d+)/.exec(window.location.pathname),a=/#doc/i.test(window.location.href);t.url&&!n&&o&&!a&&(t.url=`/${o[1]}${t.url}`);const r=e.docs.codeCard.render(t,s);if(i.appendChild(r),"package"==t.cardType){const n=e.github.parseRepoId((t.url||"").replace(/^\/pkg\//,""));n&&e.packagesConfigAsync().then((o=>{switch(e.github.repoStatus(n,o)){case e.github.GitRepoStatus.Banned:r.remove();break;case e.github.GitRepoStatus.Approved:t.imageUrl=e.github.mkRepoIconUrl(n),i.insertBefore(e.docs.codeCard.render(t,s),r),r.remove()}})).catch((n=>{e.reportException(n),e.debug(`failed to load repo ${t.url}`)}))}})),t.replaceWith(i)}return Promise.resolve()}(s,i,{hideHeader:!0}).then((()=>e.U.delay(1,b(t,n))))}function v(t){return t.pxtUrl?t.pxtUrl+"/--run":e.webConfig&&e.webConfig.runUrl?e.webConfig.runUrl:"/--run"}function y(t){const n={showEdit:!!t.showEdit,run:!!t.simulator};$("code.lang-python").each(((s,o)=>{!function(s,o){"undefined"!=typeof hljs&&($(s).text($(s).text().replace(/^\s*\r?\n/,"")),hljs.highlightBlock(s),i($(s)));const a=e.U.clone(n);o&&(a.run=!1,a.showEdit=!1),c(t,$(s).parent(),$(s),void 0,void 0,void 0,a)}(o,!1),$(o).removeClass("lang-python")}))}t.renderAsync=function(t){return e.analytics.enable(),t||(t=n()),t.pxtUrl&&(t.pxtUrl=t.pxtUrl.replace(/\/$/,"")),t.showEdit&&(t.showEdit=!e.BrowserUtils.isIFrame()),function(e){e.packageClass&&($("."+e.packageClass).each(((t,n)=>{let s=$(n),i=s.text().split("\n").map((e=>e.replace(/\s*/g,""))).filter((e=>!!e)).join(",");e.package=e.package?`${e.package},${i}`:i,e.snippetReplaceParent&&(s=s.parent()),s.remove()})),$(".lang-config").each(((t,n)=>{let s=$(n);e.snippetReplaceParent&&(s=s.parent()),s.remove()})))}(t),function(t){let n,s;t.jresClass&&$(`.${t.jresClass}`).each(((e,t)=>{const n=$(t);s=n.text(),t.parentElement.remove()})),t.assetJSONClass&&$(`.${t.assetJSONClass}`).each(((e,t)=>{const s=$(t);n=s.text(),t.parentElement.remove()})),t.assetJSON=function(t,n){if(!t&&!n)return;const s=e.tutorial.parseAssetJson(t)||{};if(n){const t=JSON.parse(n);s[e.TILEMAP_JRES]=JSON.stringify(t),s[e.TILEMAP_CODE]=e.emitTilemapsFromJRes(t)}return s}(n,s)}(t),p=[],function(e){let t=$("code.lang-ghost");e.snippetReplaceParent&&(t=t.parent()),t.remove()}(t),function(t){t.simulatorClass&&$("."+t.simulatorClass).each(((n,s)=>{let i=$(s),o="81.97%";e.appTarget.simulator&&(o=100/e.appTarget.simulator.aspectRatio+"%");let a=$(`<div class="ui card"><div class="ui content">\n                    <div style="position:relative;height:0;padding-bottom:${o};overflow:hidden;">\n                    <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" allowfullscreen="allowfullscreen" frameborder="0" sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe>\n                    </div>\n                    </div></div>`);const r=t.package?"&deps="+encodeURIComponent(t.package):"",l=v(t)+"#nofooter=1"+r,c=encodeURIComponent(i.text().trim()),d=a.find("iframe");d.attr("src",l),d.attr("data-code",c),t.assetJSON&&d.attr("data-assets",JSON.stringify(t.assetJSON)),t.snippetReplaceParent&&(i=i.parent()),i.replaceWith(a)}))}(t),function(t){const n={showEdit:!!t.showEdit,run:!!t.simulator};function s(s,o){"undefined"!=typeof hljs&&($(s).text($(s).text().replace(/^\s*\r?\n/,"")),hljs.highlightBlock(s),i($(s)));const a=e.U.clone(n);o&&(a.run=!1,a.showEdit=!1),c(t,$(s).parent(),$(s),void 0,void 0,void 0,a)}$("code.lang-typescript").each(((e,t)=>{s(t,!1),$(t).removeClass("lang-typescript")})),$("code.lang-typescript-ignore").each(((e,t)=>{$(t).removeClass("lang-typescript-ignore"),$(t).addClass("lang-typescript"),s(t,!0),$(t).removeClass("lang-typescript")})),$("code.lang-typescript-invalid").each(((e,t)=>{$(t).removeClass("lang-typescript-invalid"),$(t).addClass("lang-typescript"),s(t,!0),$(t).removeClass("lang-typescript"),$(t).parent("div").addClass("invalid"),$(t).parent("div").prepend($("<i>",{class:"icon ban"})),$(t).addClass("invalid")})),$("code.lang-typescript-valid").each(((e,t)=>{$(t).removeClass("lang-typescript-valid"),$(t).addClass("lang-typescript"),s(t,!0),$(t).removeClass("lang-typescript"),$(t).parent("div").addClass("valid"),$(t).parent("div").prepend($("<i>",{class:"icon check"})),$(t).addClass("valid")}))}(t),y(t),Promise.resolve().then((()=>b(t.codeCardClass,t))).then((()=>function(t){return"core"==e.appTarget.id?Promise.resolve():g(t).then((t=>{let n={};const s=t.compileBlocks.blocksInfo;s.blocks.forEach((e=>{const t=(e.attributes.blockNamespace||e.namespace).split(".")[0];if(!n[t]){const e=s.apis.byQName[t];e&&e.attributes.color&&(n[t]=e.attributes.color)}}));let i="";return Object.keys(n).forEach((t=>{const s=n[t]||"#dddddd";i+=`\n                        span.docs.${t.toLowerCase()} {\n                            background-color: ${s} !important;\n                            border-color: ${e.toolbox.fadeColor(s,.1,!1)} !important;\n                        }\n                    `})),i})).then((t=>(Object.keys(e.toolbox.blockColors).forEach((n=>{const s=e.toolbox.getNamespaceColor(n);t+=`\n                        span.docs.${n.toLowerCase()} {\n                            background-color: ${s} !important;\n                            border-color: ${e.toolbox.fadeColor(s,.1,!1)} !important;\n                        }\n                    `})),t))).then((e=>{let t=document.createElement("style");t.id="namespaceColors",t.type="text/css",(document.head||document.getElementsByTagName("head")[0]).appendChild(t),t.appendChild(document.createTextNode(e))}))}(t))).then((()=>function(t){(t=e.Util.clone(t)).emPixels=18,t.snippetMode=!0;const n=$(":not(pre) > code");let s=0;return function i(){if(s>=n.length)return Promise.resolve();const o=$(n[s++]),a=o.text(),r=/^(\|+)([^\|]+)\|+$/.exec(a);if(r){const t=/^(([^\:\.]*?)[\:\.])?(.*)$/.exec(r[2]),n=t[2]?t[2].trim().toLowerCase():"",s=1==r[1].length?`docs inlinebutton ${n}`:`docs inlineblock ${n}`,a=t[3].trim();return o.replaceWith($(`<span class="${s}"/>`).text(e.U.rlf(a))),i()}const l=/^\[(.+)\]$/.exec(a);if(!l)return i();const c=l[1];return e.runner.decompileSnippetAsync(c,t).then((t=>{if(t.blocksSvg){let n=$('<span class="block"/>').append(t.blocksSvg);const s=m(t.compileProgram.getSourceFile(e.MAIN_TS).statements[0]);if(s&&t.apiInfo){const e=t.apiInfo.byQName[s.qName];e&&e.attributes.help&&(n=$('<a class="ui link"/>').attr("href",`/reference/${e.attributes.help}`).append(n))}o.replaceWith(n)}return e.U.delay(1,i())}))}()}(t))).then((()=>k(t,t.linksClass,t.snippetReplaceParent,!1))).then((()=>k(t,t.namespacesClass,t.snippetReplaceParent,!0))).then((()=>function(t,n){const s=t.apisClass;if(!s)return Promise.resolve();const i=$("."+s);return i.length?g(t).then((t=>{const s=t.compileBlocks.blocksInfo,o=e.Util.values(s.apis.byQName).filter((e=>!(e.attributes.hidden||e.attributes.deprecated||e.attributes.blockAliasFor||!e.attributes.jsDoc||!e.attributes.block||/^__/.test(e.name))));i.each(((t,s)=>{let i=$(s);const a=e.Util.toDictionary(i.text().split("\n"),(e=>e)),r=o.filter((e=>!!a[e.attributes.blockNamespace||e.namespace]));if(!r.length)return;r.sort(((e,t)=>{const n=!e.attributes.blockHidden&&Blockly.Blocks[e.attributes.blockId],s=!t.attributes.blockHidden&&Blockly.Blocks[t.attributes.blockId];return!!n!=!!s?(s?1:0)-(n?1:0):e.name.localeCompare(t.name)}));const l=$("<div />").addClass("ui divided items");l.attr("role","listbox"),r.forEach((e=>f(l,e,"item"))),n&&(i=i.parent()),i.replaceWith(l)}))})):Promise.resolve()}(t,t.snippetReplaceParent))).then((()=>function(t){return u(t.signatureClass,((n,s)=>{var i,o,a,r;let l=s.compileProgram;if(!l)return;let d=m(l.getSourceFile(e.MAIN_TS).statements[0]);if(!d||!s.apiInfo)return;const p=s.apiInfo.byQName[d.qName];if(!p)return;let u=Blockly.Blocks[p.attributes.blockId],g=(null===(i=null==u?void 0:u.codeCard)||void 0===i?void 0:i.blocksXml)||void 0;const h=g?e.blocks.render(g):(null===(o=s.compileBlocks)||void 0===o?void 0:o.success)?s.blocksSvg:void 0,f=h?$(h):void 0;let k=ts.pxtc.service.displayStringForSymbol(p,!1,s.apiInfo).split("\n")[1]+";";const b=$('<code class="lang-typescript highlight"/>').text(k),v=(null===(r=null===(a=e.appTarget)||void 0===a?void 0:a.appTheme)||void 0===r?void 0:r.python)&&ts.pxtc.service.displayStringForSymbol(p,!0,s.apiInfo).split("\n")[1],y=v&&$('<code class="lang-python highlight"/>').text(v);if(t.snippetReplaceParent&&(n=n.parent()),e.Util.isTranslationMode()){const e=$('<div class="ui segment" />');e.append($('<div class="ui header"><i class="ui xicon globe"></i></div>')),p.attributes.translationId&&e.append($('<div class="ui message">').text(p.attributes.translationId)),p.attributes.jsDoc&&e.append($('<div class="ui message">').text(p.attributes.jsDoc)),e.insertAfter(n)}c(t,n,b,y,f,s,{showJs:!0,showPy:!0,hideGutter:!0})}),{package:t.package,snippetMode:!0,aspectRatio:t.blocksAspectRatio,assets:t.assetJSON})}(t))).then((()=>function(t){if(t.tutorial)return u(t.snippetClass,((e,n)=>{const s=n.blocksSvg;t.snippetReplaceParent&&(e=e.parent());const i=$('<div class="ui segment codewidget"/>').append(s);e.replaceWith(i)}),{package:t.package,snippetMode:!1,aspectRatio:t.blocksAspectRatio,assets:t.assetJSON});let n=0;return u(t.snippetClass,((s,i)=>{const o=i.compileBlocks&&i.compileBlocks.success?$(i.blocksSvg):void 0,a=i.compilePython&&i.compilePython.success&&i.compilePython.outfiles[e.MAIN_PY],r=$('<code class="lang-typescript highlight"/>').text(s.text().trim()),l=a?$('<code class="lang-python highlight"/>').text(a.trim()):void 0;t.snippetReplaceParent&&(s=s.parent());const d=i.compileJS&&i.compileJS.success,p=t.hex&&d&&i.compileJS.outfiles[pxtc.BINARY_HEX]?i.compileJS.outfiles[pxtc.BINARY_HEX]:void 0,u=`${e.appTarget.nickname||e.appTarget.id}-${t.hexName||""}-${n++}.hex`;c(t,s,r,l,o,i,{showEdit:t.showEdit,run:t.simulator,hexname:u,hex:p})}),{package:t.package,aspectRatio:t.blocksAspectRatio,assets:t.assetJSON})}(t))).then((()=>function(e){return u(e.blocksClass,((t,n)=>{const s=n.blocksSvg;e.snippetReplaceParent&&(t=t.parent());const i=$('<div class="ui segment codewidget"/>').append(s);t.replaceWith(i)}),{package:e.package,snippetMode:!0,aspectRatio:e.blocksAspectRatio,assets:e.assetJSON})}(t))).then((()=>{return(n=t).blocksXmlClass?function t(n,s,i){let o=$("."+n).first();return o[0]?(i.emPixels||(i.emPixels=18),i.splitSvg=!0,e.runner.compileBlocksAsync(o.text(),i).then((a=>{try{s(o,a)}catch(t){e.reportException(t),o.append($("<div/>").addClass("ui segment warning").text(t.message))}return o.removeClass(n),e.U.delay(1,t(n,s,i))}))):Promise.resolve()}(n.blocksXmlClass,((e,t)=>{const s=t.blocksSvg;n.snippetReplaceParent&&(e=e.parent());const i=$('<div class="ui segment codewidget"/>').append(s);e.replaceWith(i)}),{package:n.package,snippetMode:!0,aspectRatio:n.blocksAspectRatio,assets:n.assetJSON}):Promise.resolve();var n})).then((()=>{return(n=t).diffBlocksXmlClass?function t(n,s,i){let o=$("."+n).first();if(!o[0])return Promise.resolve();i.emPixels||(i.emPixels=18),i.splitSvg=!0;const a=o.text().split(/-{10,}/),r=a[0],l=a[1];return e.runner.compileBlocksAsync("",i).then((a=>{o.removeClass(n);try{const t=e.blocks.diffXml(r,l);t?(a.blocksSvg=t.svg,s(o,a)):o.text("no changes")}catch(t){e.reportException(t),o.append($("<div/>").addClass("ui segment warning").text(t.message))}return e.U.delay(1,t(n,s,i))}))}(n.diffBlocksXmlClass,((e,t)=>{const s=t.blocksSvg;n.snippetReplaceParent&&(e=e.parent());const i=$('<div class="ui segment codewidget"/>').append(s);e.replaceWith(i)}),{package:n.package,snippetMode:!0,aspectRatio:n.blocksAspectRatio,assets:n.assetJSON}):Promise.resolve();var n})).then((()=>{return(n=t).diffBlocksClass?function t(s){let i=$("."+s).first();if(!i[0])return Promise.resolve();const{fileA:o,fileB:a}=e.diff.split(i.text(),{removeTrailingSemiColumns:!0});return e.U.promiseMapAllSeries([o,a],(t=>e.runner.decompileSnippetAsync(t,{generateSourceMap:!0}))).then((r=>{try{const t=e.blocks.decompiledDiffAsync(o,r[0].compileBlocks,a,r[1].compileBlocks,{hideDeletedTopBlocks:!0,hideDeletedBlocks:!0}),s=e.diff.render(o,a,{hideLineNumbers:!0,hideMarkerLine:!0,hideMarker:!0,hideRemoved:!0,update:!0,ignoreWhitespace:!0});let l;const[d,p]=r.map((t=>t.compilePython&&t.compilePython.outfiles&&t.compilePython.outfiles[e.MAIN_PY]));d&&p&&(l=e.diff.render(d,p,{hideLineNumbers:!0,hideMarkerLine:!0,hideMarker:!0,hideRemoved:!0,update:!0,ignoreWhitespace:!0})),c(n,i.parent(),$(s),l&&$(l),$(t.svg),void 0,{showEdit:!1,run:!1,hexname:void 0,hex:void 0})}catch(t){e.reportException(t),i.append($("<div/>").addClass("ui segment warning").text(t.message))}return e.U.delay(1,t(s))}))}(n.diffBlocksClass):Promise.resolve();var n})).then((()=>{return(n=t).diffClass?function t(s){let i=$("."+s).first();if(!i[0])return Promise.resolve();const{fileA:o,fileB:a}=e.diff.split(i.text());try{const t=e.diff.render(o,a,{hideLineNumbers:!0,hideMarkerLine:!0,hideMarker:!0,hideRemoved:!0,update:!0,ignoreWhitespace:!0});n.snippetReplaceParent&&(i=i.parent());const r=$('<div class="ui segment codewidget"/>').append(t);i.removeClass(s),i.replaceWith(r)}catch(t){e.reportException(t),i.append($("<div/>").addClass("ui segment warning").text(t.message))}return e.U.delay(1,t(s))}(n.diffClass):Promise.resolve();var n})).then((()=>function(t){const n={showEdit:!!t.showEdit,run:!!t.simulator};return u(t.staticPythonClass,((i,o)=>{const a=o.compilePython;if(a&&a.success){const r=i.clone().removeClass("lang-shadow").addClass("highlight"),l=r.clone().addClass("lang-python").text(a.outfiles[e.MAIN_PY]);r.addClass("lang-typescript"),s(l),c(t,i.parent(),r,l,void 0,o,n)}}),{package:t.package,snippetMode:!0,assets:t.assetJSON})}(t))).then((()=>function(t){return t.projectClass?function n(){let s=$("."+t.projectClass).first(),i=s[0];if(!i)return Promise.resolve();s.removeClass(t.projectClass);let o=e.Cloud.parseScriptId(i.innerText);if(o){if(t.snippetReplaceParent){i=i.parentElement;let e=document.createElement("div");i.parentElement.insertBefore(e,i),i.parentElement.removeChild(i),i=e}return e.runner.renderProjectAsync(i,o).then((()=>n()))}return n()}():Promise.resolve()}(t))).then((()=>function(){const t={};return function n(){const s=p.shift();if(!s)return Promise.resolve();const{el:i,options:o,render:a}=s;return e.runner.decompileSnippetAsync(i.text(),o).then((n=>{const s=n.compileJS&&n.compileJS.diagnostics&&n.compileJS.diagnostics.filter((e=>e.category==pxtc.DiagnosticCategory.Error));s&&s.length&&s.forEach((t=>e.reportError("docs.decompile",""+t.messageText,{code:t.code+""}))),n.blocksSvg.querySelectorAll("defs *").forEach((e=>{t[e.id]?e.remove():t[e.id]=!0})),a(i,n)}),(t=>{e.reportException(t),i.append($("<div/>").addClass("ui segment warning").text(t.message))})).finally((()=>(i.removeClass("lang-shadow"),n())))}().then((()=>{Blockly.Workspace.getAll().forEach((e=>e.dispose())),e.blocks.cleanRenderingWorkspace()}))}()))}}(e.runner||(e.runner={}))}(pxt||(pxt={})),function(e){!function(t){class n{constructor(e,t){this.ksPkg=e,this.topPkg=t,this.files={}}getKsPkg(){return this.ksPkg}getPkgId(){return this.ksPkg?this.ksPkg.id:this.id}isTopLevel(){return this.ksPkg&&0==this.ksPkg.level}setFiles(e){this.files=e}getAllFiles(){return e.Util.mapMap(this.files,((e,t)=>t))}}class s{constructor(){this.githubPackageCache={}}readFile(t,n){let s=l(t);return e.U.lookup(s.files,n)}writeFile(e,t,n){l(e).files[t]=n}getHexInfoAsync(t){return e.hexloader.getHexInfoAsync(this,t)}cacheStoreAsync(e,t){return Promise.resolve()}cacheGetAsync(e){return Promise.resolve(null)}patchDependencies(t,n,s){if(!s)return!1;const i=e.github.parseRepoId(s);if(!i)return!1;for(const n of Object.keys(t.dependencies)){const o=t.dependencies[n],a=e.github.parseRepoId(o);if(a&&i.fullName==a.fullName)return e.semver.strcmp(i.tag,a.tag)<0&&(t.dependencies[n]=s),!0}return!1}downloadPackageAsync(t,n){let s,i=t.verProtocol();"github"==i&&(s=this.githubPackageCache[t._verspec]);let o=l(t);return(s?Promise.resolve(s):t.commonDownloadAsync()).then((a=>{if(a)return"github"!=i||s||(this.githubPackageCache[t._verspec]=e.Util.clone(a)),o.setFiles(a),Promise.resolve();if("empty"==i){if(0==Object.keys(o.files).length&&o.setFiles(c()),n&&n.length){const s=l(t).files,i=JSON.parse(s[e.CONFIG_NAME]);n.forEach((e=>{r(i,e)})),s[e.CONFIG_NAME]=e.Package.stringifyConfig(i)}return Promise.resolve()}if("docs"==i){let n=c(),s=JSON.parse(n[e.CONFIG_NAME]);return t.verArgument().split(",").forEach((e=>{r(s,e)})),s.yotta||(s.yotta={}),s.yotta.ignoreConflicts=!0,n[e.CONFIG_NAME]=e.Package.stringifyConfig(s),o.setFiles(n),Promise.resolve()}return"invalid"==i?(e.log(`skipping invalid pkg ${t.id}`),Promise.resolve()):Promise.reject(`Cannot download ${t.version()}; unknown protocol`)}))}}let i,o,a;function r(e,t){let n=/^([a-zA-Z0-9_-]+)(=(.+))?$/.exec(t);if(n){if(n[3]&&this&&this.patchDependencies(e,n[1],n[3]))return!1;e.dependencies[n[1]]=n[3]||"*"}else console.warn(`unknown package syntax ${t}`);return!0}function l(e){let s=e._editorPkg;if(s)return s;let i=null;e!=t.mainPkg&&(i=l(t.mainPkg));let o=new n(e,i);return e==t.mainPkg&&(o.topPkg=o),e._editorPkg=o,o}function c(){let t=e.appTarget.tsprj,n=e.U.clone(t.files);return n[e.CONFIG_NAME]=e.Package.stringifyConfig(t.config),n[e.MAIN_BLOCKS]="",n}function d(){e.setAppTarget(window.pxtTargetBundle),e.Util.assert(!!e.appTarget);const n=window.location.href;let i,o=!1;if(/[&?]translate=1/.test(n)&&!e.BrowserUtils.isIE())i=ts.pxtc.Util.TRANSLATION_LOCALE,o=!0,e.Util.enableLiveLocalizationUpdates();else{const t=/PXT_LANG=(.*?)(?:;|$)/.exec(document.cookie),s=/(live)?(force)?lang=([a-z]{2,}(-[A-Z]+)?)/i.exec(n);i=s?s[3]:t&&t[1]||e.appTarget.appTheme.defaultLocale||navigator.userLanguage||navigator.language;const a=e.appTarget.appTheme.defaultLocale,r=null==i?void 0:i.toLocaleLowerCase(),l=e.BrowserUtils.isLocalHostDev()&&(!r||(a?a.toLocaleLowerCase()===r:"en"===r||"en-us"===r));(e.BrowserUtils.isPxtElectron()||l||e.appTarget.appTheme.disableLiveTranslations)&&!(null==s?void 0:s[1])||e.Util.enableLiveLocalizationUpdates(),o=!!s&&!!s[2]}const a=e.appTarget.versions;$&&$.fn&&$.fn.embed&&$.fn.embed.settings&&$.fn.embed.settings.sources&&$.fn.embed.settings.sources.youtube&&($.fn.embed.settings.sources.youtube.url="//www.youtube.com/embed/{id}?rel=0");const r=e.webConfig;return e.Util.updateLocalizationAsync({targetId:e.appTarget.id,baseUrl:r.commitCdnUrl,code:i,pxtBranch:a?a.pxtCrowdinBranch:"",targetBranch:a?a.targetCrowdinBranch:"",force:o}).then((()=>{t.mainPkg=new e.MainPackage(new s)}))}function p(e){console.error(e)}function u(n,s,i){const a=n?/\w+:\w+/.test(n)?n:"pub:"+n:"empty:tsprj";let r,c,d;return o&&o._verspec==a?(t.mainPkg=o,r=t.mainPkg.host(),c=Promise.resolve(),d=Promise.resolve()):(r=t.mainPkg.host(),t.mainPkg=new e.MainPackage(r),t.mainPkg._verspec=n?/\w+:\w+/.test(n)?n:"pub:"+n:"empty:tsprj",c=r.downloadPackageAsync(t.mainPkg,i),d=t.mainPkg.installAllAsync(),o=t.mainPkg),c.then((()=>r.readFile(t.mainPkg,e.CONFIG_NAME))).then((n=>n?d.then((()=>{if(s){let n=l(t.mainPkg);n.files[e.MAIN_TS]=s;let i=JSON.parse(n.files[e.CONFIG_NAME]);i.name=window.location.href.split("/").pop().split(/[?#]/)[0],n.files[e.CONFIG_NAME]=e.Package.stringifyConfig(i),t.mainPkg.config.name=i.name,-1==t.mainPkg.config.files.indexOf(e.MAIN_BLOCKS)&&t.mainPkg.config.files.push(e.MAIN_BLOCKS)}})).catch((e=>{p(lf("Cannot load extension: {0}",e.message))})):Promise.resolve()))}function m(e){let n=t.mainPkg.getTargetOptions();return n.isNative=!!e,n.hasHex=!!e,t.mainPkg.getCompileOptionsAsync(n)}function g(e,t){return m(e).then((e=>{t&&t(e);let n=pxtc.compile(e);return n.diagnostics&&n.diagnostics.length>0&&n.diagnostics.forEach((e=>{console.error(e.messageText)})),n}))}async function h(n){var s;await u(n.id,n.code,n.dependencies);let i=!1;const o=e.appTarget.versions.target;let a=await g(!1,(s=>{var a;if(n.assets){const t=JSON.parse(n.assets);for(const n of Object.keys(t)){const i=t[n];if(s.fileSystem[n]=i,s.sourceFiles.indexOf(n)<0&&s.sourceFiles.push(n),/\.jres$/.test(n)){const t=JSON.parse(i);s.jres=e.inflateJRes(t,s.jres)}}}if(n.code&&(s.fileSystem[e.MAIN_TS]=n.code),s.target.preferredEditor===e.PYTHON_PROJECT_NAME){s.target.preferredEditor=e.JAVASCRIPT_PROJECT_NAME,s.ast=!0;const t=S(pxtc.compile(s).ast,s);s.apisInfo=t,s.target.preferredEditor=e.PYTHON_PROJECT_NAME}const r=null===(a=t.mainPkg.config.targetVersions)||void 0===a?void 0:a.target;if(r&&o&&e.semver.cmp(e.semver.parse(r),e.semver.parse(o))<0)for(const t of Object.keys(s.fileSystem))!e.Util.startsWith(t,"pxt_modules")&&e.Util.endsWith(t,".ts")&&(i=!0,s.fileSystem[t]=e.patching.patchJavaScript(r,s.fileSystem[t]))}));return(null===(s=a.diagnostics)||void 0===s?void 0:s.length)>0&&i&&(e.log("Compile with upgrade rules failed, trying again with original code"),a=await g(!1,(t=>{n.code&&(t.fileSystem[e.MAIN_TS]=n.code)}))),a.diagnostics&&a.diagnostics.length>0&&console.error("Diagnostics",a.diagnostics),pxtc.buildSimJsInfo(a)}function f(e){let t={};try{let n=window.localStorage.getItem(e);n&&(t=JSON.parse(n))}catch(e){}return t}function k(n,s){if(t.editorLanguageMode=n,s!=e.Util.localeInfo()){const t=/^live-/;return t.test(s)&&e.Util.enableLiveLocalizationUpdates(),e.Util.updateLocalizationAsync({targetId:e.appTarget.id,baseUrl:e.webConfig.commitCdnUrl,code:s.replace(t,""),pxtBranch:e.appTarget.versions.pxtCrowdinBranch,targetBranch:e.appTarget.versions.targetCrowdinBranch})}return Promise.resolve()}function b(t){let n=t.data;if(n)switch(n.type){case"fileloaded":let t=n,s=t.name;k(/\.ts$/i.test(s)?a.TypeScript:a.Blocks,t.locale);break;case"popout":let i=/((\/v[0-9+])\/)?[^\/]*#(doc|md):([^&?:]+)/i.exec(window.location.href);if(i){const t=e.webConfig.docsUrl||"/--docs";let n=i[2]||"",s="doc"==i[3]?e.webConfig.isStatic?`/docs${i[4]}.html`:`${i[4]}`:`${t}?md=${i[4]}`;window.parent&&window.parent.postMessage({type:"opendoc",url:e.BrowserUtils.urlJoin(n,s)},"*")}break;case"localtoken":let o=n;o&&o.localToken&&(e.Cloud.localToken=o.localToken,P.forEach((e=>e())),P=[])}}function v(t,n){return e.Cloud.privateGetTextAsync(n+"/text").then((e=>JSON.parse(e))).then((e=>y(t,e,n)))}function y(n,s,i=null,o=!1){const r=JSON.parse(s[e.CONFIG_NAME])||{};let l=`# ${r.name} ${r.version?r.version:""}\n\n`;const c="README.md";s[c]&&(l+=s[c].replace(/^#+/,"$0#")+"\n"),r.files.filter((t=>t!=e.CONFIG_NAME&&t!=c)).filter((e=>t.editorLanguageMode==a.Blocks==/\.blocks?$/.test(e))).forEach((e=>{/^main\.(ts|blocks)$/.test(e)||(l+=`\n## ${e}\n`),/\.ts$/.test(e)?l+=`\`\`\`typescript\n${s[e]}\n\`\`\`\n`:/\.blocks?$/.test(e)?l+=`\`\`\`blocksxml\n${s[e]}\n\`\`\`\n`:l+=`\`\`\`${e.substr(e.indexOf("."))}\n${s[e]}\n\`\`\`\n`}));const d=r&&r.dependencies&&Object.keys(r.dependencies).filter((t=>t!=e.appTarget.corepkg));if(d&&d.length&&(l+=`\n## ${lf("Extensions")} #extensions\n\n${d.map((e=>`* ${e}, ${r.dependencies[e]}`)).join("\n")}\n\n\`\`\`package\n${d.map((e=>`${e}=${r.dependencies[e]}`)).join("\n")}\n\`\`\`\n`),i){let t=(e.appTarget.appTheme.shareUrl||"https://makecode.com/")+i;o&&(t="`"+t+"`"),l+=`\n${t}\n\n`}console.debug(`print md: ${l}`);return w(n,l,{print:!0})}e.react.getTilemapProject||(e.react.getTilemapProject=()=>(i||(i=new e.TilemapProject,i.loadPackage(t.mainPkg)),i)),t.initFooter=function(t,n){if(!t)return;let s=e.appTarget.appTheme,i=$("body"),o=$(t),a=$("<a/>").attr("href",s.homeUrl).attr("target","_blank");o.append(a),s.organizationLogo?a.append($("<img/>").attr("src",e.Util.toDataUri(s.organizationLogo))):a.append(lf("powered by {0}",s.title)),i.mouseenter((e=>o.fadeOut())),i.mouseleave((e=>o.fadeIn()))},t.showError=p,t.generateHexFileAsync=function(t){return u(t.id).then((()=>g(!0,(n=>{t.code&&(n.fileSystem[e.MAIN_TS]=t.code)})))).then((e=>(e.diagnostics&&e.diagnostics.length>0&&console.error("Diagnostics",e.diagnostics),e.outfiles[pxtc.BINARY_HEX])))},t.generateVMFileAsync=function(t){return e.setHwVariant("vm"),u(t.id).then((()=>g(!0,(n=>{t.code&&(n.fileSystem[e.MAIN_TS]=t.code)})))).then((e=>(console.log(e),e)))},t.simulateAsync=async function(t,n){var s,i;const o=n.builtJsInfo||await h(n),{js:a,fnArgs:r,parts:l,usedBuiltinParts:c}=o;if(!a)return void console.error("Program failed to compile");let d={};d.onSimulatorCommand=e=>{"restart"===e.command&&(g.storedState=f(n.id),p.run(a,g)),"setstate"==e.command&&e.stateKey&&e.stateValue&&function(e,t,n){let s=f(e);if(!e)return;n?s[t]=n:delete s[t];try{window.localStorage.setItem(e,JSON.stringify(s))}catch(e){}}(n.id,e.stateKey,e.stateValue)},d.messageSimulators=null===(i=null===(s=e.appTarget)||void 0===s?void 0:s.simulator)||void 0===i?void 0:i.messageSimulators;let p=new pxsim.SimulatorDriver(t,d),u=e.appTarget.simulator.boardDefinition,m=f(n.id),g={boardDefinition:u,parts:l,builtinParts:c,fnArgs:r,cdnUrl:e.webConfig.commitCdnUrl,localizedStrings:e.Util.getLocalizedStrings(),highContrast:n.highContrast,storedState:m,light:n.light,single:n.single};return e.appTarget.simulator&&!n.fullScreen&&(g.aspectRatio=l.length&&e.appTarget.simulator.partsAspectRatio?e.appTarget.simulator.partsAspectRatio:e.appTarget.simulator.aspectRatio),p.run(a,g),o},t.buildSimJsInfo=h,function(e){e[e.Blocks=0]="Blocks",e[e.TypeScript=1]="TypeScript"}(a=t.LanguageMode||(t.LanguageMode={})),t.editorLanguageMode=a.Blocks,t.setEditorContextAsync=k,t.startRenderServer=function(){e.tickEvent("renderer.ready");const n=[];let s;function i(){if(s)return;const o=n.shift();if(!o)return;const a=o.options||{};a.splitSvg=!1,e.tickEvent("renderer.job");const r=/^\s*<xml/.test(o.code);s=(async()=>{await e.BrowserUtils.loadBlocklyAsync();const n=(r?await e.runner.compileBlocksAsync(o.code,a):await t.decompileSnippetAsync(o.code,o.options)).blocksSvg,s=n.viewBox.baseVal.width,i=n.viewBox.baseVal.height,l=n?await e.blocks.layout.blocklyToSvgAsync(n,0,0,s,i):void 0;let c;try{c=l?await e.BrowserUtils.encodeToPngAsync(l.xml,{width:s,height:i}):void 0}catch(e){console.warn(e)}window.parent.postMessage({source:"makecode",type:"renderblocks",id:o.id,width:null==l?void 0:l.width,height:null==l?void 0:l.height,svg:null==l?void 0:l.svg,uri:c||(null==l?void 0:l.xml),css:null==l?void 0:l.css},"*")})().catch((e=>{window.parent.postMessage({source:"makecode",type:"renderblocks",id:o.id,error:e.message},"*")})).finally((()=>{s=void 0,i()}))}e.editor.initEditorExtensionsAsync().then((()=>{window.addEventListener("message",(function(e){const t=e.data;"renderblocks"==t.type&&(n.push(t),i())}),!1),window.parent.postMessage({source:"makecode",type:"renderready",versions:e.appTarget.versions},"*")}))},t.startDocsServer=function(t,n,s){e.tickEvent("docrenderer.ready");const i=[];function o(i,a){e.debug(`rendering ${i}`),s&&$(s).hide(),$(n).hide(),$(t).show(),e.U.delay(100).then((()=>{switch(i){case"print":const t=window.localStorage.printjob;return delete window.localStorage.printjob,y(n,JSON.parse(t),void 0,!0).then((()=>pxsim.print(1e3)));case"project":return y(n,JSON.parse(a)).then((()=>pxsim.print(1e3)));case"projectid":return v(n,JSON.parse(a)).then((()=>pxsim.print(1e3)));case"doc":return function(t,n){return n=n.replace(/^\//,""),e.Cloud.markdownAsync(n).then((e=>w(t,e,{path:n})))}(n,a);case"book":return function(t,n){n=n.replace(/^\//,""),e.tickEvent("book",{id:n}),e.log(`rendering book from ${n}`);let s;return $("#loading").find(".loader").addClass("text").text(lf("Compiling your book (this may take a minute)")),e.U.delay(100).then((()=>e.Cloud.markdownAsync(n))).then((t=>{s=e.docs.buildTOC(t),e.log(`TOC: ${JSON.stringify(s,null,2)}`);const n=[];return e.docs.visitTOC(s,(e=>{/^\//.test(e.path)&&!/^\/pkg\//.test(e.path)&&n.push(e)})),e.U.promisePoolAsync(4,n,(async t=>{try{const n=await e.Cloud.markdownAsync(t.path);t.markdown=n}catch(e){t.markdown=`_${t.path} failed to load._`}}))})).then((n=>{let i=s[0].name;return e.docs.visitTOC(s,(e=>{e.markdown&&(i+="\n\n"+e.markdown)})),w(t,i)}))}(n,a);default:return w(n,a)}})).catch((t=>{$(n).html(`\n                    <img style="height:4em;" src="${e.appTarget.appTheme.docsLogo}" />\n                    <h1>${lf("Oops")}</h1>\n                    <h3>${lf("We could not load the documentation, please check your internet connection.")}</h3>\n                    <button class="ui button primary" id="tryagain">${lf("Try Again")}</button>`),$(n).find("#tryagain").click((()=>{o(i,a)})),window.parent&&window.parent.postMessage({type:"docfailed",docType:i,src:a},"*")})).finally((()=>{$(t).hide(),s&&$(s).show(),$(n).show()})).then((()=>{}))}function r(e,t){t?(pxsim.U.addClass(e,"disabled"),e.setAttribute("aria-disabled","true")):(pxsim.U.removeClass(e,"disabled"),e.setAttribute("aria-disabled","false"))}function l(){let e=/^#(doc|md|tutorial|book|project|projectid|print):([^&?:]+)(:([^&?:]+):([^&?:]+))?/i.exec(window.location.hash);if(e){s&&(i.push(window.location.hash),i.length>10&&i.shift(),i.length>1&&r(s,!1));(e[4]?k(/^blocks$/.test(e[4])?a.Blocks:a.TypeScript,e[5]):Promise.resolve()).then((()=>o(e[1],decodeURIComponent(e[2]))))}}s&&(s.addEventListener("click",(()=>{!function(){if(!s)return;i.length>1&&(i.pop(),window.location.hash=i.pop());i.length<=1&&r(s,!0)}()})),r(s,!0)),e.editor.initEditorExtensionsAsync().then((()=>{window.addEventListener("message",b,!1),window.addEventListener("hashchange",(()=>{l()}),!1),parent.postMessage({type:"sidedocready"},"*"),setTimeout((()=>l()),1)}))},t.renderProjectAsync=v,t.renderProjectFilesAsync=y;function w(n,s,i={}){const o=e.docs.renderMarkdown({template:'\n<aside id=button class=box>\n   <a class="ui primary button" href="@ARGS@">@BODY@</a>\n</aside>\n\n<aside id=vimeo>\n<div class="ui two column stackable grid container">\n<div class="column">\n    <div class="ui embed mdvid" data-source="vimeo" data-id="@ARGS@" data-placeholder="/thumbnail/1024/vimeo/@ARGS@" data-icon="video play">\n    </div>\n</div></div>\n</aside>\n\n<aside id=youtube>\n<div class="ui two column stackable grid container">\n<div class="column">\n    <div class="ui embed mdvid" data-source="youtube" data-id="@ARGS@" data-placeholder="https://img.youtube.com/vi/@ARGS@/0.jpg">\n    </div>\n</div></div>\n</aside>\n\n<aside id=section>\n    \x3c!-- section @ARGS@ --\x3e\n</aside>\n\n<aside id=hide class=box>\n    <div style=\'display:none\'>\n        @BODY@\n    </div>\n</aside>\n\n<aside id=avatar class=box>\n    <div class=\'avatar @ARGS@\'>\n        <div class=\'avatar-image\'></div>\n        <div class=\'ui compact message\'>\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=hint class=box>\n    <div class="ui info message">\n        <div class="content">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=codecard class=box>\n    <pre><code class="lang-codecard">@BODY@</code></pre>\n</aside>\n\n<aside id=tutorialhint class=box>\n    <div class="ui hint message">\n        <div class="content">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=reminder class=box>\n    <div class="ui warning message">\n        <div class="content">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=alert class=box>\n    <div class="ui negative message">\n        <div class="content">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=tip class=box>\n    <div class="ui positive message">\n        <div class="content">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n\x3c!-- wrapped around ordinary content --\x3e\n<aside id=main-container class=box>\n    <div class="ui text">\n        @BODY@\n    </div>\n</aside>\n\n\x3c!-- used for \'column\' box - they are collected and wrapped in \'column-container\' --\x3e\n<aside id=column class=aside>\n    <div class=\'column\'>\n        @BODY@\n    </div>\n</aside>\n<aside id=column-container class=box>\n    <div class="ui three column stackable grid text">\n        @BODY@\n    </div>\n</aside>\n@breadcrumb@\n@body@',markdown:s,theme:e.appTarget.appTheme});let r=i.blocksAspectRatio||window.innerHeight<window.innerWidth?1.62:1/1.62;$(n).html(o),$(n).find("a").attr("target","_blank");const l=e.runner.defaultClientRenderOptions();return l.tutorial=!!i.tutorial,l.blocksAspectRatio=r||l.blocksAspectRatio,l.showJavaScript=t.editorLanguageMode==a.TypeScript,i.print&&(l.showEdit=!1,l.simulator=!1),e.runner.renderAsync(l).then((()=>{$(n).find('a[href^="/"]').removeAttr("target").each(((e,t)=>{$(t).attr("href","#doc:"+$(t).attr("href").replace(/^\//,""))})),$(n).find(".ui.embed").embed()}))}let x,C;function S(e,t){C||(C={});const n=Object.keys(t.fileSystem).sort().join(";");return C[n]||(C[n]=pxtc.getApiInfo(e,t.jres)),C[n]}t.renderMarkdownAsync=w,t.decompileSnippetAsync=function(n,s){const{assets:o,forceCompilation:a,snippetMode:r,generateSourceMap:l}=s||{};return u(s&&s.packageId?"pub:"+s.packageId:s&&s.package?"docs:"+s.package:null,n).then((()=>m(!!e.appTarget.compile&&e.appTarget.compile.hasHex))).then((c=>{if(n&&(c.fileSystem[e.MAIN_TS]=n),c.ast=!0,o)for(const e of Object.keys(o))c.sourceFiles.indexOf(e)<0&&c.sourceFiles.push(e),c.fileSystem[e]=o[e];let d,p,u;a?(d=pxtc.compile(c),p=d&&d.ast):p=pxtc.getTSProgram(c,x),x=p,e.appTarget.appTheme.python&&(u=ts.pxtc.transpile.tsToPy(p,e.MAIN_TS));let m=S(p,c);return ts.pxtc.localizeApisAsync(m,t.mainPkg).then((()=>{let n=pxtc.getBlocksInfo(m);e.blocks.initializeAndInject(n);const a=null==o?void 0:o[e.TILEMAP_JRES],c=null==o?void 0:o[e.IMAGES_JRES];(a||c)&&(i=new e.TilemapProject,i.loadPackage(t.mainPkg),a&&i.loadTilemapJRes(JSON.parse(a),!0),c&&i.loadAssetsJRes(JSON.parse(c)));let g=pxtc.decompiler.decompileToBlocks(n,p.getSourceFile(e.MAIN_TS),{snippetMode:r,generateSourceMap:l});if(g.diagnostics&&g.diagnostics.length>0&&g.diagnostics.forEach((e=>console.error(e.messageText))),!g.success)return{package:t.mainPkg,compileProgram:p,compileJS:d,compileBlocks:g,apiInfo:m};e.debug(g.outfiles[e.MAIN_BLOCKS]);const h=e.blocks.render(g.outfiles[e.MAIN_BLOCKS],s);return(a||c)&&(i=null),{package:t.mainPkg,compileProgram:p,compileJS:d,compileBlocks:g,compilePython:u,apiInfo:m,blocksSvg:h}}))}))},t.compileBlocksAsync=function(n,s){const{assets:o}=s||{};return u(s&&s.packageId?"pub:"+s.packageId:s&&s.package?"docs:"+s.package:null,"").then((()=>m(!!e.appTarget.compile&&e.appTarget.compile.hasHex))).then((a=>{if(a.ast=!0,o)for(const e of Object.keys(o))a.sourceFiles.indexOf(e)<0&&a.sourceFiles.push(e),a.fileSystem[e]=o[e];const r=S(pxtc.compile(a).ast,a);return ts.pxtc.localizeApisAsync(r,t.mainPkg).then((()=>{const a=pxtc.getBlocksInfo(r);e.blocks.initializeAndInject(a);const l=null==o?void 0:o[e.TILEMAP_JRES],c=null==o?void 0:o[e.IMAGES_JRES];(l||c)&&(i=new e.TilemapProject,i.loadPackage(t.mainPkg),l&&i.loadTilemapJRes(JSON.parse(l),!0),c&&i.loadAssetsJRes(JSON.parse(c)));const d=e.blocks.render(n,s);return(l||c)&&(i=null),{package:t.mainPkg,blocksSvg:d,apiInfo:r}}))}))};let P=[];t.initCallbacks=[],t.init=function(){d().then((()=>{for(let e=0;e<t.initCallbacks.length;++e)t.initCallbacks[e]()}))},function(){let e=window.ksRunnerWhenLoaded;e&&e()}()}(e.runner||(e.runner={}))}(pxt||(pxt={}));
+var pxt;
+(function (pxt) {
+    var runner;
+    (function (runner) {
+        /**
+         * Starts the simulator and injects it into the provided container.
+         * the simulator will attempt to establish a websocket connection
+         * to the debugger's user interface on port 3234.
+         *
+         * @param container The container to inject the simulator into
+         */
+        function startDebuggerAsync(container) {
+            const debugRunner = new DebugRunner(container);
+            debugRunner.start();
+        }
+        runner.startDebuggerAsync = startDebuggerAsync;
+        /**
+         * Runner for the debugger that handles communication with the user
+         * interface. Also talks to the server for anything to do with
+         * the filesystem (like reading code)
+         */
+        class DebugRunner {
+            constructor(container) {
+                this.container = container;
+                this.pkgLoaded = false;
+                this.intervalRunning = false;
+            }
+            start() {
+                this.initializeWebsocket();
+                if (!this.intervalRunning) {
+                    this.intervalRunning = true;
+                    this.intervalId = setInterval(() => {
+                        if (!this.ws) {
+                            try {
+                                this.initializeWebsocket();
+                            }
+                            catch (e) {
+                                console.warn(`Connection to server failed, retrying in ${DebugRunner.RETRY_MS} ms`);
+                            }
+                        }
+                    }, DebugRunner.RETRY_MS);
+                }
+                this.session = new pxsim.SimDebugSession(this.container);
+                this.session.start(this);
+            }
+            initializeWebsocket() {
+                if (!pxt.BrowserUtils.isLocalHost() || !pxt.Cloud.localToken)
+                    return;
+                pxt.debug('initializing debug pipe');
+                this.ws = new WebSocket('ws://localhost:3234/' + pxt.Cloud.localToken + '/simdebug');
+                this.ws.onopen = ev => {
+                    pxt.debug('debug: socket opened');
+                };
+                this.ws.onclose = ev => {
+                    pxt.debug('debug: socket closed');
+                    if (this.closeListener) {
+                        this.closeListener();
+                    }
+                    this.session.stopSimulator();
+                    this.ws = undefined;
+                };
+                this.ws.onerror = ev => {
+                    pxt.debug('debug: socket closed due to error');
+                    if (this.errorListener) {
+                        this.errorListener(ev.type);
+                    }
+                    this.session.stopSimulator();
+                    this.ws = undefined;
+                };
+                this.ws.onmessage = ev => {
+                    let message;
+                    try {
+                        message = JSON.parse(ev.data);
+                    }
+                    catch (e) {
+                        pxt.debug('debug: could not parse message');
+                    }
+                    if (message) {
+                        // FIXME: ideally, we should just open two websockets instead of adding to the
+                        // debug protocol. One for the debugger, one for meta-information and file
+                        // system requests
+                        if (message.type === 'runner') {
+                            this.handleRunnerMessage(message);
+                        }
+                        else {
+                            // Intercept the launch configuration and notify the server-side debug runner
+                            if (message.type === "request" && message.command === "launch") {
+                                this.sendRunnerMessage("configure", {
+                                    projectDir: message.arguments.projectDir
+                                });
+                            }
+                            this.dataListener(message);
+                        }
+                    }
+                };
+            }
+            send(msg) {
+                this.ws.send(msg);
+            }
+            onData(cb) {
+                this.dataListener = cb;
+            }
+            onError(cb) {
+                this.errorListener = cb;
+            }
+            onClose(cb) {
+                this.closeListener = cb;
+            }
+            close() {
+                if (this.session) {
+                    this.session.stopSimulator(true);
+                }
+                if (this.intervalRunning) {
+                    clearInterval(this.intervalId);
+                    this.intervalId = undefined;
+                }
+                if (this.ws) {
+                    this.ws.close();
+                }
+            }
+            handleRunnerMessage(msg) {
+                switch (msg.subtype) {
+                    case "ready":
+                        this.sendRunnerMessage("ready");
+                        break;
+                    case "runcode":
+                        this.runCode(msg);
+                        break;
+                }
+            }
+            runCode(msg) {
+                const breakpoints = [];
+                // The breakpoints are in the format returned by the compiler
+                // and need to be converted to the format used by the DebugProtocol
+                msg.breakpoints.forEach(bp => {
+                    breakpoints.push([bp.id, {
+                            verified: true,
+                            line: bp.line,
+                            column: bp.column,
+                            endLine: bp.endLine,
+                            endColumn: bp.endColumn,
+                            source: {
+                                path: bp.fileName
+                            }
+                        }]);
+                });
+                this.session.runCode(msg.code, msg.usedParts, msg.usedArguments, new pxsim.BreakpointMap(breakpoints), pxt.appTarget.simulator.boardDefinition);
+            }
+            sendRunnerMessage(subtype, msg = {}) {
+                msg["subtype"] = subtype;
+                msg["type"] = "runner";
+                this.send(JSON.stringify(msg));
+            }
+        }
+        DebugRunner.RETRY_MS = 2500;
+        runner.DebugRunner = DebugRunner;
+    })(runner = pxt.runner || (pxt.runner = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var runner;
+    (function (runner) {
+        const JS_ICON = "icon xicon js";
+        const PY_ICON = "icon xicon python";
+        const BLOCKS_ICON = "icon xicon blocks";
+        function defaultClientRenderOptions() {
+            const renderOptions = {
+                blocksAspectRatio: window.innerHeight < window.innerWidth ? 1.62 : 1 / 1.62,
+                snippetClass: 'lang-blocks',
+                signatureClass: 'lang-sig',
+                blocksClass: 'lang-block',
+                blocksXmlClass: 'lang-blocksxml',
+                diffBlocksXmlClass: 'lang-diffblocksxml',
+                diffClass: 'lang-diff',
+                diffStaticPythonClass: 'lang-diffspy',
+                diffBlocksClass: 'lang-diffblocks',
+                staticPythonClass: 'lang-spy',
+                simulatorClass: 'lang-sim',
+                linksClass: 'lang-cards',
+                namespacesClass: 'lang-namespaces',
+                apisClass: 'lang-apis',
+                codeCardClass: 'lang-codecard',
+                packageClass: 'lang-package',
+                jresClass: 'lang-jres',
+                assetJSONClass: 'lang-assetsjson',
+                projectClass: 'lang-project',
+                snippetReplaceParent: true,
+                simulator: true,
+                showEdit: true,
+                hex: true,
+                tutorial: false,
+                showJavaScript: false,
+                hexName: pxt.appTarget.id
+            };
+            return renderOptions;
+        }
+        runner.defaultClientRenderOptions = defaultClientRenderOptions;
+        function highlight($js) {
+            if (typeof hljs !== "undefined") {
+                if ($js.hasClass("highlight")) {
+                    hljs.highlightBlock($js[0]);
+                }
+                else {
+                    $js.find('code.highlight').each(function (i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                }
+                highlightLine($js);
+            }
+        }
+        function highlightLine($js) {
+            // apply line highlighting
+            $js.find("span.hljs-comment:contains(@highlight)")
+                .each((i, el) => {
+                try {
+                    highlightLineElement(el);
+                }
+                catch (e) {
+                    pxt.reportException(e);
+                }
+            });
+        }
+        function highlightLineElement(el) {
+            const $el = $(el);
+            const span = document.createElement("span");
+            span.className = "highlight-line";
+            // find new line and split text node
+            let next = el.nextSibling;
+            if (!next || next.nodeType != Node.TEXT_NODE)
+                return; // end of snippet?
+            let text = next.textContent;
+            let inewline = text.indexOf('\n');
+            if (inewline < 0)
+                return; // there should have been a new line here
+            // split the next node
+            next.textContent = text.substring(0, inewline + 1);
+            $(document.createTextNode(text.substring(inewline + 1).replace(/^\s+/, ''))).insertAfter($(next));
+            // process and highlight new line
+            next = next.nextSibling;
+            while (next) {
+                let nextnext = next.nextSibling; // before we hoist it from the tree
+                if (next.nodeType == Node.TEXT_NODE) {
+                    text = next.textContent;
+                    const inewline = text.indexOf('\n');
+                    if (inewline < 0) {
+                        span.appendChild(next);
+                        next = nextnext;
+                    }
+                    else {
+                        // we've hit the end of the line... split node in two
+                        span.appendChild(document.createTextNode(text.substring(0, inewline)));
+                        next.textContent = text.substring(inewline + 1);
+                        break;
+                    }
+                }
+                else {
+                    span.appendChild(next);
+                    next = nextnext;
+                }
+            }
+            // insert back
+            $(span).insertAfter($el);
+            // remove line entry
+            $el.remove();
+        }
+        function appendBlocks($parent, $svg) {
+            $parent.append($(`<div class="ui content blocks"/>`).append($svg));
+        }
+        function appendJs($parent, $js, woptions) {
+            $parent.append($(`<div class="ui content js"><div class="subheading"><i class="ui icon xicon js"></i>JavaScript</div></div>`).append($js));
+            highlight($js);
+        }
+        function appendPy($parent, $py, woptions) {
+            $parent.append($(`<div class="ui content py"><div class="subheading"><i class="ui icon xicon python"></i>Python</div></div>`).append($py));
+            highlight($py);
+        }
+        function snippetBtn(label, icon) {
+            const $btn = $(`<a class="item" role="button" tabindex="0"><i role="presentation" aria-hidden="true"></i><span class="ui desktop only"></span></a>`);
+            $btn.attr("aria-label", label);
+            $btn.attr("title", label);
+            $btn.find('i').attr("class", icon);
+            $btn.find('span').text(label);
+            addFireClickOnEnter($btn);
+            return $btn;
+        }
+        function addFireClickOnEnter(el) {
+            el.keypress(e => {
+                const charCode = (typeof e.which == "number") ? e.which : e.keyCode;
+                if (charCode === 13 /* enter */ || charCode === 32 /* space */) {
+                    e.preventDefault();
+                    e.currentTarget.click();
+                }
+            });
+        }
+        function fillWithWidget(options, $container, $js, $py, $svg, decompileResult, woptions = {}) {
+            let $h = $('<div class="ui bottom attached tabular icon small compact menu hideprint">'
+                + ' <div class="right icon menu"></div></div>');
+            let $c = $('<div class="ui top attached segment codewidget"></div>');
+            let $menu = $h.find('.right.menu');
+            const theme = pxt.appTarget.appTheme || {};
+            if (woptions.showEdit && !theme.hideDocsEdit && decompileResult) { // edit button
+                const $editBtn = snippetBtn(lf("Edit"), "edit icon");
+                const { package: pkg, compileBlocks, compilePython } = decompileResult;
+                const host = pkg.host();
+                if ($svg && compileBlocks) {
+                    pkg.setPreferredEditor(pxt.BLOCKS_PROJECT_NAME);
+                    host.writeFile(pkg, pxt.MAIN_BLOCKS, compileBlocks.outfiles[pxt.MAIN_BLOCKS]);
+                }
+                else if ($py && compilePython) {
+                    pkg.setPreferredEditor(pxt.PYTHON_PROJECT_NAME);
+                    host.writeFile(pkg, pxt.MAIN_PY, compileBlocks.outfiles[pxt.MAIN_PY]);
+                }
+                else {
+                    pkg.setPreferredEditor(pxt.JAVASCRIPT_PROJECT_NAME);
+                }
+                if (options.assetJSON) {
+                    for (const key of Object.keys(options.assetJSON)) {
+                        if (pkg.config.files.indexOf(key) < 0) {
+                            pkg.config.files.push(key);
+                        }
+                        host.writeFile(pkg, key, options.assetJSON[key]);
+                    }
+                }
+                const compressed = pkg.compressToFileAsync();
+                $editBtn.click(() => {
+                    pxt.tickEvent("docs.btn", { button: "edit" });
+                    compressed.then(buf => {
+                        window.open(`${getEditUrl(options)}/#project:${ts.pxtc.encodeBase64(pxt.Util.uint8ArrayToString(buf))}`, 'pxt');
+                    });
+                });
+                $menu.append($editBtn);
+            }
+            if (options.showJavaScript || (!$svg && !$py)) {
+                // js
+                $c.append($js);
+                appendBlocksButton();
+                appendPyButton();
+            }
+            else if ($svg) {
+                // blocks
+                $c.append($svg);
+                appendJsButton();
+                appendPyButton();
+            }
+            else if ($py) {
+                $c.append($py);
+                appendBlocksButton();
+                appendJsButton();
+            }
+            // runner menu
+            if (woptions.run && !theme.hideDocsSimulator) {
+                let $runBtn = snippetBtn(lf("Run"), "play icon").click(() => {
+                    pxt.tickEvent("docs.btn", { button: "sim" });
+                    if ($c.find('.sim')[0]) {
+                        $c.find('.sim').remove(); // remove previous simulators
+                        scrollJQueryIntoView($c);
+                    }
+                    else {
+                        let padding = '81.97%';
+                        if (pxt.appTarget.simulator)
+                            padding = (100 / pxt.appTarget.simulator.aspectRatio) + '%';
+                        const deps = options.package ? "&deps=" + encodeURIComponent(options.package) : "";
+                        const url = getRunUrl(options) + "#nofooter=1" + deps;
+                        const assets = options.assetJSON ? `data-assets="${encodeURIComponent(JSON.stringify(options.assetJSON))}"` : "";
+                        const data = encodeURIComponent($js.text());
+                        let $embed = $(`<div class="ui card sim"><div class="ui content"><div style="position:relative;height:0;padding-bottom:${padding};overflow:hidden;"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" src="${url}" data-code="${data}" ${assets} allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin" frameborder="0"></iframe></div></div></div>`);
+                        $c.append($embed);
+                        scrollJQueryIntoView($embed);
+                    }
+                });
+                $menu.append($runBtn);
+            }
+            if (woptions.hexname && woptions.hex) {
+                let $hexBtn = snippetBtn(lf("Download"), "download icon").click(() => {
+                    pxt.tickEvent("docs.btn", { button: "hex" });
+                    pxt.BrowserUtils.browserDownloadBinText(woptions.hex, woptions.hexname, { contentType: pxt.appTarget.compile.hexMimeType });
+                });
+                $menu.append($hexBtn);
+            }
+            let r = $(`<div class=codesnippet></div>`);
+            // don't add menu if empty
+            if ($menu.children().length)
+                r.append($h);
+            r.append($c);
+            // inject container
+            $container.replaceWith(r);
+            function appendBlocksButton() {
+                if (!$svg)
+                    return;
+                const $svgBtn = snippetBtn(lf("Blocks"), BLOCKS_ICON).click(() => {
+                    pxt.tickEvent("docs.btn", { button: "blocks" });
+                    if ($c.find('.blocks')[0]) {
+                        $c.find('.blocks').remove();
+                        scrollJQueryIntoView($c);
+                    }
+                    else {
+                        if ($js)
+                            appendBlocks($js.parent(), $svg);
+                        else
+                            appendBlocks($c, $svg);
+                        scrollJQueryIntoView($svg);
+                    }
+                });
+                $menu.append($svgBtn);
+            }
+            function appendJsButton() {
+                if (!$js)
+                    return;
+                if (woptions.showJs)
+                    appendJs($c, $js, woptions);
+                else {
+                    const $jsBtn = snippetBtn("JavaScript", JS_ICON).click(() => {
+                        pxt.tickEvent("docs.btn", { button: "js" });
+                        if ($c.find('.js')[0]) {
+                            $c.find('.js').remove();
+                            scrollJQueryIntoView($c);
+                        }
+                        else {
+                            if ($svg)
+                                appendJs($svg.parent(), $js, woptions);
+                            else
+                                appendJs($c, $js, woptions);
+                            scrollJQueryIntoView($js);
+                        }
+                    });
+                    $menu.append($jsBtn);
+                }
+            }
+            function appendPyButton() {
+                if (!$py)
+                    return;
+                if (woptions.showPy) {
+                    appendPy($c, $py, woptions);
+                }
+                else {
+                    const $pyBtn = snippetBtn("Python", PY_ICON).click(() => {
+                        pxt.tickEvent("docs.btn", { button: "py" });
+                        if ($c.find('.py')[0]) {
+                            $c.find('.py').remove();
+                            scrollJQueryIntoView($c);
+                        }
+                        else {
+                            if ($svg)
+                                appendPy($svg.parent(), $py, woptions);
+                            else
+                                appendPy($c, $py, woptions);
+                            scrollJQueryIntoView($py);
+                        }
+                    });
+                    $menu.append($pyBtn);
+                }
+            }
+            function scrollJQueryIntoView($toScrollTo) {
+                var _a;
+                (_a = $toScrollTo[0]) === null || _a === void 0 ? void 0 : _a.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+        }
+        let renderQueue = [];
+        function consumeRenderQueueAsync() {
+            const existingFilters = {};
+            return consumeNext()
+                .then(() => {
+                Blockly.Workspace.getAll().forEach(el => el.dispose());
+                pxt.blocks.cleanRenderingWorkspace();
+            });
+            function consumeNext() {
+                const job = renderQueue.shift();
+                if (!job)
+                    return Promise.resolve(); // done
+                const { el, options, render } = job;
+                return pxt.runner.decompileSnippetAsync(el.text(), options)
+                    .then(r => {
+                    const errors = r.compileJS && r.compileJS.diagnostics && r.compileJS.diagnostics.filter(d => d.category == pxtc.DiagnosticCategory.Error);
+                    if (errors && errors.length) {
+                        errors.forEach(diag => pxt.reportError("docs.decompile", "" + diag.messageText, { "code": diag.code + "" }));
+                    }
+                    // filter out any blockly definitions from the svg that would be duplicates on the page
+                    r.blocksSvg.querySelectorAll("defs *").forEach(el => {
+                        if (existingFilters[el.id]) {
+                            el.remove();
+                        }
+                        else {
+                            existingFilters[el.id] = true;
+                        }
+                    });
+                    render(el, r);
+                }, e => {
+                    pxt.reportException(e);
+                    el.append($('<div/>').addClass("ui segment warning").text(e.message));
+                }).finally(() => {
+                    el.removeClass("lang-shadow");
+                    return consumeNext();
+                });
+            }
+        }
+        function renderNextSnippetAsync(cls, render, options) {
+            if (!cls)
+                return Promise.resolve();
+            let $el = $("." + cls).first();
+            if (!$el[0])
+                return Promise.resolve();
+            if (!options.emPixels)
+                options.emPixels = 18;
+            if (!options.layout)
+                options.layout = pxt.blocks.BlockLayout.Align;
+            options.splitSvg = true;
+            renderQueue.push({ el: $el, source: $el.text(), options, render });
+            $el.addClass("lang-shadow");
+            $el.removeClass(cls);
+            return renderNextSnippetAsync(cls, render, options);
+        }
+        function renderSnippetsAsync(options) {
+            if (options.tutorial) {
+                // don't render chrome for tutorials
+                return renderNextSnippetAsync(options.snippetClass, (c, r) => {
+                    const s = r.blocksSvg;
+                    if (options.snippetReplaceParent)
+                        c = c.parent();
+                    const segment = $('<div class="ui segment codewidget"/>').append(s);
+                    c.replaceWith(segment);
+                }, { package: options.package, snippetMode: false, aspectRatio: options.blocksAspectRatio, assets: options.assetJSON });
+            }
+            let snippetCount = 0;
+            return renderNextSnippetAsync(options.snippetClass, (c, r) => {
+                const s = r.compileBlocks && r.compileBlocks.success ? $(r.blocksSvg) : undefined;
+                const p = r.compilePython && r.compilePython.success && r.compilePython.outfiles[pxt.MAIN_PY];
+                const js = $('<code class="lang-typescript highlight"/>').text(c.text().trim());
+                const py = p ? $('<code class="lang-python highlight"/>').text(p.trim()) : undefined;
+                if (options.snippetReplaceParent)
+                    c = c.parent();
+                const compiled = r.compileJS && r.compileJS.success;
+                // TODO should this use pxt.outputName() and not pxtc.BINARY_HEX
+                const hex = options.hex && compiled && r.compileJS.outfiles[pxtc.BINARY_HEX]
+                    ? r.compileJS.outfiles[pxtc.BINARY_HEX] : undefined;
+                const hexname = `${pxt.appTarget.nickname || pxt.appTarget.id}-${options.hexName || ''}-${snippetCount++}.hex`;
+                fillWithWidget(options, c, js, py, s, r, {
+                    showEdit: options.showEdit,
+                    run: options.simulator,
+                    hexname: hexname,
+                    hex: hex,
+                });
+            }, { package: options.package, aspectRatio: options.blocksAspectRatio, assets: options.assetJSON });
+        }
+        function decompileCallInfo(stmt) {
+            if (!stmt || stmt.kind != ts.SyntaxKind.ExpressionStatement)
+                return null;
+            let estmt = stmt;
+            if (!estmt.expression || estmt.expression.kind != ts.SyntaxKind.CallExpression)
+                return null;
+            let call = estmt.expression;
+            let info = pxtc.pxtInfo(call).callInfo;
+            return info;
+        }
+        function renderSignaturesAsync(options) {
+            return renderNextSnippetAsync(options.signatureClass, (c, r) => {
+                var _a, _b, _c, _d;
+                let cjs = r.compileProgram;
+                if (!cjs)
+                    return;
+                let file = cjs.getSourceFile(pxt.MAIN_TS);
+                let info = decompileCallInfo(file.statements[0]);
+                if (!info || !r.apiInfo)
+                    return;
+                const symbolInfo = r.apiInfo.byQName[info.qName];
+                if (!symbolInfo)
+                    return;
+                let block = Blockly.Blocks[symbolInfo.attributes.blockId];
+                let xml = ((_a = block === null || block === void 0 ? void 0 : block.codeCard) === null || _a === void 0 ? void 0 : _a.blocksXml) || undefined;
+                const blocksHtml = xml ? pxt.blocks.render(xml) : ((_b = r.compileBlocks) === null || _b === void 0 ? void 0 : _b.success) ? r.blocksSvg : undefined;
+                const s = blocksHtml ? $(blocksHtml) : undefined;
+                let jsSig = ts.pxtc.service.displayStringForSymbol(symbolInfo, /** python **/ false, r.apiInfo)
+                    .split("\n")[1] + ";";
+                const js = $('<code class="lang-typescript highlight"/>').text(jsSig);
+                const pySig = ((_d = (_c = pxt.appTarget) === null || _c === void 0 ? void 0 : _c.appTheme) === null || _d === void 0 ? void 0 : _d.python) && ts.pxtc.service.displayStringForSymbol(symbolInfo, /** python **/ true, r.apiInfo).split("\n")[1];
+                const py = pySig && $('<code class="lang-python highlight"/>').text(pySig);
+                if (options.snippetReplaceParent)
+                    c = c.parent();
+                // add an html widge that allows to translate the block
+                if (pxt.Util.isTranslationMode()) {
+                    const trs = $('<div class="ui segment" />');
+                    trs.append($(`<div class="ui header"><i class="ui xicon globe"></i></div>`));
+                    if (symbolInfo.attributes.translationId)
+                        trs.append($('<div class="ui message">').text(symbolInfo.attributes.translationId));
+                    if (symbolInfo.attributes.jsDoc)
+                        trs.append($('<div class="ui message">').text(symbolInfo.attributes.jsDoc));
+                    trs.insertAfter(c);
+                }
+                fillWithWidget(options, c, js, py, s, r, { showJs: true, showPy: true, hideGutter: true });
+            }, { package: options.package, snippetMode: true, aspectRatio: options.blocksAspectRatio, assets: options.assetJSON });
+        }
+        function renderBlocksAsync(options) {
+            return renderNextSnippetAsync(options.blocksClass, (c, r) => {
+                const s = r.blocksSvg;
+                if (options.snippetReplaceParent)
+                    c = c.parent();
+                const segment = $('<div class="ui segment codewidget"/>').append(s);
+                c.replaceWith(segment);
+            }, { package: options.package, snippetMode: true, aspectRatio: options.blocksAspectRatio, assets: options.assetJSON });
+        }
+        function renderStaticPythonAsync(options) {
+            // Highlight python snippets if the snippet has compile python
+            const woptions = {
+                showEdit: !!options.showEdit,
+                run: !!options.simulator
+            };
+            return renderNextSnippetAsync(options.staticPythonClass, (c, r) => {
+                const s = r.compilePython;
+                if (s && s.success) {
+                    const $js = c.clone().removeClass('lang-shadow').addClass('highlight');
+                    const $py = $js.clone().addClass('lang-python').text(s.outfiles[pxt.MAIN_PY]);
+                    $js.addClass('lang-typescript');
+                    highlight($py);
+                    fillWithWidget(options, c.parent(), /* js */ $js, /* py */ $py, /* svg */ undefined, r, woptions);
+                }
+            }, { package: options.package, snippetMode: true, assets: options.assetJSON });
+        }
+        function renderBlocksXmlAsync(opts) {
+            if (!opts.blocksXmlClass)
+                return Promise.resolve();
+            const cls = opts.blocksXmlClass;
+            function renderNextXmlAsync(cls, render, options) {
+                let $el = $("." + cls).first();
+                if (!$el[0])
+                    return Promise.resolve();
+                if (!options.emPixels)
+                    options.emPixels = 18;
+                options.splitSvg = true;
+                return pxt.runner.compileBlocksAsync($el.text(), options)
+                    .then((r) => {
+                    try {
+                        render($el, r);
+                    }
+                    catch (e) {
+                        pxt.reportException(e);
+                        $el.append($('<div/>').addClass("ui segment warning").text(e.message));
+                    }
+                    $el.removeClass(cls);
+                    return pxt.U.delay(1, renderNextXmlAsync(cls, render, options));
+                });
+            }
+            return renderNextXmlAsync(cls, (c, r) => {
+                const s = r.blocksSvg;
+                if (opts.snippetReplaceParent)
+                    c = c.parent();
+                const segment = $('<div class="ui segment codewidget"/>').append(s);
+                c.replaceWith(segment);
+            }, { package: opts.package, snippetMode: true, aspectRatio: opts.blocksAspectRatio, assets: opts.assetJSON });
+        }
+        function renderDiffBlocksXmlAsync(opts) {
+            if (!opts.diffBlocksXmlClass)
+                return Promise.resolve();
+            const cls = opts.diffBlocksXmlClass;
+            function renderNextXmlAsync(cls, render, options) {
+                let $el = $("." + cls).first();
+                if (!$el[0])
+                    return Promise.resolve();
+                if (!options.emPixels)
+                    options.emPixels = 18;
+                options.splitSvg = true;
+                const xml = $el.text().split(/-{10,}/);
+                const oldXml = xml[0];
+                const newXml = xml[1];
+                return pxt.runner.compileBlocksAsync("", options) // force loading blocks
+                    .then(r => {
+                    $el.removeClass(cls);
+                    try {
+                        const diff = pxt.blocks.diffXml(oldXml, newXml);
+                        if (!diff)
+                            $el.text("no changes");
+                        else {
+                            r.blocksSvg = diff.svg;
+                            render($el, r);
+                        }
+                    }
+                    catch (e) {
+                        pxt.reportException(e);
+                        $el.append($('<div/>').addClass("ui segment warning").text(e.message));
+                    }
+                    return pxt.U.delay(1, renderNextXmlAsync(cls, render, options));
+                });
+            }
+            return renderNextXmlAsync(cls, (c, r) => {
+                const s = r.blocksSvg;
+                if (opts.snippetReplaceParent)
+                    c = c.parent();
+                const segment = $('<div class="ui segment codewidget"/>').append(s);
+                c.replaceWith(segment);
+            }, { package: opts.package, snippetMode: true, aspectRatio: opts.blocksAspectRatio, assets: opts.assetJSON });
+        }
+        function renderDiffAsync(opts) {
+            if (!opts.diffClass)
+                return Promise.resolve();
+            const cls = opts.diffClass;
+            function renderNextDiffAsync(cls) {
+                let $el = $("." + cls).first();
+                if (!$el[0])
+                    return Promise.resolve();
+                const { fileA: oldSrc, fileB: newSrc } = pxt.diff.split($el.text());
+                try {
+                    const diffEl = pxt.diff.render(oldSrc, newSrc, {
+                        hideLineNumbers: true,
+                        hideMarkerLine: true,
+                        hideMarker: true,
+                        hideRemoved: true,
+                        update: true,
+                        ignoreWhitespace: true,
+                    });
+                    if (opts.snippetReplaceParent)
+                        $el = $el.parent();
+                    const segment = $('<div class="ui segment codewidget"/>').append(diffEl);
+                    $el.removeClass(cls);
+                    $el.replaceWith(segment);
+                }
+                catch (e) {
+                    pxt.reportException(e);
+                    $el.append($('<div/>').addClass("ui segment warning").text(e.message));
+                }
+                return pxt.U.delay(1, renderNextDiffAsync(cls));
+            }
+            return renderNextDiffAsync(cls);
+        }
+        function renderDiffBlocksAsync(opts) {
+            if (!opts.diffBlocksClass)
+                return Promise.resolve();
+            const cls = opts.diffBlocksClass;
+            function renderNextDiffAsync(cls) {
+                let $el = $("." + cls).first();
+                if (!$el[0])
+                    return Promise.resolve();
+                const { fileA: oldSrc, fileB: newSrc } = pxt.diff.split($el.text(), {
+                    removeTrailingSemiColumns: true
+                });
+                return pxt.U.promiseMapAllSeries([oldSrc, newSrc], src => pxt.runner.decompileSnippetAsync(src, {
+                    generateSourceMap: true
+                }))
+                    .then(resps => {
+                    try {
+                        const diffBlocks = pxt.blocks.decompiledDiffAsync(oldSrc, resps[0].compileBlocks, newSrc, resps[1].compileBlocks, {
+                            hideDeletedTopBlocks: true,
+                            hideDeletedBlocks: true
+                        });
+                        const diffJs = pxt.diff.render(oldSrc, newSrc, {
+                            hideLineNumbers: true,
+                            hideMarkerLine: true,
+                            hideMarker: true,
+                            hideRemoved: true,
+                            update: true,
+                            ignoreWhitespace: true
+                        });
+                        let diffPy;
+                        const [oldPy, newPy] = resps.map(resp => resp.compilePython
+                            && resp.compilePython.outfiles
+                            && resp.compilePython.outfiles[pxt.MAIN_PY]);
+                        if (oldPy && newPy) {
+                            diffPy = pxt.diff.render(oldPy, newPy, {
+                                hideLineNumbers: true,
+                                hideMarkerLine: true,
+                                hideMarker: true,
+                                hideRemoved: true,
+                                update: true,
+                                ignoreWhitespace: true
+                            });
+                        }
+                        fillWithWidget(opts, $el.parent(), $(diffJs), diffPy && $(diffPy), $(diffBlocks.svg), undefined, {
+                            showEdit: false,
+                            run: false,
+                            hexname: undefined,
+                            hex: undefined
+                        });
+                    }
+                    catch (e) {
+                        pxt.reportException(e);
+                        $el.append($('<div/>').addClass("ui segment warning").text(e.message));
+                    }
+                    return pxt.U.delay(1, renderNextDiffAsync(cls));
+                });
+            }
+            return renderNextDiffAsync(cls);
+        }
+        let decompileApiPromise;
+        function decompileApiAsync(options) {
+            if (!decompileApiPromise)
+                decompileApiPromise = pxt.runner.decompileSnippetAsync('', options);
+            return decompileApiPromise;
+        }
+        function renderNamespaces(options) {
+            if (pxt.appTarget.id == "core")
+                return Promise.resolve();
+            return decompileApiAsync(options)
+                .then((r) => {
+                let res = {};
+                const info = r.compileBlocks.blocksInfo;
+                info.blocks.forEach(fn => {
+                    const ns = (fn.attributes.blockNamespace || fn.namespace).split('.')[0];
+                    if (!res[ns]) {
+                        const nsn = info.apis.byQName[ns];
+                        if (nsn && nsn.attributes.color)
+                            res[ns] = nsn.attributes.color;
+                    }
+                });
+                let nsStyleBuffer = '';
+                Object.keys(res).forEach(ns => {
+                    const color = res[ns] || '#dddddd';
+                    nsStyleBuffer += `
+                        span.docs.${ns.toLowerCase()} {
+                            background-color: ${color} !important;
+                            border-color: ${pxt.toolbox.fadeColor(color, 0.1, false)} !important;
+                        }
+                    `;
+                });
+                return nsStyleBuffer;
+            })
+                .then((nsStyleBuffer) => {
+                Object.keys(pxt.toolbox.blockColors).forEach((ns) => {
+                    const color = pxt.toolbox.getNamespaceColor(ns);
+                    nsStyleBuffer += `
+                        span.docs.${ns.toLowerCase()} {
+                            background-color: ${color} !important;
+                            border-color: ${pxt.toolbox.fadeColor(color, 0.1, false)} !important;
+                        }
+                    `;
+                });
+                return nsStyleBuffer;
+            })
+                .then((nsStyleBuffer) => {
+                // Inject css
+                let nsStyle = document.createElement('style');
+                nsStyle.id = "namespaceColors";
+                nsStyle.type = 'text/css';
+                let head = document.head || document.getElementsByTagName('head')[0];
+                head.appendChild(nsStyle);
+                nsStyle.appendChild(document.createTextNode(nsStyleBuffer));
+            });
+        }
+        function renderInlineBlocksAsync(options) {
+            options = pxt.Util.clone(options);
+            options.emPixels = 18;
+            options.snippetMode = true;
+            const $els = $(`:not(pre) > code`);
+            let i = 0;
+            function renderNextAsync() {
+                if (i >= $els.length)
+                    return Promise.resolve();
+                const $el = $($els[i++]);
+                const text = $el.text();
+                const mbtn = /^(\|+)([^\|]+)\|+$/.exec(text);
+                if (mbtn) {
+                    const mtxt = /^(([^\:\.]*?)[\:\.])?(.*)$/.exec(mbtn[2]);
+                    const ns = mtxt[2] ? mtxt[2].trim().toLowerCase() : '';
+                    const lev = mbtn[1].length == 1 ? `docs inlinebutton ${ns}` : `docs inlineblock ${ns}`;
+                    const txt = mtxt[3].trim();
+                    $el.replaceWith($(`<span class="${lev}"/>`).text(pxt.U.rlf(txt)));
+                    return renderNextAsync();
+                }
+                const m = /^\[(.+)\]$/.exec(text);
+                if (!m)
+                    return renderNextAsync();
+                const code = m[1];
+                return pxt.runner.decompileSnippetAsync(code, options)
+                    .then(r => {
+                    if (r.blocksSvg) {
+                        let $newel = $('<span class="block"/>').append(r.blocksSvg);
+                        const file = r.compileProgram.getSourceFile(pxt.MAIN_TS);
+                        const stmt = file.statements[0];
+                        const info = decompileCallInfo(stmt);
+                        if (info && r.apiInfo) {
+                            const symbolInfo = r.apiInfo.byQName[info.qName];
+                            if (symbolInfo && symbolInfo.attributes.help) {
+                                $newel = $(`<a class="ui link"/>`).attr("href", `/reference/${symbolInfo.attributes.help}`).append($newel);
+                            }
+                        }
+                        $el.replaceWith($newel);
+                    }
+                    return pxt.U.delay(1, renderNextAsync());
+                });
+            }
+            return renderNextAsync();
+        }
+        function renderProjectAsync(options) {
+            if (!options.projectClass)
+                return Promise.resolve();
+            function render() {
+                let $el = $("." + options.projectClass).first();
+                let e = $el[0];
+                if (!e)
+                    return Promise.resolve();
+                $el.removeClass(options.projectClass);
+                let id = pxt.Cloud.parseScriptId(e.innerText);
+                if (id) {
+                    if (options.snippetReplaceParent) {
+                        e = e.parentElement;
+                        // create a new div to host the rendered code
+                        let d = document.createElement("div");
+                        e.parentElement.insertBefore(d, e);
+                        e.parentElement.removeChild(e);
+                        e = d;
+                    }
+                    return pxt.runner.renderProjectAsync(e, id)
+                        .then(() => render());
+                }
+                else
+                    return render();
+            }
+            return render();
+        }
+        function renderApisAsync(options, replaceParent) {
+            const cls = options.apisClass;
+            if (!cls)
+                return Promise.resolve();
+            const apisEl = $('.' + cls);
+            if (!apisEl.length)
+                return Promise.resolve();
+            return decompileApiAsync(options)
+                .then((r) => {
+                const info = r.compileBlocks.blocksInfo;
+                const symbols = pxt.Util.values(info.apis.byQName)
+                    .filter(symbol => !symbol.attributes.hidden
+                    && !symbol.attributes.deprecated
+                    && !symbol.attributes.blockAliasFor
+                    && !!symbol.attributes.jsDoc
+                    && !!symbol.attributes.block
+                    && !/^__/.test(symbol.name));
+                apisEl.each((i, e) => {
+                    let c = $(e);
+                    const namespaces = pxt.Util.toDictionary(c.text().split('\n'), n => n); // list of namespace to list apis for.
+                    const csymbols = symbols.filter(symbol => !!namespaces[symbol.attributes.blockNamespace || symbol.namespace]);
+                    if (!csymbols.length)
+                        return;
+                    csymbols.sort((l, r) => {
+                        // render cards first
+                        const lcard = !l.attributes.blockHidden && Blockly.Blocks[l.attributes.blockId];
+                        const rcard = !r.attributes.blockHidden && Blockly.Blocks[r.attributes.blockId];
+                        if (!!lcard != !!rcard)
+                            return -(lcard ? 1 : 0) + (rcard ? 1 : 0);
+                        // sort alphabetically
+                        return l.name.localeCompare(r.name);
+                    });
+                    const ul = $('<div />').addClass('ui divided items');
+                    ul.attr("role", "listbox");
+                    csymbols.forEach(symbol => addSymbolCardItem(ul, symbol, "item"));
+                    if (replaceParent)
+                        c = c.parent();
+                    c.replaceWith(ul);
+                });
+            });
+        }
+        function addCardItem(ul, card) {
+            if (!card)
+                return;
+            const mC = /^\/(v\d+)/.exec(card.url);
+            const mP = /^\/(v\d+)/.exec(window.location.pathname);
+            const inEditor = /#doc/i.test(window.location.href);
+            if (card.url && !mC && mP && !inEditor)
+                card.url = `/${mP[1]}/${card.url}`;
+            ul.append(pxt.docs.codeCard.render(card, { hideHeader: true, shortName: true }));
+        }
+        function addSymbolCardItem(ul, symbol, cardStyle) {
+            const attributes = symbol.attributes;
+            const block = !attributes.blockHidden && Blockly.Blocks[attributes.blockId];
+            const card = block === null || block === void 0 ? void 0 : block.codeCard;
+            if (card) {
+                const ccard = pxt.U.clone(block.codeCard);
+                if (cardStyle)
+                    ccard.style = cardStyle;
+                addCardItem(ul, ccard);
+            }
+            else {
+                // default to text
+                // no block available here
+                addCardItem(ul, {
+                    name: symbol.qName,
+                    description: attributes.jsDoc,
+                    url: attributes.help || undefined,
+                    style: cardStyle
+                });
+            }
+        }
+        function renderLinksAsync(options, cls, replaceParent, ns) {
+            return renderNextSnippetAsync(cls, (c, r) => {
+                const cjs = r.compileProgram;
+                if (!cjs)
+                    return;
+                const file = cjs.getSourceFile(pxt.MAIN_TS);
+                const stmts = file.statements.slice(0);
+                const ul = $('<div />').addClass('ui cards');
+                ul.attr("role", "listbox");
+                stmts.forEach(stmt => {
+                    const kind = stmt.kind;
+                    const info = decompileCallInfo(stmt);
+                    if (info && r.apiInfo && r.apiInfo.byQName[info.qName]) {
+                        const symbol = r.apiInfo.byQName[info.qName];
+                        const attributes = symbol.attributes;
+                        const block = Blockly.Blocks[attributes.blockId];
+                        if (ns) {
+                            const ii = symbol;
+                            const nsi = r.compileBlocks.blocksInfo.apis.byQName[ii.namespace];
+                            addCardItem(ul, {
+                                name: nsi.attributes.blockNamespace || nsi.name,
+                                url: nsi.attributes.help || ("reference/" + (nsi.attributes.blockNamespace || nsi.name).toLowerCase()),
+                                description: nsi.attributes.jsDoc,
+                                blocksXml: block && block.codeCard
+                                    ? block.codeCard.blocksXml
+                                    : attributes.blockId
+                                        ? `<xml xmlns="http://www.w3.org/1999/xhtml"><block type="${attributes.blockId}"></block></xml>`
+                                        : undefined
+                            });
+                        }
+                        else {
+                            addSymbolCardItem(ul, symbol);
+                        }
+                    }
+                    else
+                        switch (kind) {
+                            case ts.SyntaxKind.ExpressionStatement: {
+                                const es = stmt;
+                                switch (es.expression.kind) {
+                                    case ts.SyntaxKind.TrueKeyword:
+                                    case ts.SyntaxKind.FalseKeyword:
+                                        addCardItem(ul, {
+                                            name: "Boolean",
+                                            url: "blocks/logic/boolean",
+                                            description: lf("True or false values"),
+                                            blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="logic_boolean"><field name="BOOL">TRUE</field></block></xml>'
+                                        });
+                                        break;
+                                    default:
+                                        pxt.debug(`card expr kind: ${es.expression.kind}`);
+                                        break;
+                                }
+                                break;
+                            }
+                            case ts.SyntaxKind.IfStatement:
+                                addCardItem(ul, {
+                                    name: ns ? "Logic" : "if",
+                                    url: "blocks/logic" + (ns ? "" : "/if"),
+                                    description: ns ? lf("Logic operators and constants") : lf("Conditional statement"),
+                                    blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_if"></block></xml>'
+                                });
+                                break;
+                            case ts.SyntaxKind.WhileStatement:
+                                addCardItem(ul, {
+                                    name: ns ? "Loops" : "while",
+                                    url: "blocks/loops" + (ns ? "" : "/while"),
+                                    description: ns ? lf("Loops and repetition") : lf("Repeat code while a condition is true."),
+                                    blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="device_while"></block></xml>'
+                                });
+                                break;
+                            case ts.SyntaxKind.ForOfStatement:
+                                addCardItem(ul, {
+                                    name: ns ? "Loops" : "for of",
+                                    url: "blocks/loops" + (ns ? "" : "/for-of"),
+                                    description: ns ? lf("Loops and repetition") : lf("Repeat code for each item in a list."),
+                                    blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_for_of"></block></xml>'
+                                });
+                                break;
+                            case ts.SyntaxKind.BreakStatement:
+                                addCardItem(ul, {
+                                    name: ns ? "Loops" : "break",
+                                    url: "blocks/loops" + (ns ? "" : "/break"),
+                                    description: ns ? lf("Loops and repetition") : lf("Break out of the current loop."),
+                                    blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="break_keyword"></block></xml>'
+                                });
+                                break;
+                            case ts.SyntaxKind.ContinueStatement:
+                                addCardItem(ul, {
+                                    name: ns ? "Loops" : "continue",
+                                    url: "blocks/loops" + (ns ? "" : "/continue"),
+                                    description: ns ? lf("Loops and repetition") : lf("Skip iteration and continue the current loop."),
+                                    blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="continue_keyboard"></block></xml>'
+                                });
+                                break;
+                            case ts.SyntaxKind.ForStatement: {
+                                let fs = stmt;
+                                // look for the 'repeat' loop style signature in the condition expression, explicitly: (let i = 0; i < X; i++)
+                                // for loops will have the '<=' conditional.
+                                let forloop = true;
+                                if (fs.condition.getChildCount() == 3) {
+                                    forloop = !(fs.condition.getChildAt(0).getText() == "0" ||
+                                        fs.condition.getChildAt(1).kind == ts.SyntaxKind.LessThanToken);
+                                }
+                                if (forloop) {
+                                    addCardItem(ul, {
+                                        name: ns ? "Loops" : "for",
+                                        url: "blocks/loops" + (ns ? "" : "/for"),
+                                        description: ns ? lf("Loops and repetition") : lf("Repeat code for a given number of times using an index."),
+                                        blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_simple_for"></block></xml>'
+                                    });
+                                }
+                                else {
+                                    addCardItem(ul, {
+                                        name: ns ? "Loops" : "repeat",
+                                        url: "blocks/loops" + (ns ? "" : "/repeat"),
+                                        description: ns ? lf("Loops and repetition") : lf("Repeat code for a given number of times."),
+                                        blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="controls_repeat_ext"></block></xml>'
+                                    });
+                                }
+                                break;
+                            }
+                            case ts.SyntaxKind.VariableStatement:
+                                addCardItem(ul, {
+                                    name: ns ? "Variables" : "variable declaration",
+                                    url: "blocks/variables" + (ns ? "" : "/assign"),
+                                    description: ns ? lf("Variables") : lf("Assign a value to a named variable."),
+                                    blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="variables_set"></block></xml>'
+                                });
+                                break;
+                            default:
+                                pxt.debug(`card kind: ${kind}`);
+                        }
+                });
+                if (replaceParent)
+                    c = c.parent();
+                c.replaceWith(ul);
+            }, { package: options.package, aspectRatio: options.blocksAspectRatio, assets: options.assetJSON });
+        }
+        function fillCodeCardAsync(c, cards, options) {
+            if (!cards || cards.length == 0)
+                return Promise.resolve();
+            if (cards.length == 0) {
+                let cc = pxt.docs.codeCard.render(cards[0], options);
+                c.replaceWith(cc);
+            }
+            else {
+                let cd = document.createElement("div");
+                cd.className = "ui cards";
+                cd.setAttribute("role", "listbox");
+                cards.forEach(card => {
+                    // patch card url with version if necessary, we don't do this in the editor because that goes through the backend and passes the targetVersion then
+                    const mC = /^\/(v\d+)/.exec(card.url);
+                    const mP = /^\/(v\d+)/.exec(window.location.pathname);
+                    const inEditor = /#doc/i.test(window.location.href);
+                    if (card.url && !mC && mP && !inEditor)
+                        card.url = `/${mP[1]}${card.url}`;
+                    const cardEl = pxt.docs.codeCard.render(card, options);
+                    cd.appendChild(cardEl);
+                    // automitcally display package icon for approved packages
+                    if (card.cardType == "package") {
+                        const repoId = pxt.github.parseRepoId((card.url || "").replace(/^\/pkg\//, ''));
+                        if (repoId) {
+                            pxt.packagesConfigAsync()
+                                .then(pkgConfig => {
+                                const status = pxt.github.repoStatus(repoId, pkgConfig);
+                                switch (status) {
+                                    case pxt.github.GitRepoStatus.Banned:
+                                        cardEl.remove();
+                                        break;
+                                    case pxt.github.GitRepoStatus.Approved:
+                                        // update card info
+                                        card.imageUrl = pxt.github.mkRepoIconUrl(repoId);
+                                        // inject
+                                        cd.insertBefore(pxt.docs.codeCard.render(card, options), cardEl);
+                                        cardEl.remove();
+                                        break;
+                                }
+                            })
+                                .catch(e => {
+                                // swallow
+                                pxt.reportException(e);
+                                pxt.debug(`failed to load repo ${card.url}`);
+                            });
+                        }
+                    }
+                });
+                c.replaceWith(cd);
+            }
+            return Promise.resolve();
+        }
+        function renderNextCodeCardAsync(cls, options) {
+            if (!cls)
+                return Promise.resolve();
+            let $el = $("." + cls).first();
+            if (!$el[0])
+                return Promise.resolve();
+            $el.removeClass(cls);
+            // try parsing the card as json
+            const cards = pxt.gallery.parseCodeCardsHtml($el[0]);
+            if (!cards) {
+                $el.append($('<div/>').addClass("ui segment warning").text("invalid codecard format"));
+            }
+            if (options.snippetReplaceParent)
+                $el = $el.parent();
+            return fillCodeCardAsync($el, cards, { hideHeader: true })
+                .then(() => pxt.U.delay(1, renderNextCodeCardAsync(cls, options)));
+        }
+        function getRunUrl(options) {
+            return options.pxtUrl ? options.pxtUrl + '/--run' : pxt.webConfig && pxt.webConfig.runUrl ? pxt.webConfig.runUrl : '/--run';
+        }
+        function getEditUrl(options) {
+            const url = options.pxtUrl || pxt.appTarget.appTheme.homeUrl;
+            return (url || "").replace(/\/$/, '');
+        }
+        function mergeConfig(options) {
+            // additional config options
+            if (!options.packageClass)
+                return;
+            $('.' + options.packageClass).each((i, c) => {
+                let $c = $(c);
+                let name = $c.text().split('\n').map(s => s.replace(/\s*/g, '')).filter(s => !!s).join(',');
+                options.package = options.package ? `${options.package},${name}` : name;
+                if (options.snippetReplaceParent)
+                    $c = $c.parent();
+                $c.remove();
+            });
+            $('.lang-config').each((i, c) => {
+                let $c = $(c);
+                if (options.snippetReplaceParent)
+                    $c = $c.parent();
+                $c.remove();
+            });
+        }
+        function readAssetJson(options) {
+            let assetJson;
+            let tilemapJres;
+            if (options.jresClass) {
+                $(`.${options.jresClass}`).each((i, c) => {
+                    const $c = $(c);
+                    tilemapJres = $c.text();
+                    c.parentElement.remove();
+                });
+            }
+            if (options.assetJSONClass) {
+                $(`.${options.assetJSONClass}`).each((i, c) => {
+                    const $c = $(c);
+                    assetJson = $c.text();
+                    c.parentElement.remove();
+                });
+            }
+            options.assetJSON = mergeAssetJson(assetJson, tilemapJres);
+            function mergeAssetJson(assetJSON, tilemapJres) {
+                if (!assetJSON && !tilemapJres)
+                    return undefined;
+                const mergedJson = pxt.tutorial.parseAssetJson(assetJSON) || {};
+                if (tilemapJres) {
+                    const parsedTmapJres = JSON.parse(tilemapJres);
+                    mergedJson[pxt.TILEMAP_JRES] = JSON.stringify(parsedTmapJres);
+                    mergedJson[pxt.TILEMAP_CODE] = pxt.emitTilemapsFromJRes(parsedTmapJres);
+                }
+                return mergedJson;
+            }
+        }
+        function renderDirectPython(options) {
+            // Highlight python snippets written with the ```python
+            // language tag (as opposed to the ```spy tag, see renderStaticPythonAsync for that)
+            const woptions = {
+                showEdit: !!options.showEdit,
+                run: !!options.simulator
+            };
+            function render(e, ignored) {
+                if (typeof hljs !== "undefined") {
+                    $(e).text($(e).text().replace(/^\s*\r?\n/, ''));
+                    hljs.highlightBlock(e);
+                    highlightLine($(e));
+                }
+                const opts = pxt.U.clone(woptions);
+                if (ignored) {
+                    opts.run = false;
+                    opts.showEdit = false;
+                }
+                fillWithWidget(options, $(e).parent(), $(e), /* py */ undefined, /* JQuery */ undefined, /* decompileResult */ undefined, opts);
+            }
+            $('code.lang-python').each((i, e) => {
+                render(e, false);
+                $(e).removeClass('lang-python');
+            });
+        }
+        function renderTypeScript(options) {
+            const woptions = {
+                showEdit: !!options.showEdit,
+                run: !!options.simulator
+            };
+            function render(e, ignored) {
+                if (typeof hljs !== "undefined") {
+                    $(e).text($(e).text().replace(/^\s*\r?\n/, ''));
+                    hljs.highlightBlock(e);
+                    highlightLine($(e));
+                }
+                const opts = pxt.U.clone(woptions);
+                if (ignored) {
+                    opts.run = false;
+                    opts.showEdit = false;
+                }
+                fillWithWidget(options, $(e).parent(), $(e), /* py */ undefined, /* JQuery */ undefined, /* decompileResult */ undefined, opts);
+            }
+            $('code.lang-typescript').each((i, e) => {
+                render(e, false);
+                $(e).removeClass('lang-typescript');
+            });
+            $('code.lang-typescript-ignore').each((i, e) => {
+                $(e).removeClass('lang-typescript-ignore');
+                $(e).addClass('lang-typescript');
+                render(e, true);
+                $(e).removeClass('lang-typescript');
+            });
+            $('code.lang-typescript-invalid').each((i, e) => {
+                $(e).removeClass('lang-typescript-invalid');
+                $(e).addClass('lang-typescript');
+                render(e, true);
+                $(e).removeClass('lang-typescript');
+                $(e).parent('div').addClass('invalid');
+                $(e).parent('div').prepend($("<i>", { "class": "icon ban" }));
+                $(e).addClass('invalid');
+            });
+            $('code.lang-typescript-valid').each((i, e) => {
+                $(e).removeClass('lang-typescript-valid');
+                $(e).addClass('lang-typescript');
+                render(e, true);
+                $(e).removeClass('lang-typescript');
+                $(e).parent('div').addClass('valid');
+                $(e).parent('div').prepend($("<i>", { "class": "icon check" }));
+                $(e).addClass('valid');
+            });
+        }
+        function renderGhost(options) {
+            let c = $('code.lang-ghost');
+            if (options.snippetReplaceParent)
+                c = c.parent();
+            c.remove();
+        }
+        function renderSims(options) {
+            if (!options.simulatorClass)
+                return;
+            // simulators
+            $('.' + options.simulatorClass).each((i, c) => {
+                let $c = $(c);
+                let padding = '81.97%';
+                if (pxt.appTarget.simulator)
+                    padding = (100 / pxt.appTarget.simulator.aspectRatio) + '%';
+                let $sim = $(`<div class="ui card"><div class="ui content">
+                    <div style="position:relative;height:0;padding-bottom:${padding};overflow:hidden;">
+                    <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" allowfullscreen="allowfullscreen" frameborder="0" sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe>
+                    </div>
+                    </div></div>`);
+                const deps = options.package ? "&deps=" + encodeURIComponent(options.package) : "";
+                const url = getRunUrl(options) + "#nofooter=1" + deps;
+                const data = encodeURIComponent($c.text().trim());
+                const $simIFrame = $sim.find("iframe");
+                $simIFrame.attr("src", url);
+                $simIFrame.attr("data-code", data);
+                if (options.assetJSON) {
+                    $simIFrame.attr("data-assets", JSON.stringify(options.assetJSON));
+                }
+                if (options.snippetReplaceParent)
+                    $c = $c.parent();
+                $c.replaceWith($sim);
+            });
+        }
+        function renderAsync(options) {
+            pxt.analytics.enable();
+            if (!options)
+                options = defaultClientRenderOptions();
+            if (options.pxtUrl)
+                options.pxtUrl = options.pxtUrl.replace(/\/$/, '');
+            if (options.showEdit)
+                options.showEdit = !pxt.BrowserUtils.isIFrame();
+            mergeConfig(options);
+            readAssetJson(options);
+            renderQueue = [];
+            renderGhost(options);
+            renderSims(options);
+            renderTypeScript(options);
+            renderDirectPython(options);
+            return Promise.resolve()
+                .then(() => renderNextCodeCardAsync(options.codeCardClass, options))
+                .then(() => renderNamespaces(options))
+                .then(() => renderInlineBlocksAsync(options))
+                .then(() => renderLinksAsync(options, options.linksClass, options.snippetReplaceParent, false))
+                .then(() => renderLinksAsync(options, options.namespacesClass, options.snippetReplaceParent, true))
+                .then(() => renderApisAsync(options, options.snippetReplaceParent))
+                .then(() => renderSignaturesAsync(options))
+                .then(() => renderSnippetsAsync(options))
+                .then(() => renderBlocksAsync(options))
+                .then(() => renderBlocksXmlAsync(options))
+                .then(() => renderDiffBlocksXmlAsync(options))
+                .then(() => renderDiffBlocksAsync(options))
+                .then(() => renderDiffAsync(options))
+                .then(() => renderStaticPythonAsync(options))
+                .then(() => renderProjectAsync(options))
+                .then(() => consumeRenderQueueAsync());
+        }
+        runner.renderAsync = renderAsync;
+    })(runner = pxt.runner || (pxt.runner = {}));
+})(pxt || (pxt = {}));
+/* TODO(tslint): get rid of jquery html() calls */
+/// <reference path="../built/pxtlib.d.ts" />
+/// <reference path="../built/pxteditor.d.ts" />
+/// <reference path="../built/pxtcompiler.d.ts" />
+/// <reference path="../built/pxtblocks.d.ts" />
+/// <reference path="../built/pxtsim.d.ts" />
+var pxt;
+(function (pxt) {
+    var runner;
+    (function (runner) {
+        class EditorPackage {
+            constructor(ksPkg, topPkg) {
+                this.ksPkg = ksPkg;
+                this.topPkg = topPkg;
+                this.files = {};
+            }
+            getKsPkg() {
+                return this.ksPkg;
+            }
+            getPkgId() {
+                return this.ksPkg ? this.ksPkg.id : this.id;
+            }
+            isTopLevel() {
+                return this.ksPkg && this.ksPkg.level == 0;
+            }
+            setFiles(files) {
+                this.files = files;
+            }
+            getAllFiles() {
+                return pxt.Util.mapMap(this.files, (k, f) => f);
+            }
+        }
+        class Host {
+            constructor() {
+                this.githubPackageCache = {};
+            }
+            readFile(module, filename) {
+                let epkg = getEditorPkg(module);
+                return pxt.U.lookup(epkg.files, filename);
+            }
+            writeFile(module, filename, contents) {
+                const epkg = getEditorPkg(module);
+                epkg.files[filename] = contents;
+            }
+            getHexInfoAsync(extInfo) {
+                return pxt.hexloader.getHexInfoAsync(this, extInfo);
+            }
+            cacheStoreAsync(id, val) {
+                return Promise.resolve();
+            }
+            cacheGetAsync(id) {
+                return Promise.resolve(null);
+            }
+            patchDependencies(cfg, name, repoId) {
+                if (!repoId)
+                    return false;
+                // check that the same package hasn't been added yet
+                const repo = pxt.github.parseRepoId(repoId);
+                if (!repo)
+                    return false;
+                for (const k of Object.keys(cfg.dependencies)) {
+                    const v = cfg.dependencies[k];
+                    const kv = pxt.github.parseRepoId(v);
+                    if (kv && repo.fullName == kv.fullName) {
+                        if (pxt.semver.strcmp(repo.tag, kv.tag) < 0) {
+                            // we have a later tag, use this one
+                            cfg.dependencies[k] = repoId;
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+            downloadPackageAsync(pkg, dependencies) {
+                let proto = pkg.verProtocol();
+                let cached = undefined;
+                // cache resolve github packages
+                if (proto == "github")
+                    cached = this.githubPackageCache[pkg._verspec];
+                let epkg = getEditorPkg(pkg);
+                return (cached ? Promise.resolve(cached) : pkg.commonDownloadAsync())
+                    .then(resp => {
+                    if (resp) {
+                        if (proto == "github" && !cached)
+                            this.githubPackageCache[pkg._verspec] = pxt.Util.clone(resp);
+                        epkg.setFiles(resp);
+                        return Promise.resolve();
+                    }
+                    if (proto == "empty") {
+                        if (Object.keys(epkg.files).length == 0) {
+                            epkg.setFiles(emptyPrjFiles());
+                        }
+                        if (dependencies && dependencies.length) {
+                            const files = getEditorPkg(pkg).files;
+                            const cfg = JSON.parse(files[pxt.CONFIG_NAME]);
+                            dependencies.forEach((d) => {
+                                addPackageToConfig(cfg, d);
+                            });
+                            files[pxt.CONFIG_NAME] = pxt.Package.stringifyConfig(cfg);
+                        }
+                        return Promise.resolve();
+                    }
+                    else if (proto == "docs") {
+                        let files = emptyPrjFiles();
+                        let cfg = JSON.parse(files[pxt.CONFIG_NAME]);
+                        // load all dependencies
+                        pkg.verArgument().split(',').forEach(d => {
+                            if (!addPackageToConfig(cfg, d)) {
+                                return;
+                            }
+                        });
+                        if (!cfg.yotta)
+                            cfg.yotta = {};
+                        cfg.yotta.ignoreConflicts = true;
+                        files[pxt.CONFIG_NAME] = pxt.Package.stringifyConfig(cfg);
+                        epkg.setFiles(files);
+                        return Promise.resolve();
+                    }
+                    else if (proto == "invalid") {
+                        pxt.log(`skipping invalid pkg ${pkg.id}`);
+                        return Promise.resolve();
+                    }
+                    else {
+                        return Promise.reject(`Cannot download ${pkg.version()}; unknown protocol`);
+                    }
+                });
+            }
+        }
+        let tilemapProject;
+        if (!pxt.react.getTilemapProject) {
+            pxt.react.getTilemapProject = () => {
+                if (!tilemapProject) {
+                    tilemapProject = new pxt.TilemapProject();
+                    tilemapProject.loadPackage(runner.mainPkg);
+                }
+                return tilemapProject;
+            };
+        }
+        function addPackageToConfig(cfg, dep) {
+            let m = /^([a-zA-Z0-9_-]+)(=(.+))?$/.exec(dep);
+            if (m) {
+                if (m[3] && this && this.patchDependencies(cfg, m[1], m[3]))
+                    return false;
+                cfg.dependencies[m[1]] = m[3] || "*";
+            }
+            else
+                console.warn(`unknown package syntax ${dep}`);
+            return true;
+        }
+        function getEditorPkg(p) {
+            let r = p._editorPkg;
+            if (r)
+                return r;
+            let top = null;
+            if (p != runner.mainPkg)
+                top = getEditorPkg(runner.mainPkg);
+            let newOne = new EditorPackage(p, top);
+            if (p == runner.mainPkg)
+                newOne.topPkg = newOne;
+            p._editorPkg = newOne;
+            return newOne;
+        }
+        function emptyPrjFiles() {
+            let p = pxt.appTarget.tsprj;
+            let files = pxt.U.clone(p.files);
+            files[pxt.CONFIG_NAME] = pxt.Package.stringifyConfig(p.config);
+            files[pxt.MAIN_BLOCKS] = "";
+            return files;
+        }
+        function patchSemantic() {
+            if ($ && $.fn && $.fn.embed && $.fn.embed.settings && $.fn.embed.settings.sources && $.fn.embed.settings.sources.youtube) {
+                $.fn.embed.settings.sources.youtube.url = '//www.youtube.com/embed/{id}?rel=0';
+            }
+        }
+        function initInnerAsync() {
+            pxt.setAppTarget(window.pxtTargetBundle);
+            pxt.Util.assert(!!pxt.appTarget);
+            const href = window.location.href;
+            let force = false;
+            let lang = undefined;
+            if (/[&?]translate=1/.test(href) && !pxt.BrowserUtils.isIE()) {
+                lang = ts.pxtc.Util.TRANSLATION_LOCALE;
+                force = true;
+                pxt.Util.enableLiveLocalizationUpdates();
+            }
+            else {
+                const cookieValue = /PXT_LANG=(.*?)(?:;|$)/.exec(document.cookie);
+                const mlang = /(live)?(force)?lang=([a-z]{2,}(-[A-Z]+)?)/i.exec(href);
+                lang = mlang ? mlang[3] : (cookieValue && cookieValue[1] || pxt.appTarget.appTheme.defaultLocale || navigator.userLanguage || navigator.language);
+                const defLocale = pxt.appTarget.appTheme.defaultLocale;
+                const langLowerCase = lang === null || lang === void 0 ? void 0 : lang.toLocaleLowerCase();
+                const localDevServe = pxt.BrowserUtils.isLocalHostDev()
+                    && (!langLowerCase || (defLocale
+                        ? defLocale.toLocaleLowerCase() === langLowerCase
+                        : "en" === langLowerCase || "en-us" === langLowerCase));
+                const serveLocal = pxt.BrowserUtils.isPxtElectron() || localDevServe;
+                const liveTranslationsDisabled = serveLocal || pxt.appTarget.appTheme.disableLiveTranslations;
+                if (!liveTranslationsDisabled || !!(mlang === null || mlang === void 0 ? void 0 : mlang[1])) {
+                    pxt.Util.enableLiveLocalizationUpdates();
+                }
+                force = !!mlang && !!mlang[2];
+            }
+            const versions = pxt.appTarget.versions;
+            patchSemantic();
+            const cfg = pxt.webConfig;
+            return pxt.Util.updateLocalizationAsync({
+                targetId: pxt.appTarget.id,
+                baseUrl: cfg.commitCdnUrl,
+                code: lang,
+                pxtBranch: versions ? versions.pxtCrowdinBranch : "",
+                targetBranch: versions ? versions.targetCrowdinBranch : "",
+                force: force,
+            })
+                .then(() => {
+                runner.mainPkg = new pxt.MainPackage(new Host());
+            });
+        }
+        function initFooter(footer, shareId) {
+            if (!footer)
+                return;
+            let theme = pxt.appTarget.appTheme;
+            let body = $('body');
+            let $footer = $(footer);
+            let footera = $('<a/>').attr('href', theme.homeUrl)
+                .attr('target', '_blank');
+            $footer.append(footera);
+            if (theme.organizationLogo)
+                footera.append($('<img/>').attr('src', pxt.Util.toDataUri(theme.organizationLogo)));
+            else
+                footera.append(lf("powered by {0}", theme.title));
+            body.mouseenter(ev => $footer.fadeOut());
+            body.mouseleave(ev => $footer.fadeIn());
+        }
+        runner.initFooter = initFooter;
+        function showError(msg) {
+            console.error(msg);
+        }
+        runner.showError = showError;
+        let previousMainPackage = undefined;
+        function loadPackageAsync(id, code, dependencies) {
+            const verspec = id ? /\w+:\w+/.test(id) ? id : "pub:" + id : "empty:tsprj";
+            let host;
+            let downloadPackagePromise;
+            let installPromise;
+            if (previousMainPackage && previousMainPackage._verspec == verspec) {
+                runner.mainPkg = previousMainPackage;
+                host = runner.mainPkg.host();
+                downloadPackagePromise = Promise.resolve();
+                installPromise = Promise.resolve();
+            }
+            else {
+                host = runner.mainPkg.host();
+                runner.mainPkg = new pxt.MainPackage(host);
+                runner.mainPkg._verspec = id ? /\w+:\w+/.test(id) ? id : "pub:" + id : "empty:tsprj";
+                downloadPackagePromise = host.downloadPackageAsync(runner.mainPkg, dependencies);
+                installPromise = runner.mainPkg.installAllAsync();
+                // cache previous package
+                previousMainPackage = runner.mainPkg;
+            }
+            return downloadPackagePromise
+                .then(() => host.readFile(runner.mainPkg, pxt.CONFIG_NAME))
+                .then(str => {
+                if (!str)
+                    return Promise.resolve();
+                return installPromise.then(() => {
+                    if (code) {
+                        //Set the custom code if provided for docs.
+                        let epkg = getEditorPkg(runner.mainPkg);
+                        epkg.files[pxt.MAIN_TS] = code;
+                        //set the custom doc name from the URL.
+                        let cfg = JSON.parse(epkg.files[pxt.CONFIG_NAME]);
+                        cfg.name = window.location.href.split('/').pop().split(/[?#]/)[0];
+                        ;
+                        epkg.files[pxt.CONFIG_NAME] = pxt.Package.stringifyConfig(cfg);
+                        //Propgate the change to main package
+                        runner.mainPkg.config.name = cfg.name;
+                        if (runner.mainPkg.config.files.indexOf(pxt.MAIN_BLOCKS) == -1) {
+                            runner.mainPkg.config.files.push(pxt.MAIN_BLOCKS);
+                        }
+                    }
+                }).catch(e => {
+                    showError(lf("Cannot load extension: {0}", e.message));
+                });
+            });
+        }
+        function getCompileOptionsAsync(hex) {
+            let trg = runner.mainPkg.getTargetOptions();
+            trg.isNative = !!hex;
+            trg.hasHex = !!hex;
+            return runner.mainPkg.getCompileOptionsAsync(trg);
+        }
+        function compileAsync(hex, updateOptions) {
+            return getCompileOptionsAsync(hex)
+                .then(opts => {
+                if (updateOptions)
+                    updateOptions(opts);
+                let resp = pxtc.compile(opts);
+                if (resp.diagnostics && resp.diagnostics.length > 0) {
+                    resp.diagnostics.forEach(diag => {
+                        console.error(diag.messageText);
+                    });
+                }
+                return resp;
+            });
+        }
+        function generateHexFileAsync(options) {
+            return loadPackageAsync(options.id)
+                .then(() => compileAsync(true, opts => {
+                if (options.code)
+                    opts.fileSystem[pxt.MAIN_TS] = options.code;
+            }))
+                .then(resp => {
+                if (resp.diagnostics && resp.diagnostics.length > 0) {
+                    console.error("Diagnostics", resp.diagnostics);
+                }
+                return resp.outfiles[pxtc.BINARY_HEX];
+            });
+        }
+        runner.generateHexFileAsync = generateHexFileAsync;
+        function generateVMFileAsync(options) {
+            pxt.setHwVariant("vm");
+            return loadPackageAsync(options.id)
+                .then(() => compileAsync(true, opts => {
+                if (options.code)
+                    opts.fileSystem[pxt.MAIN_TS] = options.code;
+            }))
+                .then(resp => {
+                console.log(resp);
+                return resp;
+            });
+        }
+        runner.generateVMFileAsync = generateVMFileAsync;
+        async function simulateAsync(container, simOptions) {
+            var _a, _b;
+            const builtSimJS = simOptions.builtJsInfo || await buildSimJsInfo(simOptions);
+            const { js, fnArgs, parts, usedBuiltinParts, } = builtSimJS;
+            if (!js) {
+                console.error("Program failed to compile");
+                return undefined;
+            }
+            let options = {};
+            options.onSimulatorCommand = msg => {
+                if (msg.command === "restart") {
+                    runOptions.storedState = getStoredState(simOptions.id);
+                    driver.run(js, runOptions);
+                }
+                if (msg.command == "setstate") {
+                    if (msg.stateKey && msg.stateValue) {
+                        setStoredState(simOptions.id, msg.stateKey, msg.stateValue);
+                    }
+                }
+            };
+            options.messageSimulators = (_b = (_a = pxt.appTarget) === null || _a === void 0 ? void 0 : _a.simulator) === null || _b === void 0 ? void 0 : _b.messageSimulators;
+            let driver = new pxsim.SimulatorDriver(container, options);
+            let board = pxt.appTarget.simulator.boardDefinition;
+            let storedState = getStoredState(simOptions.id);
+            let runOptions = {
+                boardDefinition: board,
+                parts: parts,
+                builtinParts: usedBuiltinParts,
+                fnArgs: fnArgs,
+                cdnUrl: pxt.webConfig.commitCdnUrl,
+                localizedStrings: pxt.Util.getLocalizedStrings(),
+                highContrast: simOptions.highContrast,
+                storedState: storedState,
+                light: simOptions.light,
+                single: simOptions.single
+            };
+            if (pxt.appTarget.simulator && !simOptions.fullScreen)
+                runOptions.aspectRatio = parts.length && pxt.appTarget.simulator.partsAspectRatio
+                    ? pxt.appTarget.simulator.partsAspectRatio
+                    : pxt.appTarget.simulator.aspectRatio;
+            driver.run(js, runOptions);
+            return builtSimJS;
+        }
+        runner.simulateAsync = simulateAsync;
+        async function buildSimJsInfo(simOptions) {
+            var _a;
+            await loadPackageAsync(simOptions.id, simOptions.code, simOptions.dependencies);
+            let didUpgrade = false;
+            const currentTargetVersion = pxt.appTarget.versions.target;
+            let compileResult = await compileAsync(false, opts => {
+                var _a;
+                if (simOptions.assets) {
+                    const parsedAssets = JSON.parse(simOptions.assets);
+                    for (const key of Object.keys(parsedAssets)) {
+                        const el = parsedAssets[key];
+                        opts.fileSystem[key] = el;
+                        if (opts.sourceFiles.indexOf(key) < 0) {
+                            opts.sourceFiles.push(key);
+                        }
+                        if (/\.jres$/.test(key)) {
+                            const parsedJres = JSON.parse(el);
+                            opts.jres = pxt.inflateJRes(parsedJres, opts.jres);
+                        }
+                    }
+                }
+                if (simOptions.code)
+                    opts.fileSystem[pxt.MAIN_TS] = simOptions.code;
+                // Api info needed for py2ts conversion, if project is shared in Python
+                if (opts.target.preferredEditor === pxt.PYTHON_PROJECT_NAME) {
+                    opts.target.preferredEditor = pxt.JAVASCRIPT_PROJECT_NAME;
+                    opts.ast = true;
+                    const resp = pxtc.compile(opts);
+                    const apis = getApiInfo(resp.ast, opts);
+                    opts.apisInfo = apis;
+                    opts.target.preferredEditor = pxt.PYTHON_PROJECT_NAME;
+                }
+                // Apply upgrade rules if necessary
+                const sharedTargetVersion = (_a = runner.mainPkg.config.targetVersions) === null || _a === void 0 ? void 0 : _a.target;
+                if (sharedTargetVersion && currentTargetVersion &&
+                    pxt.semver.cmp(pxt.semver.parse(sharedTargetVersion), pxt.semver.parse(currentTargetVersion)) < 0) {
+                    for (const fileName of Object.keys(opts.fileSystem)) {
+                        if (!pxt.Util.startsWith(fileName, "pxt_modules") && pxt.Util.endsWith(fileName, ".ts")) {
+                            didUpgrade = true;
+                            opts.fileSystem[fileName] = pxt.patching.patchJavaScript(sharedTargetVersion, opts.fileSystem[fileName]);
+                        }
+                    }
+                }
+            });
+            if (((_a = compileResult.diagnostics) === null || _a === void 0 ? void 0 : _a.length) > 0 && didUpgrade) {
+                pxt.log("Compile with upgrade rules failed, trying again with original code");
+                compileResult = await compileAsync(false, opts => {
+                    if (simOptions.code)
+                        opts.fileSystem[pxt.MAIN_TS] = simOptions.code;
+                });
+            }
+            if (compileResult.diagnostics && compileResult.diagnostics.length > 0) {
+                console.error("Diagnostics", compileResult.diagnostics);
+            }
+            return pxtc.buildSimJsInfo(compileResult);
+        }
+        runner.buildSimJsInfo = buildSimJsInfo;
+        function getStoredState(id) {
+            let storedState = {};
+            try {
+                let projectStorage = window.localStorage.getItem(id);
+                if (projectStorage) {
+                    storedState = JSON.parse(projectStorage);
+                }
+            }
+            catch (e) { }
+            return storedState;
+        }
+        function setStoredState(id, key, value) {
+            let storedState = getStoredState(id);
+            if (!id) {
+                return;
+            }
+            if (value)
+                storedState[key] = value;
+            else
+                delete storedState[key];
+            try {
+                window.localStorage.setItem(id, JSON.stringify(storedState));
+            }
+            catch (e) { }
+        }
+        let LanguageMode;
+        (function (LanguageMode) {
+            LanguageMode[LanguageMode["Blocks"] = 0] = "Blocks";
+            LanguageMode[LanguageMode["TypeScript"] = 1] = "TypeScript";
+            LanguageMode[LanguageMode["Python"] = 2] = "Python";
+        })(LanguageMode = runner.LanguageMode || (runner.LanguageMode = {}));
+        runner.editorLanguageMode = LanguageMode.Blocks;
+        function setEditorContextAsync(mode, localeInfo) {
+            runner.editorLanguageMode = mode;
+            if (localeInfo != pxt.Util.localeInfo()) {
+                const localeLiveRx = /^live-/;
+                const fetchLive = localeLiveRx.test(localeInfo);
+                if (fetchLive) {
+                    pxt.Util.enableLiveLocalizationUpdates();
+                }
+                return pxt.Util.updateLocalizationAsync({
+                    targetId: pxt.appTarget.id,
+                    baseUrl: pxt.webConfig.commitCdnUrl,
+                    code: localeInfo.replace(localeLiveRx, ''),
+                    pxtBranch: pxt.appTarget.versions.pxtCrowdinBranch,
+                    targetBranch: pxt.appTarget.versions.targetCrowdinBranch,
+                });
+            }
+            return Promise.resolve();
+        }
+        runner.setEditorContextAsync = setEditorContextAsync;
+        function receiveDocMessage(e) {
+            let m = e.data;
+            if (!m)
+                return;
+            switch (m.type) {
+                case "fileloaded":
+                    let fm = m;
+                    let name = fm.name;
+                    let mode = LanguageMode.Blocks;
+                    if (/\.ts$/i.test(name)) {
+                        mode = LanguageMode.TypeScript;
+                    }
+                    else if (/\.py$/i.test(name)) {
+                        mode = LanguageMode.Python;
+                    }
+                    setEditorContextAsync(mode, fm.locale);
+                    break;
+                case "popout":
+                    let mp = /((\/v[0-9+])\/)?[^\/]*#(doc|md):([^&?:]+)/i.exec(window.location.href);
+                    if (mp) {
+                        const docsUrl = pxt.webConfig.docsUrl || '/--docs';
+                        let verPrefix = mp[2] || '';
+                        let url = mp[3] == "doc" ? (pxt.webConfig.isStatic ? `/docs${mp[4]}.html` : `${mp[4]}`) : `${docsUrl}?md=${mp[4]}`;
+                        // notify parent iframe that we have completed the popout
+                        if (window.parent)
+                            window.parent.postMessage({
+                                type: "opendoc",
+                                url: pxt.BrowserUtils.urlJoin(verPrefix, url)
+                            }, "*");
+                    }
+                    break;
+                case "localtoken":
+                    let dm = m;
+                    if (dm && dm.localToken) {
+                        pxt.Cloud.localToken = dm.localToken;
+                        pendingLocalToken.forEach(p => p());
+                        pendingLocalToken = [];
+                    }
+                    break;
+            }
+        }
+        function startRenderServer() {
+            pxt.tickEvent("renderer.ready");
+            const jobQueue = [];
+            let jobPromise = undefined;
+            function consumeQueue() {
+                if (jobPromise)
+                    return; // other worker already in action
+                const msg = jobQueue.shift();
+                if (!msg)
+                    return; // no more work
+                const options = (msg.options || {});
+                options.splitSvg = false; // don't split when requesting rendered images
+                pxt.tickEvent("renderer.job");
+                const isXml = /^\s*<xml/.test(msg.code);
+                const doWork = async () => {
+                    await pxt.BrowserUtils.loadBlocklyAsync();
+                    const result = isXml
+                        ? await pxt.runner.compileBlocksAsync(msg.code, options)
+                        : await runner.decompileSnippetAsync(msg.code, msg.options);
+                    const blocksSvg = result.blocksSvg;
+                    const width = blocksSvg.viewBox.baseVal.width;
+                    const height = blocksSvg.viewBox.baseVal.height;
+                    const res = blocksSvg
+                        ? await pxt.blocks.layout.blocklyToSvgAsync(blocksSvg, 0, 0, width, height)
+                        : undefined;
+                    // try to render to png
+                    let png;
+                    try {
+                        png = res
+                            ? await pxt.BrowserUtils.encodeToPngAsync(res.xml, { width, height })
+                            : undefined;
+                    }
+                    catch (e) {
+                        console.warn(e);
+                    }
+                    window.parent.postMessage({
+                        source: "makecode",
+                        type: "renderblocks",
+                        id: msg.id,
+                        width: res === null || res === void 0 ? void 0 : res.width,
+                        height: res === null || res === void 0 ? void 0 : res.height,
+                        svg: res === null || res === void 0 ? void 0 : res.svg,
+                        uri: png || (res === null || res === void 0 ? void 0 : res.xml),
+                        css: res === null || res === void 0 ? void 0 : res.css
+                    }, "*");
+                };
+                jobPromise = doWork()
+                    .catch(e => {
+                    window.parent.postMessage({
+                        source: "makecode",
+                        type: "renderblocks",
+                        id: msg.id,
+                        error: e.message
+                    }, "*");
+                })
+                    .finally(() => {
+                    jobPromise = undefined;
+                    consumeQueue();
+                });
+            }
+            pxt.editor.initEditorExtensionsAsync()
+                .then(() => {
+                // notify parent that render engine is loaded
+                window.addEventListener("message", function (ev) {
+                    const msg = ev.data;
+                    if (msg.type == "renderblocks") {
+                        jobQueue.push(msg);
+                        consumeQueue();
+                    }
+                }, false);
+                window.parent.postMessage({
+                    source: "makecode",
+                    type: "renderready",
+                    versions: pxt.appTarget.versions
+                }, "*");
+            });
+        }
+        runner.startRenderServer = startRenderServer;
+        function startDocsServer(loading, content, backButton) {
+            pxt.tickEvent("docrenderer.ready");
+            const history = [];
+            if (backButton) {
+                backButton.addEventListener("click", () => {
+                    goBack();
+                });
+                setElementDisabled(backButton, true);
+            }
+            function render(doctype, src) {
+                pxt.debug(`rendering ${doctype}`);
+                if (backButton)
+                    $(backButton).hide();
+                $(content).hide();
+                $(loading).show();
+                pxt.U.delay(100) // allow UI to update
+                    .then(() => {
+                    switch (doctype) {
+                        case "print":
+                            const data = window.localStorage["printjob"];
+                            delete window.localStorage["printjob"];
+                            return renderProjectFilesAsync(content, JSON.parse(data), undefined, true)
+                                .then(() => pxsim.print(1000));
+                        case "project":
+                            return renderProjectFilesAsync(content, JSON.parse(src))
+                                .then(() => pxsim.print(1000));
+                        case "projectid":
+                            return renderProjectAsync(content, JSON.parse(src))
+                                .then(() => pxsim.print(1000));
+                        case "doc":
+                            return renderDocAsync(content, src);
+                        case "book":
+                            return renderBookAsync(content, src);
+                        default:
+                            return renderMarkdownAsync(content, src);
+                    }
+                })
+                    .catch(e => {
+                    $(content).html(`
+                    <img style="height:4em;" src="${pxt.appTarget.appTheme.docsLogo}" />
+                    <h1>${lf("Oops")}</h1>
+                    <h3>${lf("We could not load the documentation, please check your internet connection.")}</h3>
+                    <button class="ui button primary" id="tryagain">${lf("Try Again")}</button>`);
+                    $(content).find('#tryagain').click(() => {
+                        render(doctype, src);
+                    });
+                    // notify parent iframe that docs weren't loaded
+                    if (window.parent)
+                        window.parent.postMessage({
+                            type: "docfailed",
+                            docType: doctype,
+                            src: src
+                        }, "*");
+                }).finally(() => {
+                    $(loading).hide();
+                    if (backButton)
+                        $(backButton).show();
+                    $(content).show();
+                })
+                    .then(() => { });
+            }
+            function pushHistory() {
+                if (!backButton)
+                    return;
+                history.push(window.location.hash);
+                if (history.length > 10) {
+                    history.shift();
+                }
+                if (history.length > 1) {
+                    setElementDisabled(backButton, false);
+                }
+            }
+            function goBack() {
+                if (!backButton)
+                    return;
+                if (history.length > 1) {
+                    // Top is current page
+                    history.pop();
+                    window.location.hash = history.pop();
+                }
+                if (history.length <= 1) {
+                    setElementDisabled(backButton, true);
+                }
+            }
+            function setElementDisabled(el, disabled) {
+                if (disabled) {
+                    pxsim.U.addClass(el, "disabled");
+                    el.setAttribute("aria-disabled", "true");
+                }
+                else {
+                    pxsim.U.removeClass(el, "disabled");
+                    el.setAttribute("aria-disabled", "false");
+                }
+            }
+            async function renderHashAsync() {
+                let m = /^#(doc|md|tutorial|book|project|projectid|print):([^&?:]+)(:([^&?:]+):([^&?:]+))?/i.exec(window.location.hash);
+                if (m) {
+                    pushHistory();
+                    if (m[4]) {
+                        let mode = LanguageMode.TypeScript;
+                        if (/^blocks$/i.test(m[4])) {
+                            mode = LanguageMode.Blocks;
+                        }
+                        else if (/^python$/i.test(m[4])) {
+                            mode = LanguageMode.Python;
+                        }
+                        await setEditorContextAsync(mode, m[5]);
+                    }
+                    // navigation occured
+                    render(m[1], decodeURIComponent(m[2]));
+                }
+            }
+            let promise = pxt.editor.initEditorExtensionsAsync();
+            promise.then(() => {
+                window.addEventListener("message", receiveDocMessage, false);
+                window.addEventListener("hashchange", () => {
+                    renderHashAsync();
+                }, false);
+                parent.postMessage({ type: "sidedocready" }, "*");
+                // delay load doc page to allow simulator to load first
+                setTimeout(() => renderHashAsync(), 1);
+            });
+        }
+        runner.startDocsServer = startDocsServer;
+        function renderProjectAsync(content, projectid) {
+            return pxt.Cloud.privateGetTextAsync(projectid + "/text")
+                .then(txt => JSON.parse(txt))
+                .then(files => renderProjectFilesAsync(content, files, projectid));
+        }
+        runner.renderProjectAsync = renderProjectAsync;
+        function renderProjectFilesAsync(content, files, projectid = null, escapeLinks = false) {
+            const cfg = (JSON.parse(files[pxt.CONFIG_NAME]) || {});
+            let md = `# ${cfg.name} ${cfg.version ? cfg.version : ''}
+
+`;
+            const readme = "README.md";
+            if (files[readme])
+                md += files[readme].replace(/^#+/, "$0#") + '\n'; // bump all headers down 1
+            cfg.files.filter(f => f != pxt.CONFIG_NAME && f != readme)
+                .filter(f => matchesLanguageMode(f, runner.editorLanguageMode))
+                .forEach(f => {
+                if (!/^main\.(ts|blocks)$/.test(f))
+                    md += `
+## ${f}
+`;
+                if (/\.ts$/.test(f)) {
+                    md += `\`\`\`typescript
+${files[f]}
+\`\`\`
+`;
+                }
+                else if (/\.blocks?$/.test(f)) {
+                    md += `\`\`\`blocksxml
+${files[f]}
+\`\`\`
+`;
+                }
+                else {
+                    md += `\`\`\`${f.substr(f.indexOf('.'))}
+${files[f]}
+\`\`\`
+`;
+                }
+            });
+            const deps = cfg && cfg.dependencies && Object.keys(cfg.dependencies).filter(k => k != pxt.appTarget.corepkg);
+            if (deps && deps.length) {
+                md += `
+## ${lf("Extensions")} #extensions
+
+${deps.map(k => `* ${k}, ${cfg.dependencies[k]}`).join('\n')}
+
+\`\`\`package
+${deps.map(k => `${k}=${cfg.dependencies[k]}`).join('\n')}
+\`\`\`
+`;
+            }
+            if (projectid) {
+                let linkString = (pxt.appTarget.appTheme.shareUrl || "https://makecode.com/") + projectid;
+                if (escapeLinks) {
+                    // If printing the link will show up twice if it's an actual link
+                    linkString = "`" + linkString + "`";
+                }
+                md += `
+${linkString}
+
+`;
+            }
+            console.debug(`print md: ${md}`);
+            const options = {
+                print: true
+            };
+            return renderMarkdownAsync(content, md, options);
+        }
+        runner.renderProjectFilesAsync = renderProjectFilesAsync;
+        function matchesLanguageMode(filename, mode) {
+            switch (mode) {
+                case LanguageMode.Blocks:
+                    return /\.blocks?$/.test(filename);
+                case LanguageMode.TypeScript:
+                    return /\.ts?$/.test(filename);
+                case LanguageMode.Python:
+                    return /\.py?$/.test(filename);
+            }
+        }
+        function renderDocAsync(content, docid) {
+            docid = docid.replace(/^\//, "");
+            return pxt.Cloud.markdownAsync(docid)
+                .then(md => renderMarkdownAsync(content, md, { path: docid }));
+        }
+        function renderBookAsync(content, summaryid) {
+            summaryid = summaryid.replace(/^\//, "");
+            pxt.tickEvent('book', { id: summaryid });
+            pxt.log(`rendering book from ${summaryid}`);
+            // display loader
+            const $loader = $("#loading").find(".loader");
+            $loader.addClass("text").text(lf("Compiling your book (this may take a minute)"));
+            // start the work
+            let toc;
+            return pxt.U.delay(100)
+                .then(() => pxt.Cloud.markdownAsync(summaryid))
+                .then(summary => {
+                toc = pxt.docs.buildTOC(summary);
+                pxt.log(`TOC: ${JSON.stringify(toc, null, 2)}`);
+                const tocsp = [];
+                pxt.docs.visitTOC(toc, entry => {
+                    if (/^\//.test(entry.path) && !/^\/pkg\//.test(entry.path))
+                        tocsp.push(entry);
+                });
+                return pxt.U.promisePoolAsync(4, tocsp, async (entry) => {
+                    try {
+                        const md = await pxt.Cloud.markdownAsync(entry.path);
+                        entry.markdown = md;
+                    }
+                    catch (e) {
+                        entry.markdown = `_${entry.path} failed to load._`;
+                    }
+                });
+            })
+                .then(pages => {
+                let md = toc[0].name;
+                pxt.docs.visitTOC(toc, entry => {
+                    if (entry.markdown)
+                        md += '\n\n' + entry.markdown;
+                });
+                return renderMarkdownAsync(content, md);
+            });
+        }
+        const template = `
+<aside id=button class=box>
+   <a class="ui primary button" href="@ARGS@">@BODY@</a>
+</aside>
+
+<aside id=vimeo>
+<div class="ui two column stackable grid container">
+<div class="column">
+    <div class="ui embed mdvid" data-source="vimeo" data-id="@ARGS@" data-placeholder="/thumbnail/1024/vimeo/@ARGS@" data-icon="video play">
+    </div>
+</div></div>
+</aside>
+
+<aside id=youtube>
+<div class="ui two column stackable grid container">
+<div class="column">
+    <div class="ui embed mdvid" data-source="youtube" data-id="@ARGS@" data-placeholder="https://img.youtube.com/vi/@ARGS@/0.jpg">
+    </div>
+</div></div>
+</aside>
+
+<aside id=section>
+    <!-- section @ARGS@ -->
+</aside>
+
+<aside id=hide class=box>
+    <div style='display:none'>
+        @BODY@
+    </div>
+</aside>
+
+<aside id=avatar class=box>
+    <div class='avatar @ARGS@'>
+        <div class='avatar-image'></div>
+        <div class='ui compact message'>
+            @BODY@
+        </div>
+    </div>
+</aside>
+
+<aside id=hint class=box>
+    <div class="ui info message">
+        <div class="content">
+            @BODY@
+        </div>
+    </div>
+</aside>
+
+<aside id=codecard class=box>
+    <pre><code class="lang-codecard">@BODY@</code></pre>
+</aside>
+
+<aside id=tutorialhint class=box>
+    <div class="ui hint message">
+        <div class="content">
+            @BODY@
+        </div>
+    </div>
+</aside>
+
+<aside id=reminder class=box>
+    <div class="ui warning message">
+        <div class="content">
+            @BODY@
+        </div>
+    </div>
+</aside>
+
+<aside id=alert class=box>
+    <div class="ui negative message">
+        <div class="content">
+            @BODY@
+        </div>
+    </div>
+</aside>
+
+<aside id=tip class=box>
+    <div class="ui positive message">
+        <div class="content">
+            @BODY@
+        </div>
+    </div>
+</aside>
+
+<!-- wrapped around ordinary content -->
+<aside id=main-container class=box>
+    <div class="ui text">
+        @BODY@
+    </div>
+</aside>
+
+<!-- used for 'column' box - they are collected and wrapped in 'column-container' -->
+<aside id=column class=aside>
+    <div class='column'>
+        @BODY@
+    </div>
+</aside>
+<aside id=column-container class=box>
+    <div class="ui three column stackable grid text">
+        @BODY@
+    </div>
+</aside>
+@breadcrumb@
+@body@`;
+        function renderMarkdownAsync(content, md, options = {}) {
+            const html = pxt.docs.renderMarkdown({
+                template: template,
+                markdown: md,
+                theme: pxt.appTarget.appTheme
+            });
+            let blocksAspectRatio = options.blocksAspectRatio
+                || window.innerHeight < window.innerWidth ? 1.62 : 1 / 1.62;
+            $(content).html(html);
+            $(content).find('a').attr('target', '_blank');
+            const renderOptions = pxt.runner.defaultClientRenderOptions();
+            renderOptions.tutorial = !!options.tutorial;
+            renderOptions.blocksAspectRatio = blocksAspectRatio || renderOptions.blocksAspectRatio;
+            renderOptions.showJavaScript = runner.editorLanguageMode == LanguageMode.TypeScript;
+            if (options.print) {
+                renderOptions.showEdit = false;
+                renderOptions.simulator = false;
+            }
+            return pxt.runner.renderAsync(renderOptions).then(() => {
+                // patch a elements
+                $(content).find('a[href^="/"]').removeAttr('target').each((i, a) => {
+                    $(a).attr('href', '#doc:' + $(a).attr('href').replace(/^\//, ''));
+                });
+                // enable embeds
+                $(content).find('.ui.embed').embed();
+            });
+        }
+        runner.renderMarkdownAsync = renderMarkdownAsync;
+        let programCache;
+        let apiCache;
+        function decompileSnippetAsync(code, options) {
+            const { assets, forceCompilation, snippetMode, generateSourceMap } = options || {};
+            // code may be undefined or empty!!!
+            const packageid = options && options.packageId ? "pub:" + options.packageId :
+                options && options.package ? "docs:" + options.package
+                    : null;
+            return loadPackageAsync(packageid, code)
+                .then(() => getCompileOptionsAsync(pxt.appTarget.compile ? pxt.appTarget.compile.hasHex : false))
+                .then(opts => {
+                // compile
+                if (code)
+                    opts.fileSystem[pxt.MAIN_TS] = code;
+                opts.ast = true;
+                if (assets) {
+                    for (const key of Object.keys(assets)) {
+                        if (opts.sourceFiles.indexOf(key) < 0) {
+                            opts.sourceFiles.push(key);
+                        }
+                        opts.fileSystem[key] = assets[key];
+                    }
+                }
+                let compileJS = undefined;
+                let program;
+                if (forceCompilation) {
+                    compileJS = pxtc.compile(opts);
+                    program = compileJS && compileJS.ast;
+                }
+                else {
+                    program = pxtc.getTSProgram(opts, programCache);
+                }
+                programCache = program;
+                // decompile to python
+                let compilePython = undefined;
+                if (pxt.appTarget.appTheme.python) {
+                    compilePython = ts.pxtc.transpile.tsToPy(program, pxt.MAIN_TS);
+                }
+                // decompile to blocks
+                let apis = getApiInfo(program, opts);
+                return ts.pxtc.localizeApisAsync(apis, runner.mainPkg)
+                    .then(() => {
+                    let blocksInfo = pxtc.getBlocksInfo(apis);
+                    pxt.blocks.initializeAndInject(blocksInfo);
+                    const tilemapJres = assets === null || assets === void 0 ? void 0 : assets[pxt.TILEMAP_JRES];
+                    const assetsJres = assets === null || assets === void 0 ? void 0 : assets[pxt.IMAGES_JRES];
+                    if (tilemapJres || assetsJres) {
+                        tilemapProject = new pxt.TilemapProject();
+                        tilemapProject.loadPackage(runner.mainPkg);
+                        if (tilemapJres)
+                            tilemapProject.loadTilemapJRes(JSON.parse(tilemapJres), true);
+                        if (assetsJres)
+                            tilemapProject.loadAssetsJRes(JSON.parse(assetsJres));
+                    }
+                    let bresp = pxtc.decompiler.decompileToBlocks(blocksInfo, program.getSourceFile(pxt.MAIN_TS), {
+                        snippetMode,
+                        generateSourceMap
+                    });
+                    if (bresp.diagnostics && bresp.diagnostics.length > 0)
+                        bresp.diagnostics.forEach(diag => console.error(diag.messageText));
+                    if (!bresp.success)
+                        return {
+                            package: runner.mainPkg,
+                            compileProgram: program,
+                            compileJS,
+                            compileBlocks: bresp,
+                            apiInfo: apis
+                        };
+                    pxt.debug(bresp.outfiles[pxt.MAIN_BLOCKS]);
+                    const blocksSvg = pxt.blocks.render(bresp.outfiles[pxt.MAIN_BLOCKS], options);
+                    if (tilemapJres || assetsJres) {
+                        tilemapProject = null;
+                    }
+                    return {
+                        package: runner.mainPkg,
+                        compileProgram: program,
+                        compileJS,
+                        compileBlocks: bresp,
+                        compilePython,
+                        apiInfo: apis,
+                        blocksSvg
+                    };
+                });
+            });
+        }
+        runner.decompileSnippetAsync = decompileSnippetAsync;
+        function getApiInfo(program, opts) {
+            if (!apiCache)
+                apiCache = {};
+            const key = Object.keys(opts.fileSystem).sort().join(";");
+            if (!apiCache[key])
+                apiCache[key] = pxtc.getApiInfo(program, opts.jres);
+            return apiCache[key];
+        }
+        function compileBlocksAsync(code, options) {
+            const { assets } = options || {};
+            const packageid = options && options.packageId ? "pub:" + options.packageId :
+                options && options.package ? "docs:" + options.package
+                    : null;
+            return loadPackageAsync(packageid, "")
+                .then(() => getCompileOptionsAsync(pxt.appTarget.compile ? pxt.appTarget.compile.hasHex : false))
+                .then(opts => {
+                opts.ast = true;
+                if (assets) {
+                    for (const key of Object.keys(assets)) {
+                        if (opts.sourceFiles.indexOf(key) < 0) {
+                            opts.sourceFiles.push(key);
+                        }
+                        opts.fileSystem[key] = assets[key];
+                    }
+                }
+                const resp = pxtc.compile(opts);
+                const apis = getApiInfo(resp.ast, opts);
+                return ts.pxtc.localizeApisAsync(apis, runner.mainPkg)
+                    .then(() => {
+                    const blocksInfo = pxtc.getBlocksInfo(apis);
+                    pxt.blocks.initializeAndInject(blocksInfo);
+                    const tilemapJres = assets === null || assets === void 0 ? void 0 : assets[pxt.TILEMAP_JRES];
+                    const assetsJres = assets === null || assets === void 0 ? void 0 : assets[pxt.IMAGES_JRES];
+                    if (tilemapJres || assetsJres) {
+                        tilemapProject = new pxt.TilemapProject();
+                        tilemapProject.loadPackage(runner.mainPkg);
+                        if (tilemapJres)
+                            tilemapProject.loadTilemapJRes(JSON.parse(tilemapJres), true);
+                        if (assetsJres)
+                            tilemapProject.loadAssetsJRes(JSON.parse(assetsJres));
+                    }
+                    const blockSvg = pxt.blocks.render(code, options);
+                    if (tilemapJres || assetsJres) {
+                        tilemapProject = null;
+                    }
+                    return {
+                        package: runner.mainPkg,
+                        blocksSvg: blockSvg,
+                        apiInfo: apis
+                    };
+                });
+            });
+        }
+        runner.compileBlocksAsync = compileBlocksAsync;
+        let pendingLocalToken = [];
+        function waitForLocalTokenAsync() {
+            if (pxt.Cloud.localToken) {
+                return Promise.resolve();
+            }
+            return new Promise((resolve, reject) => {
+                pendingLocalToken.push(resolve);
+            });
+        }
+        runner.initCallbacks = [];
+        function init() {
+            initInnerAsync()
+                .then(() => {
+                for (let i = 0; i < runner.initCallbacks.length; ++i) {
+                    runner.initCallbacks[i]();
+                }
+            });
+        }
+        runner.init = init;
+        function windowLoad() {
+            let f = window.ksRunnerWhenLoaded;
+            if (f)
+                f();
+        }
+        windowLoad();
+    })(runner = pxt.runner || (pxt.runner = {}));
+})(pxt || (pxt = {}));

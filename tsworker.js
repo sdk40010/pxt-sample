@@ -1,1 +1,190 @@
-const worker=(t,e,n)=>class extends t{constructor(t,n){super(t,n),this.weightCache={},this.service=e.createLanguageService(this)}async getCompletionsAtPosition(t,n){const o=await super.getCompletionsAtPosition(t,n);if(!o)return o;o.entries=o.entries.filter((t=>!t.name.startsWith("_")));const r=this.service.getProgram(),i=r.getSourceFile(t),s=i.getFullText();let c=n-1;for(;c>0&&e.isIdentifierPart(s.charCodeAt(n),e.ScriptTarget.ES5);)c--;if("."!==s.charAt(c)&&(c=-1),c>0){const t=findInnerMostNodeAtPosition(i,c-1,e),n=r.getTypeChecker(),s=n.getTypeAtLocation(t),a=(null==s?void 0:s.symbol)||n.getSymbolAtLocation(t);if(a){const t=n.getFullyQualifiedName(a);if(!this.weightCache[t]){this.weightCache[t]={};const n=[];a.members&&n.push(a.members),a.exports&&n.push(a.exports);const o=parseCommentString(getComments(a,e));let r=[];if(o.groups)try{const t=JSON.parse(o.groups);Array.isArray(r)&&!r.some((t=>"string"!=typeof t))&&(r=t)}catch(t){}const i={},s={};for(const o of n)o.forEach((n=>{const o=parseCommentString(getComments(n,e));let r=0;if("TD_ID"===o.shim)return void(this.weightCache[t][n.name]="hidden");o.weight&&(r=parseInt(o.weight));const c=o.advanced||!o.block?i:s,a=o.block?o.group||"*":"ts-only";c[a]||(c[a]=[]),c[a].push([n.name,r])}));const c=["*"].concat(r);for(const t of Object.keys(i).concat(Object.keys(s)))-1===c.indexOf(t)&&c.push(t);const g=[];for(const t of c)s[t]&&g.push(...s[t].sort(((t,e)=>e[1]-t[1])).map((t=>t[0])));for(const t of c)i[t]&&g.push(...i[t].sort(((t,e)=>e[1]-t[1])).map((t=>t[0])));for(let e=0;e<g.length;e++)this.weightCache[t][g[e]]=weightToSortText(g.length-e)}o.entries=o.entries.filter((e=>"hidden"!==this.weightCache[t][e.name]));for(const e of o.entries){const n=this.weightCache[t][e.name]||weightToSortText(0);e.sortText=n+e.name}}}return o}};function findInnerMostNodeAtPosition(t,e,n){for(let o of t.getChildren()){if(o.kind>=n.SyntaxKind.FirstPunctuation&&o.kind<=n.SyntaxKind.LastPunctuation)continue;let t=o.getStart(),r=o.getEnd();if(t<=e&&e<r)return findInnerMostNodeAtPosition(o,e,n)}return t&&t.kind===n.SyntaxKind.SourceFile?null:t}function getComments(t,e){return t.getDeclarations()?t.getDeclarations().map((t=>{const n=t.getSourceFile();if(!n)return"";const o=e.getLeadingCommentRangesOfNode(t,n);if(!o)return"";return o.map((t=>n.text.slice(t.pos,t.end))).join("\n")})).join("\n"):""}function parseCommentString(t){const e={};if(!t)return e;let n=!0;for(;n;)n=!1,t=t.replace(/\/\/%[ \t]*([\w\.-]+)(=(("[^"\n]*")|'([^'\n]*)'|([^\s]*)))?/,((t,o,r,i,s,c,a)=>{const g=s?JSON.parse(s):r?s||c||a:"true";return e[o]=g,n=!0,"//% "}));return e}function weightToSortText(t){let e;e="string"==typeof t?parseInt(t):t,e=9999-e;let n=e+"";for(;n.length<4;)n="0"+n;return n}self.customTSWorkerFactory=worker;
+/// <reference path="../../localtypings/monacoTypeScript.d.ts"/>
+/**
+ * This file is passed to the monaco-typescript worker in pxteditor/monaco.ts
+ * It isn't used directly in the webapp.
+ *
+ * It doesn't have access to any other code, so it can't use any functions defined in the
+ * pxt, pxtc, or ts namespaces (but can use types). The tsc that is passed in here is a reference
+ * to the TypeScript compiler and should have all of the methods that are defined on the ts namespace
+ * as well as the ones from pxtcompiler/typescriptInternal.d.ts
+ */
+const worker = (TSWorkerClass, tsc, libs) => {
+    return class PxtWorker extends TSWorkerClass {
+        constructor(ctx, createData) {
+            super(ctx, createData);
+            this.weightCache = {};
+            // FIXME: It would be nice to not create a whole second language service and just use
+            // the one from the parent class, but they keep it private
+            this.service = tsc.createLanguageService(this);
+        }
+        async getCompletionsAtPosition(fileName, position) {
+            const res = await super.getCompletionsAtPosition(fileName, position);
+            if (!res)
+                return res;
+            // Filter out all entries that start with _
+            res.entries = res.entries.filter(ent => !ent.name.startsWith("_"));
+            const program = this.service.getProgram();
+            const source = program.getSourceFile(fileName);
+            const text = source.getFullText();
+            // Try to find the position of the "." if this is a property access
+            let pos = position - 1;
+            while (pos > 0 && tsc.isIdentifierPart(text.charCodeAt(position), tsc.ScriptTarget.ES5)) {
+                pos--;
+            }
+            // If we found the ".", then sort the properties/exports by weight if available
+            if (text.charAt(pos) !== ".")
+                pos = -1;
+            if (pos > 0) {
+                const node = findInnerMostNodeAtPosition(source, pos - 1, tsc);
+                const checker = program.getTypeChecker();
+                // If this is a class/interface, we need to get the symbol for the type
+                const type = checker.getTypeAtLocation(node);
+                // Otherwise it's a module
+                const sym = (type === null || type === void 0 ? void 0 : type.symbol) || checker.getSymbolAtLocation(node);
+                if (sym) {
+                    const qName = checker.getFullyQualifiedName(sym);
+                    // Cache the weights so that we don't need to reparse each time a completion is requested
+                    if (!this.weightCache[qName]) {
+                        this.weightCache[qName] = {};
+                        const tables = [];
+                        if (sym.members)
+                            tables.push(sym.members);
+                        if (sym.exports)
+                            tables.push(sym.exports);
+                        const symbolAttributes = parseCommentString(getComments(sym, tsc));
+                        let groups = [];
+                        if (symbolAttributes.groups) {
+                            try {
+                                const parsedGroups = JSON.parse(symbolAttributes.groups);
+                                if (Array.isArray(groups) && !groups.some(val => typeof val !== "string"))
+                                    groups = parsedGroups;
+                            }
+                            catch (e) {
+                                // ignore invalid comment attrinbutes
+                            }
+                        }
+                        // The sorting rules for our blocks go something like this
+                        //    APIs without the "group" attribute go first
+                        //    APIs with "group" get sorted according to the order of the "groups" entry on the namespace
+                        //    If an API has a "group" that is not within "groups", arbitrarily tack them onto the end
+                        //    APIs with "advanced" always appear after all of the APIs without it
+                        //    APIs within each group are sorted by the weight attribute
+                        //    APIs without weight are assumed to have a weight of 0 (FIXME: in the toolbox, it's actually 50)
+                        const advanced = {};
+                        const nonAdvanced = {};
+                        for (const table of tables) {
+                            table.forEach(entry => {
+                                const comments = getComments(entry, tsc);
+                                const parsed = parseCommentString(comments);
+                                let weight = 0;
+                                if (parsed.shim === "TD_ID") {
+                                    // These entries are filtered out below
+                                    this.weightCache[qName][entry.name] = "hidden";
+                                    return;
+                                }
+                                else if (parsed.weight) {
+                                    weight = parseInt(parsed.weight);
+                                }
+                                // Put APIs with no blocks at the very end of the list with the unsorted groups
+                                const entries = (parsed.advanced || !parsed.block) ? advanced : nonAdvanced;
+                                const group = parsed.block ? (parsed.group || "*") : "ts-only";
+                                if (!entries[group])
+                                    entries[group] = [];
+                                entries[group].push([entry.name, weight]);
+                            });
+                        }
+                        const allGroups = ["*"].concat(groups);
+                        for (const group of Object.keys(advanced).concat(Object.keys(nonAdvanced))) {
+                            if (allGroups.indexOf(group) === -1)
+                                allGroups.push(group);
+                        }
+                        const entries = [];
+                        for (const group of allGroups) {
+                            if (nonAdvanced[group])
+                                entries.push(...nonAdvanced[group].sort((a, b) => b[1] - a[1]).map(e => e[0]));
+                        }
+                        for (const group of allGroups) {
+                            if (advanced[group])
+                                entries.push(...advanced[group].sort((a, b) => b[1] - a[1]).map(e => e[0]));
+                        }
+                        for (let i = 0; i < entries.length; i++) {
+                            this.weightCache[qName][entries[i]] = weightToSortText(entries.length - i);
+                        }
+                    }
+                    res.entries = res.entries.filter(entry => this.weightCache[qName][entry.name] !== "hidden");
+                    // We sort the entries by replacing the sortText with a string that starts
+                    // with a number
+                    for (const entry of res.entries) {
+                        const id = this.weightCache[qName][entry.name] || weightToSortText(0);
+                        entry.sortText = id + entry.name;
+                    }
+                }
+            }
+            return res;
+        }
+    };
+};
+// Adapted from pxtcompiler/emitter/typescriptHelpers.ts
+function findInnerMostNodeAtPosition(n, position, tsc) {
+    for (let child of n.getChildren()) {
+        if (child.kind >= tsc.SyntaxKind.FirstPunctuation && child.kind <= tsc.SyntaxKind.LastPunctuation)
+            continue;
+        let s = child.getStart();
+        let e = child.getEnd();
+        if (s <= position && position < e)
+            return findInnerMostNodeAtPosition(child, position, tsc);
+    }
+    return (n && n.kind === tsc.SyntaxKind.SourceFile) ? null : n;
+}
+// Adapted from pxtcompiler/emitter/emitter.ts
+function getComments(symbol, tsc) {
+    let cmtCore = (node) => {
+        const src = node.getSourceFile();
+        if (!src)
+            return "";
+        const doc = tsc.getLeadingCommentRangesOfNode(node, src);
+        if (!doc)
+            return "";
+        const cmt = doc.map(r => src.text.slice(r.pos, r.end)).join("\n");
+        return cmt;
+    };
+    const decls = symbol.getDeclarations();
+    if (decls)
+        return symbol.getDeclarations().map(cmtCore).join("\n");
+    else
+        return "";
+}
+function parseCommentString(comment) {
+    const out = {};
+    if (!comment)
+        return out;
+    let didSomething = true;
+    while (didSomething) {
+        didSomething = false;
+        // This doesn't support all of the magic we have in pxtlib/service.ts but it handles the basic
+        // format of //% property="value"
+        comment = comment.replace(/\/\/%[ \t]*([\w\.-]+)(=(("[^"\n]*")|'([^'\n]*)'|([^\s]*)))?/, (f, key, d0, d1, v0, v1, v2) => {
+            const value = v0 ? JSON.parse(v0) : (d0 ? (v0 || v1 || v2) : "true");
+            out[key] = value;
+            didSomething = true;
+            return "//% ";
+        });
+    }
+    return out;
+}
+function weightToSortText(weight) {
+    let numWeight;
+    if (typeof weight === "string") {
+        numWeight = parseInt(weight);
+    }
+    else {
+        numWeight = weight;
+    }
+    numWeight = 9999 - numWeight;
+    let outString = numWeight + "";
+    while (outString.length < 4) {
+        outString = "0" + outString;
+    }
+    return outString;
+}
+self.customTSWorkerFactory = worker;

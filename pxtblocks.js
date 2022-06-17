@@ -1,1 +1,13619 @@
-let iface;var pxt;!function(e){!function(t){function i(t,i){return e.worker.getWorker(e.webConfig.workerjs).opAsync(t,i)}t.workerOpAsync=i;let o={};function s(e,t){e.push.apply(e,t)}function l(e){if(!e)throw new Error("Assertion failure")}class n{constructor(e,t,i,o,s){this.link=e,this.type=t,this.parentType=i,this.childType=o,this.isArrayType=s}}let r;function a(e){return e.link?a(e.link):e}function c(e,t){let i=a(e),o=a(t);if(l(null==i.link&&null==o.link),i==o)return;if(i.childType&&o.childType){const e=i.childType;i.childType=null,c(e,o.childType)}else i.childType&&!o.childType&&(o.childType=i.childType);if(i.parentType&&o.parentType){const e=i.parentType;i.parentType=null,c(e,o.parentType)}else!i.parentType||o.parentType||o.type||(o.parentType=i.parentType);let s=function(e,t){if(null==e||"Array"===e&&b(t))return t;if(null==t||"Array"===t&&b(e))return e;if(e==t)return e;throw new Error("cannot mix "+e+" with "+t)}(i.type,o.type);e.link=o,i.link=o,i.isArrayType=o.isArrayType,e.type=null,t.type=s}function u(e,t=!1){return new n(null,e,null,null,t)}t.Point=n,function(e){e[e.None=0]="None",e[e.Argument=1]="Argument",e[e.Assigned=2]="Assigned",e[e.Implicit=3]="Implicit"}(r=t.BlockDeclarationType||(t.BlockDeclarationType={}));const d=u("number"),p=u("boolean"),h=u("string"),m=u("void");function f(e){if(!e)return u(e);switch(e.toLowerCase()){case"number":return d;case"boolean":return p;case"string":return h;case"void":return m;default:return u(e)}}function g(e,t){if(l(null!=t),function(e){return"placeholder"==e.type||e.type===pxtc.TS_OUTPUT_TYPE}(t))return t.p||(t.p=u(null)),a(t.p);if("variables_get"==t.type)return a(F(e,t,t.getField("VAR").getText()).type);if("function_call_output"==t.type)return function(e,t){const i=t.getField("function_name").getText();return k(e,i)}(e,t);if(!t.outputConnection)return f(m.type);const i=t.outputConnection.check_&&t.outputConnection.check_.length?t.outputConnection.check_[0]:"T";if("Array"===i){if(t.outputConnection.check_.length>1)return f(t.outputConnection.check_[1]);let i;if("lists_create_with"==t.type){if(t.inputList&&t.inputList.length)for(const o of t.inputList)if(o.connection&&o.connection.targetBlock()){let t=a(g(e,o.connection.targetBlock()));if(t){if(t.parentType)return t.parentType;i=t.type?f(t.type+"[]"):u(null),C(i,t);break}}}else"argument_reporter_array"==t.type&&(i||(i=f("any[]")));return i&&(i.isArrayType=!0),i||u(null,!0)}if("T"===i){const i=e.stdCallTable[t.type],o="lists_index_get"===t.type;if(o||i&&i.comp.thisParameter){let s;if(s=o?t.inputList.find((e=>"LIST"===e.name)):t.inputList.find((e=>e.name===i.comp.thisParameter.definitionName)),s.connection&&s.connection.targetBlock()){const t=g(e,s.connection.targetBlock());if(t.childType)return t.childType;const i=b(t.type)&&"Array"!==t.type?u(t.type.substr(0,t.type.length-2)):u(null);return C(t,i),i}}return u(null)}return f(i)}function k(t,i){if(!t.userFunctionReturnValues[i]){const o=Blockly.Functions.getDefinition(i,t.workspace);let s=u("void");if(ke(o,!0))s=u("any");else{const l=[];for(const e of o.getDescendants(!1))"function_return"===e.type&&(y(t,e,"RETURN_VALUE"),l.push(g(t,T(e,"RETURN_VALUE"))));if(l.length)try{const e=u(null);for(const t of l)c(e,t);s=e}catch(l){t.diagnostics.push({blockId:o.id,message:e.Util.lf("Function '{0}' has an invalid return type",i)}),s=u("any")}}t.userFunctionReturnValues[i]=s}return t.userFunctionReturnValues[i]}function b(e){return e&&(-1!==e.indexOf("[]")||"Array"==e)}function y(e,t,i,s){const l=t.getInputTargetBlock(i);l?l.type!==pxtc.TS_OUTPUT_TYPE||l.p||(l.p=u(null)):(o[t.id]||(o[t.id]={}),o[t.id][i]||(o[t.id][i]=function(e,t,i){return{type:"placeholder",p:u(i||null),workspace:e.workspace,parentBlock_:t}}(e,t,s)))}function _(e){return"pxt_controls_for"==e.type||"pxt_controls_for_of"==e.type?T(e,"VAR"):e}function T(e,t){const i=e.getInputTargetBlock(t);return i||o[e.id]&&o[e.id][t]}function x(){o={}}function E(e,t,i,o){y(e,t,i);try{c(g(e,T(t,i)),o)}catch(e){}}function B(e,t,i){function o(e){return e.name?e.connection&&e.connection.check_&&e.connection.check_.length?e.connection.check_[0]:"T":void 0}function s(e,i){let s=e.inputList.filter((e=>"T"===o(e)));if(s.length){const o=T(e,s[0].name);if(o){const s=g(t,o),l=s.type?f(g(t,o).type+"[]"):f(null);return C(l,s),E(t,e,i,l),!0}}return!1}e&&e.filter((e=>e.isEnabled())).forEach((e=>{try{switch(e.type){case"math_op2":E(t,e,"x",f(d.type)),E(t,e,"y",f(d.type));break;case"math_op3":E(t,e,"x",f(d.type));break;case"math_arithmetic":case"logic_compare":switch(e.getFieldValue("OP")){case"ADD":case"MINUS":case"MULTIPLY":case"DIVIDE":case"LT":case"LTE":case"GT":case"GTE":case"POWER":E(t,e,"A",f(d.type)),E(t,e,"B",f(d.type));break;case"AND":case"OR":y(t,e,"A",p.type),y(t,e,"B",p.type);break;case"EQ":case"NEQ":y(t,e,"A"),y(t,e,"B");let i=g(t,T(e,"A")),o=g(t,T(e,"B"));try{c(i,o)}catch(e){}}break;case"logic_operation":y(t,e,"A",p.type),y(t,e,"B",p.type);break;case"logic_negate":y(t,e,"BOOL",p.type);break;case"controls_if":for(let i=0;i<=e.elseifCount_;++i)y(t,e,"IF"+i,p.type);break;case"pxt_controls_for":case"controls_simple_for":E(t,e,"TO",f(d.type));break;case"pxt_controls_for_of":case"controls_for_of":const i=g(t,T(e,"LIST"));C(i,F(t,e,_(e).getField("VAR").getText()).type);break;case"variables_set":case"variables_change":let l=F(t,e,e.getField("VAR").getText()).type;y(t,e,"VALUE");let n=T(e,"VALUE");if(n){let e=function(e,t){var i,o;return(null===(o=null===(i=t.outputConnection)||void 0===i?void 0:i.check_)||void 0===o?void 0:o.length)&&"Array"!==t.outputConnection.check_[0]&&"T"!==t.outputConnection.check_[0]?t.outputConnection.check_.map((e=>f(e))):[g(e,t)]}(t,n);const i=a(l);if(i.type&&e.slice(1).some((e=>e.type===i.type)))l.link=a(e[0]);else try{c(l,e[0])}catch(e){}}break;case"controls_repeat_ext":E(t,e,"TIMES",f(d.type));break;case"device_while":y(t,e,"COND",p.type);break;case"lists_index_get":E(t,e,"LIST",f("Array")),E(t,e,"INDEX",f(d.type));const r=g(t,T(e,"LIST"));C(r,g(t,e));break;case"lists_index_set":E(t,e,"LIST",f("Array")),y(t,e,"VALUE"),s(e,"LIST"),E(t,e,"INDEX",f(d.type));break;case"function_definition":k(t,e.getField("function_name").getText());break;case"function_call":case"function_call_output":e.getArguments().forEach((i=>{E(t,e,i.id,f(i.type))}));break;case pxtc.TS_RETURN_STATEMENT_TYPE:y(t,e,"RETURN_VALUE");break;case pxtc.PAUSE_UNTIL_TYPE:E(t,e,"PREDICATE",p);break;default:if(e.type in t.stdCallTable){const i=t.stdCallTable[e.type];if("ENUM_GET"===i.attrs.shim||"KIND_GET"===i.attrs.shim)return;le(i,se(e)).forEach(((l,n)=>{const r=i.isExtensionMethod&&0===n;if(l.definitionName&&!e.getFieldValue(l.definitionName)){let i=e.inputList.find((e=>e.name==l.definitionName));if(i&&i.connection&&i.connection.check_){if(r&&"Array"===o(i)){if(s(e,l.definitionName))return}for(let o=0;o<i.connection.check_.length;o++)try{let s=i.connection.check_[o];E(t,e,l.definitionName,f(s));break}catch(e){}}}}))}}}catch(i){const o=i.block||e;o.setWarningText(i+""),t.errors.push(o)}})),t.allVariables.forEach((e=>{null==A(e.type).type&&c(e.type,f(e.type.isArrayType?"number[]":d.type))}))}function C(e,t){const i=a(e),o=a(t);i.childType?c(i.childType,o):i.type||(i.childType=o),o.parentType?c(o.parentType,i):o.type||(o.parentType=i),b(i.type)&&(i.isArrayType=!0)}function A(e,t=[]){const i=a(e);if(-1===t.indexOf(i)&&(t.push(i),!i.type||"Array"===i.type)){if(i.parentType){const e=A(i.parentType,t);if(e.type&&"Array"!==e.type)return b(e.type)?i.type=e.type.substr(0,e.type.length-2):i.type=e.type,i}if(i.childType){const e=A(i.childType,t);if(e.type)return i.type=e.type+"[]",i}}return i}function v(e){let t=e.getFieldValue("math_number_minmax"===e.type?"SLIDER":"NUM");const i=parseFloat(t);return function(e,t){isFinite(e)&&!isNaN(e)||function(e,t){let i=new Error(e);throw i.block=t,i}(lf("Number entered is either too large or too small"),t)}(i,e),i}function I(e,i,o){return t.H.mkNumberLiteral(v(i))}let N={ADD:"+",MINUS:"-",MULTIPLY:"*",DIVIDE:"/",LT:"<",LTE:"<=",GT:">",GTE:">=",AND:"&&",OR:"||",EQ:"==",NEQ:"!=",POWER:"**"};function w(e,i,o){const s=M(i.getFieldValue("NAME"),e,!0);return t.mkStmt(t.mkText(s+"()"))}function S(e,i,o,s){const l=M(i.getField("function_name").getText(),e,!0),n=!i.getInputsInline(),r=i.getArguments().map((e=>({actualName:e.name,definitionName:e.id}))).map((t=>H(e,i,t,o))),a=t.H.stdCall(l,r,n);return s?t.mkStmt(a):a}function D(e,i,o){const s=T(i,"RETURN_VALUE");return s&&"placeholder"!=s.type?t.mkStmt(t.mkText("return "),R(e,s,o)):t.mkStmt(t.mkText("return"))}function L(e){const i=e.getContent();return t.Helpers.mkMultiComment(i.trim())}function O(e){if(null==e.type&&(c(e,f(d.type)),e=a(e)),b(e.type)||e.isArrayType)return t.mkText("[]");switch(e.type){case"boolean":return t.H.mkBooleanLiteral(!1);case"number":return t.H.mkNumberLiteral(0);case"string":return t.H.mkStringLiteral("");default:return t.mkText("null")}}function R(i,o,s){let n;if(l(null!=o),i.stats[o.type]=(i.stats[o.type]||0)+1,ie(o,s),"placeholder"!=o.type&&o.isEnabled&&o.isEnabled())switch(o.type){case"math_number":case"math_integer":case"math_whole_number":case"math_number_minmax":n=I(0,o);break;case"math_op2":n=function(e,i,o){let s=i.getFieldValue("op"),l=R(e,T(i,"x"),o),n=R(e,T(i,"y"),o);return t.H.mathCall(s,[l,n])}(i,o,s);break;case"math_op3":n=function(e,i,o){let s=R(e,T(i,"x"),o);return t.H.mathCall("abs",[s])}(i,o,s);break;case"math_arithmetic":case"logic_compare":case"logic_operation":n=function(e,i,o){let s=i.getFieldValue("OP"),n=T(i,"A"),r=T(i,"B"),a=[R(e,n,o),R(e,r,o)],c=g(e,n).type;if(c==h.type){if("EQ"==s)return t.H.mkSimpleCall("==",a);if("NEQ"==s)return t.H.mkSimpleCall("!=",a)}else if(c==p.type)return t.H.mkSimpleCall(N[s],a);return l(s in N),t.H.mkSimpleCall(N[s],a)}(i,o,s);break;case"math_modulo":n=function(e,i,o){let s=T(i,"DIVIDEND"),l=T(i,"DIVISOR"),n=[R(e,s,o),R(e,l,o)];return t.H.mkSimpleCall("%",n)}(i,o,s);break;case"logic_boolean":n=function(e,i,o){return t.H.mkBooleanLiteral("TRUE"==i.getFieldValue("BOOL"))}(0,o);break;case"logic_negate":n=function(e,i,o){let s=R(e,T(i,"BOOL"),o);return t.mkPrefix("!",[t.H.mkParenthesizedExpression(s)])}(i,o,s);break;case"variables_get":n=function(e,i){const o=i.getField("VAR").getText();let s=F(e,i,o);if(!s)return t.mkText(o);s.firstReference||(s.firstReference=i);return l(null!=s&&null!=s.type),t.mkText(s.escapedName)}(i,o);break;case"text":n=function(e,i,o){return t.H.mkStringLiteral(i.getFieldValue("TEXT"))}(0,o);break;case"text_join":n=function(e,i,o){let s,l=0;for(;;){const n=T(i,"ADD"+l);if(l++,!n){if(l<i.inputList.length)continue;break}const r=R(e,n,o);s=s?t.H.mkSimpleCall("+",[s,r]):0===n.type.indexOf("text")?r:t.H.mkSimpleCall("+",[t.H.mkStringLiteral(""),r])}return s||t.H.mkStringLiteral("")}(i,o,s);break;case"lists_create_with":n=function(e,i,o){let s=i.inputList.map((t=>t.connection&&t.connection.targetBlock()?R(e,t.connection.targetBlock(),o):void 0)).filter((e=>!!e));return t.H.mkArrayLiteral(s,!i.getInputsInline())}(i,o,s);break;case"lists_index_get":n=function(e,i,o){const s=R(e,T(i,"LIST"),o),l=R(e,T(i,"INDEX"),o);return t.mkGroup([s,t.mkText("["),l,t.mkText("]")])}(i,o,s);break;case"lists_index_set":n=function(e,i,o){const s=T(i,"LIST"),l=R(e,s,o),n=R(e,T(i,"INDEX"),o),r=R(e,T(i,"VALUE"),o),a=t.mkGroup([l,t.mkText("["),n,t.mkText("] = "),r]);return"lists_create_with"===s.type?K(a):a}(i,o,s);break;case"math_js_op":case"math_js_round":n=function(e,i,o){const s=i.getFieldValue("OP"),l=[R(e,T(i,"ARG0"),o)];return i.getInput("ARG1")&&l.push(R(e,T(i,"ARG1"),o)),t.H.mathCall(s,l)}(i,o,s);break;case pxtc.TS_OUTPUT_TYPE:n=function(e,i,o){return t.mkText(i.getFieldValue("EXPRESSION").trim())}(0,o);break;case"argument_reporter_boolean":case"argument_reporter_number":case"argument_reporter_string":case"argument_reporter_array":case"argument_reporter_custom":n=function(e,i,o){const s=M(i.getFieldValue("VALUE"),e);return t.mkText(s)}(i,o);break;case"function_call_output":n=S(i,o,s,!1);break;default:let r=i.stdCallTable[o.type];r?n=r.imageLiteral?j(i,o,r.imageLiteral,r.imageLiteralColumns,r.imageLiteralRows,r.namespace,r.f,le(r,se(o)).map((e=>H(i,o,e,s)))):G(i,o,r,s):(e.reportError("blocks","unable to compile expression",{details:o.type}),n=O(g(i,o)))}else{if("Array"===a(g(i,o)).type){let e="lists_index_get"===o.parentBlock_.type;if(!e){const t=i.stdCallTable[o.parentBlock_.type];e=t&&t.isExpression}const s=t.mkText("[0]");n=e?s:K(s)}else n=O(g(i,o))}return n.id=o.id,n}function F(e,t,i){return de(i,e.idToScope[t.id])}function M(e,t,i=!1){if(!e)return"_";if(i){if(t.renames.oldToNewFunctions[e])return t.renames.oldToNewFunctions[e]}else if(t.renames.oldToNew[e])return t.renames.oldToNew[e];let o=ts.pxtc.escapeIdentifier(e);if(t.renames.takenNames[o]){let e=2;for(;t.renames.takenNames[o+e];)e++;o+=e}return i?(t.renames.oldToNewFunctions[e]=o,t.renames.takenNames[o]=!0):t.renames.oldToNew[e]=o,o}function P(e,i,o){let s=T(i,"VALUE"),l=F(e,i,i.getField("VAR").getText());let n=e.idToScope[i.id].declaredVars[l.name]===l&&!l.firstReference&&!l.alreadyDeclared;n&&pe(i,(t=>{if("variables_get"===t.type){F(e,t,t.getField("VAR").getText())===l&&(n=!1)}}),!0);let a=R(e,s,o),c=l.escapedName+" = ";if(l.isAssigned=!0,n){l.alreadyDeclared=r.Assigned;const t=A(l.type);if(c=`let ${l.escapedName} = `,t){const i=A(g(e,s));t.type!==i.type&&(c=`let ${l.escapedName}: ${t.type} = `)}}else l.firstReference||(l.firstReference=i);return t.mkStmt(t.mkText(c),a)}function U(e,i,o){let s=T(i,"VALUE"),l=F(e,i,i.getField("VAR").getText()),n=R(e,s,o),r=t.mkText(l.escapedName);return t.mkStmt(t.mkInfix(r,"+=",n))}function V(i,o,s){const l=i.stdCallTable[o.type];return l.imageLiteral?t.mkStmt(j(i,o,l.imageLiteral,l.imageLiteralColumns,l.imageLiteralRows,l.namespace,l.f,le(l,se(o)).map((e=>H(i,o,e,s))))):l.hasHandler?function(i,o,s,l,n,r){const a=l.map((e=>H(i,o,e,r))),c=T(o,"HANDLER"),u=Y(i,c);e.appTarget.compile&&e.appTarget.compile.emptyEventHandlerComments&&0===u.children.length&&u.children.unshift(t.mkStmt(t.mkText(`// ${pxtc.HANDLER_COMMENT}`)));let d;if($(o)&&o.mutation.getMutationType()===t.MutatorTypes.ObjectDestructuringMutator)d=o.mutation.compileMutation(i,r);else if(s.comp.handlerArgs.length){let e=function(e,t,i){return ne(e,t).map((t=>F(i,e,t[0]).escapedName))}(o,s,i);d=t.mkText(`function (${e.join(", ")})`)}return W(i,n,s.f,a,u,d,s.isExtensionMethod)}(i,o,l,function(e,t){return le(e,se(t)).filter((e=>!!e.definitionName))}(l,o),l.namespace,s):t.mkStmt(G(i,o,l,s))}function H(i,o,s,l,n=!1){let r=o.getFieldValue(s.definitionName);if(null!=r){const l=o.getField(s.definitionName);if(l instanceof pxtblockly.FieldTextInput)return t.H.mkStringLiteral(r);if(l instanceof pxtblockly.FieldTilemap&&!l.isGreyBlock){const o=e.react.getTilemapProject(),s=l.getValue();if(s.startsWith("tilemap`"))return t.mkText(s);if(i.options.emitTilemapLiterals)try{const i=e.sprite.decodeTilemap(s,"typescript",o);if(i){const[e]=o.createNewTilemapFromData(i);return t.mkText(`tilemap\`${e}\``)}}catch(i){}}const n=i.blocksInfo.apis.byQName[s.type];if(n&&n.attributes.emitAsConstant)for(const e of Object.keys(i.blocksInfo.apis.byQName)){const o=i.blocksInfo.apis.byQName[e];if(o&&o.attributes&&o.attributes.enumIdentity===r)return t.mkText(e)}let a=t.mkText(r);return a.canIndentInside="string"==typeof r&&r.indexOf("\n")>=0,a}{y(i,o,s.definitionName);const e=T(o,s.definitionName);return n&&"lists_create_with"===e.type?K(R(i,e,l)):s.shadowOptions&&s.shadowOptions.toString&&g(i,e)!==h?t.H.mkSimpleCall("+",[t.H.mkStringLiteral(""),t.H.mkParenthesizedExpression(R(i,e,l))]):R(i,e,l)}}function G(e,i,o,s){let l;if($(i)&&i.mutation.getMutationType()===t.MutatorTypes.RestParameterMutator)l=i.mutation.compileMutation(e,s).children;else{if("ENUM_GET"===o.attrs.shim){const e=o.attrs.enumName,s=i.getFieldValue("MEMBER").replace(/^\d+/,"");return t.H.mkPropertyAccess(s,t.mkText(e))}if("KIND_GET"===o.attrs.shim){const s=e.kinds.filter((e=>e.blockId===o.attrs.blockId))[0];return t.H.mkPropertyAccess(i.getFieldValue("MEMBER"),t.mkText(s.name))}l=le(o,se(i)).map(((t,l)=>H(e,i,t,s,o.isExtensionMethod&&0===l&&!o.isExpression)))}let n=o.namespace,r=o.f;if(o.attrs.blockAliasFor){const t=e.blocksInfo.apis.byQName[o.attrs.blockAliasFor];t&&(r=t.name,n=t.namespace)}const a=!i.getInputsInline();if(o.isIdentity)return l[0];if(o.property)return t.H.mkPropertyAccess(r,l[0]);if("@get@"==r)return t.H.mkPropertyAccess(l[1].op.replace(/.*\./,""),l[0]);if("@set@"==r)return t.H.mkAssign(t.H.mkPropertyAccess(l[1].op.replace(/.*\./,"").replace(/@set/,""),l[0]),l[2]);if("@change@"==r)return t.H.mkSimpleCall("+=",[t.H.mkPropertyAccess(l[1].op.replace(/.*\./,"").replace(/@set/,""),l[0]),l[2]]);if(o.isExtensionMethod){if(o.attrs.defaultInstance){let n;$(i)&&i.mutation.getMutationType()===t.MutatorTypes.DefaultInstanceMutator&&(n=i.mutation.compileMutation(e,s)),n?l.unshift(n):l.unshift(t.mkText(o.attrs.defaultInstance))}return t.H.extensionCall(r,l,a)}return n?t.H.namespaceCall(n,r,l,a):t.H.stdCall(r,l,a)}function W(e,i,o,s,l,n,r=!1){let a;return l.noFinalNewline=!0,a=n?t.mkGroup([n,l]):t.mkGroup([t.mkText("function ()"),l]),r?t.mkStmt(t.H.extensionCall(o,s.concat([a]),!1)):i?t.mkStmt(t.H.namespaceCall(i,o,s.concat([a]),!1)):t.mkStmt(t.H.mkCall(o,s.concat([a]),!1))}function $(e){return!!e.mutation}function j(e,i,o,s,l,n,r,a){a=void 0===a?[]:a;let c="\n";l=l||5,s=(s||5)*o;let u=i.getFieldValue("LEDS");u=u.replace(/[ `\n]+/g,"");for(let e=0;e<l;++e){for(let t=0;t<s;++t)t>0&&(c+=" "),c+="#"===u[e*s+t]?"#":".";c+="\n"}let d=t.H.mkStringLiteral(c);return d.canIndentInside=!0,t.H.namespaceCall(n,r,[d].concat(a),!1)}function X(i,o){let l;const n=[];switch(i.stats[o.type]=(i.stats[o.type]||0)+1,ie(o,n),o.type){case"controls_if":l=function(e,i,o){let l=[];for(let n=0;n<=i.elseifCount_;++n){let r=R(e,T(i,"IF"+n),o),a=Y(e,T(i,"DO"+n)),c=t.mkText("if (");n>0&&(c=t.mkText("else if ("),c.glueToBlock=t.GlueMode.WithSpace),s(l,[c,r,t.mkText(")"),a])}if(i.elseCount_){let o=t.mkText("else");o.glueToBlock=t.GlueMode.WithSpace,s(l,[o,Y(e,T(i,"ELSE"))])}return l}(i,o,n);break;case"pxt_controls_for":case"controls_for":case"controls_simple_for":l=function(e,i,o){let s=T(i,"TO"),l=T(i,"DO"),n=T(i,"BY"),r=T(i,"FROM"),a=!n||n.type.match(/^math_number/)&&1==v(n),c=F(e,i,_(i).getField("VAR").getText());return[t.mkText("for (let "+c.escapedName+" = "),r?R(e,r,o):t.mkText("0"),t.mkText("; "),t.mkInfix(t.mkText(c.escapedName),"<=",R(e,s,o)),t.mkText("; "),a?t.mkText(c.escapedName+"++"):t.mkInfix(t.mkText(c.escapedName),"+=",R(e,n,o)),t.mkText(")"),Y(e,l)]}(i,o,n);break;case"pxt_controls_for_of":case"controls_for_of":l=function(e,i,o){let s=T(i,"LIST"),l=T(i,"DO"),n=F(e,i,_(i).getField("VAR").getText());return[t.mkText("for (let "+n.escapedName+" of "),R(e,s,o),t.mkText(")"),Y(e,l)]}(i,o,n);break;case"variables_set":l=[P(i,o,n)];break;case"variables_change":l=[U(i,o,n)];break;case"controls_repeat_ext":l=function(e,i,o){let s=R(e,T(i,"TIMES"),o),l=Y(e,T(i,"DO")),n="index";for(let t=2;F(e,i,n);t++)n="index"+t;return[t.mkText("for (let "+n+" = 0; "),t.mkInfix(t.mkText(n),"<",s),t.mkText("; "+n+"++)"),l]}(i,o,n);break;case"device_while":l=function(e,i,o){let s=R(e,T(i,"COND"),o),l=Y(e,T(i,"DO"));return[t.mkText("while ("),s,t.mkText(")"),l]}(i,o,n);break;case"procedures_defnoreturn":l=function(e,i,o){const s=M(i.getFieldValue("NAME"),e,!0),l=T(i,"STACK");return[t.mkText("function "+s+"() "),Y(e,l)]}(i,o);break;case"function_definition":l=function(e,i,o){const s=M(i.getField("function_name").getText(),e,!0),l=T(i,"STACK"),n=i.getArguments().map((t=>"Array"==t.type?`${M(t.name,e)}: any[]`:`${M(t.name,e)}: ${t.type}`)),r=ke(i,!1);return[t.mkText(`function ${s} (${n.join(", ")})${r?": any":""}`),Y(e,l)]}(i,o);break;case"procedures_callnoreturn":l=[w(i,o)];break;case"function_call":l=[S(i,o,n,!0)];break;case pxtc.TS_RETURN_STATEMENT_TYPE:l=[D(i,o,n)];break;case ts.pxtc.ON_START_TYPE:l=function(i,o){const s=Y(i,T(o,"HANDLER"));return e.appTarget.compile&&e.appTarget.compile.onStartText&&s&&s.children&&s.children.unshift(t.mkStmt(t.mkText(`// ${pxtc.ON_START_COMMENT}\n`))),s}(i,o).children;break;case pxtc.TS_STATEMENT_TYPE:l=function(e,i){return i.getLines().map((e=>t.mkText(e+"\n")))}(0,o);break;case pxtc.PAUSE_UNTIL_TYPE:l=function(i,o,s){const l=e.appTarget.runtime&&e.appTarget.runtime.pauseUntilBlock;e.Util.assert(!!l,"target has block enabled");const n=l.namespace,r=l.callName||"pauseUntil",a=H(i,o,{definitionName:"PREDICATE",actualName:"PREDICATE"},s),c=[t.mkGroup([t.mkText("() => "),a])];return n?[t.mkStmt(t.H.namespaceCall(n,r,c,!1))]:[t.mkStmt(t.H.mkCall(r,c,!1,!1))]}(i,o,n);break;case pxtc.TS_DEBUGGER_TYPE:l=function(e,i){if("1"==i.getFieldValue("ON_OFF"))return[t.mkText("debugger;\n")];return[]}(0,o);break;case pxtc.TS_BREAK_TYPE:l=[t.mkText("break;\n")];break;case pxtc.TS_CONTINUE_TYPE:l=[t.mkText("continue;\n")];break;default:l=i.stdCallTable[o.type]?[V(i,o,n)]:[t.mkStmt(R(i,o,n))]}let r=l[l.length-1];return r&&!r.id&&(r.id=o.id),n.length&&function(e,i){const o=[];for(const i of e)for(const e of i.split("\n"))o.push(t.mkText(`// ${e}`)),o.push(t.mkNewLine());for(const e of o.reverse())i.unshift(e)}(n,l),l.forEach((i=>{!(i.type===t.NT.Block||i.type===t.NT.Prefix&&e.Util.startsWith(i.op,"//"))||o.type==pxtc.ON_START_TYPE&&i.id||(i.id=o.id)})),l}function Y(e,i){let o=[],l=i;for(;i;)i.isEnabled()&&s(o,X(e,i)),i=i.getNextBlock();return l&&e.blockDeclarations[l.id]&&e.blockDeclarations[l.id].filter((e=>!e.alreadyDeclared)).forEach((t=>{o.unshift(oe(t,e.blocksInfo)),t.alreadyDeclared=r.Implicit})),t.mkBlock(o)}function K(e){const i=t.mkStmt(t.mkText(";"));return i.glueToBlock=t.GlueMode.NoSpace,t.mkGroup([i,e])}function q(t,i,o={}){let s=function(e,t){return{workspace:e,options:t,stdCallTable:{},userFunctionReturnValues:{},diagnostics:[],errors:[],renames:{oldToNew:{},takenNames:{},oldToNewFunctions:{}},stats:{},enums:[],kinds:[],idToScope:{},blockDeclarations:{},allVariables:[],blocksInfo:null}}(t,o);return s.blocksInfo=i,i&&(Object.keys(i.apis.byQName).forEach((e=>{const t=i.apis.byQName[e];!t.pkg||6!==t.kind&&3!==t.kind&&5!==t.kind&&4!==t.kind||(s.renames.takenNames[t.qName]=!0)})),i.enumsByName&&Object.keys(i.enumsByName).forEach((e=>s.enums.push(i.enumsByName[e]))),i.kindsByName&&Object.keys(i.kindsByName).forEach((e=>s.kinds.push(i.kindsByName[e]))),i.blocks.forEach((t=>{if(s.stdCallTable[t.attributes.blockId])return void e.reportError("blocks","function already defined",{details:t.attributes.blockId,qualifiedName:t.qName,packageName:t.pkg});s.renames.takenNames[t.namespace]=!0;const i=e.blocks.compileInfo(t),o=!!i.thisParameter;s.stdCallTable[t.attributes.blockId]={namespace:t.namespace,f:t.name,comp:i,attrs:t.attributes,isExtensionMethod:o,isExpression:t.retType&&"void"!==t.retType,imageLiteral:t.attributes.imageLiteral,imageLiteralColumns:t.attributes.imageLiteralColumns,imageLiteralRows:t.attributes.imageLiteralRows,hasHandler:e.blocks.hasHandler(t),property:!t.parameters,isIdentity:"TD_ID"==t.attributes.shim}})),t.getTopBlocks(!1).filter(fe).forEach((e=>{M("procedures_defnoreturn"===e.type?e.getFieldValue("NAME"):e.getField("function_name").getText(),s,!0)}))),s}function z(e,t){if(e.type===ts.pxtc.ON_START_TYPE)return 0;const i=t.stdCallTable[e.type],o=J(t,e),s=1+ts.pxtc.Util.codalHash16(o);return i&&i.attrs.afterOnStart?s:-s}function Q(i,o,l){try{let n=o.getAllBlocks(!1);e.react.getTilemapProject&&e.react.getTilemapProject().removeInactiveBlockAssets(n.map((e=>e.id)));let a=o.getTopBlocks(!0);a=a.sort(((e,t)=>z(e,i)-z(t,i))),function(e,t,i){t.forEach((e=>e.setEnabled(!0)));const o={};function s(e,t){o[e]?ee(t,!1):(ee(t,!0),o[e]=t)}i.forEach((t=>{const i=e.stdCallTable[t.type];if(t.type==ts.pxtc.ON_START_TYPE)s(ts.pxtc.ON_START_TYPE,t);else{if(fe(t)||i&&i.attrs.blockAllowMultiple&&!i.attrs.handlerStatement)return;if(i&&i.hasHandler&&!i.attrs.handlerStatement){s(i.attrs.blockHandlerKey||J(e,t),t)}else{let e=t;for(;e;)ee(t,!1),e=e.getNextBlock()}}}))}(i,n,a),n=n.filter((e=>e.isEnabled())),a=a.filter((e=>e.isEnabled())),function(e,t){let i,o=1;e.forEach((e=>{if(e.type===ts.pxtc.ON_START_TYPE){const o=e.getInputTargetBlock("HANDLER");o&&(i={firstStatement:o,declaredVars:{},referencedVars:[],children:[],assignedVars:[]},s(o,i,t))}})),i||(i={firstStatement:null,declaredVars:{},referencedVars:[],children:[],assignedVars:[]});return e.forEach((e=>{e.type!==ts.pxtc.ON_START_TYPE&&s(e,i,t)})),Object.keys(i.declaredVars).forEach((e=>{const t=i.declaredVars[e];delete i.declaredVars[e];(ue(i,t.id)||i).declaredVars[e]=t})),he(i,t),ce(i,t),i;function s(e,t,i){if(i.idToScope[e.id]=t,"variables_get"===e.type){const i=l(e.getField("VAR").getText(),t);t.referencedVars.push(i.id)}else if("variables_set"===e.type||"variables_change"===e.type){const i=l(e.getField("VAR").getText(),t);t.assignedVars.push(i.id),t.referencedVars.push(i.id)}else if(e.type===pxtc.TS_STATEMENT_TYPE){const i=e.declaredVariables;if(i){i.split(",").forEach((e=>{l(e,t).alreadyDeclared=r.Argument}))}}if(function(e){return e.inputList.some((e=>e.type===Blockly.NEXT_STATEMENT))}(e)){const l=function(e,t){switch(e.type){case"pxt_controls_for":case"controls_simple_for":return[[_(e).getField("VAR").getText(),d]];case"pxt_controls_for_of":case"controls_for_of":return[[_(e).getField("VAR").getText(),u(null)]]}if($(e)){const t=e.mutation.getDeclaredVariables();if(t)return Object.keys(t).map((e=>[e,u(t[e])]))}let i=t.stdCallTable[e.type];if(i&&i.comp.handlerArgs.length)return ne(e,i);return[]}(e,i).map((e=>({name:e[0],type:e[1],id:o++})));let n=t;l.length&&(n={parent:t,firstStatement:e,declaredVars:{},referencedVars:[],assignedVars:[],children:[]},l.forEach((e=>{e.alreadyDeclared=r.Assigned,n.declaredVars[e.name]=e})),i.idToScope[e.id]=n),t!==n&&t.children.push(n),pe(e,(e=>{s(e,n,i)})),function(e,t){e.inputList.filter((e=>e.type===Blockly.NEXT_STATEMENT)).forEach((e=>{e.connection&&e.connection.targetBlock()&&t(e.connection.targetBlock())}))}(e,(e=>{const t={parent:n,firstStatement:e,declaredVars:{},referencedVars:[],assignedVars:[],children:[]};n.children.push(t),s(e,t,i)}))}else pe(e,(e=>{s(e,t,i)}));e.nextConnection&&e.nextConnection.targetBlock()&&s(e.nextConnection.targetBlock(),t,i)}function l(e,t){return t.declaredVars[e]?t.declaredVars[e]:t.parent?l(e,t.parent):(t.declaredVars[e]={name:e,type:u(null),id:o++},t.declaredVars[e])}}(a,i),B(n,i);const c=[],p=function(e,t){if(!e.length||e.some((e=>!e.rendered)))return{orphans:t,idToComments:{}};const i=e.map((e=>{const t=e.getBoundingRectangle(),i=e.getHeightWidth();return{id:e.id,x:t.left,y:t.top,width:i.width,height:i.height}})),o={orphans:[],idToComments:{}},s=20;for(const e of t){const t=e.getBoundingRectangle(),l=e.getHeightWidth(),n=t.left,r=t.top;let a;for(const e of i)(me(n,r,l.width,l.height,e)||!a&&me(n-s,r-s,l.width+2*s,l.height+2*s,e))&&(a=e);a?(o.idToComments[a.id]||(o.idToComments[a.id]=[]),o.idToComments[a.id].push(e)):o.orphans.push(e)}return o}(a,o.getTopComments(!0));p.orphans.forEach((e=>s(c,L(e).children))),a.forEach((e=>{if(p.idToComments[e.id]&&p.idToComments[e.id].forEach((e=>{s(c,L(e).children)})),e.type==ts.pxtc.ON_START_TYPE)s(c,X(i,e));else{const o=t.mkBlock(X(i,e));o.type==t.NT.Block?s(c,o.children):c.push(o)}}));const h=[];i.enums.forEach((e=>{const i=o.getVariablesOfType(e.name);if(i&&i.length){const o=i.map((e=>{const t=/^(\d+)([^0-9].*)$/.exec(e.name);return t?[t[2],parseInt(t[1])]:[e.name,-1]}));o.sort(((e,t)=>e[1]-t[1]));const s=[];let l=-1;o.forEach((([i,o],n)=>{let r;if(e.isBitMask){const e=Math.log2(o);e>=0&&Math.floor(e)===e&&(r=t.H.mkAssign(t.mkText(i),t.H.mkSimpleCall("<<",[t.H.mkNumberLiteral(1),t.H.mkNumberLiteral(e)])))}else if(e.isHash){const e=ts.pxtc.Util.codalHash16(i.toLowerCase());r=t.H.mkAssign(t.mkText(i),t.H.mkNumberLiteral(e))}r||(r=o===l+1?t.mkText(i):t.H.mkAssign(t.mkText(i),t.H.mkNumberLiteral(o))),s.push(r),l=o}));const n=t.mkCommaSep(s,!0);n.glueToBlock=t.GlueMode.NoSpace,h.push(t.mkGroup([t.mkText(`enum ${e.name}`),t.mkBlock([n])]))}})),i.kinds.forEach((e=>{const i=o.getVariablesOfType("KIND_"+e.name);if(i&&i.length){const o=i.map((e=>e.name)).filter((t=>-1===e.initialMembers.indexOf(t)));o.length&&h.push(t.mkGroup([t.mkText(`namespace ${e.name}`),t.mkBlock(o.map((i=>t.mkStmt(t.mkText(`export const ${i} = ${e.name}.${e.createFunctionName}()`)))))]))}}));const m=i.allVariables.filter((e=>!e.alreadyDeclared)).map((e=>oe(e,l)));return i.allVariables.filter((e=>e.alreadyDeclared===r.Implicit&&!e.isAssigned)).forEach((e=>{const t=A(e.type);"string"===t.type||"number"===t.type||"boolean"===t.type||b(t.type)||i.diagnostics.push({blockId:e.firstReference&&e.firstReference.id,message:lf("Variable '{0}' is never assigned",e.name)})})),[h.concat(m.concat(c)),i.diagnostics]}catch(e){let t=e.block;if(!t)throw e;t.setWarningText(e+""),i.errors.push(t)}finally{x()}return[null,null]}function J(e,t){if(t.type==ts.pxtc.ON_START_TYPE)return JSON.stringify({name:ts.pxtc.ON_START_TYPE});if(t.type==ts.pxtc.FUNCTION_DEFINITION_TYPE)return JSON.stringify({type:"function",name:t.getFieldValue("function_name")});return JSON.stringify(Z(t)).replace(/"id"\s*:\s*"[^"]+"/g,"")}function Z(e){const t=[],i=[];for(const o of e.inputList){for(const e of o.fieldRow)e.name&&t.push(e.getText());o.type===Blockly.INPUT_VALUE&&(o.connection.targetBlock()?i.push(Z(o.connection.targetBlock())):i.push(null))}return{type:e.type,fields:t,inputs:i}}function ee(e,t){e.setEnabled(t);const i=e.getDescendants(!1);for(const e of i)e.setEnabled(t)}function te(e,o,s){let l=t.flattenNode(o);return i("format",{format:{input:l.output,pos:1}}).then((()=>({source:l.output,sourceMap:l.sourceMap,stats:e.stats,diagnostics:s||[]})))}function ie(e,t){var i;const o=null===(i=e.getCommentText)||void 0===i?void 0:i.call(e);o&&t.push(o)}function oe(e,i){const o=A(e.type);let s;s="Array"===o.type?t.mkText("[]"):O(o);let l="";if("null"==s.op||"[]"==s.op){let e=o.type;"Array"!==e&&"null[]"!==e||(e="number[]");let n=i.apis.byQName[e];n&&n.attributes.autoCreate?s=t.mkText(n.attributes.autoCreate+"()"):l=": "+e}return t.mkStmt(t.mkText("let "+e.escapedName+l+" = "),s)}function se(e){if(e.mutationToDom){const t=e.mutationToDom();if(t.hasAttribute("_expanded")){const e=parseInt(t.getAttribute("_expanded"));return isNaN(e)?0:Math.max(e,0)}}return 0}function le({comp:e},t){const i=[];return e.thisParameter&&i.push(e.thisParameter),e.parameters.forEach((e=>{e.isOptional&&t>0?(i.push(e),--t):e.isOptional||i.push(e)})),i}function ne(e,t){let i=[];if(t.attrs.draggableParameters)for(let o=0;o<t.comp.handlerArgs.length;o++){const s=t.comp.handlerArgs[o];let l;const n=T(e,"HANDLER_DRAG_PARAM_"+s.name);if(l="reporter"===t.attrs.draggableParameters?n&&n.getFieldValue("VALUE"):n&&n.getField("VAR").getText(),null===l)break;i.push([l,u(s.type)])}else for(let o=0;o<t.comp.handlerArgs.length;o++){const s=t.comp.handlerArgs[o],l=e.getField("HANDLER_"+s.name),n=l&&l.getText();if(null===n)break;i.push([n,u(s.type)])}return i}function re(e,t){if(-1!==e.referencedVars.indexOf(t))return!0;for(const i of e.children)if(re(i,t))return!0;return!1}function ae(e,t){if(-1!==e.assignedVars.indexOf(t))return!0;for(const i of e.children)if(ae(i,t))return!0;return!1}function ce(e,t){for(const t of Object.keys(e.declaredVars)){const o=e.declaredVars[t];o.escapedName||(o.escapedName=i(t))}function i(i){if(!i)return"_";let s=ts.pxtc.escapeIdentifier(i);if(t.renames.takenNames[s]||o(s,e,i)){let l=2;for(;t.renames.takenNames[s+l]||o(s+l,e,i);)l++;s+=l}return s}function o(e,t,i){if(t){for(const o of Object.keys(t.declaredVars)){const s=t.declaredVars[o];if((i!==s.name||s.name!==s.escapedName)&&s.escapedName===e)return!0}return o(e,t.parent,i)}return!1}e.children.forEach((e=>ce(e,t)))}function ue(e,t){let i;if(-1!==e.referencedVars.indexOf(t))return e;for(const o of e.children)if(re(o,t)){if(ae(o,t))return e;if(i)return e;i=o}return i?ue(i,t):void 0}function de(e,t){return t&&t.declaredVars[e]?t.declaredVars[e]:t&&t.parent?de(e,t.parent):null}function pe(e,t,i=!1){e.inputList.filter((e=>e.type===Blockly.INPUT_VALUE)).forEach((e=>{e.connection&&e.connection.targetBlock()&&(t(e.connection.targetBlock()),i&&pe(e.connection.targetBlock(),t,i))}))}function he(e,t){const i=Object.keys(e.declaredVars);if(i.length){const o=i.map((t=>e.declaredVars[t]));e.firstStatement&&(t.blockDeclarations[e.firstStatement.id]=o.concat(t.blockDeclarations[e.firstStatement.id]||[])),o.forEach((e=>t.allVariables.push(e)))}e.children.forEach((e=>he(e,t)))}function me(e,t,i,o,s){const l=r(e,s.x,s.x+s.width)||r(s.x,e,e+i),n=r(t,s.y,s.y+s.height)||r(s.y,t,t+o);return l&&n;function r(e,t,i){return e>=t&&e<=i}}function fe(e){return"procedures_defnoreturn"===e.type||"function_definition"===e.type}function ge(e){return e.getField("function_name").getText()}function ke(e,t){const i=ge(e),o={};return function e(s){let l;l=t?s.getDescendants(!1).filter((e=>"function_return"==e.type)).map((e=>T(e,"RETURN_VALUE"))).filter((e=>e&&"function_call_output"===e.type)):s.getDescendants(!1).filter((e=>"function_call_output"==e.type));for(const t of l){const s=ge(t);if(s===i)return!0;if(!o[s]&&(o[s]=!0,e(Blockly.Functions.getDefinition(s,t.workspace))))return!0}return!1}(e)}t.compileExpression=R,t.escapeVarName=M,t.mkEnv=q,t.compileBlockAsync=function(e,t){const i=e.workspace,o=q(i,t);B(i&&i.getAllBlocks(!1),o);const s=X(o,e);return x(),te(o,s)},t.callKey=J,t.findBlockIdByPosition=function(e,t){if(!t)return;let i,o;for(let s=0;s<e.length;++s){let l=e[s];l.startPos<=t.start&&l.endPos>=t.start+t.length&&(!i||o>l.endPos-l.startPos)&&(i=l,o=l.endPos-l.startPos)}return i?i.id:void 0},t.findBlockIdByLine=function(e,t){if(!t)return;let i,o;for(let s=0;s<e.length;++s){let l=e[s];l.startLine<=t.start&&l.endLine>t.start+t.length&&(!i||o>l.endLine-l.startLine)&&(i=l,o=l.endLine-l.startLine)}return i?i.id:void 0},t.compileAsync=function(e,t,i={}){const o=q(e,t,i),[s,l]=Q(o,e,t);return te(o,s,l)}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){let i={};function o(e,t,o){null==i[e]&&(i[e]={field:t,validator:o})}t.initFieldEditors=function(){o("text",pxtblockly.FieldTextInput),o("note",pxtblockly.FieldNote),o("gridpicker",pxtblockly.FieldGridPicker),o("textdropdown",pxtblockly.FieldTextDropdown),o("numberdropdown",pxtblockly.FieldNumberDropdown),o("imagedropdown",pxtblockly.FieldImageDropdown),o("colorwheel",pxtblockly.FieldColorWheel),o("toggle",pxtblockly.FieldToggle),o("toggleonoff",pxtblockly.FieldToggleOnOff),o("toggleyesno",pxtblockly.FieldToggleYesNo),o("toggleupdown",pxtblockly.FieldToggleUpDown),o("toggledownup",pxtblockly.FieldToggleDownUp),o("togglehighlow",pxtblockly.FieldToggleHighLow),o("togglewinlose",pxtblockly.FieldToggleWinLose),o("colornumber",pxtblockly.FieldColorNumber),o("images",pxtblockly.FieldImages),o("sprite",pxtblockly.FieldSpriteEditor),o("animation",pxtblockly.FieldAnimationEditor),o("tilemap",pxtblockly.FieldTilemap),o("tileset",pxtblockly.FieldTileset),o("speed",pxtblockly.FieldSpeed),o("turnratio",pxtblockly.FieldTurnRatio),o("protractor",pxtblockly.FieldProtractor),o("position",pxtblockly.FieldPosition),o("melody",pxtblockly.FieldCustomMelody)},t.registerFieldEditor=o,t.createFieldEditor=function(t,o,s){if(null==i[t])return console.error(`Field editor ${t} not registered`),null;s||(s={}),e.Util.assert(null==s.lightMode,"lightMode is a reserved parameter for custom fields"),s.lightMode=e.options.light;let l=i[t];return new l.field(o,s,l.validator)}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){t.needsDecompiledDiff=function(e,t){if(!e||!t)return!1;const i={};if(e.replace(/id="([^"]+)"/g,((e,t)=>(i[t]=!0,""))),!Object.keys(i).length)return!1;let o=0,s=0;return t.replace(/id="([^"]+)"/g,((e,t)=>(o++,i[t]&&s++,""))),o>0&&0==s},t.diffXml=function(t,i,s){return o(e.blocks.loadWorkspaceXml(t,!0),e.blocks.loadWorkspaceXml(i,!0),s)};const i="#d0d0d0";function o(o,n,r){try{return Blockly.Events.disable(),function(o,n,r){e.tickEvent("blocks.diff",{started:1}),r=r||{};const a=s();if(!o)return{ws:void 0,message:lf("All blocks are new."),added:0,deleted:0,modified:1};if(!n)return{ws:void 0,message:lf("The current blocks seem corrupted."),added:0,deleted:0,modified:1};const c=e.Util.toDictionary(o.getTopBlocks(!1),(e=>l(e,!0)));n.getTopBlocks(!1).forEach((e=>{const t=l(e,!0),i=o.getBlockById(e.id)||c[t];if(i){t==l(i,!0)&&(a("fast unmodified top ",e.id),e.dispose(!1),i.dispose(!1))}}));const u=o.getAllBlocks(!1).filter((e=>e.isEnabled())),d=o.getTopBlocks(!1).filter((e=>e.isEnabled())),p=n.getAllBlocks(!1).filter((e=>e.isEnabled()));if(a("blocks",p.map((e=>e.toDevString()))),a(p),0==u.length&&0==p.length)return e.tickEvent("blocks.diff",{moves:1}),{ws:void 0,message:lf("Some blocks were moved or changed."),added:0,deleted:0,modified:1};const h=d.filter((e=>!n.getBlockById(e.id))),m=u.filter((e=>!n.getBlockById(e.id))),f=p.filter((e=>!o.getBlockById(e.id))),g=e.blocks.initRenderingWorkspace(),k=e.blocks.saveWorkspaceXml(n,!0);e.blocks.domToWorkspaceNoEvents(Blockly.Xml.textToDom(k),g),g.getAllBlocks(!1).filter((e=>!e.isEnabled())).forEach((e=>{a("disabled ",e.toDevString()),e.dispose(!1)}));const b=e.Util.toDictionary(g.getAllBlocks(!1),(e=>e.id));a("todo blocks",b),w("start"),r.hideDeletedTopBlocks||(h.forEach((e=>{a(`deleted top ${e.toDevString()}`),I(e);const t=A(e);I(t),t.setEnabled(!1)})),w("deleted top"));f.map((e=>g.getBlockById(e.id))).filter((e=>!!e)).forEach((e=>{a(`added ${e.toDevString()}`),I(e)})),w("added");const y={};if(!r.hideDeletedBlocks){const e=m.filter((e=>!(b[e.id]||C(e)||e.outputConnection&&e.outputConnection.isConnected())));e.forEach((e=>{const t=A(e);y[e.id]=t.id,a(`deleted block ${e.toDevString()}->${t.toDevString()}`)})),e.forEach((e=>E(e)))}let _=0;if(e.Util.values(b).filter((e=>S(e))).forEach((e=>{a(`moved ${e.toDevString()}`),delete b[e.id],B(e),_++})),w("moved"),e.Util.values(b).filter((e=>D(e))).forEach((e=>{a(`changed ${e.toDevString()}`),delete b[e.id],B(e),_++})),w("changed"),g.getTopBlocks(!1).forEach((e=>{N(e)||(a(`unmodified top ${e.toDevString()}`),delete b[e.id],e.dispose(!1))})),w("cleaned"),e.Util.values(b).filter((e=>!!g.getBlockById(e.id))).forEach((e=>{L(e)})),w("unmodified"),!g.getAllBlocks(!1).length)return e.tickEvent("blocks.diff",{missed:1}),{ws:g,message:lf("Some blocks were changed."),deleted:m.length,added:f.length,modified:_};g.resize(),Blockly.svgResize(g);const T=e.blocks.renderWorkspace(r.renderOptions||{emPixels:20,layout:t.BlockLayout.Flow,aspectRatio:.5,useViewWidth:!0}),x={ws:g,svg:T,deleted:m.length,added:f.length,modified:_};return e.tickEvent("blocks.diff",{deleted:x.deleted,added:x.added,modified:x.modified}),x;function E(e){a(`stitching ${e.toDevString()}->${y[e.id]}`);const t=g.getBlockById(y[e.id]);t.setEnabled(!1),B(t),I(t);const i=e.getPreviousBlock();if(i){const o=g.getBlockById(y[i.id])||g.getBlockById(i.id);if(a(`previous ${e.id}->${t.toDevString()}: ${o.toDevString()}`),o)if(o.nextConnection)t.previousConnection.connect(o.nextConnection);else{const e=o.inputList.slice().reverse().find((e=>e.connection&&e.connection.type==Blockly.NEXT_STATEMENT));e&&t.previousConnection.connect(e.connection)}}const o=e.getNextBlock();if(o){const i=g.getBlockById(y[o.id])||g.getBlockById(o.id);i&&(a(`next ${e.id}->${t.toDevString()}: ${i.toDevString()}`),t.nextConnection.connect(i.previousConnection))}}function B(e){e.__pxt_used=!0}function C(e){return!!e.__pxt_used}function A(e){const t=Blockly.Xml.blockToDom(e,!1),i=Blockly.Xml.domToBlock(t,g);return i.nextConnection&&i.nextConnection.targetConnection&&i.nextConnection.disconnect(),i.previousConnection&&i.previousConnection.targetConnection&&i.previousConnection.disconnect(),i}function v(e){e.rendered=!1,e.inputList.forEach((t=>t.fieldRow.forEach((t=>{t.init(),t.borderRect_&&(t.borderRect_.setAttribute("fill",e.getColour()),t.borderRect_.setAttribute("stroke",e.getColourTertiary()))}))))}function I(e){e.getDescendants(!1).forEach((e=>{delete b[e.id],B(e)}))}function N(e){return!!e.getDescendants(!1).find((e=>C(e)))}function w(t){a(`${t}:`,e.Util.values(b).map((e=>e.toDevString())))}function S(e){const t=o.getBlockById(e.id);if(!t)return!1;const i=e.getPreviousBlock();if(i&&!b[i.id])return!1;const s=e.getNextBlock();if(s&&!b[s.id])return!1;const l=t.getPreviousBlock();if(!l&&!i)return!1;if(!!l!=!!i||l.id!=i.id)return!0;const n=t.getNextBlock();return!(!n&&!s)&&(!!n!=!!s||n.id!=s.id)}function D(e){let t=o.getBlockById(e.id);if(!t)return!1;const i=l(t),s=l(e);return i!=s&&(a(`old ${t.toDevString()}`,i),a(`new ${e.toDevString()}`,s),!0)}function L(e){e.setColour(i),v(e),r.statementsOnly&&(e.inputList||[]).map((e=>e.type==Blockly.INPUT_VALUE&&e.connection&&e.connection.targetBlock())).filter((e=>!!e)).forEach((e=>L(e)))}}(o,n,r)}catch(t){return e.reportException(t),{ws:void 0,message:lf("Oops, we could not diff those blocks."),error:t,deleted:0,added:0,modified:0}}finally{Blockly.Events.enable()}}function s(){return e.options.debug||window&&/diffdbg=1/.test(window.location.href)?console.log:(e,...t)=>{}}function l(e,t){const i=Blockly.Xml.blockToDom(e,!0);return n(i),r(i,(e=>{n(e),t||("next"==e.localName||"statement"==e.localName||"shadow"==e.localName)&&e.remove()})),Blockly.Xml.domToText(i)}function n(e){e.removeAttribute("id"),e.removeAttribute("x"),e.removeAttribute("y"),e.removeAttribute("deletable"),e.removeAttribute("editable"),e.removeAttribute("movable")}function r(t,i){if(t){i(t);for(const o of e.Util.toArray(t.children))r(o,i)}}t.mergeXml=function(e,t,i){return e==t?i:i==t?e:void 0},t.decompiledDiffAsync=function(t,i,l,n,r={}){const a=s(),c=i.outfiles[e.MAIN_BLOCKS];let u=n.outfiles[e.MAIN_BLOCKS];a(c),a(u);const d=e.diff.compute(t,l,{ignoreWhitespace:!0,full:!0});a(d);const p={};let h=0,m=0;d.forEach(((t,o)=>{const s=t[0],l=t.substr(2);let r=l.length;switch(s){case"-":h+=r+1;break;case"+":m+=r+1;break;default:const o=/^\s+/.exec(l);if(o){const e=o[0].length;h+=e,m+=e,r-=e}const s=e.blocks.findBlockIdByPosition(n.blockSourceMap,{start:m,length:r});if(s&&!p[s]){const o=e.blocks.findBlockIdByPosition(i.blockSourceMap,{start:h,length:r});o&&(a(t),a(`id ${h}:${l.length}>${o} ==> ${m}:${l.length}>${s}`),p[s]=o,u=u.replace(s,o))}h+=r+1,m+=r+1}}));const f=e.blocks.loadWorkspaceXml(c,!0),g=e.blocks.loadWorkspaceXml(u,!0);return r.statementsOnly=!0,o(f,g,r)}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){function i(e,t){const i=[];for(let o=0;o<e.childNodes.length;o++){const s=e.childNodes.item(o);s.tagName===t&&i.push(s)}return i}function o(e,t){return s(e,"block","type",t).concat(s(e,"shadow","type",t))}function s(t,i,o,s){return e.Util.toArray(t.getElementsByTagName(i)).filter((e=>e.getAttribute(o)===s))}function l(e,t,i,o){const l=s(e,t,i,o);return l.length?l[0]:void 0}function n(e,i,o){var s;let n=o.getAttribute("type"),r=Blockly.Blocks[n],a=t.blockSymbol(n);if(!a||!r)return;let c=t.compileInfo(a);null===(s=a.parameters)||void 0===s||s.forEach(((t,s)=>{let n=e.apis.byQName[t.type];if(n&&6==n.kind){let e=l(o,"field","name",c.actualNameToParam[t.name].definitionName);if(e){let t=i[n.name+"."+e.textContent];t&&(e.textContent=t)}}}))}t.domToWorkspaceNoEvents=function(t,i){e.tickEvent("blocks.domtow");let o=[];try{Blockly.Events.disable(),o=Blockly.Xml.domToWorkspace(t,i),function(e){e.getAllBlocks(!1).filter((e=>!!e.getCommentText())).forEach((t=>{var i,o;const s=t.getCommentText();if(/@highlight/.test(s)){const l=s.replace(/@highlight/g,"").trim();t.setCommentText(l||null),null===(o=(i=e).highlightBlock)||void 0===o||o.call(i,t.id)}}))}(i)}catch(t){e.reportException(t)}finally{Blockly.Events.enable()}return o},t.clearWithoutEvents=function(t){if(e.tickEvent("blocks.clear"),t)try{Blockly.Events.disable(),t.clear(),t.clearUndo()}finally{Blockly.Events.enable()}},t.saveWorkspaceXml=function(e,t){const i=Blockly.Xml.workspaceToDom(e,!t);return Blockly.Xml.domToText(i)},t.saveBlocksXml=function(e,t){return e.getTopBlocks(!1).map((e=>Blockly.Xml.domToText(Blockly.Xml.blockToDom(e,!t))))},t.getDirectChildren=i,t.getBlocksWithType=o,t.getChildrenWithAttr=s,t.getFirstChildWithAttr=l,t.loadBlocksXml=function(e,t){let i=Blockly.Xml.textToDom(t),o=Blockly.Xml.domToBlock(i,e);if(e.getMetrics){let t=e.getMetrics(),i=o.getHeightWidth();o.moveBy(t.viewLeft+t.viewWidth/2-i.width/2,t.viewTop+t.viewHeight/2-i.height/2)}},t.loadWorkspaceXml=function(t,i=!1){const o=new Blockly.Workspace;try{const i=Blockly.Xml.textToDom(t);return e.blocks.domToWorkspaceNoEvents(i,o),o}catch(t){return i||e.reportException(t),null}},t.importXml=function(l,r,a,c=!1){try{e.blocks.initializeAndInject(a);const c=(new DOMParser).parseFromString(r,"application/xml"),d=e.patching.computePatches(l);d&&(d.filter((e=>"blockId"==e.type)).forEach((t=>Object.keys(t.map).forEach((i=>{o(c,i).forEach((o=>{o.setAttribute("type",t.map[i]),e.debug(`patched block ${i} -> ${t.map[i]}`)}))})))),d.filter((e=>"blockValue"==e.type)).forEach((t=>Object.keys(t.map).forEach((s=>{const l=s.split("."),n=l[0];l[1];o(c,n).reduce(((e,t)=>e.concat(i(t,"value"))),[]).forEach((i=>{i.setAttribute("name",t.map[s]),e.debug(`patched block value ${s} -> ${t.map[s]}`)}))})))),d.filter((e=>"userenum"==e.type)).forEach((t=>Object.keys(t.map).forEach((i=>{s(c,"variable","type",i).forEach((o=>{o.setAttribute("type",t.map[i]),e.debug(`patched enum variable type ${i} -> ${t.map[i]}`)}))})))));const p=i(c.children.item(0),"shadow");for(const e of p){const t=c.createElement("block");e.getAttributeNames().forEach((i=>t.setAttribute(i,e.getAttribute(i))));for(let i=0;i<e.childNodes.length;i++)t.appendChild(e.childNodes.item(i));e.replaceWith(t)}const h={};Object.keys(a.apis.byQName).forEach((e=>{let t=a.apis.byQName[e];7==t.kind&&(h[t.namespace+"."+(t.attributes.blockImportId||t.attributes.block||t.attributes.blockId||t.name)]=t.namespace+"."+t.name)}));const m=c.getElementsByTagName("block");for(let e=0;e<m.length;++e)n(a,h,m[e]);return function(i,s){const l=o(i,ts.pxtc.ON_START_TYPE);let n=l.length?l[0]:void 0;if(n)return void n.removeAttribute("deletable");let r=[];const a=s.blocksById;let c,u=i.firstElementChild;for(;u;){const o=u.nextElementSibling,s=u.getAttribute("type");if(!u.getAttribute("disabled")&&!u.getElementsByTagName("statement").length&&(e.blocks.buildinBlockStatements[s]||a[s]&&"void"==a[s].retType&&!t.hasArrowFunction(a[s])))if(c){const e=i.ownerDocument.createElement("next");e.appendChild(u),c.appendChild(e),u.removeAttribute("x"),u.removeAttribute("y"),c=u}else c=i.ownerDocument.createElement("statement"),c.setAttribute("name","HANDLER"),n||(n=i.ownerDocument.createElement("block"),n.setAttribute("type",ts.pxtc.ON_START_TYPE),r.push(n)),n.appendChild(c),c.appendChild(u),u.removeAttribute("x"),u.removeAttribute("y"),c=u;u=o}r.forEach((e=>i.appendChild(e)))}(c.documentElement,a),u=c.documentElement,e.U.toArray(u.querySelectorAll("block[type=procedures_defnoreturn]")).forEach((e=>{e.setAttribute("type","function_definition"),e.querySelector("field[name=NAME]").setAttribute("name","function_name")})),e.U.toArray(u.querySelectorAll("block[type=procedures_callnoreturn]")).forEach((e=>{e.setAttribute("type","function_call"),e.querySelector("field[name=NAME]").setAttribute("name","function_name")})),e.blocks.extensionBlocklyPatch&&e.blocks.extensionBlocklyPatch(l,c.documentElement),(new XMLSerializer).serializeToString(c)}catch(t){return c||e.reportException(t),r}var u}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){var t;(function(i){i.patchBlocksFromOldWorkspace=function(t,i,o){const s=e.blocks.loadWorkspaceXml(o,!0);return function(t,i,o){let s,l;i.getTopBlocks(!1).filter((e=>e.isEnabled())).forEach((n=>{const r=n.xy_;if(r&&0!=r.x&&0!=r.y){s||(s=e.blocks.mkEnv(i,t),l={},o.getTopBlocks(!1).forEach((t=>{const i=e.blocks.callKey(s,t),o=l[i]||[];o.push(t),l[i]=o})));const a=e.blocks.callKey(s,n),c=(l[a]||[]).shift();c&&(c.xy_=r.clone())}}))}(t,i,s),function(t,i){const o=Blockly.Xml.workspaceToDom(t,!0),s=Blockly.Xml.workspaceToDom(i,!0);return e.Util.toArray(o.childNodes).filter((e=>e.nodeType==Node.ELEMENT_NODE&&"block"==e.localName&&"true"==e.getAttribute("disabled"))).forEach((e=>s.appendChild(s.ownerDocument.importNode(e,!0)))),Blockly.Xml.domToText(s)}(i,s)},i.splitSvg=function(t,i,o=18){const s=i.getTopComments(!0),l=i.getTopBlocks(!0);if(s.length+l.length<2)return t;const n=document.createElement("div");function r(i,s,l,r,a,c){const u=t.cloneNode(!0),d=u.querySelector(`g.blocklyWorkspace > g.${i}`),p=u.querySelector(`g.blocklyWorkspace > g.${s}`),h=e.Util.toArray(d.querySelectorAll(`g.blocklyWorkspace > g.${i} > ${c?"."+c:"g[transform]"}`)),m=h.splice(l,1)[0];if(!m)return void e.log("missing block, did block failed to load?");h.filter((e=>e!=m)).forEach((e=>{e.parentNode.removeChild(e)})),d.removeAttribute("transform"),p.parentNode.removeChild(p),m.setAttribute("transform",`translate(${a.x}, ${a.y})`);const f=r.width/o+"em",g=r.height/o+"em";u.setAttribute("viewBox",`0 0 ${r.width} ${r.height}`),u.style.width=f,u.style.height=g,u.setAttribute("width",f),u.setAttribute("height",g),n.appendChild(u)}return n.className=`blocks-svg-list ${i.getInjectionDiv().className}`,s.forEach(((e,t)=>r("blocklyBubbleCanvas","blocklyBlockCanvas",t,e.getHeightWidth(),{x:0,y:0},"blocklyComment"))),l.forEach(((e,t)=>{const i=e.getHeightWidth(),s={x:0,y:0};e.getStartHat()&&(i.height+=o,s.y+=o),r("blocklyBlockCanvas","blocklyBubbleCanvas",t,i,s)})),n},i.verticalAlign=function(e,t){let i=0;e.getTopComments(!0).forEach((e=>{e.moveBy(0,i),i+=e.getHeightWidth().height,i+=t})),e.getTopBlocks(!0).forEach(((e,o)=>{e.getStartHat()&&(i+=t),e.moveBy(0,i),i+=e.getHeightWidth().height,i+=t}))},i.setCollapsedAll=function(e,t){e.getTopBlocks(!1).filter((e=>e.isEnabled())).forEach((e=>e.setCollapsed(t)))};const o=20;function s(t,i,o){let s;o&&(s={target:e.appTarget.id,versions:e.appTarget.versions,xml:e.blocks.saveBlocksXml(t).map((t=>e.Util.htmlEscape(t)))});const l=0|i||4;return r(t,l).then((t=>t?e.BrowserUtils.encodeToPngAsync(t.xml,{width:t.width,height:t.height,pixelDensity:l,text:o?JSON.stringify(s,null,2):null}):Promise.resolve(void 0))).catch((t=>{e.reportException(t)}))}i.flow=function(e,t){if(t){if(t.useViewWidth){const t=e.getMetrics();if(t.viewHeight>t.viewWidth)return f(e.getTopComments(!0),e.getTopBlocks(!0),void 0,t.viewWidth),void e.scroll(o,20)}f(e.getTopComments(!0),e.getTopBlocks(!0),t.ratio)}else f(e.getTopComments(!0),e.getTopBlocks(!0));e.scroll(o,20)},i.screenshotEnabled=function(){return!e.BrowserUtils.isIE()&&!e.BrowserUtils.isUwpEdge()},i.screenshotAsync=function(e,t,i){return s(e,t,i)},i.toPngAsync=s;const l="http://www.w3.org/1999/xlink",n=12e7;function r(e,t){if(!e)return Promise.resolve(void 0);const i=e.getBlocksBoundingBox(),o=e.getParentSvg().cloneNode(!0);u(o);let s=i.right-i.left,l=i.bottom-i.top,r=1;const a=s*l*Math.pow(t,2);return a>n&&(r=Math.sqrt(n/a)),d(o,i.left,i.top,s,l,r)}function a(e){return c((new XMLSerializer).serializeToString(e))}function c(e){return e.replace(new RegExp("&nbsp;","g"),"&#160;")}function u(t){e.BrowserUtils.removeClass(t,"blocklySvg"),e.BrowserUtils.addClass(t,"blocklyPreview pxt-renderer classic-theme"),e.U.toArray(t.querySelectorAll(".blocklyMainBackground,.blocklyScrollbarBackground")).forEach((e=>{e&&e.parentNode.removeChild(e)})),e.U.toArray(t.querySelectorAll(".blocklyConnectionIndicator,.blocklyInputConnectionIndicator")).forEach((e=>{e&&e.parentNode.removeChild(e)})),t.removeAttribute("width"),t.removeAttribute("height"),e.U.toArray(t.querySelectorAll(".blocklyBlockCanvas,.blocklyBubbleCanvas")).forEach((e=>e.removeAttribute("transform")));const i=new DOMParser;return e.U.toArray(t.querySelectorAll(".blocklyCommentTextarea")).forEach((t=>{const o=i.parseFromString("<!doctype html><body>"+e.docs.html2Quote(t.value),"text/html");t.textContent=o.body.textContent})),t}function d(t,i,o,s,n,r){if(!t.childNodes[0])return Promise.resolve(void 0);t.removeAttribute("width"),t.removeAttribute("height"),t.removeAttribute("transform");let c=Math.round(s*(r||1)),u=Math.round(n*(r||1));const d=a(t).replace(/^\s*<svg[^>]+>/i,"").replace(/<\/svg>\s*$/i,""),f=`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="${l}" width="${c}" height="${u}" viewBox="${i} ${o} ${s} ${n}" class="pxt-renderer">${d}</svg>`,g=(new DOMParser).parseFromString(f,"image/svg+xml"),k=g.createElementNS("http://www.w3.org/1999/xhtml","style"),b=e.Util.isUserLanguageRtl(),y=document.getElementById(`style-${b?"rtl":""}blockly.css`).href,_=e.Util.toArray(document.head.getElementsByTagName("link")).filter((t=>e.Util.endsWith(t.getAttribute("href"),"semantic.css")))[0].href;return Promise.all([e.BrowserUtils.loadAjaxAsync(y),e.BrowserUtils.loadAjaxAsync(_)]).then((t=>{var i,o;const s=e.Util.toArray(document.head.querySelectorAll("style")).filter((e=>/\.blocklySvg/.test(e.innerText)))[0];t.unshift((null===(i=document.getElementById("blockly-common-style"))||void 0===i?void 0:i.innerText)||""),t.unshift((null===(o=document.getElementById("blockly-renderer-style-pxt"))||void 0===o?void 0:o.innerText)||"");const n=(s?s.innerText:"")+"\n\n"+t.map((e=>e+"\n\n"));return k.appendChild(g.createCDATASection(n)),g.documentElement.insertBefore(k,g.documentElement.firstElementChild),function(t){h||(h={});const i=t.getElementsByTagName("image"),o=e.Util.toArray(i).filter((e=>{const t=e.getAttributeNS(l,"href");return t&&!/^data:/.test(t)})).map((e=>e)).map((t=>{const i=t.getAttributeNS(l,"href");let o=h[i];return(o?Promise.resolve(h[i]):e.BrowserUtils.loadImageAsync(t.getAttributeNS(l,"href")).then((e=>{const t=document.createElement("canvas"),s=t.getContext("2d");let l=e.width,n=e.height;return t.width=l,t.height=n,s.drawImage(e,0,0,l,n,0,0,t.width,t.height),h[i]=o=t.toDataURL("image/png"),o})).catch((t=>(e.debug(`svg render: failed to load ${i}`),"")))).then((e=>{t.setAttributeNS(l,"href",e)}))}));return Promise.all(o).then((()=>{}))}(g).then((()=>function(t){if(m||(m={}),!e.BrowserUtils.isEdge())return Promise.resolve();const i=t.getElementsByTagName("image"),o=e.Util.toArray(i).filter((e=>/^data:image\/svg\+xml/.test(e.getAttributeNS(l,"href")))).map((e=>e)).map((t=>{const i=t.getAttributeNS(l,"href"),o=parseInt(t.getAttribute("width").replace(/[^0-9]/g,"")),s=parseInt(t.getAttribute("height").replace(/[^0-9]/g,""));let n=m[i];return(n?Promise.resolve(n):e.BrowserUtils.encodeToPngAsync(i,{width:o,height:s,pixelDensity:2})).then((e=>{m[i]=e,t.setAttributeNS(l,"href",e)}))}));return Promise.all(o).then((()=>{}))}(g))).then((()=>({width:c,height:u,svg:a(g).replace('<style xmlns="http://www.w3.org/1999/xhtml">',"<style>"),xml:p(g),css:n})))}))}function p(e){const t=(new XMLSerializer).serializeToString(e);return"data:image/svg+xml;base64,"+ts.pxtc.encodeBase64(unescape(encodeURIComponent(t)))}let h,m;function f(e,i,s=1.62,l){const n=[],r={};let a;e.forEach((e=>{const t=e.data;null!=t&&(r[t]=e)})),i.sort(((e,t)=>e.isEnabled()===t.isEnabled()?e.type===t.type?0:"function_definition"===e.type?1:"function_definition"===t.type?-1:e.type.localeCompare(t.type):e.isEnabled()?-1:1)),i.forEach((e=>{const i=t.getBlockData(e).commentRefs;if(i.length){const t=[];for(let e=0;e<i.length;e++){const o=r[i[e]];o&&(t.push(g(o)),delete r[i[e]])}if(t.length)return void n.push({value:e,width:-1,height:-1,children:t})}const o=g(e);!a&&e.isEnabled()&&e.type===pxtc.ON_START_TYPE?a=o:n.push(o)})),a&&n.unshift(a),Object.keys(r).sort(((e,t)=>e.length===t.length?e>t?-1:1:e.length>t.length?-1:1)).forEach((e=>{r[e]&&n.push(g(r[e]))})),e.forEach((e=>{null==e.data&&n.push(g(e))}));let c,u=0;for(let e=0;e<n.length;e++){const t=n[e];if(t.children){const e=t.value.getHeightWidth();t.x=0,t.y=0;let i=e.width+13,o=0;for(let e=0;e<t.children.length;e++){const s=t.children[e];s.x=i,s.y=o,o+=s.height+13,t.width=Math.max(t.width,i+s.width)}t.height=Math.max(o-13,e.height)}u+=(t.height+13)*(t.width+13)}c=l>o?l-o:Math.sqrt(u)*s;let d=o,p=20,h=0;for(let e=0;e<n.length;e++){const t=n[e];if(t.children){m(t,d+t.x,p+t.y);for(let e=0;e<t.children.length;e++){const i=t.children[e];m(i,d+i.x,p+i.y)}}else m(t,d,p);d+=t.width+45,h=Math.max(h,p+t.height+45),d>c&&(d=o,p=h)}function m(e,t,i){const o=e.value.getBoundingRectangle();e.value.moveBy(t-o.left,i-o.top)}}function g(e){const t=e.getHeightWidth();return{value:e,height:t.height,width:t.width}}i.toSvgAsync=r,i.serializeNode=a,i.serializeSvgString=c,i.cleanUpBlocklySvg=u,i.blocklyToSvgAsync=d,i.documentToSvg=p})((t=e.blocks||(e.blocks={})).layout||(t.layout={}))}(pxt||(pxt={})),function(e){!function(t){const i={string:{field:"TEXT",block:"text",defaultValue:""},number:{field:"NUM",block:"math_number",defaultValue:"0"},boolean:{field:"BOOL",block:"logic_boolean",defaultValue:"false"},Array:{field:"VAR",block:"variables_get",defaultValue:"list"}};function o(e){let t=/^(?:Array<(.+)>)|(?:(.+)\[\])|(?:\[.+\])$/.exec(e);return t?t[1]?t[1]:t[2]:void 0}t.optionalDummyInputPrefix="0_optional_dummy",t.optionalInputWithFieldPrefix="0_optional_field",t.isArrayType=o,t.isTupleType=function(e){let t=/^\[(.+)\]$/.exec(e);return t?t[1].split(/,\s*/):void 0};const s=/^(string|number|boolean)$/;let l,n;function r(){return l||(l={},Object.keys(Blockly.Blocks).forEach((e=>l[e]={block:Blockly.Blocks[e]}))),l}t.builtinBlocks=r,t.buildinBlockStatements={controls_if:!0,controls_for:!0,pxt_controls_for:!0,controls_simple_for:!0,controls_repeat_ext:!0,pxt_controls_for_of:!0,controls_for_of:!0,variables_set:!0,variables_change:!0,device_while:!0};let a={};function c(e,t,s,l){let n;if(l=l||t.defaultValue,!(s=s||t.shadowBlockId)&&t.range&&(s="math_number_minmax"),n=l&&'"'==l.slice(0,1)?JSON.parse(l):l,"number"==t.type&&"value"==s){const e=document.createElement("field");return e.setAttribute("name",t.definitionName),e.appendChild(document.createTextNode("0")),e}const r="variables_get"==s,a="text"==s,c=document.createElement("value");c.setAttribute("name",t.definitionName);const d=o(t.type),p=document.createElement(r||d?"block":"shadow");c.appendChild(p);const h=i[d||t.type];if(p.setAttribute("type",s||(d?"lists_create_with":h&&h.block||t.type)),p.setAttribute("colour",Blockly.Colours.textField),d){if(h&&!s){let e;switch(d){case"number":e=["0","1"];break;case"string":e=["a","b","c"];break;case"boolean":e=["FALSE","FALSE","FALSE"]}return u(p,h.block,h.field,e),c}if(s&&n)return u(p,n),c}if(!h||s&&h.block!==s&&"math_number_minmax"!==s){if(n){const i=document.createElement("field");if(i.textContent=n,r)i.setAttribute("name","VAR"),p.appendChild(i);else if(a)i.setAttribute("name","TEXT"),p.appendChild(i);else if(s){const t=e.blocksById[s];if(t&&t.attributes._def&&t.attributes._def.parameters.length){const e=t.attributes._def.parameters[0];i.setAttribute("name",e.name),p.appendChild(i)}}else i.setAttribute("name",t.definitionName),p.appendChild(i)}}else{const e=document.createElement("field");let i,o;switch(p.appendChild(e),s){case"variables_get":i="VAR";break;case"math_number_minmax":i="SLIDER";break;default:i=h.field}e.setAttribute("name",i),o="boolean"==t.type?document.createTextNode((n||h.defaultValue).toUpperCase()):document.createTextNode(n||h.defaultValue),e.appendChild(o)}let m;return t.range&&(m=document.createElement("mutation"),m.setAttribute("min",t.range.min.toString()),m.setAttribute("max",t.range.max.toString()),m.setAttribute("label",t.actualName.charAt(0).toUpperCase()+t.actualName.slice(1)),t.fieldOptions&&(t.fieldOptions.step&&m.setAttribute("step",t.fieldOptions.step),t.fieldOptions.color&&m.setAttribute("color",t.fieldOptions.color),t.fieldOptions.precision&&m.setAttribute("precision",t.fieldOptions.precision))),t.fieldOptions&&(m||(m=document.createElement("mutation")),m.setAttribute("customfield",JSON.stringify(t.fieldOptions))),m&&p.appendChild(m),c}function u(e,t,i,o){const s=o?o.length:2,l=document.createElement("mutation");l.setAttribute("items",""+s),l.setAttribute("horizontalafter",""+s),e.appendChild(l);for(let l=0;l<s;l++){const s=document.createElement("value");s.setAttribute("name","ADD"+l);const n=document.createElement("shadow");if(n.setAttribute("type",t),i){const e=document.createElement("field");e.setAttribute("name",i),o&&e.appendChild(document.createTextNode(o[l])),n.appendChild(e)}s.appendChild(n),e.appendChild(s)}}function d(t,i,o,s){const l=p(t,e.toolbox.convertColor(i),o,s);return l.setAttribute("web-class","blocklyFlyoutHeading"),l}function p(t,i,o,s){let l=Blockly.utils.xml.createElement("label");return l.setAttribute("text",t),i&&l.setAttribute("web-icon-color",e.toolbox.convertColor(i)),o&&(1===o.length?(l.setAttribute("web-icon",o),s&&l.setAttribute("web-icon-class",s)):l.setAttribute("web-icon-class",`blocklyFlyoutIcon${t}`)),l}function h(t,i,l){let n=document.createElement("block");if(n.setAttribute("type",i.attributes.blockId),i.attributes.blockGap?n.setAttribute("gap",i.attributes.blockGap):e.appTarget.appTheme&&e.appTarget.appTheme.defaultBlockGap&&n.setAttribute("gap",e.appTarget.appTheme.defaultBlockGap.toString()),l.thisParameter){const e=l.thisParameter;n.appendChild(c(t,e,e.shadowBlockId||"variables_get",e.defaultValue||e.definitionName))}return i.parameters&&(l.parameters.filter((e=>!e.isOptional&&(s.test(e.type)||s.test(o(e.type))||e.shadowBlockId||e.defaultValue))).forEach((e=>{n.appendChild(c(t,e))})),i.attributes.draggableParameters?l.handlerArgs.forEach((t=>{const o="reporter"===i.attributes.draggableParameters,s=document.createElement("value");s.setAttribute("name","HANDLER_DRAG_PARAM_"+t.name);const l=o?e.blocks.reporterTypeForArgType(t.type):"variables_get_reporter",r=document.createElement("shadow");if(r.setAttribute("type",l),o&&"argument_reporter_custom"===l){const e=document.createElement("mutation");e.setAttribute("typename",t.type),r.appendChild(e)}const a=document.createElement("field");a.setAttribute("name",o?"VALUE":"VAR"),a.textContent=e.Util.htmlEscape(t.name),r.appendChild(a),s.appendChild(r),n.appendChild(s)})):l.handlerArgs.forEach((e=>{const t=document.createElement("field");t.setAttribute("name","HANDLER_"+e.name),t.textContent=e.name,n.appendChild(t)}))),n}function m(i){return n=i,Blockly.pxtBlocklyUtils.whitelistDraggableBlockTypes(i.blocks.filter((e=>e.attributes.duplicateShadowOnDrag)).map((e=>e.attributes.blockId))),i.blocks.map((o=>{const s=t.compileInfo(o),l=h(i,o,s);if(o.attributes.blockBuiltin){e.Util.assert(!!r()[o.attributes.blockId]);const t=r()[o.attributes.blockId];t.symbol=o,t.block.codeCard=g(o,l)}else!function(i,o,s,l){let n=o.attributes.blockId;if(r()[n])return e.reportError("blocks","trying to override builtin block",{details:n}),!1;let c=JSON.stringify(o);if(a[n]&&a[n].hash==c)return!0;if(Blockly.Blocks[o.attributes.blockId])return console.error("duplicate block definition: "+n),!1;let u={hash:c,fn:o,block:{codeCard:g(o,l),init:function(){!function(i,o,s,l){var n;const r=(s.attributes.blockNamespace||s.namespace).split(".")[0],a=1==s.kind||2==s.kind,c=o.apis.byQName[r],u=s.attributes.blockNamespace&&c&&c.attributes.color||s.attributes.color||c&&c.attributes.color||e.toolbox.getNamespaceColor(r)||255;if(s.attributes.help){const e=s.attributes.help.replace(/^\//,"");/^github:/.test(e)?i.setHelpUrl(e):"none"!==e&&i.setHelpUrl("/reference/"+e)}else if(s.pkg&&!e.appTarget.bundledpkgs[s.pkg]){let e=s.qName.toLowerCase().split(".");e[0]==s.pkg&&e.shift(),i.setHelpUrl(`/pkg/${s.pkg}#${encodeURIComponent(e.join("-"))}`)}i.setColour(u);let d=Blockly.OUTPUT_SHAPE_ROUND;"boolean"==s.retType&&(d=Blockly.OUTPUT_SHAPE_HEXAGONAL);i.setOutputShape(d),s.attributes.undeletable&&i.setDeletable(!1);m(s.attributes._def);let p=!1;if(s.attributes.mutate)t.addMutation(i,s,s.attributes.mutate);else if(s.attributes.defaultInstance)t.addMutation(i,s,t.MutatorTypes.DefaultInstanceMutator);else if(s.attributes._expandedDef&&"disabled"!==s.attributes.expandableArgumentMode){const e="toggle"===s.attributes.expandableArgumentMode;t.initExpandableBlock(o,i,s.attributes._expandedDef,l,e,(()=>m(s.attributes._expandedDef,!0)))}else if(l.handlerArgs.length)if(p=!0,s.attributes.optionalVariableArgs)t.initVariableArgsBlock(i,l.handlerArgs);else if(s.attributes.draggableParameters)l.handlerArgs.filter((e=>!e.inBlockDef)).forEach((e=>{const t=i.appendValueInput("HANDLER_DRAG_PARAM_"+e.name);"reporter"==s.attributes.draggableParameters?t.setCheck(_(e.type,o)):t.setCheck("Variable")}));else{let e=i.appendDummyInput();l.handlerArgs.filter((e=>!e.inBlockDef)).forEach((t=>{e.appendField(new Blockly.FieldVariable(t.name),"HANDLER_"+t.name)}))}if(t.appendMutation(i,{mutationToDom:e=>(i.inputList.forEach((t=>{t.fieldRow.forEach((t=>{if(t.isFieldCustom_&&t.saveOptions){const i=t.saveOptions();i&&e.setAttribute("customfield",JSON.stringify(i))}}))})),e),domToMutation:e=>{i.inputList.forEach((t=>{t.fieldRow.forEach((t=>{if(t.isFieldCustom_&&t.restoreOptions){const i=JSON.parse(e.getAttribute("customfield"));i&&t.restoreOptions(i)}}))}))}}),s.attributes.imageLiteral){const e=(s.attributes.imageLiteralColumns||5)*s.attributes.imageLiteral,t=s.attributes.imageLiteralRows||5,o=s.attributes.imageLiteralScale;i.appendDummyInput().appendField(new pxtblockly.FieldMatrix("",{columns:e,rows:t,scale:o}),"LEDS")}"external"===s.attributes.inlineInputMode?i.setInputsInline(!1):"inline"===s.attributes.inlineInputMode?i.setInputsInline(!0):i.setInputsInline(!s.parameters||s.parameters.length<4&&!s.attributes.imageLiteral);((null===(n=s.parameters)||void 0===n?void 0:n.find((e=>pxtc.parameterTypeIsArrowFunction(e))))||p)&&(i.appendStatementInput("HANDLER").setCheck(null),i.setInputsInline(!0));T(i,s.retType,o);const h=k(s);function m(n,r=!1){let c=0,d=!r&&!!l.thisParameter;const p=function(e){const t=[];let i=[];return e.parts.forEach((e=>{switch(e.kind){case"break":o();break;case"param":i.push(e),o();break;case"image":case"label":i.push(e)}})),o(),t;function o(){i.length&&(t.push(i),i=[])}}(n),h=new e.ImageConverter;"ENUM_GET"!==s.attributes.shim&&"KIND_GET"!==s.attributes.shim||!(l.parameters.length>1||l.thisParameter)?(p.forEach((n=>{const p=[];let m,f,g,k=!1;if(n.forEach((i=>{if("param"!==i.kind){const t=function(t){if("image"===t.kind)return function(t){let i=N[t];if(!i)return void e.log(`missing jres icon ${t}`);return new Blockly.FieldImage(i,40,40,"",null,e.Util.isUserLanguageRtl())}(t.uri);const i=function(e){if(" "===e)return"";if(e.length>1){const t=" "==e.charAt(0),i=" "==e.charAt(e.length-1);if(t||i)return e.substring(t?1:0,i?e.length-1:e.length)}return e}(t.text);if(!i)return;return t.cssClass?new Blockly.FieldLabel(i,t.cssClass):t.style.length?new pxtblockly.FieldStyledLabel(i,{bold:-1!==t.style.indexOf("bold"),italics:-1!==t.style.indexOf("italics"),blocksInfo:void 0}):new Blockly.FieldLabel(i,void 0)}(i);t&&p.push({field:t})}else{if("ENUM_GET"===s.attributes.shim)return e.U.assert(!!s.attributes.enumName,"Trying to create an ENUM_GET block without a valid enum name"),void p.push({name:"MEMBER",field:new pxtblockly.FieldUserEnum(o.enumsByName[s.attributes.enumName])});if("KIND_GET"===s.attributes.shim)return void p.push({name:"MEMBER",field:new pxtblockly.FieldKind(o.kindsByName[s.attributes.kindNamespace||s.attributes.blockNamespace||s.namespace])});{let c=function(e,t,i=!1){if(e.ref){const i="this"===e.name?t.thisParameter:t.actualNameToParam[e.name];if(!i){let i;if(t.handlerArgs.forEach((t=>{t.name===e.name&&(i=t)})),i)return i}return i}return i?t.thisParameter:t.definitionNameToParam[e.name]}(i,l,d);if(d=!1,!c)return void console.error("block "+s.attributes.blockId+": unknown parameter "+i.name+(i.ref?` (${i.ref})`:""));if(!c.definitionName)return m="HANDLER_DRAG_PARAM_"+c.name,void(f="reporter"===s.attributes.draggableParameters?_(c.type,o):"Variable");let g=e.U.lookup(o.apis.byQName,c.type);k=!0;const b=c.definitionName,y=c.actualName;let T=g&&6==g.kind,x=g&&!!g.attributes.fixedInstances&&!c.shadowBlockId,E=!!s.attributes.constantShim,B="@combined@"==c.type,C=c.fieldEditor,A=b.charAt(0).toUpperCase()+b.slice(1),v=c.type;if(T||x||E||B){let i;T?(n=o.apis,r=c.type,i=e.Util.values(n.byQName).filter((e=>e.namespace===r&&!e.attributes.blockHidden))):i=x?S(o.apis,g.qName):B?s.combinedProperties.map((t=>e.U.lookup(o.apis.byQName,t))):function(t,i){return e.Util.values(t.byQName).filter((e=>e.attributes.blockIdentity===i))}(o.apis,s.qName),0==i.length&&console.error(`no instances of ${g.qName} found`);const l=i.map((t=>{let i=t.attributes.block||t.attributes.blockId||t.name,o=t.attributes.blockCombine;return t.attributes.jresURL&&!t.attributes.iconURL&&e.U.startsWith(t.attributes.jresURL,"data:image/x-mkcd-f")&&(t.attributes.iconURL=h.convert(t.attributes.jresURL)),o&&(i=i.replace(/@set/,"")),[t.attributes.iconURL||t.attributes.blockImage?{src:t.attributes.iconURL||e.Util.pathJoin(e.webConfig.commitCdnUrl,`blocks/${t.namespace.toLowerCase()}/${t.name.toLowerCase()}.png`),alt:i,width:36,height:36,value:t.name}:i,t.namespace+"."+t.name]}));if(c.defaultValue){let e=-1;if(l.some(((t,i)=>t[1]===c.defaultValue&&(e=i,!0))),e>-1){const t=l.splice(e,1)[0];l.unshift(t)}}if(C){let i=s.attributes.paramDefl[y]||"";const n={data:l,colour:u,label:A,type:v,blocksInfo:o};e.Util.jsonMergeFrom(n,s.attributes.paramFieldEditorOptions&&s.attributes.paramFieldEditorOptions[y]||{}),p.push(w(t.createFieldEditor(C,i,n),b))}else p.push(w(new Blockly.FieldDropdown(l),b))}else if(C){const i=s.attributes.paramDefl[c.actualName]||"",l={colour:u,label:A,type:v,blocksInfo:o};e.Util.jsonMergeFrom(l,s.attributes.paramFieldEditorOptions&&s.attributes.paramFieldEditorOptions[c.actualName]||{}),p.push(w(t.createFieldEditor(C,i,l),c.definitionName))}else m=b,a&&"this"===i.name?f=c.type:"number"==c.type&&c.shadowBlockId&&"value"==c.shadowBlockId?(m=void 0,p.push(w(new Blockly.FieldNumber("0"),b))):f="string"==c.type&&c.shadowOptions&&c.shadowOptions.toString?null:_(c.type,o)}}var n,r})),m)g=i.appendValueInput(m),g.setAlign(Blockly.ALIGN_LEFT);else if(r){const e=k?t.optionalInputWithFieldPrefix:t.optionalDummyInputPrefix;g=i.appendDummyInput(e+c++)}else g=i.appendDummyInput();f&&g.setCheck(f),p.forEach((e=>g.appendField(e.field,e.name)))})),h.logTime()):console.warn(`Enum blocks may only have 1 parameter but ${s.attributes.blockId} has ${l.parameters.length}`)}i.setPreviousStatement(!(h&&!s.attributes.handlerStatement)&&"void"==s.retType),i.setNextStatement(!(h&&!s.attributes.handlerStatement)&&"void"==s.retType),i.setTooltip(/^__/.test(s.namespace)?"":s.attributes.jsDoc)}(this,i,o,s)}}};e.Util.isTranslationMode()&&e.blocks.promptTranslateBlock&&(u.block.customContextMenu=t=>{o.attributes.translationId&&t.push({enabled:!0,text:lf("Translate this block"),callback:function(){e.blocks.promptTranslateBlock(n,[o.attributes.translationId])}})});a[n]=u,Blockly.Blocks[n]=u.block}(i,o,s,l);return o}))}function f(e){return e.outerHTML.replace(/^<\?[^>]*>/,"")}function g(e,t){return{name:e.namespace+"."+e.name,shortName:e.name,description:e.attributes.jsDoc,url:e.attributes.help?"reference/"+e.attributes.help.replace(/^\//,""):void 0,blocksXml:`<xml xmlns="http://www.w3.org/1999/xhtml">${f(t)}</xml>`}}function k(e){var t;return!!(null===(t=e.parameters)||void 0===t?void 0:t.some((e=>pxtc.parameterTypeIsArrowFunction(e))))}t.blockSymbol=function(e){let t=a[e];return t?t.fn:void 0},t.createShadowValue=c,t.createFlyoutHeadingLabel=d,t.createFlyoutGroupLabel=function(e,t,i,o){const s=p(e,void 0,t);return s.setAttribute("web-class","blocklyFlyoutGroup"),s.setAttribute("web-line","1.5"),i&&s.setAttribute("web-line-width",i),o&&(s.setAttribute("web-help-button","true"),s.setAttribute("callbackKey",o)),s},t.createFlyoutButton=function(e,t){let i=Blockly.utils.xml.createElement("button");return i.setAttribute("text",t),i.setAttribute("callbackKey",e),i},t.createToolboxBlock=h,t.injectBlocks=m,t.hasArrowFunction=k,t.cleanBlocks=function(){e.debug("removing all custom blocks");for(const e in a)A(a[e].fn)},t.initializeAndInject=function(e){y(),m(e)},t.initialize=function(e){y(),function(e){N={};const t=e.apis.jres;if(!t)return;Object.keys(t).forEach((e=>{const i=t[e];i&&i.icon&&(N[e]=i.icon)}))}(e)};let b=!1;function y(){b||(b=!0,goog.provide("Blockly.Blocks.device"),goog.require("Blockly.Blocks"),Blockly.FieldCheckbox.CHECK_CHAR="■",Blockly.Constants.ADD_START_HATS=!!e.appTarget.appTheme.blockHats,t.initFieldEditors(),function(){const i=Blockly.Msg;i.DUPLICATE_BLOCK=lf("{id:block}Duplicate"),i.DUPLICATE_COMMENT=lf("Duplicate Comment"),i.REMOVE_COMMENT=lf("Remove Comment"),i.ADD_COMMENT=lf("Add Comment"),i.EXTERNAL_INPUTS=lf("External Inputs"),i.INLINE_INPUTS=lf("Inline Inputs"),i.EXPAND_BLOCK=lf("Expand Block"),i.COLLAPSE_BLOCK=lf("Collapse Block"),i.ENABLE_BLOCK=lf("Enable Block"),i.DISABLE_BLOCK=lf("Disable Block"),i.DELETE_BLOCK=lf("Delete Block"),i.DELETE_X_BLOCKS=lf("Delete Blocks"),i.DELETE_ALL_BLOCKS=lf("Delete All Blocks"),i.HELP=lf("Help"),Blockly.BlockSvg.prototype.showHelp=function(){const t=goog.isFunction(this.helpUrl)?this.helpUrl():this.helpUrl;t&&(e.blocks.openHelpUrl||window.open)(t)},Blockly.WorkspaceSvg.prototype.configureContextMenu=function(o,s){if(this.options.readOnly||this.isFlyout)return;o.length=0;let l=this.getTopBlocks(!0),n=Blockly.utils.genUid(),r=this.getTopComments(),a=this;const c=!(this.options.debugMode||this.options.readOnly);if(this.options.comments&&!e.BrowserUtils.isIE()){const e=Blockly.ContextMenu.workspaceCommentOption(a,s);e.enabled=e.enabled&&c,o.push(e)}let u=Blockly.WorkspaceSvg.buildDeleteList_(l),d=0;for(let e=0;e<u.length;e++)u[e].isShadow()||d++;const p=10;function h(){Blockly.Events.setGroup(n);let e=u.shift();e&&(e.workspace?(e.dispose(!1,!0),setTimeout(h,p)):h()),Blockly.Events.setGroup(!1)}const m={text:1==d?i.DELETE_BLOCK:i.DELETE_ALL_BLOCKS,enabled:d>0&&c,callback:()=>{e.tickEvent("blocks.context.delete",void 0,{interactiveConsent:!0}),d<2?h():Blockly.confirm(lf("Delete all {0} blocks?",d),(e=>{e&&h()}))}};o.push(m);const f={text:lf("Format Code"),enabled:c,callback:()=>{e.tickEvent("blocks.context.format",void 0,{interactiveConsent:!0}),e.blocks.layout.flow(this,{useViewWidth:!0})}};if(o.push(f),e.appTarget.appTheme.blocksCollapsing){const t={text:lf("Collapse Blocks"),enabled:l.length&&l.find((e=>e.isEnabled()&&!e.isCollapsed()))&&c,callback:()=>{e.tickEvent("blocks.context.collapse",void 0,{interactiveConsent:!0}),e.blocks.layout.setCollapsedAll(this,!0)}};o.push(t);const i={text:lf("Expand Blocks"),enabled:l.length&&l.find((e=>e.isEnabled()&&e.isCollapsed()))&&c,callback:()=>{e.tickEvent("blocks.context.expand",void 0,{interactiveConsent:!0}),e.blocks.layout.setCollapsedAll(this,!1)}};o.push(i)}if(e.blocks.layout.screenshotEnabled()){const t={text:lf("Snapshot"),enabled:l.length>0||r.length>0,callback:()=>{var t;e.tickEvent("blocks.context.screenshot",void 0,{interactiveConsent:!0}),e.blocks.layout.screenshotAsync(this,null,null===(t=e.appTarget.appTheme)||void 0===t?void 0:t.embedBlocksInSnapshot).then((t=>{e.BrowserUtils.isSafari()&&(t=t.replace(/^data:image\/[^;]/,"data:application/octet-stream")),e.BrowserUtils.browserDownloadDataUri(t,`${e.appTarget.nickname||e.appTarget.id}-${lf("screenshot")}.png`)}))}};o.push(t)}e.appTarget.appTheme.workspaceSearch&&o.push({text:lf("Find..."),enabled:l.length>0,callback:()=>{var t,i;e.tickEvent("blocks.context.workspacesearch",void 0,{interactiveConsent:!0}),null===(i=null===(t=this.getComponentManager())||void 0===t?void 0:t.getComponent("workspaceSearch"))||void 0===i||i.open()}}),t.onShowContextMenu&&t.onShowContextMenu(this,o)},Blockly.Constants.Logic.LOGIC_COMPARE_ONCHANGE_MIXIN.onchange=function(){}}(),function(){const t=e.blocks.getBlockDefinition(ts.pxtc.ON_START_TYPE);if(Blockly.Blocks[ts.pxtc.ON_START_TYPE]={init:function(){this.jsonInit({message0:t.block.message0,args0:[{type:"input_dummy"},{type:"input_statement",name:"HANDLER"}],colour:(e.appTarget.runtime?e.appTarget.runtime.onStartColor:"")||e.toolbox.getNamespaceColor("loops")}),B(this,ts.pxtc.ON_START_TYPE,t.name,t.tooltip,t.url,String((e.appTarget.runtime?e.appTarget.runtime.onStartColor:"")||e.toolbox.getNamespaceColor("loops")),void 0,void 0,!!e.appTarget.runtime&&e.appTarget.runtime.onStartUnDeletable)}},Blockly.Blocks[pxtc.TS_STATEMENT_TYPE]={init:function(){let t,i,o=this;o.setColour("#717171"),o.setPreviousStatement(!0),o.setNextStatement(!0),o.setInputsInline(!1),o.domToMutation=e=>{const t=parseInt(e.getAttribute("numlines"));o.declaredVariables=e.getAttribute("declaredvars"),i=[];for(let o=0;o<t;o++){const t=e.getAttribute("line"+o);i.push(t)}o.setPythonEnabled(!1)},o.mutationToDom=()=>{let e=document.createElement("mutation");return i&&(i.forEach(((t,i)=>e.setAttribute("line"+i,t))),e.setAttribute("numlines",i.length.toString())),o.declaredVariables&&e.setAttribute("declaredvars",this.declaredVariables),e},o.setPythonEnabled=s=>{if(t!==s){for(;o.inputList.length;)o.removeInput(o.inputList[0].name);t=s,s?(o.appendDummyInput().appendField(e.Util.lf("<python code>"),"LINE0"),o.setTooltip(lf("A Python statement that could not be converted to blocks"))):(i.forEach(((e,t)=>{o.appendDummyInput().appendField(e,"LINE"+t)})),o.setTooltip(lf("A JavaScript statement that could not be converted to blocks")))}},o.getLines=()=>i,o.setEditable(!1),B(this,pxtc.TS_STATEMENT_TYPE,lf("JavaScript statement"),lf("A JavaScript statement that could not be converted to blocks"),"/blocks/javascript-blocks","#717171")}},Blockly.Blocks[pxtc.TS_OUTPUT_TYPE]={init:function(){let e=this;e.setColour("#717171"),e.setPreviousStatement(!1),e.setNextStatement(!1),e.setOutput(!0),e.setEditable(!1),e.appendDummyInput().appendField(new pxtblockly.FieldTsExpression(""),"EXPRESSION"),e.setPythonEnabled=t=>{e.getField("EXPRESSION").setPythonEnabled(t),t?e.setTooltip(lf("A Python expression that could not be converted to blocks")):e.setTooltip(lf("A JavaScript expression that could not be converted to blocks"))},B(e,pxtc.TS_OUTPUT_TYPE,lf("JavaScript expression"),lf("A JavaScript expression that could not be converted to blocks"),"/blocks/javascript-blocks","#717171")}},e.appTarget.runtime&&e.appTarget.runtime.pauseUntilBlock){const t=e.appTarget.runtime.pauseUntilBlock,i=e.blocks.getBlockDefinition(ts.pxtc.PAUSE_UNTIL_TYPE);Blockly.Blocks[pxtc.PAUSE_UNTIL_TYPE]={init:function(){const o=t.color||e.toolbox.getNamespaceColor("loops");this.jsonInit({message0:i.block.message0,args0:[{type:"input_value",name:"PREDICATE",check:"Boolean"}],inputsInline:!0,previousStatement:null,nextStatement:null,colour:o}),B(this,ts.pxtc.PAUSE_UNTIL_TYPE,i.name,i.tooltip,i.url,o,void 0,void 0,!1)}}}const i="pxt_controls_for_of",o=e.blocks.getBlockDefinition(i);Blockly.Blocks[i]={init:function(){this.jsonInit({message0:o.block.message0,args0:[{type:"input_value",name:"VAR",variable:o.block.variable,check:"Variable"},{type:"input_value",name:"LIST",check:["Array","String"]}],previousStatement:null,nextStatement:null,colour:e.toolbox.blockColors.loops,inputsInline:!0}),this.appendStatementInput("DO").appendField(o.block.appendField);let t=this;B(this,i,o.name,(function(){return e.U.rlf(o.tooltip,t.getInputTargetBlock("VAR")?t.getInputTargetBlock("VAR").getField("VAR").getText():"")}),o.url,String(e.toolbox.getNamespaceColor("loops")))}};const s="controls_for_of",l=e.blocks.getBlockDefinition(s);Blockly.Blocks[s]={init:function(){this.jsonInit({message0:l.block.message0,args0:[{type:"field_variable",name:"VAR",variable:l.block.variable},{type:"input_value",name:"LIST",check:"Array"}],previousStatement:null,nextStatement:null,colour:e.toolbox.blockColors.loops,inputsInline:!0}),this.appendStatementInput("DO").appendField(l.block.appendField);let t=this;B(this,s,l.name,(function(){return e.U.rlf(l.tooltip,t.getField("VAR").getText())}),l.url,String(e.toolbox.getNamespaceColor("loops")))}};const n="lists_index_get",r=e.blocks.getBlockDefinition(n);Blockly.Blocks.lists_index_get={init:function(){this.jsonInit({message0:r.block.message0,args0:[{type:"input_value",name:"LIST",check:"Array"},{type:"input_value",name:"INDEX",check:"Number"}],colour:e.toolbox.blockColors.arrays,outputShape:Blockly.OUTPUT_SHAPE_ROUND,inputsInline:!0}),this.setPreviousStatement(!1),this.setNextStatement(!1),this.setOutput(!0),x(this,n)}};const a="lists_index_set",c=e.blocks.getBlockDefinition(a);Blockly.Blocks[a]={init:function(){this.jsonInit({message0:c.block.message0,args0:[{type:"input_value",name:"LIST",check:"Array"},{type:"input_value",name:"INDEX",check:"Number"},{type:"input_value",name:"VALUE",check:null}],previousStatement:null,nextStatement:null,colour:e.toolbox.blockColors.arrays,inputsInline:!0}),x(this,a)}}}(),function(){const i="math_op2",o=e.blocks.getBlockDefinition(i),s=o.tooltip;Blockly.Blocks[i]={init:function(){this.jsonInit({message0:lf("%1 of %2 and %3"),args0:[{type:"field_dropdown",name:"op",options:[[lf("{id:op}min"),"min"],[lf("{id:op}max"),"max"]]},{type:"input_value",name:"x",check:"Number"},{type:"input_value",name:"y",check:"Number"}],inputsInline:!0,output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND,colour:e.toolbox.getNamespaceColor("math")});B(this,i,o.name,(function(e){return s[e.getFieldValue("op")]}),o.url,e.toolbox.getNamespaceColor(o.category))}};const l="math_op3",n=e.blocks.getBlockDefinition(l);Blockly.Blocks[l]={init:function(){this.jsonInit({message0:n.block.message0,args0:[{type:"input_value",name:"x",check:"Number"}],inputsInline:!0,output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND,colour:e.toolbox.getNamespaceColor("math")}),x(this,l)}};["math_number","math_integer","math_whole_number","math_number_minmax"].forEach((t=>{const i=e.blocks.getBlockDefinition(t);C(t,i.name,i.tooltip,i.url,Blockly.Colours.textField,Blockly.Colours.textField,Blockly.Colours.textField)}));const r=Blockly.Msg,a="math_arithmetic",c=e.blocks.getBlockDefinition(a),u=c.tooltip;r.MATH_ADDITION_SYMBOL=c.block.MATH_ADDITION_SYMBOL,r.MATH_SUBTRACTION_SYMBOL=c.block.MATH_SUBTRACTION_SYMBOL,r.MATH_MULTIPLICATION_SYMBOL=c.block.MATH_MULTIPLICATION_SYMBOL,r.MATH_DIVISION_SYMBOL=c.block.MATH_DIVISION_SYMBOL,r.MATH_POWER_SYMBOL=c.block.MATH_POWER_SYMBOL,C(a,c.name,(function(e){return u[e.getFieldValue("OP")]}),c.url,e.toolbox.getNamespaceColor(c.category));const d="math_modulo",p=e.blocks.getBlockDefinition(d);r.MATH_MODULO_TITLE=p.block.MATH_MODULO_TITLE,E(d),t.initMathOpBlock(),t.initMathRoundBlock()}(),function(){Blockly.FieldVariable.prototype.getVariableTypes_=()=>[""];let t=lf("{id:var}item");Blockly.Variables.flyoutCategory=function(t){let i=[];if(!e.appTarget.appTheme.hideFlyoutHeadings){let t=d(lf("Variables"),e.toolbox.getNamespaceColor("variables"),e.toolbox.getNamespaceIcon("variables"));i.push(t)}let o=document.createElement("button");o.setAttribute("text",lf("Make a Variable...")),o.setAttribute("callbackKey","CREATE_VARIABLE"),t.registerButtonCallback("CREATE_VARIABLE",(function(e){Blockly.Variables.createVariable(e.getTargetWorkspace())})),i.push(o);let s=Blockly.Variables.flyoutCategoryBlocks(t);return i=i.concat(s),i},Blockly.Variables.flyoutCategoryBlocks=function(e){let t=e.getVariablesOfType(""),i=[];if(t.length>0){let e=t[t.length-1];t.sort(Blockly.VariableModel.compareByName);for(let e=0;e<t.length;e++){const o=t[e];if(Blockly.Blocks.variables_get){let e='<xml><block type="variables_get" gap="8">'+Blockly.Variables.generateVariableFieldXmlString(o)+"</block></xml>",t=Blockly.Xml.textToDom(e).firstChild;i.push(t)}}if(i[i.length-1].setAttribute("gap","24"),Blockly.Blocks.variables_set){let t='<xml><block type="variables_set" gap="'+(Blockly.Blocks.variables_change?8:24)+'">'+Blockly.Variables.generateVariableFieldXmlString(e)+"</block></xml>",o=Blockly.Xml.textToDom(t).firstChild;{let e=goog.dom.createDom("value");e.setAttribute("name","VALUE");let t=goog.dom.createDom("shadow");t.setAttribute("type","math_number"),e.appendChild(t);let i=goog.dom.createDom("field");i.setAttribute("name","NUM"),i.appendChild(document.createTextNode("0")),t.appendChild(i),o.appendChild(e)}i.push(o)}if(Blockly.Blocks.variables_change){let t='<xml><block type="variables_change" gap="'+(Blockly.Blocks.variables_get?20:8)+'">'+Blockly.Variables.generateVariableFieldXmlString(e)+"</block></xml>",o=Blockly.Xml.textToDom(t).firstChild;{let e=goog.dom.createDom("value");e.setAttribute("name","VALUE");let t=goog.dom.createDom("shadow");t.setAttribute("type","math_number"),e.appendChild(t);let i=goog.dom.createDom("field");i.setAttribute("name","NUM"),i.appendChild(document.createTextNode("1")),t.appendChild(i),o.appendChild(e)}i.push(o)}}return i};const i=Blockly.Msg,o="variables_get",s=e.blocks.getBlockDefinition(o);i.VARIABLES_GET_CREATE_SET=s.block.VARIABLES_GET_CREATE_SET,E(o);E("variables_get_reporter"),i.RENAME_VARIABLE=lf("Rename variable..."),i.DELETE_VARIABLE=lf('Delete the "%1" variable'),i.DELETE_VARIABLE_CONFIRMATION=lf('Delete %1 uses of the "%2" variable?'),i.NEW_VARIABLE_DROPDOWN=lf("New variable...");const l="variables_set",n=e.blocks.getBlockDefinition(l);i.VARIABLES_SET=n.block.VARIABLES_SET,i.VARIABLES_DEFAULT_NAME=t,i.VARIABLES_SET_CREATE_GET=lf("Create 'get %1'"),E(l);const r="variables_change",a=e.blocks.getBlockDefinition(r);Blockly.Blocks[r]={init:function(){this.jsonInit({message0:a.block.message0,args0:[{type:"field_variable",name:"VAR",variable:t},{type:"input_value",name:"VALUE",check:"Number"}],inputsInline:!0,previousStatement:null,nextStatement:null,colour:e.toolbox.getNamespaceColor("variables")}),x(this,r)},customContextMenu:function(e){if(!this.inDebugWorkspace()){let t={enabled:this.workspace.remainingCapacity()>0},i=this.getField("VAR").getText();t.text=lf("Create 'get {0}'",i);let o=goog.dom.createDom("field",null,i);o.setAttribute("name","VAR");let s=goog.dom.createDom("block",null,o);s.setAttribute("type","variables_get"),t.callback=Blockly.ContextMenu.callbackFactory(this,s),e.push(t)}}},i.NEW_VARIABLE_TITLE=lf("New variable name:"),i.RENAME_VARIABLE_TITLE=lf("Rename all '%1' variables to:")}(),function(){const i=Blockly.Msg;i.FUNCTION_CREATE_NEW=lf("Make a Function..."),i.FUNCTION_WARNING_DUPLICATE_ARG=lf("Functions cannot use the same argument name more than once."),i.FUNCTION_WARNING_ARG_NAME_IS_FUNCTION_NAME=lf("Argument names must not be the same as the function name."),i.FUNCTION_WARNING_EMPTY_NAME=lf("Function and argument names cannot be empty."),i.FUNCTIONS_DEFAULT_FUNCTION_NAME=lf("doSomething"),i.FUNCTIONS_DEFAULT_BOOLEAN_ARG_NAME=lf("bool"),i.FUNCTIONS_DEFAULT_STRING_ARG_NAME=lf("text"),i.FUNCTIONS_DEFAULT_NUMBER_ARG_NAME=lf("num"),i.FUNCTIONS_DEFAULT_CUSTOM_ARG_NAME=lf("arg"),i.PROCEDURES_HUE=e.toolbox.getNamespaceColor("functions"),i.REPORTERS_HUE=e.toolbox.getNamespaceColor("variables");const o="procedures_defnoreturn",s=e.blocks.getBlockDefinition(o);i.PROCEDURES_DEFNORETURN_TITLE=s.block.PROCEDURES_DEFNORETURN_TITLE,i.PROCEDURE_ALREADY_EXISTS=s.block.PROCEDURE_ALREADY_EXISTS,Blockly.Blocks.procedures_defnoreturn.init=function(){let t=new Blockly.FieldTextInput("",Blockly.Procedures.rename);this.appendDummyInput().appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE).appendField(t,"NAME").appendField("","PARAMS"),this.setColour(e.toolbox.getNamespaceColor("functions")),this.arguments_=[],this.argumentVarModels_=[],this.setStartHat(!0),this.setStatements_(!0),this.statementConnection_=null},E(o);const l="procedures_callnoreturn",r=e.blocks.getBlockDefinition(l);i.PROCEDURES_CALLRETURN_TOOLTIP=s.tooltip.toString(),Blockly.Blocks.procedures_callnoreturn={init:function(){let t=new pxtblockly.FieldProcedure("");this.appendDummyInput("TOPROW").appendField(r.block.PROCEDURES_CALLNORETURN_TITLE).appendField(t,"NAME"),this.setPreviousStatement(!0),this.setNextStatement(!0),this.setColour(e.toolbox.getNamespaceColor("functions")),this.arguments_=[],this.quarkConnections_={},this.quarkIds_=null},getProcedureCall:function(){return this.getFieldValue("NAME")},renameProcedure:function(e,t){Blockly.Names.equals(e,this.getProcedureCall())&&this.setFieldValue(t,"NAME")},onchange:function(t){if(this.workspace&&!this.workspace.isFlyout&&!this.isInsertionMarker())if(t.type==Blockly.Events.CREATE&&-1!=t.ids.indexOf(this.id)){let i=this.getProcedureCall(),o=Blockly.Procedures.getDefinition(i,this.workspace);if(!o||o.type==this.defType_&&JSON.stringify(o.arguments_)==JSON.stringify(this.arguments_)||(o=null),!o){Blockly.Events.setGroup(t.group);let i=Blockly.utils.xml.createElement("xml"),o=Blockly.utils.xml.createElement("block");o.setAttribute("type",this.defType_);let s=this.getRelativeToSurfaceXY(),l=s.x+Blockly.SNAP_RADIUS*(this.RTL?-1:1),n=s.y+2*Blockly.SNAP_RADIUS;o.setAttribute("x",l),o.setAttribute("y",n);let r=Blockly.utils.xml.createElement("field");r.setAttribute("name","NAME"),r.appendChild(document.createTextNode(this.getProcedureCall())),o.appendChild(r),i.appendChild(o),e.blocks.domToWorkspaceNoEvents(i,this.workspace),Blockly.Events.setGroup(!1)}}else if(t.type==Blockly.Events.DELETE){let e=this.getProcedureCall();Blockly.Procedures.getDefinition(e,this.workspace)||(Blockly.Events.setGroup(t.group),this.dispose(!0,!1),Blockly.Events.setGroup(!1))}},mutationToDom:function(){const e=document.createElement("mutation");return e.setAttribute("name",this.getProcedureCall()),e},domToMutation:function(e){const t=e.getAttribute("name");this.renameProcedure(this.getProcedureCall(),t)},customContextMenu:function(e){let t={enabled:!0};t.text=Blockly.Msg.PROCEDURES_HIGHLIGHT_DEF;let i=this.getProcedureCall(),o=this.workspace;t.callback=function(){let e=Blockly.Procedures.getDefinition(i,o);e&&e.select()},e.push(t)},defType_:"procedures_defnoreturn"},E(l);const a="function_definition",c=e.blocks.getBlockDefinition(a);i.FUNCTIONS_EDIT_OPTION=c.block.FUNCTIONS_EDIT_OPTION,E(a);const u="function_call",p=e.blocks.getBlockDefinition(u);i.FUNCTIONS_CALL_TITLE=p.block.FUNCTIONS_CALL_TITLE,i.FUNCTIONS_GO_TO_DEFINITION_OPTION=p.block.FUNCTIONS_GO_TO_DEFINITION_OPTION,E(u),E("function_call_output");const h="function_return";Blockly.Blocks[h]={init:function(){t.initReturnStatement(this)},onchange:function(e){const t=this;if(!t.workspace||t.workspace.isFlyout)return;const i=e.type===Blockly.Events.BLOCK_CREATE&&-1!=e.ids.indexOf(t.id),o=e.type===Blockly.Events.END_DRAG&&-1!=e.allNestedIds.indexOf(t.id);if(i||o){const i=t.getRootBlock();if(i.type===h||null!=i.previousConnection)return;i.type!==a&&(Blockly.Events.setGroup(e.group),t.previousConnection.disconnect(),Blockly.Events.setGroup(!1))}}},E(h),Blockly.Procedures.flyoutCategory=function(t){let i=[];if(!e.appTarget.appTheme.hideFlyoutHeadings){let t=d(lf("Functions"),e.toolbox.getNamespaceColor("functions"),e.toolbox.getNamespaceIcon("functions"),"blocklyFlyoutIconfunctions");i.push(t)}const o=lf("Make a Function..."),s=lf("New function name:");let l=Blockly.utils.xml.createElement("button");l.setAttribute("text",o),l.setAttribute("callbackKey","CREATE_FUNCTION");let n=i=>{let o=t.getTopBlocks(!0)[0],s=10,l=10;if(o){let e=o.getRelativeToSurfaceXY();s=e.x+Blockly.SNAP_RADIUS*(o.RTL?-1:1),l=e.y+2*Blockly.SNAP_RADIUS}let n=Blockly.utils.xml.createElement("xml"),r=Blockly.utils.xml.createElement("block");r.setAttribute("type","procedures_defnoreturn"),r.setAttribute("x",String(s)),r.setAttribute("y",String(l));let a=Blockly.utils.xml.createElement("field");a.setAttribute("name","NAME"),a.appendChild(document.createTextNode(i)),r.appendChild(a),n.appendChild(r);let c=e.blocks.domToWorkspaceNoEvents(n,t);Blockly.hideChaff();let u=t.getBlockById(c[0]);u.select(),t.centerOnBlock(u.id)};function r(t,o){for(let s=0;s<t.length;s++){let l=t[s][0],n=(t[s][1],Blockly.utils.xml.createElement("block"));n.setAttribute("type",o),n.setAttribute("gap","16"),n.setAttribute("colour",e.toolbox.getNamespaceColor("functions"));let r=goog.dom.createDom("field",null,l);r.setAttribute("name","NAME"),n.appendChild(r),i.push(n)}}return t.registerButtonCallback("CREATE_FUNCTION",(function(i){let l=i=>{Blockly.prompt(s,i,(function(i){e.tickEvent("blocks.makeafunction"),i&&(i=i.replace(/[\s\xa0]+/g," ").replace(/^ | $/g,""))==o&&(i=null),i&&(t.getVariable(i)?Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace("%1",i.toLowerCase()),(function(){l(i)})):Blockly.Procedures.isLegalName_(i,t)?n(i):Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace("%1",i.toLowerCase()),(function(){l(i)})))}))};l("doSomething")})),i.push(l),r(Blockly.Procedures.allProcedures(t)[0],"procedures_callnoreturn"),i};const m=Blockly.Functions.flyoutCategory;Blockly.Functions.flyoutCategory=t=>{const i=m(t);if(i.length>1){let e=I();i.splice(1,0,e)}const o=Blockly.Functions.getAllFunctionDefinitionBlocks(t).filter((e=>e.getDescendants(!1).some((e=>"function_return"===e.type&&e.getInputTargetBlock("RETURN_VALUE"))))).map((e=>e.getField("function_name").getText())),s=d(lf("Functions"),e.toolbox.getNamespaceColor("functions"),e.toolbox.getNamespaceIcon("functions"),"blocklyFlyoutIconfunctions");i.unshift(s);const l=[];for(const e of i)if(l.push(e),"function_call"===e.getAttribute("type")){const t=e.children.item(0);if(t){const i=t.getAttribute("name");if(o.some((e=>e===i))){const t=e.cloneNode(!0);t.setAttribute("type","function_call_output"),l.push(t)}}}return l};const f={number:e.blocks.defaultIconForArgType("number"),boolean:e.blocks.defaultIconForArgType("boolean"),string:e.blocks.defaultIconForArgType("string"),Array:e.blocks.defaultIconForArgType("Array")},g={},k=e.appTarget.runtime&&e.appTarget.runtime.functionsOptions;k&&k.extraFunctionEditorTypes&&k.extraFunctionEditorTypes.forEach((t=>{f[t.typeName]=t.icon||e.blocks.defaultIconForArgType(),t.defaultName&&(g[t.typeName]=t.defaultName)}));Blockly.PXTBlockly.FunctionUtils.argumentIcons=f,Blockly.PXTBlockly.FunctionUtils.argumentDefaultNames=g,Blockly.Blocks.argument_reporter_custom&&(Blockly.Blocks.argument_reporter_custom.domToMutation=function(e){const t=e.getAttribute("typename");this.typeName_=t,T(this,t,n)});const b=Blockly.Functions.makeCreateCallOption;Blockly.Msg.FUNCTIONS_CREATE_CALL_OPTION="",Blockly.Functions.makeCreateCallOption=function(t){let i=b(t),o=t.getField("function_name").getText();return i.text=e.Util.lf("Create 'call {0}'",o),i}}(),function(){const t=Blockly.Msg,i="lists_create_with",o=e.blocks.getBlockDefinition(i);t.LISTS_CREATE_EMPTY_TITLE=o.block.LISTS_CREATE_EMPTY_TITLE,t.LISTS_CREATE_WITH_INPUT_WITH=o.block.LISTS_CREATE_WITH_INPUT_WITH,t.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD=o.block.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD,t.LISTS_CREATE_WITH_ITEM_TITLE=o.block.LISTS_CREATE_WITH_ITEM_TITLE,E(i);const s="lists_length",l=e.blocks.getBlockDefinition(s);t.LISTS_LENGTH_TITLE=l.block.LISTS_LENGTH_TITLE,Blockly.Blocks[s].init=function(){this.jsonInit({message0:t.LISTS_LENGTH_TITLE,args0:[{type:"input_value",name:"VALUE",check:["Array"]}],output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND})},E(s)}(),function(){const t=Blockly.Msg,i="controls_repeat_ext",o=e.blocks.getBlockDefinition(i);t.CONTROLS_REPEAT_TITLE=o.block.CONTROLS_REPEAT_TITLE,t.CONTROLS_REPEAT_INPUT_DO=o.block.CONTROLS_REPEAT_INPUT_DO,E(i);const s="device_while",l=e.blocks.getBlockDefinition(s);Blockly.Blocks[s]={init:function(){this.jsonInit({message0:l.block.message0,args0:[{type:"input_value",name:"COND",check:"Boolean"}],previousStatement:null,nextStatement:null,colour:e.toolbox.getNamespaceColor("loops")}),this.appendStatementInput("DO").appendField(l.block.appendField),x(this,s)}};const n="pxt_controls_for",r=e.blocks.getBlockDefinition(n);Blockly.Blocks[n]={init:function(){this.jsonInit({message0:r.block.message0,args0:[{type:"input_value",name:"VAR",variable:r.block.variable,check:"Variable"},{type:"input_value",name:"TO",check:"Number"}],previousStatement:null,nextStatement:null,colour:e.toolbox.getNamespaceColor("loops"),inputsInline:!0}),this.appendStatementInput("DO").appendField(r.block.appendField);let t=this;B(this,n,r.name,(function(){return e.U.rlf(r.tooltip,t.getInputTargetBlock("VAR")?t.getInputTargetBlock("VAR").getField("VAR").getText():"")}),r.url,String(e.toolbox.getNamespaceColor("loops")))},getVars:function(){return[this.getField("VAR").getText()]},renameVar:function(e,t){const i=this.getField("VAR");Blockly.Names.equals(e,i.getText())&&i.setValue(t)}};const a="controls_simple_for",c=e.blocks.getBlockDefinition(a);Blockly.Blocks[a]={init:function(){this.jsonInit({message0:c.block.message0,args0:[{type:"field_variable",name:"VAR",variable:c.block.variable},{type:"input_value",name:"TO",check:"Number"}],previousStatement:null,nextStatement:null,colour:e.toolbox.getNamespaceColor("loops"),inputsInline:!0}),this.appendStatementInput("DO").appendField(c.block.appendField);let t=this;B(this,a,c.name,(function(){return e.U.rlf(c.tooltip,t.getField("VAR").getText())}),c.url,String(e.toolbox.getNamespaceColor("loops")))},getVars:function(){return[this.getField("VAR").getText()]},renameVar:function(e,t){const i=this.getField("VAR");Blockly.Names.equals(e,i.getText())&&i.setValue(t)},customContextMenu:function(e){if(!this.isCollapsed()&&!this.inDebugWorkspace()){let t={enabled:!0},i=this.getField("VAR").getText();t.text=lf("Create 'get {0}'",i);let o=goog.dom.createDom("field",null,i);o.setAttribute("name","VAR");let s=goog.dom.createDom("block",null,o);s.setAttribute("type","variables_get"),t.callback=Blockly.ContextMenu.callbackFactory(this,s),e.push(t)}}};const u=e.blocks.getBlockDefinition(ts.pxtc.TS_BREAK_TYPE);Blockly.Blocks[pxtc.TS_BREAK_TYPE]={init:function(){const t=e.toolbox.getNamespaceColor("loops");this.jsonInit({message0:u.block.message0,inputsInline:!0,previousStatement:null,nextStatement:null,colour:t}),B(this,ts.pxtc.TS_BREAK_TYPE,u.name,u.tooltip,u.url,t,void 0,void 0,!1)}};const d=e.blocks.getBlockDefinition(ts.pxtc.TS_CONTINUE_TYPE);Blockly.Blocks[pxtc.TS_CONTINUE_TYPE]={init:function(){const t=e.toolbox.getNamespaceColor("loops");this.jsonInit({message0:d.block.message0,inputsInline:!0,previousStatement:null,nextStatement:null,colour:t}),B(this,ts.pxtc.TS_CONTINUE_TYPE,d.name,d.tooltip,d.url,t,void 0,void 0,!1)}};const p="#cccccc";Blockly.Blocks[pxtc.COLLAPSED_BLOCK]={init:function(){this.jsonInit({message0:"...",inputsInline:!0,previousStatement:null,nextStatement:null,colour:p}),B(this,ts.pxtc.COLLAPSED_BLOCK,"...",lf("a few blocks"),void 0,p,void 0,void 0,!1)}}}(),function(){const t=Blockly.Msg,i="controls_if",o=e.blocks.getBlockDefinition(i),s=o.tooltip;t.CONTROLS_IF_MSG_IF=o.block.CONTROLS_IF_MSG_IF,t.CONTROLS_IF_MSG_THEN=o.block.CONTROLS_IF_MSG_THEN,t.CONTROLS_IF_MSG_ELSE=o.block.CONTROLS_IF_MSG_ELSE,t.CONTROLS_IF_MSG_ELSEIF=o.block.CONTROLS_IF_MSG_ELSEIF,t.CONTROLS_IF_TOOLTIP_1=s.CONTROLS_IF_TOOLTIP_1,t.CONTROLS_IF_TOOLTIP_2=s.CONTROLS_IF_TOOLTIP_2,t.CONTROLS_IF_TOOLTIP_3=s.CONTROLS_IF_TOOLTIP_3,t.CONTROLS_IF_TOOLTIP_4=s.CONTROLS_IF_TOOLTIP_4,E(i);const l="logic_compare",n=e.blocks.getBlockDefinition(l).tooltip;t.LOGIC_COMPARE_TOOLTIP_EQ=n.LOGIC_COMPARE_TOOLTIP_EQ,t.LOGIC_COMPARE_TOOLTIP_NEQ=n.LOGIC_COMPARE_TOOLTIP_NEQ,t.LOGIC_COMPARE_TOOLTIP_LT=n.LOGIC_COMPARE_TOOLTIP_LT,t.LOGIC_COMPARE_TOOLTIP_LTE=n.LOGIC_COMPARE_TOOLTIP_LTE,t.LOGIC_COMPARE_TOOLTIP_GT=n.LOGIC_COMPARE_TOOLTIP_GT,t.LOGIC_COMPARE_TOOLTIP_GTE=n.LOGIC_COMPARE_TOOLTIP_GTE,E(l);const r="logic_operation",a=e.blocks.getBlockDefinition(r),c=a.tooltip;t.LOGIC_OPERATION_AND=a.block.LOGIC_OPERATION_AND,t.LOGIC_OPERATION_OR=a.block.LOGIC_OPERATION_OR,t.LOGIC_OPERATION_TOOLTIP_AND=c.LOGIC_OPERATION_TOOLTIP_AND,t.LOGIC_OPERATION_TOOLTIP_OR=c.LOGIC_OPERATION_TOOLTIP_OR,E(r);const u="logic_negate",d=e.blocks.getBlockDefinition(u);t.LOGIC_NEGATE_TITLE=d.block.LOGIC_NEGATE_TITLE,E(u);const p="logic_boolean",h=e.blocks.getBlockDefinition(p);t.LOGIC_BOOLEAN_TRUE=h.block.LOGIC_BOOLEAN_TRUE,t.LOGIC_BOOLEAN_FALSE=h.block.LOGIC_BOOLEAN_FALSE,E(p)}(),function(){const t=e.blocks.getBlockDefinition("text");C("text",t.name,t.tooltip,t.url,Blockly.Colours.textField,Blockly.Colours.textField,Blockly.Colours.textField);const i=Blockly.Msg,o="text_length",s=e.blocks.getBlockDefinition(o);i.TEXT_LENGTH_TITLE=s.block.TEXT_LENGTH_TITLE,Blockly.Blocks[o].init=function(){this.jsonInit({message0:i.TEXT_LENGTH_TITLE,args0:[{type:"input_value",name:"VALUE",check:["String"]}],output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND})},E(o);const l="text_join",n=e.blocks.getBlockDefinition(l);i.TEXT_JOIN_TITLE_CREATEWITH=n.block.TEXT_JOIN_TITLE_CREATEWITH,E(l)}(),function(){const t=(e,t)=>Math.abs(t-(e.left+e.width/2)),i=Blockly.BlockDragger.prototype.drag;Blockly.BlockDragger.prototype.drag=function(o,s){const l=document.getElementsByClassName("blocklyToolboxDiv")[0],n=document.getElementsByClassName("blocklyTreeRoot")[0]||document.getElementsByClassName("blocklyFlyout")[0],r=document.getElementById("blocklyTrashIcon");if(n&&r){const i=t(n.getBoundingClientRect(),o.clientX);if(i<200){const t=i/200;r.style.opacity=""+(1-t),r.style.display="block",l&&(n.style.opacity=`${t}`,i<50&&e.BrowserUtils.addClass(l,"blocklyToolboxDeleting"))}else r.style.display="none",n.style.opacity="1",l&&e.BrowserUtils.removeClass(l,"blocklyToolboxDeleting")}return i.call(this,o,s)};const o=Blockly.BlockDragger.prototype.endDrag;Blockly.BlockDragger.prototype.endDrag=function(t,i){o.call(this,t,i);const s=document.getElementsByClassName("blocklyToolboxDiv")[0],l=document.getElementsByClassName("blocklyTreeRoot")[0]||document.getElementsByClassName("blocklyFlyout")[0],n=document.getElementById("blocklyTrashIcon");n&&l&&(n.style.display="none",l.style.opacity="1",s&&e.BrowserUtils.removeClass(s,"blocklyToolboxDeleting"))}}(),Blockly.Blocks[pxtc.TS_DEBUGGER_TYPE]={init:function(){let t=this;t.setColour(e.toolbox.getNamespaceColor("debug")),t.setPreviousStatement(!0),t.setNextStatement(!0),t.setInputsInline(!1),t.appendDummyInput("ON_OFF").appendField(new Blockly.FieldLabel(lf("breakpoint"),void 0),"DEBUGGER").appendField(new pxtblockly.FieldBreakpoint("1",{type:"number"}),"ON_OFF"),B(this,pxtc.TS_DEBUGGER_TYPE,lf("Debugger statement"),lf("A debugger statement invokes any available debugging functionality"),"/javascript/debugger",e.toolbox.getNamespaceColor("debug"))}},Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT="",function(){const t=e=>{if(e.disabled)return lf("This block is disabled and will not run. Attach this block to an event to enable it.");let t=e.tooltip;for(;goog.isFunction(t);)t=t(e);return t};Blockly.Tooltip.show_=function(){const i=Blockly.Tooltip;if(i.poisonedElement_=i.element_,!Blockly.Tooltip.DIV)return;goog.dom.removeChildren(Blockly.Tooltip.DIV);function o(){let e=i.element_.RTL,t=goog.dom.getViewportSize(),o=Blockly.Tooltip.DIV;o.style.direction=e?"rtl":"ltr",o.style.display="block",Blockly.Tooltip.visible=!0;let s=i.lastX_;e?s-=Blockly.Tooltip.OFFSET_X+o.offsetWidth:s+=Blockly.Tooltip.OFFSET_X;let l=i.lastY_+Blockly.Tooltip.OFFSET_Y;l+o.offsetHeight>t.height+window.scrollY&&(l-=o.offsetHeight+2*Blockly.Tooltip.OFFSET_Y),e?s=Math.max(Blockly.Tooltip.MARGINS-window.scrollX,s):s+o.offsetWidth>t.width+window.scrollX-2*Blockly.Tooltip.MARGINS&&(s=t.width-o.offsetWidth-2*Blockly.Tooltip.MARGINS),o.style.top=l+"px",o.style.left=s+"px"}if(i.element_.codeCard){const s=e.docs.codeCard.render({header:t(i.element_)});Blockly.Tooltip.DIV.appendChild(s),o()}else{let e=t(i.element_);e=Blockly.utils._string.wrap(e,Blockly.Tooltip.LIMIT);let s=e.split("\n");for(let e=0;e<s.length;e++){let t=document.createElement("div");t.appendChild(document.createTextNode(s[e])),Blockly.Tooltip.DIV.appendChild(t)}o()}}}(),Blockly.Block.prototype.setEnabled=function(e){if(this.disabled==e){let t=Blockly.Events.recordUndo;Blockly.Events.recordUndo=!1,Blockly.Events.fire(new Blockly.Events.BlockChange(this,"disabled",null,this.disabled,!e)),Blockly.Events.recordUndo=t,this.disabled=!e}})}function _(e,t){const i=e.split(/\s*\|\s*/),s=[];for(const e of i)switch(e){case"number":s.push("Number");break;case"string":s.push("String");break;case"boolean":s.push("Boolean");break;case"T":case"any":return null;case"void":return;default:if(o(e)){if(i.length>1)return null;s.push("Array")}const l=t.apis.byQName[e];l&&l.extendsTypes&&0<l.extendsTypes.length?s.push(...l.extendsTypes):s.push(e)}return s}function T(e,t,i){const o=_(t,i);(o||null===o)&&e.setOutput(!0,o)}function x(t,i){const o=e.blocks.getBlockDefinition(i);B(t,i,o.name,o.tooltip,o.url,e.toolbox.getNamespaceColor(o.category))}function E(t){const i=e.blocks.getBlockDefinition(t);C(t,i.name,i.tooltip,i.url,e.toolbox.getNamespaceColor(i.category))}function B(i,o,s,l,n,r,a,c,u){!l||"string"!=typeof l&&"function"!=typeof l||i.setTooltip(l),n&&i.setHelpUrl(n),r&&i.setColour(r,a,c),u&&i.setDeletable(!1);let d=document.getElementById("blocklyToolboxDefinition"),p=d?t.getFirstChildWithAttr(d,"block","type",o):void 0;i.codeCard={header:s,name:s,software:1,description:goog.isFunction(l)?l(i):l,blocksXml:p?'<xml xmlns="http://www.w3.org/1999/xhtml">'+(f(p)||`<block type="${o}"></block>`)+"</xml>":void 0,url:n},e.Util.isTranslationMode()&&e.blocks.promptTranslateBlock&&(i.customContextMenu=t=>{const s=e.blocks.getBlockDefinition(i.type);s&&s.translationIds&&t.push({enabled:!0,text:lf("Translate this block"),callback:function(){e.blocks.promptTranslateBlock(o,s.translationIds)}})})}function C(e,t,i,o,s,l,n){let r=Blockly.Blocks[e],a=r.init;a&&(r.init=function(){a.call(this);B(this,e,t,i,o,s,l,n)})}function A(e){delete Blockly.Blocks[e.attributes.blockId],delete a[e.attributes.blockId]}function v(t,i,o,s){const l=document.createElement(s?"shadow":"block");l.setAttribute("type",e.Util.htmlEscape(t));const n=document.createElement("field");return n.setAttribute("name",e.Util.htmlEscape(i)),n.textContent=e.Util.htmlEscape(o),l.appendChild(n),l}function I(){const e=document.createElement("block");e.setAttribute("type","function_return");const t=document.createElement("value");t.setAttribute("name","RETURN_VALUE"),e.appendChild(t);const i=v("math_number","NUM","0",!0);return t.appendChild(i),e}t.installHelpResources=C,t.onShowContextMenu=void 0,t.mkPredicateBlock=function(e){const t=document.createElement("block");t.setAttribute("type",e);const i=document.createElement("value");i.setAttribute("name","PREDICATE"),t.appendChild(i);const o=v("logic_boolean","BOOL","TRUE",!0);return i.appendChild(o),t},t.mkFieldBlock=v,t.mkReturnStatementBlock=I;let N={};function w(e,t){return{field:e,name:t}}function S(t,i){return e.Util.values(t.byQName).filter((e=>4===e.kind&&e.attributes.fixedInstance&&function(e,t,i){if(t==i)return!0;let o=e.byQName[t];return!(!o||!o.extendsTypes)&&o.extendsTypes.indexOf(i)>=0}(t,e.retType,i)))}function D(e){return e.data?/^(?:\d+;?)+$/.test(e.data)?{commentRefs:e.data.split(";"),fieldData:{}}:JSON.parse(e.data):{commentRefs:[],fieldData:{}}}function L(e,t){e.data=JSON.stringify(t)}t.getFixedInstanceDropdownValues=S,t.generateIcons=function(t){const i=new e.ImageConverter;t.forEach((t=>{t.attributes.jresURL&&!t.attributes.iconURL&&e.U.startsWith(t.attributes.jresURL,"data:image/x-mkcd-f")&&(t.attributes.iconURL=i.convert(t.attributes.jresURL))}))},t.setVarFieldValue=function(e,t,i){const o=e.getField(t),s=e.workspace.getAllVariables();let l=!1;if(s&&s.length)for(let e=0;e<s.length;e++){const t=s[e];t.name===i&&(o.setValue(t.getId()),l=!0)}if(!l){o.initModel();const e=o.getVariable();e.name=i,o.setValue(e.getId())}},t.getBlockData=D,t.setBlockData=L,t.setBlockDataForField=function(e,t,i){const o=D(e);o.fieldData[t]=i,L(e,o)},t.getBlockDataForField=function(e,t){return D(e).fieldData[t]};class O extends WorkspaceSearch{createDom_(){super.createDom_(),this.addEvent_(this.workspace_.getInjectionDiv(),"click",this,(e=>{"flex"!=this.htmlDiv_.style.display||this.htmlDiv_.contains(e.target)||this.close()}))}highlightSearchGroup_(e){e.forEach((e=>{const t=e.pathObject.svgPath;Blockly.utils.dom.addClass(t,"blockly-ws-search-highlight-pxt")}))}unhighlightSearchGroup_(e){e.forEach((e=>{const t=e.pathObject.svgPath;Blockly.utils.dom.removeClass(t,"blockly-ws-search-highlight-pxt")}))}open(){super.open(),Blockly.utils.dom.addClass(this.workspace_.getInjectionDiv(),"blockly-ws-searching")}close(){super.close(),Blockly.utils.dom.removeClass(this.workspace_.getInjectionDiv(),"blockly-ws-searching")}}t.PxtWorkspaceSearch=O}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){let i;!function(e){e.ObjectDestructuringMutator="objectdestructuring",e.RestParameterMutator="restparameter",e.DefaultInstanceMutator="defaultinstance"}(i=t.MutatorTypes||(t.MutatorTypes={})),t.addMutation=function(e,t,o){let r;switch(o){case i.ObjectDestructuringMutator:if(!t.parameters||t.parameters.length<1)console.error("Destructuring mutations require at least one parameter");else{let e=!1;for(const i of t.parameters)if(-1!==i.type.indexOf("=>")){if(!i.properties||0===i.properties.length)return void console.error("Destructuring mutations only supported for functions with an event parameter that has multiple properties");e=!0}if(!e)return void console.error("Destructuring mutations must have an event parameter")}r=new s(e,t);break;case i.RestParameterMutator:r=new l(e,t);break;case i.DefaultInstanceMutator:r=new n(e,t);break;default:return void console.warn("Ignoring unknown mutation type: "+o)}e.mutationToDom=r.mutationToDom.bind(r),e.domToMutation=r.domToMutation.bind(r),e.compose=r.compose.bind(r),e.decompose=r.decompose.bind(r),e.mutation=r},t.mutateToolboxBlock=function(e,t,o){const r=document.createElement("mutation");switch(t){case i.ObjectDestructuringMutator:r.setAttribute(s.propertiesAttributeName,o);break;case i.RestParameterMutator:r.setAttribute(l.countAttributeName,o);break;case i.DefaultInstanceMutator:r.setAttribute(n.attributeName,o);default:return void console.warn("Ignoring unknown mutation type: "+t)}e.appendChild(r)};class o{constructor(e,t){this.info=t,this.block=e,this.topBlockType=this.block.type+"_mutator";const i=this.getSubBlockNames();this.initializeMutatorTopBlock(),this.initializeMutatorSubBlocks(i);const o=i.map((e=>e.type));this.block.setMutator(new Blockly.Mutator(o))}compose(e){const t=e.getDescendants(!1).map((e=>({type:e.type,name:e.inputList[0].name})));t.shift(),this.updateBlock(t)}decompose(e){const t=e.newBlock(this.topBlockType);t.initSvg();for(const i of t.inputList)if(i.name===o.mutatorStatmentInput){let t=i.connection;this.getVisibleBlockTypes().forEach((i=>{const o=e.newBlock(i);o.initSvg(),t.connect(o.previousConnection),t=o.nextConnection}));break}return t}compileMutation(e,t){}getDeclaredVariables(){}isDeclaredByMutation(e){return!1}initializeMutatorSubBlock(e,t,i){e.appendDummyInput(t).appendField(t),e.setColour(i),e.setNextStatement(!0),e.setPreviousStatement(!0)}initializeMutatorTopBlock(){const e=this.info.attributes.mutateText,t=this.block.getColour();Blockly.Blocks[this.topBlockType]=Blockly.Blocks[this.topBlockType]||{init:function(){const i=this;i.appendDummyInput().appendField(e),i.setColour(t),i.appendStatementInput(o.mutatorStatmentInput)}}}initializeMutatorSubBlocks(e){const t=this.block.getColour(),i=this.initializeMutatorSubBlock.bind(this);e.forEach((e=>{Blockly.Blocks[e.type]=Blockly.Blocks[e.type]||{init:function(){i(this,e.name,t)}}}))}}o.mutatorStatmentInput="PROPERTIES",o.mutatedVariableInputName="properties";class s extends o{constructor(e,t){super(e,t),this.currentlyVisible=[],this.parameterRenames={},this.prefix=this.info.attributes.mutatePrefix,this.block.appendDummyInput(o.mutatedVariableInputName),this.block.appendStatementInput("HANDLER").setCheck("null")}getMutationType(){return i.ObjectDestructuringMutator}compileMutation(e,i){if(!this.info.attributes.mutatePropertyEnum&&!this.parameters.length)return;const o=`function ({ ${this.parameters.map((i=>{const o=this.block.getField(i),s=o&&o.getText(),l=t.escapeVarName(i,e);return s!==i?(this.parameterRenames[i]=s,`${i}: ${t.escapeVarName(s,e)}`):l})).join(", ")} })`;return this.info.attributes.mutatePropertyEnum?t.mkText(` [${this.parameters.map((e=>`${this.info.attributes.mutatePropertyEnum}.${e}`)).join(", ")}],${o}`):t.mkText(o)}getDeclaredVariables(){const e={};return this.parameters.forEach((t=>{e[this.getVarFieldValue(t)]=this.parameterTypes[t]})),e}isDeclaredByMutation(e){return this.parameters.some((t=>this.getVarFieldValue(t)===e))}mutationToDom(){const t=document.createElement("mutation"),i=this.parameters.map((t=>{const i=this.getVarFieldValue(t);return i!==t&&(this.parameterRenames[t]=e.Util.htmlEscape(i)),e.Util.htmlEscape(t)})).join(",");t.setAttribute(s.propertiesAttributeName,i);for(const e in this.parameterRenames)e===this.parameterRenames[e]&&delete this.parameterRenames[e];return t.setAttribute(s.renameAttributeName,JSON.stringify(this.parameterRenames)),t}domToMutation(e){const t=e.getAttribute(s.propertiesAttributeName);if(t){const i=t.split(","),o=[];if(void 0===this.paramIndex&&(this.paramIndex=this.getParameterIndex()),i.forEach((e=>{const t=e.split(":");this.info.parameters[this.paramIndex].properties.some((e=>e.name===t[0]))&&o.push({property:t[0],newName:t[1]})})),this.parameterRenames=void 0,e.hasAttribute(s.renameAttributeName))try{this.parameterRenames=JSON.parse(e.getAttribute(s.renameAttributeName))}catch(e){console.warn("Ignoring invalid rename map in saved block mutation")}this.parameterRenames=this.parameterRenames||{},this.parameters=[],o.forEach((e=>{this.parameters.push(e.property),e.newName&&e.newName!==e.property&&(this.parameterRenames[e.property]=e.newName)})),this.updateVisibleProperties(),o.filter((e=>!!e.newName)).forEach((e=>this.setVarFieldValue(e.property,e.newName)))}}getVarFieldValue(e){const t=this.block.getField(e);return t&&t.getText()}setVarFieldValue(e,i){this.block.getField(e);this.block.getField(e)&&t.setVarFieldValue(this.block,e,i)}updateBlock(e){this.parameters=[],e.forEach((e=>{-1===this.parameters.indexOf(e.name)&&this.parameters.push(e.name)})),this.updateVisibleProperties()}getSubBlockNames(){return this.parameters=[],this.parameterTypes={},void 0===this.paramIndex&&(this.paramIndex=this.getParameterIndex()),this.info.parameters[this.paramIndex].properties.map((e=>(this.parameterTypes[e.name]=e.type,{type:this.propertyId(e.name),name:e.name})))}getVisibleBlockTypes(){return this.currentlyVisible.map((e=>this.propertyId(e)))}updateVisibleProperties(){if(e.Util.listsEqual(this.currentlyVisible,this.parameters))return;const t=this.block.inputList.find((e=>e.name===o.mutatedVariableInputName));this.prefix&&0===this.currentlyVisible.length&&t.appendField(this.prefix,s.prefixLabel),this.currentlyVisible.forEach((e=>{if(-1===this.parameters.indexOf(e)){const i=this.getVarFieldValue(e);i!==e&&(this.parameterRenames[e]=i),t.removeField(e)}})),this.parameters.forEach((e=>{if(-1===this.currentlyVisible.indexOf(e)){const i=this.parameterRenames[e]||e;t.appendField(new Blockly.FieldVariable(i),e)}})),this.prefix&&0===this.parameters.length&&t.removeField(s.prefixLabel),this.currentlyVisible=this.parameters}propertyId(e){return this.block.type+"_"+e}getParameterIndex(){for(let e=0;e<this.info.parameters.length;e++)if(-1!==this.info.parameters[e].type.indexOf("=>"))return e}}s.propertiesAttributeName="callbackproperties",s.renameAttributeName="renamemap",s.prefixLabel="0prefix_label_";class l extends o{constructor(){super(...arguments),this.count=0}getMutationType(){return i.RestParameterMutator}compileMutation(e,i){const o=[];return this.forEachInput((s=>o.push(t.compileExpression(e,s,i)))),t.mkGroup(o)}mutationToDom(){const e=document.createElement("mutation");return e.setAttribute(l.countAttributeName,this.count.toString()),e}domToMutation(e){const t=e.getAttribute(l.countAttributeName);if(t){try{this.count=parseInt(t)}catch(e){return}for(let e=0;e<this.count;e++)this.addNumberField(!1,e)}}updateBlock(e){if(e){const t=Math.abs(this.count-e.length);if(this.count<e.length)for(let e=0;e<t;e++)this.addNumberField(!0,this.count);else if(this.count>e.length)for(let e=0;e<t;e++)this.removeNumberField()}}getSubBlockNames(){return[{name:"Value",type:l.entryTypeName}]}getVisibleBlockTypes(){const e=[];return this.forEachInput((()=>e.push(l.entryTypeName))),e}addNumberField(e,t){const i=this.block.appendValueInput(l.valueInputPrefix+t).setCheck("Number");if(e){const e=this.block.workspace.newBlock("math_number");e.initSvg(),e.setShadow(!0),i.connection.connect(e.outputConnection),this.block.workspace.render(),this.count++}}removeNumberField(){this.count>0&&this.block.removeInput(l.valueInputPrefix+(this.count-1)),this.count--}forEachInput(e){for(let t=0;t<this.count;t++)e(this.block.getInputTargetBlock(l.valueInputPrefix+t),t)}}l.countAttributeName="count",l.entryTypeName="entry",l.valueInputPrefix="value_input_";class n extends o{constructor(){super(...arguments),this.showing=!1}getMutationType(){return i.DefaultInstanceMutator}compileMutation(e,i){if(this.showing){const o=this.block.getInputTargetBlock(n.instanceInputName);if(o)return t.compileExpression(e,o,i)}}mutationToDom(){const e=document.createElement("mutation");return e.setAttribute(n.attributeName,this.showing?"true":"false"),e}domToMutation(e){const t=e.getAttribute(n.attributeName);t?this.updateShape("true"===t):this.updateShape(!1)}updateBlock(e){this.updateShape(!(!e||!e.length))}getSubBlockNames(){return[{name:"Instance",type:n.instanceSubBlockType}]}getVisibleBlockTypes(){const e=[];return this.showing&&e.push(n.instanceSubBlockType),e}updateShape(e){this.showing!==e&&(e&&!this.block.getInputTargetBlock(n.instanceInputName)?this.block.appendValueInput(n.instanceInputName):this.block.removeInput(n.instanceInputName),this.showing=e)}}n.attributeName="showing",n.instanceInputName="__instance__",n.instanceSubBlockType="instance"}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){let i,o,s;function l(){return i||(o=document.createElement("div"),o.style.position="absolute",o.style.top="0",o.style.left="0",o.style.width="1px",o.style.height="1px",document.body.appendChild(o),i=Blockly.inject(o,{move:{scrollbars:!1},readOnly:!0,sounds:!1,media:e.webConfig.commitCdnUrl+"blockly/media/",rtl:e.Util.isUserLanguageRtl(),renderer:"pxt"})),e.blocks.clearWithoutEvents(i),i}function n(){i&&i.dispose(),i=void 0}function r(t={emPixels:18,layout:s.Align}){switch(t.splitSvg?s.Align:t.layout||s.Flow){case s.Align:e.blocks.layout.verticalAlign(i,t.emPixels||18);break;case s.Flow:e.blocks.layout.flow(i,{ratio:t.aspectRatio,useViewWidth:t.useViewWidth});break;case s.Clean:i.cleanUp_&&i.cleanUp_()}let l=i.getMetrics();const n=o.querySelectorAll("svg")[0].cloneNode(!0);return e.blocks.layout.cleanUpBlocklySvg(n),e.U.toArray(n.querySelectorAll(".blocklyBlockCanvas,.blocklyBubbleCanvas")).forEach((e=>e.setAttribute("transform",`translate(${-l.contentLeft}, ${-l.contentTop}) scale(1)`))),n.setAttribute("viewBox",`0 0 ${l.contentWidth} ${l.contentHeight}`),t.emPixels&&(n.style.width=l.contentWidth/t.emPixels+"em",n.style.height=l.contentHeight/t.emPixels+"em"),t.splitSvg?e.blocks.layout.splitSvg(n,i,t.emPixels):n}!function(e){e[e.None=0]="None",e[e.Align=1]="Align",e[e.Clean=3]="Clean",e[e.Flow=4]="Flow"}(s=t.BlockLayout||(t.BlockLayout={})),t.initRenderingWorkspace=l,t.cleanRenderingWorkspace=n,t.renderWorkspace=r,t.render=function(t,o={emPixels:18,layout:s.Align}){l();try{let s=t||'<xml xmlns="http://www.w3.org/1999/xhtml"></xml>',l=Blockly.Xml.textToDom(s);return e.blocks.domToWorkspaceNoEvents(l,i),r(o)}catch(t){return void e.reportException(t)}finally{n()}},t.blocksMetrics=function(e){const t=e.getTopBlocks(!1);if(!t.length)return{width:0,height:0};let i;return t.forEach((e=>{const t=e.getBoundingRectangle();i?(i.l=Math.min(i.l,t.left),i.r=Math.max(i.r,t.right),i.t=Math.min(i.t,t.top),i.b=Math.min(i.b,t.bottom)):i={l:t.left,r:t.right,t:t.top,b:t.bottom}})),{width:i.r-i.l,height:i.b-i.t}}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(e){function t(e,t){let o=[];for(const s in e.children){const l=e.children[s];if("block"===l.tagName)if(t){const e=l.getAttribute("type");e&&e===t&&o.push(l)}else o.push(l);else{const e=i(l);e&&(o=o.concat(e))}}return o}function i(e,i){let o=t(e,i);return o.length?o[0]:null}e.findRootBlocks=t,e.findRootBlock=i}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){!function(t){t.render=function(t,i={}){const o=t.url?/^[^:]+:\/\//.test(t.url)?t.url:"/"+t.url.replace(/^\.?\/?/,""):t.youTubeId?`https://youtu.be/${t.youTubeId}`:void 0,s=!!o,l=(e,t,i="div",o="")=>{let s=document.createElement(i);return t&&(s.className=t),e&&e.appendChild(s),o&&s.appendChild(document.createTextNode(o+"")),s};let n=l(null,"ui "+(t.style||"card")+" "+(t.color||"")+(s?" link":""),s?"a":"div");if(n.setAttribute("role","option"),n.setAttribute("aria-selected","true"),s){const e=n;e.href=o,/^https?:\/\//.test(o)&&(e.target="_blank")}if(!i.hideHeader&&t.header){let e=l(n,"ui content "+(t.responsive?" tall desktop only":""));t.header&&l(e,"description","span",t.header)}const r=(i.shortName?t.shortName:"")||t.name;let a=l(n,"ui image"+(t.responsive?" tall landscape only":""));if(t.label){let e=document.createElement("label");e.className=`ui ${t.labelClass?t.labelClass:"orange right ribbon"} label`,e.textContent=t.label,a.appendChild(e)}if(t.blocksXml){const i=e.blocks.render(t.blocksXml);if(i){let e=l(a,"");e.setAttribute("style","width:100%; min-height:10em"),e.appendChild(i)}else console.error("failed to render blocks"),e.debug(t.blocksXml)}if(t.typeScript){let e=document.createElement("pre");e.appendChild(document.createTextNode(t.typeScript)),a.appendChild(e)}if(t.imageUrl||(t.youTubeId?`https://img.youtube.com/vi/${t.youTubeId}/0.jpg`:void 0)){let e=document.createElement("div");e.className="ui imagewrapper";let i=document.createElement("div");i.className="ui cardimage",i.style.backgroundImage=`url("${t.imageUrl}")`,i.title=r,i.setAttribute("role","presentation"),e.appendChild(i),a.appendChild(e)}if("file"==t.cardType){let e=l(n,"ui fileimage");a.appendChild(e)}if(r||t.description){let e=l(n,"ui content");if(r&&(n.setAttribute("aria-label",r),l(e,"header","div",r)),t.description){const i=l(e,"ui description"),o=t.description.split(".")[0]+".";i.appendChild(document.createTextNode(o))}}if(t.time){let i=l(n,"meta");if(t.time){l(i,"date","span").appendChild(document.createTextNode(e.Util.timeSince(t.time)))}}if(t.extracontent){l(n,"extra content","div").appendChild(document.createTextNode(t.extracontent))}return n}}(t.codeCard||(t.codeCard={}))}(e.docs||(e.docs={}))}(pxt||(pxt={})),function(e){!function(t){function i(e,t){const i=e,o=i.mutationToDom,s=i.domToMutation;i.mutationToDom=()=>{const e=o?o():document.createElement("mutation");return t.mutationToDom(e)},i.domToMutation=e=>{s&&s(e),t.domToMutation(e)}}t.appendMutation=i,t.initVariableArgsBlock=function(e,o){let s=0,l=0,n=e.appendDummyInput(),r=()=>{if(s!==l){if(s>l){const t=s-l;for(let i=0;i<t;i++){const t=o[l+i];n.insertFieldAt(n.fieldRow.length-1,new pxtblockly.FieldArgumentVariable(t.name),"HANDLER_"+t.name);const s=e;(null==s?void 0:s.initSvg)&&s.initSvg()}}else{let e=l-s;for(let t=0;t<e;t++){const e=o[l-t-1];n.removeField("HANDLER_"+e.name)}}s>=o.length?n.removeField("_HANDLER_ADD"):l>=o.length&&a(),l=s}};function a(){n.appendField(new Blockly.FieldImage(e.ADD_IMAGE_DATAURI,24,24,lf("Add argument"),(()=>{s=Math.min(s+1,o.length),r()}),!1),"_HANDLER_ADD")}Blockly.Extensions.apply("inline-svgs",e,!1),a(),i(e,{mutationToDom:t=>{t.setAttribute("numArgs",s.toString());for(let i=0;i<s;i++){const s=e.getField("HANDLER_"+o[i].name);let l=s&&s.getText();t.setAttribute("arg"+i,l)}return t},domToMutation:i=>{let l=parseInt(i.getAttribute("numargs"));s=Math.min(isNaN(l)?0:l,o.length),r();for(let l=0;l<s;l++){const s=i.getAttribute("arg"+l),n="HANDLER_"+o[l].name;e.getField(n)&&t.setVarFieldValue(e,n,s)}}})},t.initExpandableBlock=function(s,l,n,r,a,c){const u="0_add_button",d="0_rem_button",p="_expanded",h="_input_init",m=n.parameters.map((e=>e.name)),f=n.parameters.length,g=a?f:1,k=new o(l);function b(i,o=!1,a=!1){const c=E(i);if(!a&&!o&&c===k.getNumber(p))return;k.setValue(p,c);const u=c;if(!k.getBoolean(h)&&u>0&&(x(),!l.rendered))return;let d=0;for(let i=0;i<l.inputList.length;i++){const o=l.inputList[i];if(e.Util.startsWith(o.name,t.optionalDummyInputPrefix))B(o,d<u||u===f);else if(e.Util.startsWith(o.name,t.optionalInputWithFieldPrefix)||-1!==m.indexOf(o.name)){const e=d<u;if(B(o,e),e&&o.connection&&!o.connection.isConnected()&&!l.isInsertionMarker()){const e=r.definitionNameToParam[n.parameters[d].name];let i=t.createShadowValue(s,e);"value"===i.tagName.toLowerCase()&&(i=i.firstElementChild),Blockly.Events.disable();try{const e=Blockly.Xml.domToBlock(i,l.workspace);e&&o.connection.connect(e.outputConnection)}catch(e){}Blockly.Events.enable()}++d}}_(),o||l.render()}function y(e,t,i,o){l.appendDummyInput(e).appendField(new Blockly.FieldImage(t,24,24,i,(()=>b(o)),!1))}function _(){const e=k.getNumber(p),t=e!==f,i=0!==e,o=!!l.getInput(d),s=!!l.getInput(u);t||l.removeInput(u,!0),i||l.removeInput(d,!0),i&&!o&&y(d,l.REMOVE_IMAGE_DATAURI,lf("Hide optional arguments"),-1*g),t&&(s&&l.inputList.findIndex((e=>e.name===u))!==l.inputList.length-1?(l.removeInput(u,!0),T()):s||T())}function T(){y(u,l.ADD_IMAGE_DATAURI,lf("Reveal optional arguments"),g)}function x(){k.setValue(h,!0),c(),_()}function E(e){return Math.min(Math.max(k.getNumber(p)+e,0),f)}function B(e,t){if(l.rendered){e.setVisible(t).forEach((e=>{e.render()}))}}k.setEventsEnabled(!1),k.setValue(p,0),k.setValue(h,!1),k.setEventsEnabled(!0),Blockly.Extensions.apply("inline-svgs",l,!1),T(),i(l,{mutationToDom:e=>(e.setAttribute(p,k.getString(p)),e.setAttribute(h,k.getString(h)),e),domToMutation:e=>{if(k.setEventsEnabled(!1),e.hasAttribute(h)&&"true"==e.getAttribute(h)&&!k.getBoolean(h)&&(k.setValue(h,!0),x()),e.hasAttribute(p)){const t=parseInt(e.getAttribute(p));if(!isNaN(t)){const e=t-(k.getNumber(p)||0);k.getBoolean(h)?l.rendered||l.isInsertionMarker()?b(e,!0,l.isInsertionMarker()):k.setValue(p,E(e)):b(e,!0)}}k.setEventsEnabled(!0)}}),setTimeout((()=>{l.rendered&&!l.workspace.isDragging()&&b(0,void 0,!0)}),1)},t.initReturnStatement=function(t){const i=e.blocks.getBlockDefinition("function_return"),o="0_add_button",s="0_rem_button";Blockly.Extensions.apply("inline-svgs",t,!1);let l,n=!0;function r(){const r=t.getInput("RETURN_VALUE");if(n){if(!r){for(;t.getInput("");)t.removeInput("");t.jsonInit({message0:i.block.message_with_value,args0:[{type:"input_value",name:"RETURN_VALUE",check:null}],previousStatement:null,colour:e.toolbox.getNamespaceColor("functions")})}if(t.getInput(o)&&t.removeInput(o),t.getInput(s)||u(s,t.REMOVE_IMAGE_DATAURI,lf("Remove return value")),l){const e=t.workspace.getBlockById(l);e&&e.outputConnection&&!e.outputConnection.targetBlock()&&t.getInput("RETURN_VALUE").connection.connect(e.outputConnection),l=void 0}}else{if(r){const o=r.connection.targetBlock();o&&(o.isShadow()&&o.setShadow(!1),r.connection.disconnect(),l=o.id),t.removeInput("RETURN_VALUE"),t.jsonInit({message0:i.block.message_no_value,args0:[],previousStatement:null,colour:e.toolbox.getNamespaceColor("functions")})}t.getInput(s)&&t.removeInput(s),t.getInput(o)||u(o,t.ADD_IMAGE_DATAURI,lf("Add return value"))}t.setInputsInline(!0)}function a(){return Blockly.Xml.domToText(t.mutationToDom())}function c(e,i){e!==i&&Blockly.Events.fire(new Blockly.Events.BlockChange(t,"mutation",null,e,i))}function u(e,i,o){t.appendDummyInput(e).appendField(new Blockly.FieldImage(i,24,24,o,(()=>{const e=a();n=!n;const t=a();c(e,t),r();c(t,a())}),!1))}r(),t.domToMutation=e=>{e.hasAttribute("last_connected_id")&&(l=e.getAttribute("last_connected_id")),n="true"!==e.getAttribute("no_return_value"),r()},t.mutationToDom=()=>{const e=document.createElement("mutation");return function(e,t){e.setAttribute("no_return_value",t?"false":"true")}(e,!!t.getInput("RETURN_VALUE")),l&&e.setAttribute("last_connected_id",l),e}};class o{constructor(e,t){this.block=e,this.fireEvents=!0,this.state=t||{}}setValue(e,t){if(this.fireEvents&&this.block.mutationToDom){const i=this.block.mutationToDom();this.state[e]=t.toString();const o=this.block.mutationToDom();Object.keys(this.state).forEach((e=>{i.getAttribute(e)!==this.state[e]&&o.setAttribute(e,this.state[e])}));const s=Blockly.Xml.domToText(i),l=Blockly.Xml.domToText(o);s!=l&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.block,"mutation",null,s,l))}else this.state[e]=t.toString()}getNumber(e){return parseInt(this.state[e])}getBoolean(e){return"false"!=this.state[e]}getString(e){return this.state[e]}setEventsEnabled(e){this.fireEvents=e}}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){const i=e.blocks.MATH_FUNCTIONS.unary.concat(e.blocks.MATH_FUNCTIONS.binary).concat(e.blocks.MATH_FUNCTIONS.infix);let o;t.initMathOpBlock=function(){const s="math_js_op",l=e.blocks.getBlockDefinition(s);function n(e,t){const i=e.appendValueInput("ARG"+(t?1:0));i.setCheck("Number"),t&&(i.connection.setShadowDom(function(){if(!o){o=document.createElement("shadow"),o.setAttribute("type","math_number");const e=document.createElement("field");e.setAttribute("name","NUM"),e.textContent="0",o.appendChild(e)}return o}()),i.connection.respawnShadow_())}function r(e,t){let i=!!e.getInput("ARG1");t?(i&&e.moveInputBefore("op_dropdown","ARG1"),e.moveInputBefore("ARG0","op_dropdown")):(i&&e.moveInputBefore("ARG0","ARG1"),e.moveInputBefore("op_dropdown","ARG0"))}Blockly.Blocks[s]={init:function(){const o=this;o.setPreviousStatement(!1),o.setNextStatement(!1),o.setOutput(!0,"Number"),o.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND),o.setInputsInline(!0);o.appendDummyInput("op_dropdown").appendField(new Blockly.FieldDropdown(i.map((e=>[l.block[e],e])),(t=>function(t,i){!function(t){return-1!==e.blocks.MATH_FUNCTIONS.unary.indexOf(t)}(i)?t.getInput("ARG1")||n(t,!0):t.removeInput("ARG1",!0);r(t,function(t){return-1!==e.blocks.MATH_FUNCTIONS.infix.indexOf(t)}(i))}(o,t))),"OP"),n(o,!1),t.appendMutation(o,{mutationToDom:e=>{let t;for(let e=0;e<o.inputList.length;e++){const i=o.inputList[e];if("op_dropdown"===i.name){t=!1;break}if("ARG0"===i.name){t=!0;break}}return e.setAttribute("op-type",(o.getInput("ARG1")?t?"infix":"binary":"unary").toString()),e},domToMutation:e=>{if(e.hasAttribute("op-type")){const t=e.getAttribute("op-type");"unary"!=t&&n(o,!0),r(o,"infix"===t)}}})}},t.installHelpResources(s,l.name,(function(e){return l.tooltip[e.getFieldValue("OP")]}),l.url,e.toolbox.getNamespaceColor(l.category))}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){!function(t){const i=e.blocks.ROUNDING_FUNCTIONS;t.initMathRoundBlock=function(){const o="math_js_round",s=e.blocks.getBlockDefinition(o);Blockly.Blocks[o]={init:function(){const e=this;e.setPreviousStatement(!1),e.setNextStatement(!1),e.setOutput(!0,"Number"),e.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND),e.setInputsInline(!0);e.appendDummyInput("round_dropdown").appendField(new Blockly.FieldDropdown(i.map((e=>[s.block[e],e])),(e=>{})),"OP"),function(e){e.appendValueInput("ARG0").setCheck("Number")}(e)}},t.installHelpResources(o,s.name,(function(e){return s.tooltip[e.getFieldValue("OP")]}),s.url,e.toolbox.getNamespaceColor(s.category))}}(e.blocks||(e.blocks={}))}(pxt||(pxt={})),function(e){class t extends Blockly.Field{constructor(e,t,i){super(e,i),this.SERIALIZABLE=!0,this.options=t,e&&!this.valueText&&(this.valueText=e)}init(){super.init(),this.onInit()}dispose(){this.onDispose()}getValue(){return this.valueText}doValueUpdate_(e){null!==e&&(this.valueText=this.loaded?this.onValueChanged(e):e)}getDisplayText_(){return this.valueText}onLoadedIntoWorkspace(){this.loaded||(this.loaded=!0,this.valueText=this.onValueChanged(this.valueText))}isInitialized(){return!!this.fieldGroup_}getBlockData(){return pxt.blocks.getBlockDataForField(this.sourceBlock_,this.name)}setBlockData(e){pxt.blocks.setBlockDataForField(this.sourceBlock_,this.name,e)}}e.FieldBase=t}(pxtblockly||(pxtblockly={})),function(e){var t=pxt.svgUtil;const i=32;class o extends e.FieldBase{constructor(e,t,i){super(e,t,i),this.pendingEdit=!1,this.isEmpty=!1,this.assetChangeListener=()=>{if(this.pendingEdit)return;const e=this.getBlockData();e&&(this.asset=pxt.react.getTilemapProject().lookupAsset(this.getAssetType(),e)),this.redrawPreview()},this.lightMode=t.lightMode,this.params=this.parseFieldOptions(t),this.blocksInfo=t.blocksInfo}onInit(){this.redrawPreview()}onValueChanged(e){return this.parseValueText(e),this.redrawPreview(),this.getValueText()}showEditor_(){if(this.isGreyBlock)return;const t=Object.assign({},this.params);let i;switch(t.blocksInfo=this.blocksInfo,this.asset.type){case"tile":case"image":i="image-editor",t.temporaryAssets=e.getTemporaryAssets(this.sourceBlock_.workspace,"image");break;case"animation":i="animation-editor",t.temporaryAssets=e.getTemporaryAssets(this.sourceBlock_.workspace,"image").concat(e.getTemporaryAssets(this.sourceBlock_.workspace,"animation"));break;case"tilemap":i="tilemap-editor";const o=pxt.react.getTilemapProject();pxt.sprite.addMissingTilemapTilesAndReferences(o,this.asset)}const o=pxt.react.getFieldEditorView(i,this.asset,t);this.undoRedoState&&o.restorePersistentData(this.undoRedoState),pxt.react.getTilemapProject().pushUndo(),o.onHide((()=>{var e;const t=o.getResult(),i=pxt.react.getTilemapProject();if(t){const n=this.getValue();if(pxt.assetEquals(this.asset,t))return;const r=s(this.asset)?null:this.asset.id;let a=s(t)?null:t.id;r||a!==this.sourceBlock_.id||(t.id=i.generateNewID(t.type),a=t.id),this.pendingEdit=!0,(null===(e=t.meta)||void 0===e?void 0:e.displayName)&&this.disposeOfTemporaryAsset(),this.asset=t;const c=i.revision();if(this.onEditorClose(this.asset),this.updateAssetListener(),this.updateAssetMeta(),this.redrawPreview(),this.undoRedoState=o.getPersistentData(),this.sourceBlock_&&Blockly.Events.isEnabled()){const e=new l(this.sourceBlock_,"field",this.name,n,this.getValue(),c,i.revision());r!==a&&(e.oldAssetId=r,e.newAssetId=a),Blockly.Events.fire(e)}this.pendingEdit=!1}})),o.show()}render_(){this.isGreyBlock&&!this.textElement_&&this.createTextElement_(),super.render_(),this.isGreyBlock||(this.size_.height=42,this.size_.width=50)}getDisplayText_(){if(this.isGreyBlock){const e=pxt.Util.htmlUnescape(this.valueText);return e.substr(0,e.indexOf("("))+"(...)"}return""}updateEditable(){if(this.isGreyBlock&&this.fieldGroup_){const e=this.fieldGroup_;Blockly.utils.dom.removeClass(e,"blocklyNonEditableText"),Blockly.utils.dom.removeClass(e,"blocklyEditableText"),e.style.cursor=""}else super.updateEditable()}getValue(){return this.isGreyBlock?pxt.Util.htmlUnescape(this.valueText):this.getValueText()}onDispose(){var e;(null===(e=this.sourceBlock_)||void 0===e?void 0:e.workspace)&&!this.sourceBlock_.workspace.rendered&&this.disposeOfTemporaryAsset(),pxt.react.getTilemapProject().removeChangeListener(this.getAssetType(),this.assetChangeListener)}disposeOfTemporaryAsset(){this.isTemporaryAsset()&&(pxt.react.getTilemapProject().removeAsset(this.asset),this.setBlockData(null),this.asset=void 0)}clearTemporaryAssetData(){this.isTemporaryAsset()&&this.setBlockData(null)}isTemporaryAsset(){return s(this.asset)}getAsset(){return this.asset}updateAsset(e){this.asset=e,this.setValue(this.getValue())}onEditorClose(e){}redrawPreview(){if(!this.fieldGroup_)return;if(pxsim.U.clear(this.fieldGroup_),this.isGreyBlock)return this.createTextElement_(),this.render_(),void this.updateEditable();const o=(new t.Rect).at(5,1).size(40,40).setClass("blocklySpriteField").stroke("#898989",1).corner(4);if(this.fieldGroup_.appendChild(o.el),this.asset){let o;switch(this.asset.type){case"image":case"tile":o=e.bitmapToImageURI(pxt.sprite.Bitmap.fromData(this.asset.bitmap),i,this.lightMode);break;case"animation":o=e.bitmapToImageURI(pxt.sprite.Bitmap.fromData(this.asset.frames[0]),i,this.lightMode);break;case"tilemap":o=e.tilemapToImageURI(this.asset.data,i,this.lightMode)}const s=(new t.Image).src(o).at(9,5).size(i,i);this.fieldGroup_.appendChild(s.el)}}parseValueText(e){if(e=pxt.Util.htmlUnescape(e),this.sourceBlock_&&!this.sourceBlock_.isInFlyout){const t=pxt.react.getTilemapProject(),i=this.getBlockData(),o=t.lookupAsset(this.getAssetType(),i);!o||e&&this.isEmpty?(this.setBlockData(null),this.asset&&this.sourceBlock_&&this.asset.meta.blockIDs&&(this.asset.meta.blockIDs=this.asset.meta.blockIDs.filter((e=>e!==this.sourceBlock_.id)),this.isTemporaryAsset()||t.updateAsset(this.asset)),this.isEmpty=!e,this.asset=this.createNewAsset(e)):this.asset=o,this.updateAssetMeta(),this.updateAssetListener()}}parseFieldOptions(e){const t={initWidth:16,initHeight:16,disableResize:!1,lightMode:!1};return e?(e.disableResize&&(t.disableResize="true"===e.disableResize.toLowerCase()||"1"===e.disableResize),t.initWidth=i(e.initWidth,t.initWidth),t.initHeight=i(e.initHeight,t.initHeight),t.lightMode=e.lightMode,t):t;function i(e,t){const i=parseInt(e);return isNaN(i)?t:i}}updateAssetMeta(){if(this.asset){if(this.asset.meta||(this.asset.meta={}),this.asset.meta.blockIDs||(this.asset.meta.blockIDs=[]),this.sourceBlock_){if(-1===this.asset.meta.blockIDs.indexOf(this.sourceBlock_.id)){const e=this.asset.meta.blockIDs;e.length&&this.isTemporaryAsset()&&e.some((e=>this.sourceBlock_.workspace.getBlockById(e)))&&(this.asset=pxt.cloneAsset(this.asset),this.asset.meta.blockIDs=[]),this.asset.meta.blockIDs.push(this.sourceBlock_.id)}this.setBlockData(this.asset.id)}this.isTemporaryAsset()?this.asset.meta.temporaryInfo={blockId:this.sourceBlock_.id,fieldName:this.name}:pxt.react.getTilemapProject().updateAsset(this.asset)}}updateAssetListener(){pxt.react.getTilemapProject().removeChangeListener(this.getAssetType(),this.assetChangeListener),this.asset&&!this.isTemporaryAsset()&&pxt.react.getTilemapProject().addChangeListener(this.asset,this.assetChangeListener)}}function s(e){return e&&!e.meta.displayName}e.FieldAssetEditor=o;class l extends Blockly.Events.BlockChange{constructor(e,t,i,o,s,l,n){super(e,t,i,o,s),this.oldRevision=l,this.newRevision=n,this.fieldName=i}isNull(){return this.oldRevision===this.newRevision&&super.isNull()}run(e){if(this.newAssetId||this.oldAssetId){const t=this.getEventWorkspace_().getBlockById(this.blockId);e?pxt.blocks.setBlockDataForField(t,this.fieldName,this.newAssetId):pxt.blocks.setBlockDataForField(t,this.fieldName,this.oldAssetId)}e?(pxt.react.getTilemapProject().redo(),super.run(e)):(pxt.react.getTilemapProject().undo(),super.run(e));const t=this.getEventWorkspace_(),i=new l(t.getBlockById(this.blockId),"tilemap-revision","revision",null,pxt.react.getTilemapProject().revision(),0,0);i.recordUndo=!1,Blockly.Events.fire(i)}}e.BlocklyTilemapChange=l}(pxtblockly||(pxtblockly={})),function(e){var t=pxt.svgUtil;const i=32;class o extends e.FieldAssetEditor{constructor(){super(...arguments),this.onMouseEnter=()=>{if(this.animateRef||!this.asset)return;const e=this.getParentInterval()||this.asset.interval,t=e>50?e:50;let i=0;this.animateRef=setInterval((()=>{this.preview&&this.frames[i]&&this.preview.src(this.frames[i]),i=(i+1)%this.frames.length}),t)},this.onMouseLeave=()=>{this.animateRef&&clearInterval(this.animateRef),this.animateRef=void 0,this.preview&&this.frames[0]&&this.preview.src(this.frames[0])}}initView(){this.sourceBlock_.getSvgRoot().addEventListener("mouseenter",this.onMouseEnter),this.sourceBlock_.getSvgRoot().addEventListener("mouseleave",this.onMouseLeave)}showEditor_(){this.asset&&(this.asset.interval=this.getParentInterval()||this.asset.interval),super.showEditor_()}render_(){super.render_(),this.size_.height=42,this.size_.width=80}getAssetType(){return"animation"}createNewAsset(e){const t=pxt.react.getTilemapProject();if(e){const o=pxt.lookupProjectAssetByTSReference(e,t);if(o)return o;const s=-1===(i=e).indexOf("[")?null:(i=i.replace(/[\[\]]/gm,"")).split(",").map((e=>pxt.sprite.imageLiteralToBitmap(e).data())).filter((e=>e.height&&e.width));if(s&&s.length){return{internalID:-1,id:this.sourceBlock_.id,type:"animation",frames:s,interval:this.getParentInterval(),meta:{}}}const l=t.lookupAssetByName("animation",e.trim());if(l)return l}var i;return{internalID:-1,id:this.sourceBlock_.id,type:"animation",frames:[new pxt.sprite.Bitmap(this.params.initWidth,this.params.initHeight).data()],interval:500,meta:{}}}onEditorClose(e){this.setParentInterval(e.interval)}getValueText(){return this.asset?this.isTemporaryAsset()?"["+this.asset.frames.map((e=>pxt.sprite.bitmapToImageLiteral(pxt.sprite.Bitmap.fromData(e),"typescript"))).join(",")+"]":pxt.getTSReferenceForAsset(this.asset):"[]"}redrawPreview(){if(!this.fieldGroup_)return;pxsim.U.clear(this.fieldGroup_);const o=(new t.Rect).at(35,1).size(40,40).corner(4).setClass("blocklyAnimationField");this.fieldGroup_.appendChild(o.el);const s=new t.Text("").at(5,26).fill(this.sourceBlock_.getColourSecondary()).setClass("semanticIcon");this.fieldGroup_.appendChild(s.el),this.asset&&(this.frames=this.asset.frames.map((t=>e.bitmapToImageURI(pxt.sprite.Bitmap.fromData(t),i,this.lightMode))),this.preview=(new t.Image).src(this.frames[0]).at(39,5).size(i,i),this.fieldGroup_.appendChild(this.preview.el))}getParentIntervalBlock(){const e=this.sourceBlock_;if(e.parentBlock_){const t=e.parentBlock_;for(const e of t.inputList)if("frameInterval"===e.name)return e.connection.targetBlock()}}setParentInterval(e){const t=this.getParentIntervalBlock();if(t){const i=s(t);i&&t.setFieldValue(String(e),i)}}getParentInterval(){const e=this.getParentIntervalBlock();if(e){const t=s(e);if(t)return Number(e.getFieldValue(t))}return 100}parseFieldOptions(e){return function(e){const t={initWidth:16,initHeight:16,disableResize:!1,lightMode:!1};if(!e)return t;t.lightMode=e.lightMode,e.filter&&(t.filter=e.filter);return t.initWidth=i(e.initWidth,t.initWidth),t.initHeight=i(e.initHeight,t.initHeight),t;function i(e,t){const i=parseInt(e);return isNaN(i)?t:i}}(e)}}function s(e){return"math_number_minmax"===e.type?"SLIDER":"math_number"===(t=e.type)||"math_integer"===t||"math_whole_number"===t?"NUM":"timePicker"===e.type?"ms":null;var t}e.FieldAnimationEditor=o}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldVariable{constructor(e){super(e),this.menuGenerator_=this.dropdownCreate}dropdownCreate(){return Blockly.FieldVariable.dropdownCreate.call(this).filter((e=>e[1]!=Blockly.DELETE_VARIABLE_ID))}}e.FieldArgumentVariable=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldNumber{constructor(e,t,i){super(e,void 0,void 0,void 0,i),this.isFieldCustom_=!0,this.CURSOR="pointer",this.params=t,this.setValue(e),this.addArgType("toggle"),this.type_=t.type}initView(){if(!this.fieldGroup_)return;null!==this.getArgTypes()&&(this.sourceBlock_.isShadow()?this.sourceBlock_.svgGroup_.setAttribute("data-argument-type",this.getArgTypes()):this.fieldGroup_.setAttribute("data-argument-type",this.getArgTypes()));const e=this.getSize();this.checkElement_=Blockly.utils.dom.createSvgElement("g",{class:"blocklyToggle "+(this.state_?"blocklyToggleOnBreakpoint":"blocklyToggleOffBreakpoint"),transform:`translate(8, ${e.height/2})`},this.fieldGroup_),this.toggleThumb_=Blockly.utils.dom.createSvgElement("polygon",{class:"blocklyToggleRect",points:"50,5 100,5 125,30 125,80 100,105 50,105 25,80 25,30"},this.checkElement_);let t=this.sourceBlock_.RTL?-e.width/2:e.width/2;this.textElement_=Blockly.utils.dom.createSvgElement("text",{class:"blocklyText",x:t,dy:"0.6ex",y:e.height/2},this.fieldGroup_),this.switchToggle(this.state_),this.setValue(this.getValue()),this.markDirty()}updateSize_(){this.size_.width=30}getValue(){return this.toVal(this.state_)}setValue(e){let t=this.fromVal(e);this.state_!==t&&(this.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.state_,t)),this.state_=t,this.switchToggle(this.state_))}switchToggle(e){this.checkElement_&&(this.updateSize_(),e?(pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOnBreakpoint"),pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOffBreakpoint")):(pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOnBreakpoint"),pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOffBreakpoint")),this.checkElement_.setAttribute("transform","translate(-7, -1) scale(0.3)"))}updateDisplay_(e){super.updateDisplay_(e),this.textElement_&&pxt.BrowserUtils.addClass(this.textElement_,"blocklyToggleText")}render_(){this.visible_&&this.textElement_&&(goog.dom.removeChildren(this.textElement_),this.updateSize_())}showEditor_(){let e=!this.state_;null!==e&&this.setValue(this.toVal(e))}toVal(e){return"number"==this.type_?String(e?"1":"0"):String(e?"true":"false")}fromVal(e){return"string"==typeof e?"1"==e||"TRUE"==e.toUpperCase():!!e}}e.FieldBreakpoint=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldSlider{constructor(e,t,i){super(String(e),"0","255","1","10","Color",i),this.isFieldCustom_=!0,this.params=t,this.params.min&&(this.min_=parseFloat(this.params.min)),this.params.max&&(this.max_=parseFloat(this.params.max)),this.params.label&&(this.labelText_=this.params.label),this.params.channel&&(this.channel_=this.params.channel)}setBackground_(e){let t=this.createColourStops_().join(",");goog.style.setStyle(e,"background","-moz-linear-gradient(left, "+t+")"),goog.style.setStyle(e,"background","-webkit-linear-gradient(left, "+t+")"),goog.style.setStyle(e,"background","-o-linear-gradient(left, "+t+")"),goog.style.setStyle(e,"background","-ms-linear-gradient(left, "+t+")"),goog.style.setStyle(e,"background","linear-gradient(left, "+t+")"),this.params.sliderWidth&&goog.style.setStyle(e,"width",`${this.params.sliderWidth}px`)}setReadout_(e,t){const i=this.colorWheel(parseInt(t),this.channel_),o=document.createElement("span");o.className="blocklyColorReadout",o.style.backgroundColor=`${i}`,pxsim.U.clear(e),e.appendChild(o)}createColourStops_(){let e=[];for(let t=0;t<=255;t+=20)e.push(this.colorWheel(t,this.channel_));return e}colorWheel(e,t){return"hsvfast"==t?this.hsvFast(e,255,255):(e=255-e)<85?this.hex(3*e,255,255-3*e):e<170?(e-=85,this.hex(255,255-3*e,3*e)):(e-=170,this.hex(255-3*e,3*e,255))}hsvFast(e,t,i){let o=e%255>>0;o<0&&(o+=255),o=192*o/255>>0;let s,l,n,r=i*(255-t)/255>>0,a=i-r,c=o/64>>0,u=o%64>>0,d=(u*a/63.75>>0)+r,p=((63-u)*a/63.75>>0)+r;return c?1==c?(s=r,l=p,n=d):(s=d,l=r,n=p):(s=p,l=d,n=r),this.hex(s,l,n)}hex(e,t,i){return`#${this.componentToHex(255&e)}${this.componentToHex(255&t)}${this.componentToHex(255&i)}`}componentToHex(e){let t=e.toString(16);return 1==t.length?"0"+t:t}}e.FieldColorWheel=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldColour{constructor(e,t,i){if(super(e,i),this.isFieldCustom_=!0,this.valueMode_="rgb",t.colours)this.setColours(JSON.parse(t.colours));else if(pxt.appTarget.runtime&&pxt.appTarget.runtime.palette){let e,t=pxt.Util.clone(pxt.appTarget.runtime.palette);t[0]="#dedede",pxt.appTarget.runtime.paletteNames&&(e=pxt.Util.clone(pxt.appTarget.runtime.paletteNames),e[0]=lf("transparent")),this.setColours(t,e)}this.setValue(this.getColours_()[0]),t.columns&&this.setColumns(parseInt(t.columns)),t.className&&(this.className_=t.className),t.valueMode&&(this.valueMode_=t.valueMode)}applyColour(){var e,t,i,o,s,l;this.borderRect_?this.borderRect_.style.fill=this.value_:this.sourceBlock_&&(null===(i=null===(t=null===(e=this.sourceBlock_)||void 0===e?void 0:e.pathObject)||void 0===t?void 0:t.svgPath)||void 0===i||i.setAttribute("fill",this.value_),null===(l=null===(s=null===(o=this.sourceBlock_)||void 0===o?void 0:o.pathObject)||void 0===s?void 0:s.svgPath)||void 0===l||l.setAttribute("stroke","#fff"))}doClassValidation_(e){return"string"!=typeof e?null:i(e,this.getColours_())}getValue(e){if(e)return this.value_;switch(this.valueMode_){case"hex":return`"${this.value_}"`;case"rgb":return this.value_.indexOf("#")>-1?`0x${this.value_.replace(/^#/,"")}`:this.value_;case"index":if(!this.value_)return"-1";const e=this.getColours_();for(let t=0;t<e.length;t++)if(this.value_.toUpperCase()===e[t].toUpperCase())return t+""}return this.value_}doValueUpdate_(e){this.value_=i(e,this.getColours_()),this.applyColour()}showEditor_(){super.showEditor_(),this.className_&&this.picker_&&pxt.BrowserUtils.addClass(this.picker_,this.className_)}getColours_(){return this.colours_}}function i(e,t){if(e){const i=/Colors\.([a-zA-Z]+)/.exec(e),o=/(0x|#)([0-9a-fA-F]+)/.exec(e);if(i)switch(i[1].toLocaleLowerCase()){case"red":return"#FF0000";case"orange":return"#FF7F00";case"yellow":return"#FFFF00";case"green":return"#00FF00";case"blue":return"#0000FF";case"indigo":return"#4B0082";case"violet":return"#8A2BE2";case"purple":return"#A033E5";case"pink":return"#FF007F";case"white":return"#FFFFFF";case"black":return"#000000";default:return e}else if(o){const e=o[2];if(3===e.length){let t="#";for(let i=0;i<e.length;i++){const o=e.charAt(i);t+=o+o}return t}if(6===e.length)return"#"+e}if(t){const i=parseInt(e);return isNaN(i)||null==t[i]?t[0]:t[i]}}return e}e.FieldColorNumber=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldDropdown{constructor(t,i,o){super(i.data),this.isFieldCustom_=!0,this.buttonClick_=function(e){let t=e.target.getAttribute("data-value");null!==t&&(this.setValue(t),this.closeModal_&&(this.close(),this.closeModal_=!1))},this.buttonClickAndClose_=function(e){this.closeModal_=!0,this.buttonClick_(e)},this.columns_=parseInt(i.columns)||4,this.maxRows_=parseInt(i.maxRows)||0,this.width_=parseInt(i.width)||200,this.backgroundColour_=e.parseColour(i.colour),this.borderColour_=pxt.toolbox.fadeColor(this.backgroundColour_,.4,!1);let s={xOffset:parseInt(i.tooltipsXOffset)||15,yOffset:parseInt(i.tooltipsYOffset)||-10};this.tooltipConfig_=s,this.hasSearchBar_=!!i.hasSearchBar||!1,this.hideRect_=!!i.hideRect||!1}dispose(){super.dispose(),this.disposeTooltip(),this.disposeIntersectionObserver()}createTooltip_(){this.gridTooltip_||(this.gridTooltip_=document.createElement("div"),this.gridTooltip_.className="goog-tooltip blocklyGridPickerTooltip",this.gridTooltip_.style.position="absolute",this.gridTooltip_.style.display="none",this.gridTooltip_.style.visibility="hidden",document.body.appendChild(this.gridTooltip_))}populateTableContainer(e,t,i){pxsim.U.removeChildren(t),0==e.length&&(this.firstItem_=void 0);for(let i=0;i<e.length/this.columns_;i++){let o=this.populateRow(i,e,t);t.appendChild(o)}}populateRow(e,i,o){const s=this.columns_,l=document.createElement("div");l.className="blocklyGridPickerRow";for(let n=s*e;n<Math.min(s*e+s,i.length);n++){let e=i[n][0];const s=i[n][1],r=document.createElement("div");r.className="goog-menuitem goog-option",r.setAttribute("id",":"+n),r.setAttribute("role","menuitem"),r.style.userSelect="none",r.title=e.alt||e,r.setAttribute("data-value",s);const a=document.createElement("div");a.setAttribute("class","goog-menuitem-content"),a.title=e.alt||e,a.setAttribute("data-value",s);const c="object"==typeof e;let u=this.backgroundColour_;if(s==this.getValue()&&(r.setAttribute("aria-selected","true"),pxt.BrowserUtils.addClass(r,"goog-option-selected"),u=this.sourceBlock_.getColourTertiary(),this.selectedItemDom=r,c&&!this.shouldShowTooltips()&&this.updateSelectedBar_(e,s)),r.style.backgroundColor=u,r.style.borderColor=this.borderColour_,c){const i=new Image(e.width,e.height);i.setAttribute("draggable","false"),"IntersectionObserver"in window?(i.src=t.DEFAULT_IMG,i.setAttribute("data-src",e.src),this.observer.observe(i)):i.src=e.src,i.alt=e.alt||"",i.setAttribute("data-value",s),a.appendChild(i)}else a.textContent=e;if(this.shouldShowTooltips()){Blockly.bindEvent_(r,"click",this,this.buttonClickAndClose_);const e=this.sourceBlock_.RTL?-this.tooltipConfig_.xOffset:this.tooltipConfig_.xOffset,t=this.tooltipConfig_.yOffset;Blockly.bindEvent_(r,"mousemove",this,(i=>{if(c){this.gridTooltip_.style.top=`${i.clientY+t}px`,this.gridTooltip_.style.left=`${i.clientX+e}px`;const o=document.elementFromPoint(i.clientX,i.clientY),s=o.title||o.alt;this.gridTooltip_.textContent=s,this.gridTooltip_.style.visibility=s?"visible":"hidden",this.gridTooltip_.style.display=s?"":"none"}pxt.BrowserUtils.addClass(r,"goog-menuitem-highlight"),o.setAttribute("aria-activedescendant",r.id)})),Blockly.bindEvent_(r,"mouseout",this,(e=>{c&&(this.gridTooltip_.style.visibility="hidden",this.gridTooltip_.style.display="none"),pxt.BrowserUtils.removeClass(r,"goog-menuitem-highlight"),o.removeAttribute("aria-activedescendant")}))}else c?(this.selectedBar_.style.display="",Blockly.bindEvent_(r,"click",this,(t=>{if(this.closeModal_)this.buttonClick_(t);else{const t=o.getElementsByClassName("goog-menuitem-highlight");for(let e=0;e<t.length;e++)pxt.BrowserUtils.removeClass(t[e],"goog-menuitem-highlight");pxt.BrowserUtils.addClass(r,"goog-menuitem-highlight"),this.updateSelectedBar_(e,s)}}))):(Blockly.bindEvent_(r,"click",this,this.buttonClickAndClose_),Blockly.bindEvent_(r,"mouseup",this,this.buttonClickAndClose_));r.appendChild(a),l.appendChild(r),0==n&&(this.firstItem_=r)}return l}shouldShowRect_(){return!this.hideRect_&&!this.sourceBlock_.isShadow()}doClassValidation_(e){return e}close(){this.disposeTooltip(),Blockly.WidgetDiv.hideIfOwner(this),Blockly.Events.setGroup(!1)}getFirstItem(){return this.firstItem_}highlightFirstItem(e){let t=e.childNodes;if(t.length&&t[0].childNodes){for(let e=0;e<t.length;++e){let i=t[e].childNodes.length;for(let o=0;o<i;++o){const i=t[e].childNodes[o];pxt.BrowserUtils.removeClass(i,"goog-menuitem-highlight"),pxt.BrowserUtils.removeClass(i,"goog-option-selected")}}t[0].childNodes[0].className+=" goog-menuitem-highlight"}}highlightAndScrollSelected(e,t){this.selectedItemDom&&goog.style.scrollIntoContainerView(this.selectedItemDom,t,!0)}showEditor_(){Blockly.WidgetDiv.show(this,this.sourceBlock_.RTL,(()=>{this.onClose_()})),this.setupIntersectionObserver_(),this.createTooltip_();const e=document.createElement("div");this.positionMenu_(e)}positionMenu_(e){const t=Blockly.utils.getViewportBBox(),i=this.getAnchorDimensions_(),{paddingContainer:o,scrollContainer:s}=this.createWidget_(e),l={width:o.offsetWidth,height:o.offsetHeight},n=goog.dom.getViewportSize();this.width_>n.width&&(this.width_=n.width),e.style.width=this.width_+"px";let r=0;if(this.hasSearchBar_&&(r+=50),this.selectedBar_&&(r+=50),this.maxRows_){let t=e.children[0].offsetHeight*(this.maxRows_+.3);n.height<t+r&&(t=n.height-r),l.height>t&&(s.style.overflowY="auto",goog.style.setHeight(s,t),l.height=t)}l.height+=r,this.sourceBlock_.RTL&&Blockly.utils.uiMenu.adjustBBoxesForRTL(t,i,l),Blockly.WidgetDiv.positionWithAnchor(t,i,l,this.sourceBlock_.RTL),this.highlightAndScrollSelected(e,s)}shouldShowTooltips(){return!pxt.BrowserUtils.isMobile()}getAnchorDimensions_(){const e=this.getScaledBBox();return this.sourceBlock_.RTL?e.right+=Blockly.FieldDropdown.CHECKMARK_OVERHANG:e.left-=Blockly.FieldDropdown.CHECKMARK_OVERHANG,e}createWidget_(e){const t=Blockly.WidgetDiv.DIV,i=this.getOptions();e.setAttribute("role","menu"),e.setAttribute("aria-haspopup","true");const o=document.createElement("div"),s=document.createElement("div");if(s.style.border=`solid 1px ${this.borderColour_}`,e.style.backgroundColor=this.backgroundColour_,o.style.backgroundColor=this.backgroundColour_,s.style.backgroundColor=this.backgroundColour_,e.className="blocklyGridPickerMenu",o.className="blocklyGridPickerScroller",s.className="blocklyGridPickerPadder",s.appendChild(o),o.appendChild(e),t.appendChild(s),this.hasSearchBar_){const t=this.createSearchBar_(e,o,i);s.insertBefore(t,s.childNodes[0])}return this.shouldShowTooltips()||(this.selectedBar_=this.createSelectedBar_(),s.appendChild(this.selectedBar_)),this.populateTableContainer(i,e,o),{paddingContainer:s,scrollContainer:o}}createSearchBar_(e,t,i){const o=document.createElement("div");o.setAttribute("class","ui fluid icon input");const s=document.createElement("i");s.setAttribute("class","search icon");const l=document.createElement("input");return l.setAttribute("type","search"),l.setAttribute("id","search-bar"),l.setAttribute("class","blocklyGridPickerSearchBar"),l.setAttribute("placeholder",pxt.Util.lf("Search")),l.addEventListener("click",(()=>{l.focus(),l.setSelectionRange(0,l.value.length)})),l.addEventListener("keyup",pxt.Util.debounce((()=>{let o=l.value,s=new RegExp(o,"i"),n=i.filter((e=>{const t=e[0].alt,i=e[1];return t?s.test(t):s.test(i)}));this.populateTableContainer.bind(this)(n,e,t),o?this.highlightFirstItem(e):this.highlightAndScrollSelected(e,t),this.gridTooltip_.style.visibility="hidden",this.gridTooltip_.style.display="none"}),300,!1)),l.addEventListener("keyup",(t=>{if(13==t.which){const t=e.childNodes[0];if(t){const e=t.childNodes[0];e&&(this.closeModal_=!0,e.click())}}})),o.appendChild(l),o.appendChild(s),o}createSelectedBar_(){const e=document.createElement("div");e.setAttribute("class","blocklyGridPickerSelectedBar"),e.style.display="none";const i=document.createElement("div"),o=document.createElement("div");o.className="blocklyGridPickerSelectedImage",i.appendChild(o),this.selectedImg_=document.createElement("img"),this.selectedImg_.setAttribute("width","30px"),this.selectedImg_.setAttribute("height","30px"),this.selectedImg_.setAttribute("draggable","false"),this.selectedImg_.style.display="none",this.selectedImg_.src=t.DEFAULT_IMG,o.appendChild(this.selectedImg_),this.selectedBarText_=document.createElement("span"),this.selectedBarText_.className="blocklyGridPickerTooltip",i.appendChild(this.selectedBarText_);const s=document.createElement("div"),l=document.createElement("div");l.className="ui buttons mini",s.appendChild(l);const n=document.createElement("button");n.className="ui button icon green";const r=document.createElement("i");r.className="icon check",n.appendChild(r),Blockly.bindEvent_(n,"click",this,(()=>{this.setValue(this.selectedBarValue_),this.close()}));const a=document.createElement("button");a.className="ui button icon red";const c=document.createElement("i");return c.className="icon cancel",a.appendChild(c),Blockly.bindEvent_(a,"click",this,(()=>{this.close()})),l.appendChild(n),l.appendChild(a),e.appendChild(i),e.appendChild(s),e}updateSelectedBar_(e,t){e.src&&(this.selectedImg_.src=e.src,this.selectedImg_.style.display=""),this.selectedImg_.alt=e.alt||e,this.selectedBarText_.textContent=e.alt||e,this.selectedBarValue_=t}setupIntersectionObserver_(){if(!("IntersectionObserver"in window))return;this.disposeIntersectionObserver();this.observer=new IntersectionObserver((e=>{e.forEach((e=>{e.intersectionRatio>0&&(this.observer.unobserve(e.target),(e=>{const t=e.getAttribute("data-src");t&&(e.src=t,e.removeAttribute("data-src"))})(e.target))}))}),{rootMargin:"20px 0px",threshold:.01})}disposeIntersectionObserver(){this.observer&&(this.observer=null)}disposeTooltip(){this.gridTooltip_&&(pxsim.U.remove(this.gridTooltip_),this.gridTooltip_=null)}onClose_(){this.disposeTooltip()}}t.DEFAULT_IMG="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",e.FieldGridPicker=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldDropdown{constructor(t,i,o){super(i.data),this.isFieldCustom_=!0,this.buttonClick_=function(e){let t=e.target.getAttribute("data-value");t&&(this.setValue(t),Blockly.DropDownDiv.hide())},this.columns_=parseInt(i.columns),this.maxRows_=parseInt(i.maxRows)||0,this.width_=parseInt(i.width)||300,this.backgroundColour_=e.parseColour(i.colour),this.borderColour_=pxt.toolbox.fadeColor(this.backgroundColour_,.4,!1)}showEditor_(){if(Blockly.DropDownDiv.hideIfOwner(this))return;Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent();let e=Blockly.DropDownDiv.getContentDiv(),t=document.createElement("div");t.setAttribute("role","menu"),t.setAttribute("aria-haspopup","true");const i=this.getOptions();let o=0;for(let e=0;e<i.length;e++){let s=i[e][0];const l=i[e][1];if("placeholder"==s.type){let e=document.createElement("span");e.setAttribute("class","blocklyDropDownPlaceholder"),e.style.width=s.width+"px",e.style.height=s.height+"px",t.appendChild(e);continue}let n=document.createElement("button");n.setAttribute("id",":"+e),n.setAttribute("role","menuitem"),n.setAttribute("class","blocklyDropDownButton"),n.title=s.alt;let r=s.height;this.columns_?(r=this.width_/this.columns_-8,n.style.width=r+"px",n.style.height=r+"px"):(n.style.width=s.width+"px",n.style.height=s.height+"px"),r>o&&(o=r);let a=this.backgroundColour_;l==this.getValue()&&(a=this.sourceBlock_.getColourTertiary(),n.setAttribute("aria-selected","true")),n.style.backgroundColor=a,n.style.borderColor=this.borderColour_,Blockly.bindEvent_(n,"click",this,this.buttonClick_),Blockly.bindEvent_(n,"mouseover",n,(function(){this.setAttribute("class","blocklyDropDownButton blocklyDropDownButtonHover"),t.setAttribute("aria-activedescendant",this.id)})),Blockly.bindEvent_(n,"mouseout",n,(function(){this.setAttribute("class","blocklyDropDownButton"),t.removeAttribute("aria-activedescendant")}));let c=document.createElement("img");c.src=s.src,n.setAttribute("data-value",l),c.setAttribute("data-value",l),n.appendChild(c),t.appendChild(n)}t.style.width=this.width_+"px",e.appendChild(t),this.maxRows_&&(e.style.maxHeight=(this.maxRows_+.4)*(o+8)+"px"),pxt.BrowserUtils.isFirefox()&&(e.style.paddingRight="20px"),Blockly.DropDownDiv.setColour(this.backgroundColour_,this.borderColour_),Blockly.DropDownDiv.showPositionedByField(this,this.onHide_.bind(this));let s=this.sourceBlock_;this.savedPrimary_=null==s?void 0:s.getColour(),(null==s?void 0:s.isShadow())?s.setColour(s.getColourTertiary()):this.borderRect_&&this.borderRect_.setAttribute("fill",s.getColourTertiary())}onHide_(){let e=Blockly.DropDownDiv.getContentDiv();e.removeAttribute("role"),e.removeAttribute("aria-haspopup"),e.removeAttribute("aria-activedescendant"),e.style.width="",e.style.paddingRight="",e.style.maxHeight="";let t=this.sourceBlock_;(null==t?void 0:t.isShadow())?this.sourceBlock_.setColour(this.savedPrimary_):this.borderRect_&&this.borderRect_.setAttribute("fill",this.savedPrimary_)}}e.FieldImageDropdown=t}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldImageDropdown{constructor(e,t,i){super(e,t,i),this.isFieldCustom_=!0,this.shouldSort_=t.sort,this.addLabel_=!!t.addLabel}showEditor_(){if(Blockly.DropDownDiv.hideIfOwner(this))return;let e=this.sourceBlock_;Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent();let t=Blockly.DropDownDiv.getContentDiv(),i=document.createElement("div");i.setAttribute("role","menu"),i.setAttribute("aria-haspopup","true");const o=this.getOptions();this.shouldSort_&&o.sort();for(let t=0;t<o.length;t++){const s=o[t][0],l=o[t][1];if("placeholder"==s.type){let e=document.createElement("span");e.setAttribute("class","blocklyDropDownPlaceholder"),e.style.width=s.width+"px",e.style.height=s.height+"px",i.appendChild(e);continue}let n=document.createElement("button");n.setAttribute("id",":"+t),n.setAttribute("role","menuitem"),n.setAttribute("class","blocklyDropDownButton"),n.title=s.alt,this.columns_?n.style.width=this.width_/this.columns_-8+"px":(n.style.width=s.width+"px",n.style.height=s.height+"px");let r=e.getColour();l==this.getValue()&&(r=e.getColourTertiary(),n.setAttribute("aria-selected","true")),n.style.backgroundColor=r,n.style.borderColor=e.getColourTertiary(),Blockly.bindEvent_(n,"click",this,this.buttonClick_),Blockly.bindEvent_(n,"mouseover",n,(function(){this.setAttribute("class","blocklyDropDownButton blocklyDropDownButtonHover"),i.setAttribute("aria-activedescendant",this.id)})),Blockly.bindEvent_(n,"mouseout",n,(function(){this.setAttribute("class","blocklyDropDownButton"),i.removeAttribute("aria-activedescendant")}));let a=document.createElement("img");if(a.src=s.src,n.setAttribute("data-value",l),a.setAttribute("data-value",l),n.appendChild(a),this.addLabel_){const e=this.createTextNode_(s.alt);e.setAttribute("data-value",l),n.appendChild(e)}i.appendChild(n)}i.style.width=this.width_+"px",t.appendChild(i),Blockly.DropDownDiv.setColour(e.getColour(),e.getColourTertiary()),Blockly.DropDownDiv.showPositionedByField(this,this.onHideCallback.bind(this)),this.savedPrimary_=null==e?void 0:e.getColour(),(null==e?void 0:e.isShadow())?e.setColour(e.style.colourTertiary):this.borderRect_&&this.borderRect_.setAttribute("fill",e.style.colourTertiary)}onHideCallback(){let e=this.sourceBlock_;(null==e?void 0:e.isShadow())?e.setColour(this.savedPrimary_):this.borderRect_&&this.borderRect_.setAttribute("fill",this.savedPrimary_)}createTextNode_(e){const t=document.createElement("span");return t.setAttribute("class","blocklyDropdownTextLabel"),t.textContent=e,t}}e.FieldImages=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldDropdown{constructor(e){super(function(e){return function(){const t=[],i=this;if(i.sourceBlock_&&i.sourceBlock_.workspace){i.sourceBlock_.workspace.getVariablesOfType(l(e.name)).forEach((e=>{t.push([e.name,e.name])}))}else e.initialMembers.forEach((e=>t.push([e,e])));return t.push([lf("Add a new {0}...",e.memberName),"CREATE"]),t}}(e)),this.opts=e}initView(){super.initView()}onItemSelected_(e,t){"CREATE"===t.getValue()?i(this.sourceBlock_.workspace,this.opts,lf("New {0}:",this.opts.memberName),(e=>e&&this.setValue(e))):super.onItemSelected_(e,t)}doClassValidation_(e){var t;return(null===(t=this.opts)||void 0===t?void 0:t.initialMembers)&&!this.opts.initialMembers.find((t=>t==e))&&this.getOptions(),super.doClassValidation_(e)}getOptions(e){return this.initVariables(),super.getOptions(e)}initVariables(){if(this.sourceBlock_&&this.sourceBlock_.workspace){const e=this.sourceBlock_.workspace,t=o(e,this.opts.name);this.opts.initialMembers.forEach((i=>{-1===t.indexOf(i)&&s(e,this.opts,i)})),"CREATE"===this.getValue()&&this.opts.initialMembers.length&&this.setValue(this.opts.initialMembers[0])}}}function i(e,t,l,n){Blockly.prompt(l,null,(r=>{if(r){let a=!1;if(pxtc.isIdentifierStart(r.charCodeAt(0),2)){a=!0;for(let e=1;e<r.length;e++)pxtc.isIdentifierPart(r.charCodeAt(e),2)||(a=!1)}if(!a)return void Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."),(()=>i(e,t,l,n)));if(pxt.blocks.isReservedWord(r))return void Blockly.alert(lf("'{0}' is a reserved word and cannot be used.",r),(()=>i(e,t,l,n)));const c=o(e,t.name);for(let o=0;o<c.length;o++){if(c[o]===r)return void Blockly.alert(lf("A {0} named '{1}' already exists.",t.memberName,r),(()=>i(e,t,l,n)))}r===t.createFunctionName&&Blockly.alert(lf("'{0}' is a reserved name.",t.createFunctionName),(()=>i(e,t,l,n))),n(s(e,t,r))}}),{placeholder:t.promptHint})}function o(e,t){const i=e.getVariablesOfType(l(t));return i&&i.length?i.map((e=>e.name)):[]}function s(e,t,i){return Blockly.Variables.getOrCreateVariablePackage(e,null,i,l(t.name)),i}function l(e){return"KIND_"+e}e.FieldKind=t}(pxtblockly||(pxtblockly={}));const rowRegex=/^.*[\.#].*$/;var LabelMode,pxtblockly;!function(e){e[e.None=0]="None",e[e.Number=1]="Number",e[e.Letter=2]="Letter"}(LabelMode||(LabelMode={})),function(e){class t extends Blockly.Field{constructor(e,t,i){if(super(e,i),this.isFieldCustom_=!0,this.SERIALIZABLE=!0,this.onColor="#FFFFFF",this.scale=1,this.matrixWidth=5,this.matrixHeight=5,this.yAxisLabel=LabelMode.None,this.xAxisLabel=LabelMode.None,this.cellState=[],this.cells=[],this.dontHandleMouseEvent_=e=>{e.stopPropagation(),e.preventDefault()},this.clearLedDragHandler=e=>{const t=this.sourceBlock_.getSvgRoot();pxsim.pointerEvents.down.forEach((e=>t.removeEventListener(e,this.dontHandleMouseEvent_))),t.removeEventListener(pxsim.pointerEvents.move,this.dontHandleMouseEvent_),document.removeEventListener(pxsim.pointerEvents.up,this.clearLedDragHandler),document.removeEventListener(pxsim.pointerEvents.leave,this.clearLedDragHandler),Blockly.Touch.clearTouchIdentifier(),this.elt.removeEventListener(pxsim.pointerEvents.move,this.handleRootMouseMoveListener),e.stopPropagation(),e.preventDefault()},this.toggleRect=(e,t)=>{this.cellState[e][t]=this.currentDragState_,this.updateValue()},this.handleRootMouseMoveListener=e=>{let t,i;e.changedTouches&&1==e.changedTouches.length?(t=e.changedTouches[0].clientX,i=e.changedTouches[0].clientY):(t=e.clientX,i=e.clientY);const o=document.elementFromPoint(t,i);if(!o)return;const s=o.getAttribute("data-x"),l=o.getAttribute("data-y");null!=s&&null!=l&&this.toggleRect(parseInt(s),parseInt(l))},this.params=t,void 0!==this.params.rows){let e=parseInt(this.params.rows);isNaN(e)||(this.matrixHeight=e)}if(void 0!==this.params.columns){let e=parseInt(this.params.columns);isNaN(e)||(this.matrixWidth=e)}void 0!==this.params.onColor&&(this.onColor=this.params.onColor),void 0!==this.params.offColor&&(this.offColor=this.params.offColor),void 0!==this.params.scale?this.scale=Math.max(.6,Math.min(2,Number(this.params.scale))):Math.max(this.matrixWidth,this.matrixHeight)>15?this.scale=.85:Math.max(this.matrixWidth,this.matrixHeight)>10&&(this.scale=.9)}showEditor_(){}initMatrix(){if(!this.sourceBlock_.isInsertionMarker()){this.elt=pxsim.svg.parseString('<svg xmlns="http://www.w3.org/2000/svg" id="field-matrix" />');for(let e=0;e<this.matrixWidth;e++){this.cellState.push([]),this.cells.push([]);for(let t=0;t<this.matrixHeight;t++)this.cellState[e].push(!1)}this.restoreStateFromString();for(let e=0;e<this.matrixWidth;e++)for(let t=0;t<this.matrixHeight;t++)this.createCell(e,t);if(this.updateValue(),this.xAxisLabel!==LabelMode.None){const e=this.scale*this.matrixHeight*(t.CELL_WIDTH+t.CELL_VERTICAL_MARGIN)+2*t.CELL_VERTICAL_MARGIN+t.BOTTOM_MARGIN,i=pxsim.svg.child(this.elt,"g",{transform:`translate(0 ${e})`});for(let e=0;e<this.matrixWidth;e++){const o=this.getYAxisWidth()+this.scale*e*(t.CELL_WIDTH+t.CELL_HORIZONTAL_MARGIN)+t.CELL_WIDTH/2+t.CELL_HORIZONTAL_MARGIN/2;pxsim.svg.child(i,"text",{x:o,class:"blocklyText"}).textContent=this.getLabel(e,this.xAxisLabel)}}if(this.yAxisLabel!==LabelMode.None){const e=pxsim.svg.child(this.elt,"g",{});for(let i=0;i<this.matrixHeight;i++){const o=this.scale*i*(t.CELL_WIDTH+t.CELL_VERTICAL_MARGIN)+t.CELL_WIDTH/2+2*t.CELL_VERTICAL_MARGIN;pxsim.svg.child(e,"text",{x:0,y:o,class:"blocklyText"}).textContent=this.getLabel(i,this.yAxisLabel)}}this.fieldGroup_.replaceChild(this.elt,this.fieldGroup_.firstChild)}}getLabel(e,t){switch(t){case LabelMode.Letter:return String.fromCharCode(e+65);default:return(e+1).toString()}}createCell(e,i){const o=this.scale*e*(t.CELL_WIDTH+t.CELL_HORIZONTAL_MARGIN)+t.CELL_HORIZONTAL_MARGIN+this.getYAxisWidth(),s=this.scale*i*(t.CELL_WIDTH+t.CELL_VERTICAL_MARGIN)+t.CELL_VERTICAL_MARGIN,l=pxsim.svg.child(this.elt,"g",{transform:`translate(${o} ${s})`}),n=pxsim.svg.child(l,"rect",{class:"blocklyLed"+(this.cellState[e][i]?"On":"Off"),cursor:"pointer",width:this.scale*t.CELL_WIDTH,height:this.scale*t.CELL_WIDTH,fill:this.getColor(e,i),"data-x":e,"data-y":i,rx:Math.max(2,this.scale*t.CELL_CORNER_RADIUS)});this.cells[e][i]=n,this.sourceBlock_.workspace.isFlyout||pxsim.pointerEvents.down.forEach((t=>n.addEventListener(t,(t=>{const o=this.sourceBlock_.getSvgRoot();this.currentDragState_=!this.cellState[e][i],Blockly.hideChaff(),this.sourceBlock_.select(),this.toggleRect(e,i),pxsim.pointerEvents.down.forEach((e=>o.addEventListener(e,this.dontHandleMouseEvent_))),o.addEventListener(pxsim.pointerEvents.move,this.dontHandleMouseEvent_),document.addEventListener(pxsim.pointerEvents.up,this.clearLedDragHandler),document.addEventListener(pxsim.pointerEvents.leave,this.clearLedDragHandler),this.elt.addEventListener(pxsim.pointerEvents.move,this.handleRootMouseMoveListener),t.stopPropagation(),t.preventDefault()}),!1)))}getColor(e,i){return this.cellState[e][i]?this.onColor:this.offColor||t.DEFAULT_OFF_COLOR}getOpacity(e,t){return this.cellState[e][t]?"1.0":"0.2"}updateCell(e,t){const i=this.cells[e][t];i.setAttribute("fill",this.getColor(e,t)),i.setAttribute("fill-opacity",this.getOpacity(e,t)),i.setAttribute("class","blocklyLed"+(this.cellState[e][t]?"On":"Off"))}setValue(e,t=!0){if(super.setValue(String(e)),this.elt){t&&this.restoreStateFromString();for(let e=0;e<this.matrixWidth;e++)for(let t=0;t<this.matrixHeight;t++)this.updateCell(e,t)}}render_(){this.visible_?(this.elt||this.initMatrix(),this.size_.height=this.scale*Number(this.matrixHeight)*(t.CELL_WIDTH+t.CELL_VERTICAL_MARGIN)+2*t.CELL_VERTICAL_MARGIN+t.BOTTOM_MARGIN+this.getXAxisHeight(),this.size_.width=this.scale*Number(this.matrixWidth)*(t.CELL_WIDTH+t.CELL_HORIZONTAL_MARGIN)+this.getYAxisWidth()):this.markDirty()}getValue(){let e=function(e){const t=(e=(e||"").trim()).charAt(0);if(t===e.charAt(e.length-1)&&-1!==o.indexOf(t))return e.substr(1,e.length-2).trim();return e}(this.value_);return`\`\n${t.TAB}${e}\n${t.TAB}\``}restoreStateFromString(){let e=this.value_;if(e){const o=e.split("\n").filter((e=>rowRegex.test(e)));for(let e=0;e<o.length&&e<this.matrixHeight;e++){let s=0;const l=o[e];for(let o=0;o<l.length&&s<this.matrixWidth;o++)"."===(t=l[o])||"_"===t||"0"===t?(this.cellState[s][e]=!1,s++):i(l[o])&&(this.cellState[s][e]=!0,s++)}}var t}updateValue(){let e="";for(let i=0;i<this.matrixHeight;i++){for(let t=0;t<this.matrixWidth;t++)e+=(this.cellState[t][i]?"#":".")+" ";e+="\n"+t.TAB}this.setValue(e,!1)}getYAxisWidth(){return this.yAxisLabel===LabelMode.None?0:t.Y_AXIS_WIDTH}getXAxisHeight(){return this.xAxisLabel===LabelMode.None?0:t.X_AXIS_HEIGHT}}function i(e){return"#"===e||"*"===e||"1"===e}t.CELL_WIDTH=25,t.CELL_HORIZONTAL_MARGIN=7,t.CELL_VERTICAL_MARGIN=5,t.CELL_CORNER_RADIUS=5,t.BOTTOM_MARGIN=9,t.Y_AXIS_WIDTH=9,t.X_AXIS_HEIGHT=10,t.TAB="        ",t.DEFAULT_OFF_COLOR="#000000",e.FieldMatrix=t;const o=["'",'"',"`"]}(pxtblockly||(pxtblockly={})),function(e){var t=pxt.svgUtil;e.HEADER_HEIGHT=50,e.TOTAL_WIDTH=300;class i extends Blockly.Field{constructor(e,t,i){super(e,i),this.isFieldCustom_=!0,this.SERIALIZABLE=!0,this.soundingKeys=0,this.numRow=8,this.numCol=8,this.tempo=120,this.isPlaying=!1,this.timeouts=[],this.params=t,this.createMelodyIfDoesntExist()}init(){super.init(),this.onInit()}showEditor_(){Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent(),Blockly.DropDownDiv.setColour(this.getDropdownBackgroundColour(),this.getDropdownBorderColour());let e=Blockly.DropDownDiv.getContentDiv();pxt.BrowserUtils.addClass(e,"melody-content-div"),pxt.BrowserUtils.addClass(e.parentElement,"melody-editor-dropdown"),this.gallery=new pxtmelody.MelodyGallery,this.renderEditor(e),this.prevString=this.getValue(),Blockly.Events.fire(new Blockly.Events.Ui(this.sourceBlock_,"melody-editor",!1,!0)),Blockly.DropDownDiv.showPositionedByBlock(this,this.sourceBlock_,(()=>{this.onEditorClose(),pxt.BrowserUtils.removeClass(e,"melody-content-div"),pxt.BrowserUtils.removeClass(e.parentElement,"melody-editor-dropdown"),Blockly.Events.fire(new Blockly.Events.Ui(this.sourceBlock_,"melody-editor",!0,!1))}))}getValue(){return this.stringRep=this.getTypeScriptValue(),this.stringRep}doValueUpdate_(e){null==e||""==e||'""'==e||this.stringRep&&this.stringRep===e||(this.stringRep=e,this.parseTypeScriptValue(e),super.doValueUpdate_(this.getValue()))}getText_(){return this.invalidString?pxt.Util.lf("Invalid Input"):this.getValue()}onInit(){this.render_(),this.createMelodyIfDoesntExist(),this.invalidString||(this.fieldGroup_||(this.fieldGroup_=Blockly.utils.dom.createSvgElement("g",{},null)),this.visible_||(this.fieldGroup_.style.display="none"),this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_),this.updateFieldLabel())}render_(){super.render_(),this.invalidString||(this.size_.width=i.MUSIC_ICON_WIDTH+(i.COLOR_BLOCK_WIDTH+i.COLOR_BLOCK_SPACING)*this.numCol),this.sourceBlock_.setColour("#ffffff")}renderEditor(i){let o=this.getDropdownBackgroundColour(),s=this.getDropdownBorderColour();this.topDiv=document.createElement("div"),pxt.BrowserUtils.addClass(this.topDiv,"melody-top-bar-div"),this.root=new t.SVG(this.topDiv).id("melody-editor-header-controls"),this.toggle=new l(this.root,{leftText:lf("Editor"),rightText:lf("Gallery"),baseColor:o}),this.toggle.onStateChange((e=>{e?this.hideGallery():this.showGallery()})),this.toggle.layout(),this.toggle.translate((e.TOTAL_WIDTH-this.toggle.width())/2,0),i.appendChild(this.topDiv),i.appendChild(this.gallery.getElement()),this.editorDiv=document.createElement("div"),pxt.BrowserUtils.addClass(this.editorDiv,"melody-editor-div"),this.editorDiv.style.setProperty("background-color",s),this.gridDiv=this.createGridDisplay(),this.editorDiv.appendChild(this.gridDiv),this.bottomDiv=document.createElement("div"),pxt.BrowserUtils.addClass(this.bottomDiv,"melody-bottom-bar-div"),this.doneButton=document.createElement("button"),pxt.BrowserUtils.addClass(this.doneButton,"melody-confirm-button"),this.doneButton.innerText=lf("Done"),this.doneButton.addEventListener("click",(()=>this.onDone())),this.doneButton.style.setProperty("background-color",o),this.playButton=document.createElement("button"),this.playButton.id="melody-play-button",this.playButton.addEventListener("click",(()=>this.togglePlay())),this.playIcon=document.createElement("i"),this.playIcon.id="melody-play-icon",pxt.BrowserUtils.addClass(this.playIcon,"play icon"),this.playButton.appendChild(this.playIcon),this.tempoInput=document.createElement("input"),pxt.BrowserUtils.addClass(this.tempoInput,"ui input"),this.tempoInput.type="number",this.tempoInput.title=lf("tempo"),this.tempoInput.id="melody-tempo-input",this.tempoInput.addEventListener("input",(()=>this.setTempo(+this.tempoInput.value))),this.syncTempoField(!0),this.bottomDiv.appendChild(this.tempoInput),this.bottomDiv.appendChild(this.playButton),this.bottomDiv.appendChild(this.doneButton),this.editorDiv.appendChild(this.bottomDiv),i.appendChild(this.editorDiv)}onEditorClose(){this.stopMelody(),this.gallery&&this.gallery.stopMelody(),this.clearDomReferences(),this.sourceBlock_&&Blockly.Events.isEnabled()&&this.getValue()!==this.prevString&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.prevString,this.getValue())),this.prevString=void 0}onDone(){Blockly.DropDownDiv.hideIfOwner(this),this.onEditorClose()}clearDomReferences(){this.topDiv=null,this.editorDiv=null,this.gridDiv=null,this.bottomDiv=null,this.doneButton=null,this.playButton=null,this.playIcon=null,this.tempoInput=null,this.elt=null,this.cells=null,this.toggle=null,this.root=null,this.gallery.clearDomReferences()}getTypeScriptValue(){return this.invalidString?this.invalidString:this.melody?'"'+this.melody.getStringRepresentation()+'"':""}parseTypeScriptValue(e){let t=e;try{e=(e=e.slice(1,-1)).trim(),this.createMelodyIfDoesntExist();let t=e.split(" ");t.forEach((e=>{if(!this.isValidNote(e))throw new Error(lf("Invalid note '{0}'. Notes can be C D E F G A B C5",e))})),this.melody.resetMelody();for(let e=0;e<t.length;e++)if("-"!=t[e]){let i=pxtmelody.noteToRow(t[e]);this.melody.updateMelody(i,e)}this.updateFieldLabel()}catch(e){pxt.log(e),this.invalidString=t}}isValidNote(e){switch(e){case"C":case"D":case"E":case"F":case"G":case"A":case"B":case"C5":case"-":return!0}return!1}getPreviewWidth(){return this.updateSize_(),this.size_.width}getPreviewHeight(){var e;return(null===(e=this.getConstants())||void 0===e?void 0:e.FIELD_BORDER_RECT_HEIGHT)||16}getDropdownBackgroundColour(){return this.sourceBlock_.parentBlock_?this.sourceBlock_.parentBlock_.getColour():"#3D3D3D"}getDropdownBorderColour(){return this.sourceBlock_.parentBlock_?this.sourceBlock_.parentBlock_.getColourTertiary():"#2A2A2A"}updateFieldLabel(){if(!this.fieldGroup_)return;pxsim.U.clear(this.fieldGroup_);let e=n("").appendClass("melody-editor-field-icon").at(6,15);this.fieldGroup_.appendChild(e.el);let o=this.melody.getStringRepresentation().trim().split(" ");for(let e=0;e<o.length;e++){let s=pxtmelody.getColorClass(pxtmelody.noteToRow(o[e]));const l=(new t.Rect).at((i.COLOR_BLOCK_WIDTH+i.COLOR_BLOCK_SPACING)*e+i.COLOR_BLOCK_X,i.COLOR_BLOCK_Y).size(i.COLOR_BLOCK_WIDTH,i.COLOR_BLOCK_HEIGHT).stroke("#898989",1).corners(3,2);pxt.BrowserUtils.addClass(l.el,s),this.fieldGroup_.appendChild(l.el)}}setTempo(e){(isNaN(e)||e<=0)&&this.tempoInput?this.tempoInput.value=this.tempo+"":this.tempo!=e&&(this.tempo=e,this.melody&&this.melody.setTempo(this.tempo),this.tempoInput&&(this.tempoInput.value=this.tempo+""),this.syncTempoField(!1))}syncTempoField(e){const t=this.sourceBlock_;if(t.parentBlock_){const i=t.parentBlock_;for(const t of i.inputList)if("tempo"===t.name){const i=t.connection.targetBlock();i&&(e?i.getFieldValue("SLIDER")?(this.tempoInput.value=i.getFieldValue("SLIDER"),this.tempo=+this.tempoInput.value):this.tempoInput.value=this.tempo+"":("math_number_minmax"===i.type?i.setFieldValue(this.tempoInput.value,"SLIDER"):i.setFieldValue(this.tempoInput.value,"NUM"),this.tempoInput.focus()));break}}}getDuration(){return 6e4/this.tempo}createMelodyIfDoesntExist(){return!this.melody&&(this.melody=new pxtmelody.MelodyArray,!0)}onNoteSelect(e,t){this.invalidString=null,this.melody.updateMelody(e,t),this.melody.getValue(e,t)&&!this.isPlaying&&this.playNote(e,t),this.updateGrid(),this.updateFieldLabel()}updateGrid(){for(let e=0;e<this.numRow;e++){const t=pxtmelody.getColorClass(e);for(let i=0;i<this.numCol;i++){const o=this.cells[e][i];this.melody.getValue(e,i)?(pxt.BrowserUtils.removeClass(o,"melody-default"),pxt.BrowserUtils.addClass(o,t)):(pxt.BrowserUtils.addClass(o,"melody-default"),pxt.BrowserUtils.removeClass(o,t))}}}playNote(e,t){let i=++this.soundingKeys;this.isPlaying?(this.timeouts.push(setTimeout((()=>{this.playToneCore(e)}),t*this.getDuration())),this.timeouts.push(setTimeout((()=>{pxt.AudioContextManager.stop()}),(t+1)*this.getDuration()))):(this.playToneCore(e),this.timeouts.push(setTimeout((()=>{this.soundingKeys==i&&pxt.AudioContextManager.stop()}),this.getDuration())))}queueToneForColumn(e,t,i){const o=setTimeout((()=>{++this.soundingKeys,pxt.AudioContextManager.stop();for(let t=0;t<this.numRow;t++)this.melody.getValue(t,e)&&this.playToneCore(t);this.highlightColumn(e,!0),this.timeouts=this.timeouts.filter((e=>e!==o))}),t),s=setTimeout((()=>{this.timeouts=this.timeouts.filter((e=>e!==s)),this.highlightColumn(e,!1)}),t+i);this.timeouts.push(o),this.timeouts.push(s)}playToneCore(e){let t=0;switch(e){case 0:t=523;break;case 1:t=494;break;case 2:t=440;break;case 3:t=392;break;case 4:t=349;break;case 5:t=330;break;case 6:t=294;break;case 7:t=262}pxt.AudioContextManager.tone(t)}highlightColumn(e,t){this.cells.map((t=>t[e])).forEach((e=>{t?pxt.BrowserUtils.addClass(e,"playing"):pxt.BrowserUtils.removeClass(e,"playing")}))}createGridDisplay(){i.VIEWBOX_WIDTH=(i.CELL_WIDTH+i.CELL_VERTICAL_MARGIN)*this.numCol+i.CELL_VERTICAL_MARGIN,pxt.BrowserUtils.isEdge()&&(i.VIEWBOX_WIDTH+=37),i.VIEWBOX_HEIGHT=(i.CELL_WIDTH+i.CELL_HORIZONTAL_MARGIN)*this.numRow+i.CELL_HORIZONTAL_MARGIN,this.elt=pxsim.svg.parseString(`<svg xmlns="http://www.w3.org/2000/svg" class="melody-grid-div" viewBox="0 0 ${i.VIEWBOX_WIDTH} ${i.VIEWBOX_HEIGHT}"/>`),this.cells=[];for(let e=0;e<this.numRow;e++)this.cells.push([]);for(let e=0;e<this.numRow;e++)for(let t=0;t<this.numCol;t++)this.createCell(e,t);return this.elt}createCell(e,t){const o=e*(i.CELL_WIDTH+i.CELL_HORIZONTAL_MARGIN)+i.CELL_HORIZONTAL_MARGIN,s=t*(i.CELL_WIDTH+i.CELL_VERTICAL_MARGIN)+i.CELL_VERTICAL_MARGIN,l=pxsim.svg.child(this.elt,"g",{transform:`translate(${s} ${o})`}),n=pxsim.svg.child(l,"rect",{cursor:"pointer",width:i.CELL_WIDTH,height:i.CELL_WIDTH,stroke:"white","data-x":e,"data-y":t,rx:i.CELL_CORNER_RADIUS});this.melody.getValue(e,t)?pxt.BrowserUtils.addClass(n,pxtmelody.getColorClass(e)):pxt.BrowserUtils.addClass(n,"melody-default"),this.sourceBlock_.workspace.isFlyout||(pxsim.pointerEvents.down.forEach((i=>n.addEventListener(i,(i=>{this.onNoteSelect(e,t),i.stopPropagation(),i.preventDefault()}),!1))),this.cells[e][t]=n)}togglePlay(){this.isPlaying?this.stopMelody():(this.isPlaying=!0,this.playMelody()),this.updatePlayButton()}updatePlayButton(){this.isPlaying?(pxt.BrowserUtils.removeClass(this.playIcon,"play icon"),pxt.BrowserUtils.addClass(this.playIcon,"stop icon")):(pxt.BrowserUtils.removeClass(this.playIcon,"stop icon"),pxt.BrowserUtils.addClass(this.playIcon,"play icon"))}playMelody(){if(this.isPlaying){for(let e=0;e<this.numCol;e++)this.queueToneForColumn(e,e*this.getDuration(),this.getDuration());this.timeouts.push(setTimeout((()=>this.playMelody()),this.numCol*this.getDuration()))}else this.stopMelody()}stopMelody(){if(this.isPlaying){for(;this.timeouts.length;)clearTimeout(this.timeouts.shift());pxt.AudioContextManager.stop(),this.isPlaying=!1,this.cells.forEach((e=>e.forEach((e=>pxt.BrowserUtils.removeClass(e,"playing")))))}}showGallery(){this.stopMelody(),this.updatePlayButton(),this.gallery.show((e=>{e&&(this.melody.parseNotes(e),this.gallery.hide(),this.toggle.toggle(),this.updateFieldLabel(),this.updateGrid())}))}hideGallery(){this.gallery.hide()}}i.CELL_WIDTH=25,i.CELL_HORIZONTAL_MARGIN=7,i.CELL_VERTICAL_MARGIN=5,i.CELL_CORNER_RADIUS=5,i.COLOR_BLOCK_WIDTH=10,i.COLOR_BLOCK_HEIGHT=20,i.COLOR_BLOCK_X=20,i.COLOR_BLOCK_Y=5,i.COLOR_BLOCK_SPACING=2,i.MUSIC_ICON_WIDTH=20,e.FieldCustomMelody=i;const o=200,s=40;class l{constructor(e,t){this.props=function(e){e.baseColor||(e.baseColor="#e95153");e.backgroundColor||(e.backgroundColor="rgba(52,73,94,.2)");e.borderColor||(e.borderColor="rgba(52,73,94,.4)");e.selectedTextColor||(e.selectedTextColor=e.baseColor);e.unselectedTextColor||(e.unselectedTextColor="hsla(0,0%,100%,.9)");e.switchColor||(e.switchColor="#ffffff");return e}(t),this.root=e.group(),this.buildDom(),this.isLeft=!0}buildDom(){this.root.style().content("\n            .toggle-left {\n                transform: translateX(0px);\n                animation: mvleft 0.2s 0s ease;\n            }\n\n            .toggle-right {\n                transform: translateX(100px);\n                animation: mvright 0.2s 0s ease;\n            }\n\n            @keyframes mvright {\n                0% {\n                    transform: translateX(0px);\n                }\n                100% {\n                    transform: translateX(100px);\n                }\n            }\n\n            @keyframes mvleft {\n                0% {\n                    transform: translateX(100px);\n                }\n                100% {\n                    transform: translateX(0px);\n                }\n            }\n            ");this.root.def().create("clipPath","sprite-editor-toggle-border").clipPathUnits(!0).draw("rect").at(0,0).corners(.02,.1).size(1,1),this.root.draw("rect").size(o,s).fill(this.props.baseColor).stroke(this.props.borderColor,4).corners(4,4).clipPath("url(#sprite-editor-toggle-border)"),this.root.draw("rect").at(2,2).size(196,36).fill(this.props.backgroundColor).corners(4,4),this.switch=this.root.draw("rect").at(2,2).size(98,36).fill(this.props.switchColor).corners(4,4),this.leftElement=this.root.group(),this.leftText=n(this.props.leftText).appendClass("sprite-editor-text").fill(this.props.selectedTextColor),this.leftElement.appendChild(this.leftText),this.rightElement=this.root.group(),this.rightText=n(this.props.rightText).appendClass("sprite-editor-text").fill(this.props.unselectedTextColor),this.rightElement.appendChild(this.rightText),this.root.onClick((()=>this.toggle()))}toggle(e=!1){this.isLeft?(this.switch.removeClass("toggle-left"),this.switch.appendClass("toggle-right"),this.leftText.fill(this.props.unselectedTextColor),this.rightText.fill(this.props.selectedTextColor)):(this.switch.removeClass("toggle-right"),this.switch.appendClass("toggle-left"),this.leftText.fill(this.props.selectedTextColor),this.rightText.fill(this.props.unselectedTextColor)),this.isLeft=!this.isLeft,!e&&this.changeHandler&&this.changeHandler(this.isLeft)}onStateChange(e){this.changeHandler=e}layout(){this.leftText.moveTo(51,20),this.rightText.moveTo(149,20)}translate(e,t){this.root.translate(e,t)}height(){return s}width(){return o}}function n(e){return new t.Text(e).anchor("middle").setAttribute("dominant-baseline","middle").setAttribute("dy",pxt.BrowserUtils.isIE()||pxt.BrowserUtils.isEdge()?"0.3em":"0.1em")}}(pxtblockly||(pxtblockly={})),function(e){let t;!function(e){e[e.C=262]="C",e[e.CSharp=277]="CSharp",e[e.D=294]="D",e[e.Eb=311]="Eb",e[e.E=330]="E",e[e.F=349]="F",e[e.FSharp=370]="FSharp",e[e.G=392]="G",e[e.GSharp=415]="GSharp",e[e.A=440]="A",e[e.Bb=466]="Bb",e[e.B=494]="B",e[e.C3=131]="C3",e[e.CSharp3=139]="CSharp3",e[e.D3=147]="D3",e[e.Eb3=156]="Eb3",e[e.E3=165]="E3",e[e.F3=175]="F3",e[e.FSharp3=185]="FSharp3",e[e.G3=196]="G3",e[e.GSharp3=208]="GSharp3",e[e.A3=220]="A3",e[e.Bb3=233]="Bb3",e[e.B3=247]="B3",e[e.C4=262]="C4",e[e.CSharp4=277]="CSharp4",e[e.D4=294]="D4",e[e.Eb4=311]="Eb4",e[e.E4=330]="E4",e[e.F4=349]="F4",e[e.FSharp4=370]="FSharp4",e[e.G4=392]="G4",e[e.GSharp4=415]="GSharp4",e[e.A4=440]="A4",e[e.Bb4=466]="Bb4",e[e.B4=494]="B4",e[e.C5=523]="C5",e[e.CSharp5=555]="CSharp5",e[e.D5=587]="D5",e[e.Eb5=622]="Eb5",e[e.E5=659]="E5",e[e.F5=698]="F5",e[e.FSharp5=740]="FSharp5",e[e.G5=784]="G5",e[e.GSharp5=831]="GSharp5",e[e.A5=880]="A5",e[e.Bb5=932]="Bb5",e[e.B5=988]="B5",e[e.C6=1047]="C6",e[e.CSharp6=1109]="CSharp6",e[e.D6=1175]="D6",e[e.Eb6=1245]="Eb6",e[e.E6=1319]="E6",e[e.F6=1397]="F6",e[e.FSharp6=1480]="FSharp6",e[e.G6=1568]="G6",e[e.GSharp6=1568]="GSharp6",e[e.A6=1760]="A6",e[e.Bb6=1865]="Bb6",e[e.B6=1976]="B6",e[e.C7=2093]="C7"}(t||(t={}));class i extends Blockly.FieldNumber{constructor(t,i,o){super(null,0,null,null,o),this.isFieldCustom_=!0,this.SERIALIZABLE=!0,this.isTextValid_=!0,this.nKeys_=36,this.minNote_=28,this.maxNote_=63,this.eps=2,this.setSpellcheck(!1),this.prepareNotes(),this.isExpanded=!1,this.currentPage=0,this.totalPlayCount=0,i.editorColour&&(this.primaryColour=e.parseColour(i.editorColour),this.borderColour=Blockly.utils.colour.darken(this.primaryColour,.2));const s=parseInt(i.eps);!Number.isNaN(s)&&s>=0&&(this.eps=s);const l=parseInt(i.minNote)||this.minNote_,n=parseInt(i.maxNote)||this.maxNote_;l>=28&&n<=75&&n>l&&(this.minNote_=l,this.maxNote_=n,this.nKeys_=this.maxNote_-this.minNote_+1),this.setValue(t)}doClassValidation_(e){const i=/^Note\.(.+)$/.exec(e),o=i&&i.length>1?i[1]:null;if(null===(e=t[o]?t[o]:String(parseFloat(e||"0"))))return null;const s=parseFloat(e||"0");if(isNaN(s)||s<0)return null;const l=Math.floor(s)!=s;return""+s.toFixed(l?2:0)}getValue(){return this.value_+""}doValueUpdate_(e){isNaN(Number(e))||Number(e)<0||(this.sourceBlock_&&Blockly.Events.isEnabled()&&this.value_!=e&&Blockly.Events.fire(new Blockly.Events.Change(this.sourceBlock_,"field",this.name,this.value_,e)),this.value_=e,this.refreshText())}getText(){if(this.isExpanded)return""+this.value_;{const e=+this.value_;for(let t=0;t<this.nKeys_;t++)if(Math.abs(this.getKeyFreq(t)-e)<this.eps)return this.getKeyName(t);let t=e.toString();return isNaN(e)||(t+=" Hz"),t}}refreshText(){this.forceRerender()}onHtmlInputChange_(e){super.onHtmlInputChange_(e),Blockly.DropDownDiv.hideWithoutAnimation(),this.htmlInput_.focus()}onFinishEditing_(e){this.refreshText()}onHide(){this.isExpanded=!1,this.refreshText()}showEditor_(e){this.isExpanded=!0,this.updateColor(),Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent();const t=pxt.BrowserUtils.isMobile()||pxt.BrowserUtils.isIOS();i.superClass_.showEditor_.call(this,e,t,t),this.refreshText(),Blockly.Events.setGroup(!0),this.piano=[],this.currentSelectedKey=void 0;const s=this.nKeys_-this.nKeys_/i.notesPerOctave*i.blackKeysPerOctave,l=i.notesPerOctave-i.blackKeysPerOctave;let n=i.keyWidth*s,r=i.keyHeight+i.labelHeight;const a=window.innerWidth<n;a&&(n=l*i.keyWidth,r=i.keyHeight+i.labelHeight+i.prevNextHeight);const c=o("blocklyPianoDiv",`width: ${n}px;\n                height: ${r}px;`);Blockly.DropDownDiv.getContentDiv().appendChild(c),this.noteLabel=o("blocklyNoteLabel",`top: ${i.keyHeight}px;\n                width: ${n}px;\n                background-color: ${this.primaryColour};\n                border-color: ${this.primaryColour};`),c.appendChild(this.noteLabel),this.noteLabel.textContent="-";let u=0;for(let e=0;e<this.nKeys_;e++){const t=Math.floor(e/i.notesPerOctave);let o=this.getPosition(e);a&&e>=i.notesPerOctave&&(o-=l*t*i.keyWidth);const s=this.getKeyDiv(e,o);this.piano.push(s),c.appendChild(s),Math.abs(this.getKeyFreq(e)-Number(this.getValue()))<this.eps&&(pxt.BrowserUtils.addClass(s,"selected"),this.currentSelectedKey=s,u=t)}a&&(this.setPage(u),c.appendChild(this.getNextPrevDiv(!0,n)),c.appendChild(this.getNextPrevDiv(!1,n))),Blockly.DropDownDiv.setColour(this.primaryColour,this.borderColour),Blockly.DropDownDiv.showPositionedByBlock(this,this.sourceBlock_,(()=>this.onHide()))}playKey(e,t){const i=++this.totalPlayCount;this.currentSelectedKey!==e&&(this.currentSelectedKey&&pxt.BrowserUtils.removeClass(this.currentSelectedKey,"selected"),pxt.BrowserUtils.addClass(e,"selected"),this.setValue(t)),this.currentSelectedKey=e,this.htmlInput_.value=this.getText(),pxt.AudioContextManager.tone(t),setTimeout((()=>{this.totalPlayCount==i&&pxt.AudioContextManager.stop()}),300)}dispose(){Blockly.DropDownDiv.hideIfOwner(this),super.dispose()}updateColor(){if(this.sourceBlock_.parentBlock_&&(this.sourceBlock_.isShadow()||1===(e=this.sourceBlock_).inputList.length&&1===e.inputList[0].fieldRow.length)){let e=this.sourceBlock_.parentBlock_;this.primaryColour=e.getColour(),this.borderColour=e.getColourTertiary()}else this.primaryColour="#3D3D3D",this.borderColour="#2A2A2A";var e}setPage(e){const t=this.nKeys_/i.notesPerOctave;e=Math.max(Math.min(e,t-1),0),this.noteLabel.textContent=`Octave #${e+1}`;const o=e*i.notesPerOctave;for(let e=0;e<this.piano.length;++e){const t=e>=o&&e<o+i.notesPerOctave;this.piano[e].style.display=t?"block":"none"}this.currentPage=e}getNextPrevDiv(e,t){const s=e?0:t/2,l=o("blocklyNotePrevNext",`top: ${i.keyHeight+i.labelHeight}px;\n                left: ${s}px;\n                width: ${Math.ceil(t/2)}px;\n                ${e?"border-left-color":"border-right-color"}: ${this.primaryColour};\n                background-color: ${this.primaryColour};\n                border-bottom-color: ${this.primaryColour};`);return pxt.BrowserUtils.pointerEvents.down.forEach((t=>{Blockly.bindEventWithChecks_(l,t,this,(()=>this.setPage(e?this.currentPage-1:this.currentPage+1)),!0)})),l.textContent=e?"<":">",l}getKeyDiv(e,t){const i=o("blocklyNote "+(this.isWhite(e)?"":"black"),`width: ${this.getKeyWidth(e)}px;\n                height: ${this.getKeyHeight(e)}px;\n                left: ${t}px;\n                border-color: ${this.primaryColour};`);return pxt.BrowserUtils.pointerEvents.down.forEach((t=>{Blockly.bindEventWithChecks_(i,t,this,(()=>this.playKey(i,this.getKeyFreq(e))),!0)})),Blockly.bindEventWithChecks_(i,"mouseover",this,(()=>this.noteLabel.textContent=this.getKeyName(e)),!0),i}isWhite(e){switch(e%12){case 1:case 3:case 6:case 8:case 10:return!1;default:return!0}}getKeyWidth(e){return this.isWhite(e)?i.keyWidth:i.keyWidth/2}getKeyHeight(e){return this.isWhite(e)?i.keyHeight:i.keyHeight/2}getKeyFreq(e){return this.getKeyNoteData(e).freq}getKeyName(e){const t=this.getKeyNoteData(e);let o=t.prefixedName;return this.nKeys_<=i.notesPerOctave?o=t.name:this.minNote_>=28&&this.maxNote_<=63&&(o=t.altPrefixedName||o),o}getKeyNoteData(e){return i.Notes[e+this.minNote_]}getPosition(e){const t=(e-Math.floor((e+1)/i.notesPerOctave*i.blackKeysPerOctave))*i.keyWidth;return this.isWhite(e)?t:t-i.keyWidth/4}prepareNotes(){i.Notes||(i.Notes={28:{name:lf("{id:note}C"),prefixedName:lf("Low C"),freq:131},29:{name:lf("C#"),prefixedName:lf("Low C#"),freq:139},30:{name:lf("{id:note}D"),prefixedName:lf("Low D"),freq:147},31:{name:lf("D#"),prefixedName:lf("Low D#"),freq:156},32:{name:lf("{id:note}E"),prefixedName:lf("Low E"),freq:165},33:{name:lf("{id:note}F"),prefixedName:lf("Low F"),freq:175},34:{name:lf("F#"),prefixedName:lf("Low F#"),freq:185},35:{name:lf("{id:note}G"),prefixedName:lf("Low G"),freq:196},36:{name:lf("G#"),prefixedName:lf("Low G#"),freq:208},37:{name:lf("{id:note}A"),prefixedName:lf("Low A"),freq:220},38:{name:lf("A#"),prefixedName:lf("Low A#"),freq:233},39:{name:lf("{id:note}B"),prefixedName:lf("Low B"),freq:247},40:{name:lf("{id:note}C"),prefixedName:lf("Middle C"),freq:262},41:{name:lf("C#"),prefixedName:lf("Middle C#"),freq:277},42:{name:lf("{id:note}D"),prefixedName:lf("Middle D"),freq:294},43:{name:lf("D#"),prefixedName:lf("Middle D#"),freq:311},44:{name:lf("{id:note}E"),prefixedName:lf("Middle E"),freq:330},45:{name:lf("{id:note}F"),prefixedName:lf("Middle F"),freq:349},46:{name:lf("F#"),prefixedName:lf("Middle F#"),freq:370},47:{name:lf("{id:note}G"),prefixedName:lf("Middle G"),freq:392},48:{name:lf("G#"),prefixedName:lf("Middle G#"),freq:415},49:{name:lf("{id:note}A"),prefixedName:lf("Middle A"),freq:440},50:{name:lf("A#"),prefixedName:lf("Middle A#"),freq:466},51:{name:lf("{id:note}B"),prefixedName:lf("Middle B"),freq:494},52:{name:lf("{id:note}C"),prefixedName:lf("Tenor C"),altPrefixedName:lf("High C"),freq:523},53:{name:lf("C#"),prefixedName:lf("Tenor C#"),altPrefixedName:lf("High C#"),freq:554},54:{name:lf("{id:note}D"),prefixedName:lf("Tenor D"),altPrefixedName:lf("High D"),freq:587},55:{name:lf("D#"),prefixedName:lf("Tenor D#"),altPrefixedName:lf("High D#"),freq:622},56:{name:lf("{id:note}E"),prefixedName:lf("Tenor E"),altPrefixedName:lf("High E"),freq:659},57:{name:lf("{id:note}F"),prefixedName:lf("Tenor F"),altPrefixedName:lf("High F"),freq:698},58:{name:lf("F#"),prefixedName:lf("Tenor F#"),altPrefixedName:lf("High F#"),freq:740},59:{name:lf("{id:note}G"),prefixedName:lf("Tenor G"),altPrefixedName:lf("High G"),freq:784},60:{name:lf("G#"),prefixedName:lf("Tenor G#"),altPrefixedName:lf("High G#"),freq:831},61:{name:lf("{id:note}A"),prefixedName:lf("Tenor A"),altPrefixedName:lf("High A"),freq:880},62:{name:lf("A#"),prefixedName:lf("Tenor A#"),altPrefixedName:lf("High A#"),freq:932},63:{name:lf("{id:note}B"),prefixedName:lf("Tenor B"),altPrefixedName:lf("High B"),freq:988},64:{name:lf("{id:note}C"),prefixedName:lf("High C"),freq:1046},65:{name:lf("C#"),prefixedName:lf("High C#"),freq:1109},66:{name:lf("{id:note}D"),prefixedName:lf("High D"),freq:1175},67:{name:lf("D#"),prefixedName:lf("High D#"),freq:1245},68:{name:lf("{id:note}E"),prefixedName:lf("High E"),freq:1319},69:{name:lf("{id:note}F"),prefixedName:lf("High F"),freq:1397},70:{name:lf("F#"),prefixedName:lf("High F#"),freq:1478},71:{name:lf("{id:note}G"),prefixedName:lf("High G"),freq:1568},72:{name:lf("G#"),prefixedName:lf("High G#"),freq:1661},73:{name:lf("{id:note}A"),prefixedName:lf("High A"),freq:1760},74:{name:lf("A#"),prefixedName:lf("High A#"),freq:1865},75:{name:lf("{id:note}B"),prefixedName:lf("High B"),freq:1976}})}}function o(e,t){const i=document.createElement("div");return pxt.BrowserUtils.addClass(i,e),i.setAttribute("style",t.replace(/\s+/g," ")),i}i.keyWidth=22,i.keyHeight=90,i.labelHeight=24,i.prevNextHeight=20,i.notesPerOctave=12,i.blackKeysPerOctave=5,e.FieldNote=i}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldNumberDropdown{constructor(e,t,i){super(e,t.data,t.min,t.max,t.precision,i),this.isFieldCustom_=!0}getOptions(){let e;return this.menuGenerator_&&(e=JSON.parse(this.menuGenerator_).map((e=>"object"==typeof e?e:[String(e),String(e)]))),e}}e.FieldNumberDropdown=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldSlider{constructor(e,t,i){super(e,"0","100","1","100","Value",i),this.isFieldCustom_=!0,this.params=t,this.params.screenHeight||(this.params.screenHeight=120),this.params.screenWidth||(this.params.screenWidth=160),this.params.xInputName||(this.params.xInputName="x"),this.params.yInputName||(this.params.yInputName="y"),this.params.min&&(this.min_=parseInt(this.params.min)),this.params.max&&(this.max_=parseInt(this.params.max))}showEditor_(e){this.getFieldByName(this.params.xInputName)===this&&(this.max_=this.params.screenWidth,this.labelText_=this.params.xInputName);this.getFieldByName(this.params.yInputName)===this&&(this.max_=this.params.screenHeight,this.labelText_=this.params.yInputName),super.showEditor_(e),this.renderScreenPicker()}doValueUpdate_(e){super.doValueUpdate_(e),this.resetCrosshair&&this.resetCrosshair()}renderScreenPicker(){let e=Blockly.DropDownDiv.getContentDiv();this.selectorDiv_=document.createElement("div"),this.selectorDiv_.className="blocklyCanvasOverlayOuter",e.appendChild(this.selectorDiv_);const t=document.createElement("div");t.className="blocklyCanvasOverlayDiv",this.selectorDiv_.appendChild(t);const i=document.createElement("div");i.className="cross-x",t.appendChild(i);const o=document.createElement("div");o.className="cross-y",t.appendChild(o);const s=document.createElement("div");s.className="label",t.appendChild(s);const l=1.5*this.params.screenWidth,n=1.5*this.params.screenHeight;t.style.height=n+"px",t.style.width=l+"px";const r=e.getElementsByClassName("goog-slider-horizontal")[0];if(r){r.style.width=l+"px";const e=parseFloat(this.getValue());!isNaN(e)&&e>this.getMin()&&(this.setValue(e-1+""),this.setValue(e+""))}const a=(e,t)=>{e=Math.round(Math.max(0,Math.min(l,e))),t=Math.round(Math.max(0,Math.min(n,t))),i.style.top=t+"px",o.style.left=e+"px",e=Math.round(Math.max(0,Math.min(this.params.screenWidth,e/l*this.params.screenWidth))),t=Math.round(Math.max(0,Math.min(this.params.screenHeight,t/n*this.params.screenHeight))),isNaN(e)?s.textContent=`${this.params.yInputName}=${t}`:isNaN(t)?s.textContent=`${this.params.xInputName}=${e}`:s.textContent=`${this.params.xInputName}=${e} ${this.params.yInputName}=${t}`;const r=s.getBoundingClientRect();e>this.params.screenWidth/2?s.style.left=e*(l/this.params.screenWidth)-r.width-8+"px":s.style.left=e*(l/this.params.screenWidth)+4+"px",t>this.params.screenHeight/2?s.style.top=t*(n/this.params.screenHeight)-r.height-6+"px":s.style.top=t*(n/this.params.screenHeight)+"px"};this.resetCrosshair=()=>{const{currentX:e,currentY:t}=this.getXY();a(e/this.params.screenWidth*l,t/this.params.screenHeight*n)},this.resetCrosshair(),Blockly.bindEvent_(this.selectorDiv_,"mousemove",this,(e=>{const i=t.getBoundingClientRect(),o=e.clientX-i.left,s=e.clientY-i.top;a(o,s)})),Blockly.bindEvent_(this.selectorDiv_,"mouseleave",this,this.resetCrosshair),Blockly.bindEvent_(this.selectorDiv_,"click",this,(e=>{const i=t.getBoundingClientRect(),o=e.clientX-i.left,s=e.clientY-i.top,r=Math.round(o/l*this.params.screenWidth),a=Math.round(s/n*this.params.screenHeight);this.close(),this.setXY(r,a)}))}resizeHandler(){this.close()}setXY(e,t){const i=this.getFieldByName(this.params.xInputName);i&&"number"==typeof i.getValue()&&i.setValue(String(e));const o=this.getFieldByName(this.params.yInputName);o&&"number"==typeof o.getValue()&&o.setValue(String(t))}getFieldByName(e){const t=this.sourceBlock_.parentBlock_;if(t)for(let i=0;i<t.inputList.length;i++){const o=t.inputList[i];if(o.name===e)return this.getTargetField(o)}}getXY(){let e,t;const i=this.getFieldByName(this.params.xInputName);i&&(e=i.getValue());const o=this.getFieldByName(this.params.yInputName);return o&&(t=o.getValue()),{currentX:parseInt(e),currentY:parseInt(t)}}getTargetField(e){const t=e.connection.targetBlock();if(!t)return null;const i=t.inputList[0];if(!i)return null;return i.fieldRow[0]}widgetDispose_(){Blockly.FieldNumber.superClass_.widgetDispose_.call(this),this.close(!0)}close(e){e||(Blockly.WidgetDiv.hideIfOwner(this),Blockly.DropDownDiv.hideIfOwner(this)),window.removeEventListener("resize",this.resizeHandler),this.resetCrosshair=void 0,this.selectorDiv_&&(goog.dom.removeNode(this.selectorDiv_),this.selectorDiv_=void 0)}}e.FieldPosition=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldDropdown{constructor(e,t){super([["Temp","Temp"]],t),this.setValue(e||"")}getOptions(){return this.dropdownCreate()}init(){this.fieldGroup_||super.init.call(this)}setSourceBlock(e){goog.asserts.assert(!e.isShadow(),"Procedure fields are not allowed to exist on shadow blocks."),super.setSourceBlock.call(this,e)}dropdownCreate(){let e=[];if(this.sourceBlock_&&this.sourceBlock_.workspace){let t=this.sourceBlock_.workspace.getAllBlocks(!1);for(let i=0;i<t.length;i++)if(t[i].getProcedureDef){let o=t[i].getProcedureDef();e.push(o[0])}}let t=this.getValue();t&&-1==e.indexOf(t)&&e.push(t),e.sort(goog.string.caseInsensitiveCompare),e.length||e.push("Temp");let i=[];for(let t=0;t<e.length;t++)i[t]=[e[t],e[t]];return i}onItemSelected(e,t){let i=t.getValue();null!==i&&this.setValue(i)}}e.FieldProcedure=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldSlider{constructor(e,t,i){super(String(e),"0","180","1","15",lf("Angle"),i),this.isFieldCustom_=!0,this.params=t}createLabelDom_(e){const t=document.createElement("div");this.circleSVG=document.createElementNS("http://www.w3.org/2000/svg","svg"),pxsim.svg.hydrate(this.circleSVG,{viewBox:"0 0 200 100",width:"170"}),t.appendChild(this.circleSVG);pxsim.svg.child(this.circleSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#a8aaa8","stroke-width":"1rem"});this.circleBar=pxsim.svg.child(this.circleSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#f12a21","stroke-width":"1rem"}),this.reporter=pxsim.svg.child(this.circleSVG,"text",{x:100,y:80,"text-anchor":"middle","dominant-baseline":"middle",style:"font-size: 50px",class:"sim-text inverted number"});const i=document.createElement("span");return i.setAttribute("class","blocklyFieldSliderReadout"),[t,i]}setReadout_(e,t){this.updateAngle(parseFloat(t)),this.reporter.textContent=`${t}°`}updateAngle(e){const t=(180-(e=Math.max(0,Math.min(180,e))))/180*Math.PI*90;this.circleBar.setAttribute("stroke-dashoffset",`${t}`)}}e.FieldProtractor=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldSlider{constructor(e,t,i){super(String(e),"-100","100","1","10","Speed",i),this.isFieldCustom_=!0,this.params=t,this.params.min&&(this.min_=parseFloat(this.params.min)),this.params.max&&(this.max_=parseFloat(this.params.max)),this.params.label&&(this.labelText_=this.params.label),this.params.format||(this.params.format="{0}%")}createLabelDom_(e){const t=document.createElement("div");this.speedSVG=document.createElementNS("http://www.w3.org/2000/svg","svg"),pxsim.svg.hydrate(this.speedSVG,{viewBox:"0 0 200 100",width:"170"}),t.appendChild(this.speedSVG);pxsim.svg.child(this.speedSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#a8aaa8","stroke-width":"1rem"});this.circleBar=pxsim.svg.child(this.speedSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#f12a21","stroke-width":"1rem"}),this.reporter=pxsim.svg.child(this.speedSVG,"text",{x:100,y:80,"text-anchor":"middle","dominant-baseline":"middle",style:`font-size: ${Math.max(14,50-5*(this.params.format.length-4))}px`,class:"sim-text inverted number"});const i=document.createElement("span");return i.setAttribute("class","blocklyFieldSliderReadout"),[t,i]}setReadout_(e,t){this.updateSpeed(parseFloat(t)),this.reporter.textContent=ts.pxtc.U.rlf(this.params.format,t)}updateSpeed(e){let t=this.sign(e);e=Math.abs(e)/100*50+50,-1==t&&(e=50-e);let i=(100-e)/100*(180*Math.PI);this.circleBar.setAttribute("stroke-dashoffset",`${i}`)}sign(e){return e?e<0?-1:1:0}}e.FieldSpeed=t}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldAssetEditor{getAssetType(){return"image"}createNewAsset(e){const t=pxt.react.getTilemapProject();if(e){const i=pxt.lookupProjectAssetByTSReference(e,t);if(i)return i}if(this.getBlockData())return t.lookupAsset("image",this.getBlockData());const i=e?pxt.sprite.imageLiteralToBitmap(e):new pxt.sprite.Bitmap(this.params.initWidth,this.params.initHeight);if(!i)return this.isGreyBlock=!0,void(this.valueText=e);const o=i.data();return{internalID:-1,id:this.sourceBlock_.id,type:"image",jresData:pxt.sprite.base64EncodeBitmap(o),meta:{},bitmap:o}}getValueText(){return this.asset&&!this.isTemporaryAsset()?pxt.getTSReferenceForAsset(this.asset):pxt.sprite.bitmapToImageLiteral(this.asset&&pxt.sprite.Bitmap.fromData(this.asset.bitmap),"typescript")}parseFieldOptions(e){return function(e){const t={initColor:1,initWidth:16,initHeight:16,disableResize:!1,lightMode:!1};if(!e)return t;if(t.lightMode=e.lightMode,e.sizes){const i=e.sizes.split(";"),o=[];for(let e=0;e<i.length;e++){const t=i[e].split(",");if(2!==t.length)continue;let s=parseInt(t[0]),l=parseInt(t[1]);if(isNaN(s)||isNaN(l))continue;const n=pxt.appTarget.runtime&&pxt.appTarget.runtime.screenSize;s<0&&n&&(s=n.width),l<0&&n&&(l=n.height),o.push([s,l])}o.length>0&&(t.initWidth=o[0][0],t.initHeight=o[0][1])}e.filter&&(t.filter=e.filter);e.disableResize&&(t.disableResize="true"===e.disableResize.toLowerCase()||"1"===e.disableResize);return t.initColor=i(e.initColor,t.initColor),t.initWidth=i(e.initWidth,t.initWidth),t.initHeight=i(e.initHeight,t.initHeight),t;function i(e,t){const i=parseInt(e);return isNaN(i)?t:i}}(e)}}e.FieldSpriteEditor=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldLabel{constructor(e,t,i){super(e,function(e){if(e){if(e.bold&&e.italics)return"blocklyBoldItalicizedText";if(e.bold)return"blocklyBoldText";if(e.italics)return"blocklyItalicizedText"}return}(t)),this.isFieldCustom_=!0}}e.FieldStyledLabel=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldTextDropdown{constructor(e,t,i){super(e,t.values,i),this.isFieldCustom_=!0}}e.FieldTextDropdown=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldTextInput{constructor(e,t,i){super(e,i),this.isFieldCustom_=!0}}e.FieldTextInput=t}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldAssetEditor{getInitText(){return this.initText}getTileset(){var e;return null===(e=this.asset)||void 0===e?void 0:e.data.tileset}getAssetType(){return"tilemap"}createNewAsset(e=""){e&&(e=e.replace(/&#96;/g,"`"));const t=pxt.react.getTilemapProject(),i=pxt.lookupProjectAssetByTSReference(e,t);if(i)return i;const o=pxt.sprite.decodeTilemap(e,"typescript",t)||t.blankTilemap(this.params.tileWidth,this.params.initWidth,this.params.initHeight);let s;if(function(e){return!!(e&&e.tilemap&&e.tilemap.width&&e.tilemap.height)&&(!(!e.layers||e.layers.width!==e.tilemap.width||e.layers.height!==e.tilemap.height)&&!!e.tileset)}(o)){this.initText=e,this.isGreyBlock=!1;const[i]=t.createNewTilemapFromData(o);s=t.getTilemap(i)}else e.trim()&&(this.isGreyBlock=!0,this.valueText=e);return s}onEditorClose(e){pxt.sprite.updateTilemapReferencesFromResult(pxt.react.getTilemapProject(),e)}getValueText(){return this.isGreyBlock?pxt.Util.htmlUnescape(this.valueText):this.asset?pxt.getTSReferenceForAsset(this.asset):this.getInitText()}parseFieldOptions(e){return function(e){const t={initWidth:16,initHeight:16,disableResize:!1,tileWidth:16,lightMode:!1};if(!e)return t;t.lightMode=e.lightMode,e.filter&&(t.filter=e.filter);if(e.tileWidth)if("number"==typeof e.tileWidth)switch(e.tileWidth){case 8:t.tileWidth=8;break;case 16:t.tileWidth=16;break;case 32:t.tileWidth=32}else{switch(e.tileWidth.trim().toLowerCase()){case"8":case"eight":t.tileWidth=8;break;case"16":case"sixteen":t.tileWidth=16;break;case"32":case"thirtytwo":t.tileWidth=32}}return t.initWidth=i(e.initWidth,t.initWidth),t.initHeight=i(e.initHeight,t.initHeight),t;function i(e,t){const i=parseInt(e);return isNaN(i)?t:i}}(e)}}e.FieldTilemap=t}(pxtblockly||(pxtblockly={})),function(e){const t=32;class i extends e.FieldImages{constructor(t,s,l){super(t,s,l),this.isFieldCustom_=!0,this.menuGenerator_=()=>{var t,s;return(null===(t=this.sourceBlock_)||void 0===t?void 0:t.workspace)&&e.needsTilemapUpgrade(null===(s=this.sourceBlock_)||void 0===s?void 0:s.workspace)?[o()]:i.getReferencedTiles(this.sourceBlock_.workspace)},this.assetChangeListener=()=>{this.doValueUpdate_(this.getValue()),this.forceRerender()},this.blocksInfo=s.blocksInfo}static getReferencedTiles(o){const r=pxt.react.getTilemapProject();if(r.revision()!==i.cachedRevision||o.id!=i.cachedWorkspaceId){i.cachedRevision=r.revision(),i.cachedWorkspaceId=o.id;const a=e.getAllReferencedTiles(o),c=[16,8,32];for(const e of c){const t=r.getProjectTiles(e,16===e);if(t)for(const e of t.tiles)a.find((t=>t.id===e.id))||a.push(e)}let u={};a.sort(((e,t)=>e.id===t.id?0:e.bitmap.width!==t.bitmap.width?e.bitmap.width-t.bitmap.width:e.isProjectTile!==t.isProjectTile?e.isProjectTile?-1:1:(u[e.id]||(u[e.id]=l(e.id)))-(u[t.id]||(u[t.id]=l(t.id)))));const d=i=>l(i.id)<=2?s(i.bitmap.width):e.bitmapToImageURI(pxt.sprite.Bitmap.fromData(i.bitmap),t,!1);i.referencedTiles=a.map((e=>[{src:d(e),width:t,height:t,alt:n(e)},e.id,e]))}return i.referencedTiles}initView(){super.initView(),this.sourceBlock_&&this.sourceBlock_.isInFlyout&&this.setValue(this.getOptions()[0][1])}getValue(){if(this.selectedOption_){let e=this.selectedOption_[2];return e=pxt.react.getTilemapProject().lookupAsset(e.type,e.id),pxt.getTSReferenceForAsset(e)}const e=super.getValue();return"string"==typeof e&&-1===e.indexOf(".")&&-1===e.indexOf("`")?`img\`${e}\``:e}getText(){const e=this.getValue();return"string"==typeof e&&-1!==e.indexOf("`")?e:super.getText()}render_(){if(this.value_&&this.selectedOption_&&this.selectedOption_[1]!==this.value_){const o=pxt.react.getTilemapProject().resolveTile(this.value_);i.cachedRevision=-1,o&&(this.selectedOption_=[{src:e.bitmapToImageURI(pxt.sprite.Bitmap.fromData(o.bitmap),t,!1),width:t,height:t,alt:n(o)},this.value_,o])}super.render_()}doValueUpdate_(e){super.doValueUpdate_(e);const t=this.getOptions(!0);if(e){const i=pxt.parseAssetTSReference(e);i&&(e=i.name),e=e.trim();for(const i of t)if(e===i[2].id||e===i[2].meta.displayName||e===pxt.getShortIDForAsset(i[2]))return this.selectedOption_=i,this.value_=this.getValue(),void this.updateAssetListener();this.selectedOption_=null,this.updateAssetListener()}}getOptions(e){return"function"!=typeof this.menuGenerator_?(this.transparent=o(),[this.transparent]):this.menuGenerator_.call(this)}dispose(){super.dispose(),pxt.react.getTilemapProject().removeChangeListener("tile",this.assetChangeListener)}updateAssetListener(){const e=pxt.react.getTilemapProject();e.removeChangeListener("tile",this.assetChangeListener),this.selectedOption_&&e.addChangeListener(this.selectedOption_[2],this.assetChangeListener)}}function o(){const e=pxt.react.getTilemapProject().getTransparency(16);return[{src:s(16),width:t,height:t,alt:pxt.U.lf("transparency")},e.id,e]}function s(e){const t=document.createElement("canvas"),i=t.getContext("2d");t.width=e,t.height=e,i.fillStyle="#aeaeae",i.fillRect(0,0,e,e),i.fillStyle="#dedede";for(let t=0;t<e;t+=4)for(let o=0;o<e;o+=4)t+o>>2&1&&i.fillRect(t,o,4,4);return t.toDataURL()}function l(e){switch(e){case"myTiles.transparency16":return 1;case"myTiles.transparency8":case"myTiles.transparency32":return 2;default:if(e.startsWith("myTiles.tile")){const t=parseInt(e.slice(12));if(!Number.isNaN(t))return t+2}return 9999999999}}function n(e){return e.meta.displayName||pxt.getShortIDForAsset(e)}e.FieldTileset=i}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldNumber{constructor(e,t,i){super(e,void 0,void 0,void 0,i),this.isFieldCustom_=!0,this.CURSOR="pointer",this.params=t,this.setValue(e),this.addArgType("toggle"),this.type_=t.type}initView(){if(!this.fieldGroup_)return;null!==this.getArgTypes()&&(this.sourceBlock_.isShadow()?this.sourceBlock_.svgGroup_.setAttribute("data-argument-type",this.getArgTypes()):this.fieldGroup_.setAttribute("data-argument-type",this.getArgTypes())),!this.sourceBlock_.isShadow()&&this.sourceBlock_.inputList&&this.sourceBlock_.inputList.length>1&&(this.borderRect_=Blockly.utils.dom.createSvgElement("rect",{rx:Blockly.BlockSvg.CORNER_RADIUS,ry:Blockly.BlockSvg.CORNER_RADIUS,x:0,y:0,width:this.size_.width,height:this.size_.height,fill:this.sourceBlock_.getColour(),stroke:this.sourceBlock_.getColourTertiary()},null),this.fieldGroup_.insertBefore(this.borderRect_,this.textElement_));const e=this.getSize();switch(this.checkElement_=Blockly.utils.dom.createSvgElement("g",{class:"blocklyToggle "+(this.state_?"blocklyToggleOn":"blocklyToggleOff"),transform:`translate(8, ${e.height/2})`},this.fieldGroup_),this.getOutputShape()){case Blockly.OUTPUT_SHAPE_HEXAGONAL:this.toggleThumb_=Blockly.utils.dom.createSvgElement("polygon",{class:"blocklyToggleRect",points:"-7,-14 -21,0 -7,14 7,14 21,0 7,-14",cursor:"pointer"},this.checkElement_);break;case Blockly.OUTPUT_SHAPE_ROUND:this.toggleThumb_=Blockly.utils.dom.createSvgElement("rect",{class:"blocklyToggleCircle",x:-6,y:-14,height:28,width:28,rx:14,ry:14,cursor:"pointer"},this.checkElement_);break;case Blockly.OUTPUT_SHAPE_SQUARE:this.toggleThumb_=Blockly.utils.dom.createSvgElement("rect",{class:"blocklyToggleRect",x:-6,y:-14,height:28,width:28,rx:3,ry:3,cursor:"pointer"},this.checkElement_)}let t=this.sourceBlock_.RTL?-e.width/2:e.width/2;this.textElement_=Blockly.utils.dom.createSvgElement("text",{class:"blocklyText",x:t,dy:"0.6ex",y:e.height/2},this.fieldGroup_),this.updateEditable();const i=this.sourceBlock_.getSvgRoot();i.appendChild(this.fieldGroup_),i.querySelector(".blocklyBlockBackground").setAttribute("fill",this.sourceBlock_.getColourTertiary()),this.switchToggle(this.state_),this.setValue(this.getValue()),this.markDirty()}getDisplayText_(){return this.state_?this.getTrueText():this.getFalseText()}getTrueText(){return lf("True")}getFalseText(){return lf("False")}updateSize_(){switch(this.getOutputShape()){case Blockly.OUTPUT_SHAPE_ROUND:this.size_.width=2*this.getInnerWidth()-7;break;case Blockly.OUTPUT_SHAPE_HEXAGONAL:this.size_.width=2*this.getInnerWidth()+8-Math.floor(this.getInnerWidth()/2);break;case Blockly.OUTPUT_SHAPE_SQUARE:this.size_.width=9+2*this.getInnerWidth()}}getInnerWidth(){return 10*this.getMaxLength()}getMaxLength(){return Math.max(this.getTrueText().length,this.getFalseText().length)}getOutputShape(){return this.sourceBlock_.isShadow()?this.sourceBlock_.getOutputShape():Blockly.OUTPUT_SHAPE_SQUARE}doClassValidation_(e){return"boolean"==typeof this.fromVal(e)?e:"false"}applyColour(){let e=this.sourceBlock_.getColourTertiary();this.borderRect_?this.borderRect_.setAttribute("stroke",e):this.sourceBlock_.pathObject.svgPath.setAttribute("fill",e)}getValue(){return this.toVal(this.state_)}doValueUpdate_(e){let t=this.fromVal(e);this.state_!==t&&(this.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.state_,t)),this.state_=t,this.switchToggle(this.state_),this.isDirty_=!0)}switchToggle(e){if(this.checkElement_){this.updateSize_();const t=this.getSize(),i=this.getInnerWidth();e?(pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOn"),pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOff")):(pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOn"),pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOff"));const o=this.getOutputShape();let s=0,l=0,n=0,r=0;switch(o){case Blockly.OUTPUT_SHAPE_HEXAGONAL:s=i,l=s/2;let e=l/2;n=-l+e,r=-e;const t=-e,a=l;this.toggleThumb_.setAttribute("points",`${t},-14 ${t-14},0 ${t},14 ${a},14 ${a+14},0 ${a},-14`);break;case Blockly.OUTPUT_SHAPE_ROUND:case Blockly.OUTPUT_SHAPE_SQUARE:s=5+i,l=s/2,this.toggleThumb_.setAttribute("width",""+s),this.toggleThumb_.setAttribute("x",`-${l}`),n=r=o==Blockly.OUTPUT_SHAPE_SQUARE?2:-6}this.checkElement_.setAttribute("transform",`translate(${e?r+i+l:l+n}, ${t.height/2})`)}}render_(){if(this.visible_&&this.textElement_){goog.dom.removeChildren(this.textElement_);let e=document.createTextNode(this.getDisplayText_());this.textElement_.appendChild(e),pxt.BrowserUtils.addClass(this.textElement_,"blocklyToggleText"),this.updateSize_();let t=this.size_.width,i=(this.state_?t+t/8:t/2)-t/2;this.textElement_.setAttribute("x",`${i}`)}this.borderRect_&&(this.borderRect_.setAttribute("width",`${this.size_.width}`),this.borderRect_.setAttribute("height",`${this.size_.height}`))}showEditor_(){let e=!this.state_;null!==e&&this.setValue(this.toVal(e))}toVal(e){return"number"==this.type_?String(e?"1":"0"):String(e?"true":"false")}fromVal(e){return"string"==typeof e?"1"==e||"TRUE"==e.toUpperCase():!!e}}e.FieldToggle=t}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldToggle{constructor(e,t,i){super(e,t,i),this.isFieldCustom_=!0}getTrueText(){return lf("HIGH")}getFalseText(){return lf("LOW")}}e.FieldToggleHighLow=t}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldToggle{constructor(e,t,i){super(e,t,i),this.isFieldCustom_=!0}getTrueText(){return lf("ON")}getFalseText(){return lf("OFF")}}e.FieldToggleOnOff=t}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldToggle{constructor(e,t,i){super(e,t,i),this.isFieldCustom_=!0}getTrueText(){return lf("UP")}getFalseText(){return lf("DOWN")}}e.FieldToggleUpDown=t;class i extends e.FieldToggle{constructor(e,t,i){super(e,t,i),this.isFieldCustom_=!0}getTrueText(){return lf("DOWN")}getFalseText(){return lf("UP")}}e.FieldToggleDownUp=i}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldToggle{constructor(e,t,i){super(e,t,i),this.isFieldCustom_=!0}getTrueText(){return lf("WIN")}getFalseText(){return lf("LOSE")}}e.FieldToggleWinLose=t}(pxtblockly||(pxtblockly={})),function(e){class t extends e.FieldToggle{constructor(e,t,i){super(e,t,i),this.isFieldCustom_=!0}getTrueText(){return lf("Yes")}getFalseText(){return lf("No")}}e.FieldToggleYesNo=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldTextInput{constructor(){super(...arguments),this.isFieldCustom_=!0,this.pythonMode=!1}updateEditable(){let e=this.fieldGroup_;this.EDITABLE&&e&&(this.sourceBlock_.isEditable()?(pxt.BrowserUtils.addClass(e,"blocklyEditableText"),pxt.BrowserUtils.removeClass(e,"blocklyGreyExpressionBlockText"),this.fieldGroup_.style.cursor=this.CURSOR):(pxt.BrowserUtils.addClass(e,"blocklyGreyExpressionBlockText"),pxt.BrowserUtils.removeClass(e,"blocklyEditableText"),this.fieldGroup_.style.cursor=""))}setPythonEnabled(e){e!==this.pythonMode&&(this.pythonMode=e,this.forceRerender())}getText(){return this.pythonMode?pxt.Util.lf("<python code>"):this.getValue()}applyColour(){var e;this.sourceBlock_&&(null===(e=this.getConstants())||void 0===e?void 0:e.FULL_BLOCK_FIELDS)&&this.borderRect_&&this.borderRect_.setAttribute("stroke",this.sourceBlock_.style.colourTertiary)}}e.FieldTsExpression=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldSlider{constructor(e,t,i){super(String(e),"-200","200","1","10","TurnRatio",i),this.isFieldCustom_=!0,this.params=t,this.sliderColor_="#a8aaa8"}createLabelDom_(e){let i=document.createElement("div"),o=Blockly.utils.dom.createSvgElement("svg",{xmlns:"http://www.w3.org/2000/svg","xmlns:html":"http://www.w3.org/1999/xhtml","xmlns:xlink":"http://www.w3.org/1999/xlink",version:"1.1",height:t.HALF+t.HANDLE_RADIUS+10+"px",width:2*t.HALF+"px"},i),s=Blockly.utils.dom.createSvgElement("defs",{},o),l=Blockly.utils.dom.createSvgElement("marker",{id:"head",orient:"auto",markerWidth:"2",markerHeight:"4",refX:"0.1",refY:"1.5"},s);Blockly.utils.dom.createSvgElement("path",{d:"M0,0 V3 L1.5,1.5 Z",fill:"#f12a21"},l);this.reporter_=pxsim.svg.child(o,"text",{x:t.HALF,y:96,"text-anchor":"middle","dominant-baseline":"middle",style:"font-size: 50px",class:"sim-text inverted number"}),this.path_=Blockly.utils.dom.createSvgElement("path",{x1:t.HALF,y1:t.HALF,"marker-end":"url(#head)",style:"fill: none; stroke: #f12a21; stroke-width: 10"},o),this.updateGraph_();let n=document.createElement("span");return n.setAttribute("class","blocklyFieldSliderReadout"),[i,n]}updateGraph_(){if(!this.path_)return;let e=goog.math.clamp(this.getValue()||0,-200,200);const i=e/100,o=Math.max(-1,Math.min(1,i)),s=Math.max(o)*Math.PI/2,l=t.RADIUS-6;let n=t.HALF;const r=t.HALF-22;Math.abs(i)>1&&(n-=(i-(i>0?1:-1))*l/2);const a=.2+.5*Math.abs(o),c=l*a,u=l*Math.sin(Math.PI/2-s),d=l*Math.cos(Math.PI/2-s),p=u-l*a*Math.cos(2*s),h=`M ${n} ${r} C ${n} ${r-c} ${n+(d-l*a*Math.sin(2*s))} ${r-p} ${n+d} ${r-u}`;this.path_.setAttribute("d",h),this.reporter_.textContent=`${e}`}setReadout_(e,t){this.updateGraph_()}}t.HALF=80,t.HANDLE_RADIUS=30,t.RADIUS=t.HALF-t.HANDLE_RADIUS-1,e.FieldTurnRatio=t}(pxtblockly||(pxtblockly={})),function(e){class t extends Blockly.FieldDropdown{constructor(e){super(function(e){return function(){const t=[],i=this;if(i.sourceBlock_&&i.sourceBlock_.workspace){i.sourceBlock_.workspace.getVariablesOfType(e.name).forEach((e=>{const i=e.name.replace(/^\d+/,"");t.push([i,e.name])}))}else e.initialMembers.forEach((e=>t.push([e,e])));return t.push([lf("Add a new {0}...",e.memberName),"CREATE"]),t}}(e)),this.opts=e}init(){super.init(),this.initVariables()}onItemSelected_(e,t){"CREATE"===t.getValue()?i(this.sourceBlock_.workspace,this.opts,lf("New {0}:",this.opts.memberName),(e=>e&&this.setValue(e))):super.onItemSelected_(e,t)}doClassValidation_(e){var t;return(null===(t=this.opts)||void 0===t?void 0:t.initialMembers)&&!this.opts.initialMembers.find((t=>t==e))&&this.getOptions(),super.doClassValidation_(e)}initVariables(){if(this.sourceBlock_&&this.sourceBlock_.workspace){const e=this.sourceBlock_.workspace,t=s(e,this.opts.name);if(this.opts.initialMembers.forEach((i=>{t.some((([e,t])=>e===i))||n(e,this.opts,i)})),"CREATE"===this.getValue()){const t=function(e,t,i){const s=e.getVariablesOfType(t);if(s&&s.length)for(let e=0;e<s.length;e++){const[t]=o(s[e]);if(t===i)return s[e].name}return}(e,this.opts.name,this.opts.initialMembers[0]);t&&this.setValue(t)}}}}function i(e,t,o,l){Blockly.prompt(o,null,(r=>{if(r){let a=!1;if(pxtc.isIdentifierStart(r.charCodeAt(0),2)){a=!0;for(let e=1;e<r.length;e++)pxtc.isIdentifierPart(r.charCodeAt(e),2)||(a=!1)}if(!a)return void Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."),(()=>i(e,t,o,l)));const c=s(e,t.name);for(let s=0;s<c.length;s++){const[n,a]=c[s];if(n===r)return void Blockly.alert(lf("A {0} named '{1}' already exists.",t.memberName,r),(()=>i(e,t,o,l)))}l(n(e,t,r))}}),{placeholder:t.promptHint})}function o(e){const t=/^(\d+)([^0-9].*)$/.exec(e.name);return t?[t[2],parseInt(t[1])]:[e.name,-1]}function s(e,t){const i=e.getVariablesOfType(t);return i&&i.length?i.map(o):[]}function l(e,t){const i=e.map((([e,t])=>t));if(t.isBitMask){for(let e=0;e<i.length;e++){let t=1<<e;if(i.indexOf(t)<0)return t}return 1<<i.length}if(t.isHash)return 0;{const e=t.firstValue||0;for(let t=0;t<i.length;t++)if(i.indexOf(e+t)<0)return e+t;return e+i.length}}function n(e,t,i){const o=l(s(e,t.name),t)+i;return Blockly.Variables.getOrCreateVariablePackage(e,null,o,t.name),o}e.FieldUserEnum=t,e.getNextValue=l}(pxtblockly||(pxtblockly={})),function(e){let t;function i(e,t){const i=e.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE);for(const o of i)if(parseInt(o.name.substr(0,o.name.indexOf(";")))===t.projectId){e.deleteVariableById(o.getId());break}}function o(t){return l(t,(t=>t instanceof e.FieldTilemap&&!t.isGreyBlock))}function s(t){return l(t,(t=>t instanceof e.FieldTileset))}function l(e,t){const i=[];return e.getTopBlocks(!1).forEach((e=>o(e))),i;function o(e){for(const s of e.inputList){for(const o of s.fieldRow)t(o)&&i.push({block:e,field:o.name,ref:o});s.connection&&s.connection.targetBlock()&&o(s.connection.targetBlock())}e.nextConnection&&e.nextConnection.targetBlock()&&o(e.nextConnection.targetBlock())}}!function(e){e.hasClass=function(e,t){return pxt.BrowserUtils.containsClass(e,t)},e.addClass=function(e,t){pxt.BrowserUtils.addClass(e,t)},e.removeClass=function(e,t){pxt.BrowserUtils.removeClass(e,t)}}(t=e.svg||(e.svg={})),e.parseColour=function(e){const t=Number(e);return isNaN(t)?goog.isString(e)&&e.match(/^#[0-9a-fA-F]{6}$/)?e:"#000":Blockly.hueToRgb(t)},e.bitmapToImageURI=function(e,t,i){const o=pxt.appTarget.runtime.palette.slice(1),s=document.createElement("canvas");s.width=t,s.height=t;const l=Math.min(t/e.width,t/e.height),n=Math.max(Math.floor(t*(1-e.width/e.height)/2),0),r=Math.max(Math.floor(t*(1-e.height/e.width)/2),0);let a;i?(a=s.getContext("2d",{alpha:!1}),a.fillStyle="#dedede",a.fillRect(0,0,t,t)):a=s.getContext("2d");for(let t=0;t<e.width;t++)for(let s=0;s<e.height;s++){const c=e.get(t,s);c?(a.fillStyle=o[c-1],a.fillRect(n+t*l,r+s*l,l,l)):i&&(a.fillStyle="#dedede",a.fillRect(n+t*l,r+s*l,l,l))}return s.toDataURL()},e.tilemapToImageURI=function(e,t,i){const o=pxt.appTarget.runtime.palette.slice(),s=document.createElement("canvas");s.width=t,s.height=t;const l=Math.min(t/e.tilemap.width,t/e.tilemap.height),n=Math.max(Math.floor(t*(1-e.tilemap.width/e.tilemap.height)/2),0),r=Math.max(Math.floor(t*(1-e.tilemap.height/e.tilemap.width)/2),0);let a;i?(a=s.getContext("2d",{alpha:!1}),a.fillStyle="#dedede",a.fillRect(0,0,t,t)):a=s.getContext("2d");let c=[];for(let t=0;t<e.tilemap.width;t++)for(let s=0;s<e.tilemap.height;s++){const u=e.tilemap.get(t,s);if(u){if(!c[u]){const t=e.tileset.tiles[u];c[u]=t?pxt.sprite.computeAverageColor(pxt.sprite.Bitmap.fromData(t.bitmap),o):"#dedede"}a.fillStyle=c[u],a.fillRect(n+t*l,r+s*l,l,l)}else i&&(a.fillStyle="#dedede",a.fillRect(n+t*l,r+s*l,l,l))}return s.toDataURL()},e.getAllBlocksWithTilemaps=o,e.getAllBlocksWithTilesets=s,e.needsTilemapUpgrade=function(e){return!!e.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE).map((e=>pxt.sprite.legacy.blocklyVariableToTile(e.name))).length},e.upgradeTilemapsInWorkspace=function(e,t){const l=e.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE).map((e=>pxt.sprite.legacy.blocklyVariableToTile(e.name)));if(l.length)try{Blockly.Events.disable();let n=[];for(const o of l)o.qualifiedName?n[o.projectId]=t.resolveTile(o.qualifiedName):o.data&&(n[o.projectId]=t.createNewTile(o.data,"myTiles.tile"+o.projectId)),i(e,o);const r=o(e);for(const e of r){const i=pxt.sprite.legacy.decodeTilemap(e.ref.getInitText(),"typescript"),o=[],s=new pxt.sprite.TilemapData(i.tilemap,{tileWidth:i.tileset.tileWidth,tiles:i.tileset.tiles.map(((e,i)=>null!=e.projectId?n[e.projectId]:(o[i]||(o[i]=t.resolveTile(e.qualifiedName)),o[i])))},i.layers);e.ref.setValue(pxt.sprite.encodeTilemap(s,"typescript"))}const a=s(e);for(const e of a)e.ref.doValueUpdate_(e.ref.getValue()),e.ref.isDirty_&&e.ref.forceRerender()}finally{Blockly.Events.enable()}},e.getAllReferencedTiles=function(e,t){var i;let l={};const n=o(e),r=pxt.react.getTilemapProject();for(const e of n)if(e.block.id!==t)for(const t of(null===(i=e.ref.getTileset())||void 0===i?void 0:i.tiles)||[])l[t.id]=r.lookupAsset("tile",t.id);const a=r.getAssets("tilemap");for(const e of a)for(const t of e.data.tileset.tiles)l[t.id]=r.lookupAsset("tile",t.id);const c=s(e);for(const e of c){const t=e.ref.getValue(),i=/^\s*assets\s*\.\s*tile\s*`([^`]*)`\s*$/.exec(t);if(i){const e=r.lookupAssetByName("tile",i[1]);e&&!l[e.id]&&(l[e.id]=e)}else l[t]||(l[t]=r.resolveTile(t))}return Object.keys(l).map((e=>l[e])).filter((e=>!!e))},e.getTemporaryAssets=function(t,i){switch(i){case"image":return l(t,(t=>t instanceof e.FieldSpriteEditor&&t.isTemporaryAsset())).map((e=>e.ref.getAsset()));case"animation":return l(t,(t=>t instanceof e.FieldAnimationEditor&&t.isTemporaryAsset())).map((e=>e.ref.getAsset()));default:return[]}}}(pxtblockly||(pxtblockly={}));
+///<reference path='../localtypings/pxtblockly.d.ts'/>
+/// <reference path="../built/pxtlib.d.ts" />
+let iface;
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_1) {
+        function workerOpAsync(op, arg) {
+            return pxt.worker.getWorker(pxt.webConfig.workerjs).opAsync(op, arg);
+        }
+        blocks_1.workerOpAsync = workerOpAsync;
+        let placeholders = {};
+        const MAX_COMMENT_LINE_LENGTH = 50;
+        ///////////////////////////////////////////////////////////////////////////////
+        // Miscellaneous utility functions
+        ///////////////////////////////////////////////////////////////////////////////
+        // Mutate [a1] in place and append to it the elements from [a2].
+        function append(a1, a2) {
+            a1.push.apply(a1, a2);
+        }
+        // A few wrappers for basic Block operations that throw errors when compilation
+        // is not possible. (The outer code catches these and highlights the relevant
+        // block.)
+        // Internal error (in our code). Compilation shouldn't proceed.
+        function assert(x) {
+            if (!x)
+                throw new Error("Assertion failure");
+        }
+        function throwBlockError(msg, block) {
+            let e = new Error(msg);
+            e.block = block;
+            throw e;
+        }
+        ///////////////////////////////////////////////////////////////////////////////
+        // Types
+        //
+        // We slap a very simple type system on top of Blockly. This is needed to ensure
+        // we generate valid TouchDevelop code (otherwise compilation from TD to C++
+        // would not work).
+        ///////////////////////////////////////////////////////////////////////////////
+        // There are several layers of abstraction for the type system.
+        // - Block are annotated with a string return type, and a string type for their
+        //   input blocks (see blocks-custom.js). We use that as the reference semantics
+        //   for the blocks.
+        // - In this "type system", we use the enum Type. Using an enum rules out more
+        //   mistakes.
+        // - When emitting code, we target the "TouchDevelop types".
+        //
+        // Type inference / checking is done as follows. First, we try to assign a type
+        // to all variables. We do this by examining all variable assignments and
+        // figuring out the type from the right-hand side. There's a fixpoint computation
+        // (see [mkEnv]). Then, we propagate down the expected type when doing code
+        // generation; when generating code for a variable dereference, if the expected
+        // type doesn't match the inferred type, it's an error. If the type was
+        // undetermined as of yet, the type of the variable becomes the expected type.
+        class Point {
+            constructor(link, type, parentType, childType, isArrayType) {
+                this.link = link;
+                this.type = type;
+                this.parentType = parentType;
+                this.childType = childType;
+                this.isArrayType = isArrayType;
+            }
+        }
+        blocks_1.Point = Point;
+        let BlockDeclarationType;
+        (function (BlockDeclarationType) {
+            BlockDeclarationType[BlockDeclarationType["None"] = 0] = "None";
+            BlockDeclarationType[BlockDeclarationType["Argument"] = 1] = "Argument";
+            BlockDeclarationType[BlockDeclarationType["Assigned"] = 2] = "Assigned";
+            BlockDeclarationType[BlockDeclarationType["Implicit"] = 3] = "Implicit";
+        })(BlockDeclarationType = blocks_1.BlockDeclarationType || (blocks_1.BlockDeclarationType = {}));
+        function find(p) {
+            if (p.link)
+                return find(p.link);
+            return p;
+        }
+        function union(p1, p2) {
+            let _p1 = find(p1);
+            let _p2 = find(p2);
+            assert(_p1.link == null && _p2.link == null);
+            if (_p1 == _p2)
+                return;
+            if (_p1.childType && _p2.childType) {
+                const ct = _p1.childType;
+                _p1.childType = null;
+                union(ct, _p2.childType);
+            }
+            else if (_p1.childType && !_p2.childType) {
+                _p2.childType = _p1.childType;
+            }
+            if (_p1.parentType && _p2.parentType) {
+                const pt = _p1.parentType;
+                _p1.parentType = null;
+                union(pt, _p2.parentType);
+            }
+            else if (_p1.parentType && !_p2.parentType && !_p2.type) {
+                _p2.parentType = _p1.parentType;
+            }
+            let t = unify(_p1.type, _p2.type);
+            p1.link = _p2;
+            _p1.link = _p2;
+            _p1.isArrayType = _p2.isArrayType;
+            p1.type = null;
+            p2.type = t;
+        }
+        // Ground types.
+        function mkPoint(t, isArrayType = false) {
+            return new Point(null, t, null, null, isArrayType);
+        }
+        const pNumber = mkPoint("number");
+        const pBoolean = mkPoint("boolean");
+        const pString = mkPoint("string");
+        const pUnit = mkPoint("void");
+        function ground(t) {
+            if (!t)
+                return mkPoint(t);
+            switch (t.toLowerCase()) {
+                case "number": return pNumber;
+                case "boolean": return pBoolean;
+                case "string": return pString;
+                case "void": return pUnit;
+                default:
+                    // Unification variable.
+                    return mkPoint(t);
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////////
+        // Type inference
+        //
+        // Expressions are now directly compiled as a tree. This requires knowing, for
+        // each property ref, the right value for its [parent] property.
+        ///////////////////////////////////////////////////////////////////////////////
+        // Infers the expected type of an expression by looking at the untranslated
+        // block and figuring out, from the look of it, what type of expression it
+        // holds.
+        function returnType(e, b) {
+            assert(b != null);
+            if (isPlaceholderBlock(b)) {
+                if (!b.p)
+                    b.p = mkPoint(null);
+                return find(b.p);
+            }
+            if (b.type == "variables_get")
+                return find(lookup(e, b, b.getField("VAR").getText()).type);
+            if (b.type == "function_call_output") {
+                return getReturnTypeOfFunctionCall(e, b);
+            }
+            if (!b.outputConnection) {
+                return ground(pUnit.type);
+            }
+            const check = b.outputConnection.check_ && b.outputConnection.check_.length ? b.outputConnection.check_[0] : "T";
+            if (check === "Array") {
+                if (b.outputConnection.check_.length > 1) {
+                    // HACK: The real type is stored as the second check
+                    return ground(b.outputConnection.check_[1]);
+                }
+                // lists_create_with and argument_reporter_array both hit this.
+                // For lists_create_with, we can safely infer the type from the
+                // first input that has a return type.
+                // For argument_reporter_array just return any[] for now
+                let tp;
+                if (b.type == "lists_create_with") {
+                    if (b.inputList && b.inputList.length) {
+                        for (const input of b.inputList) {
+                            if (input.connection && input.connection.targetBlock()) {
+                                let t = find(returnType(e, input.connection.targetBlock()));
+                                if (t) {
+                                    if (t.parentType) {
+                                        return t.parentType;
+                                    }
+                                    tp = t.type ? ground(t.type + "[]") : mkPoint(null);
+                                    genericLink(tp, t);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (b.type == "argument_reporter_array") {
+                    if (!tp) {
+                        tp = lookup(e, b, b.getFieldValue("VALUE")).type;
+                    }
+                }
+                if (tp)
+                    tp.isArrayType = true;
+                return tp || mkPoint(null, true);
+            }
+            else if (check === "T") {
+                const func = e.stdCallTable[b.type];
+                const isArrayGet = b.type === "lists_index_get";
+                if (isArrayGet || func && func.comp.thisParameter) {
+                    let parentInput;
+                    if (isArrayGet) {
+                        parentInput = b.inputList.find(i => i.name === "LIST");
+                    }
+                    else {
+                        parentInput = b.inputList.find(i => i.name === func.comp.thisParameter.definitionName);
+                    }
+                    if (parentInput.connection && parentInput.connection.targetBlock()) {
+                        const parentType = returnType(e, parentInput.connection.targetBlock());
+                        if (parentType.childType) {
+                            return parentType.childType;
+                        }
+                        const p = isArrayType(parentType.type) && parentType.type !== "Array" ? mkPoint(parentType.type.substr(0, parentType.type.length - 2)) : mkPoint(null);
+                        genericLink(parentType, p);
+                        return p;
+                    }
+                }
+                return mkPoint(null);
+            }
+            return ground(check);
+        }
+        function returnTypeWithInheritance(e, b) {
+            var _a, _b;
+            if (!((_b = (_a = b.outputConnection) === null || _a === void 0 ? void 0 : _a.check_) === null || _b === void 0 ? void 0 : _b.length) || b.outputConnection.check_[0] === "Array" || b.outputConnection.check_[0] === "T") {
+                return [returnType(e, b)];
+            }
+            return b.outputConnection.check_.map(t => ground(t));
+        }
+        function getReturnTypeOfFunction(e, name) {
+            if (!e.userFunctionReturnValues[name]) {
+                const definition = Blockly.Functions.getDefinition(name, e.workspace);
+                let res = mkPoint("void");
+                if (isFunctionRecursive(definition, true)) {
+                    res = mkPoint("any");
+                }
+                else {
+                    const returnTypes = [];
+                    for (const child of definition.getDescendants(false)) {
+                        if (child.type === "function_return") {
+                            attachPlaceholderIf(e, child, "RETURN_VALUE");
+                            returnTypes.push(returnType(e, getInputTargetBlock(child, "RETURN_VALUE")));
+                        }
+                    }
+                    if (returnTypes.length) {
+                        try {
+                            const unified = mkPoint(null);
+                            for (const point of returnTypes) {
+                                union(unified, point);
+                            }
+                            res = unified;
+                        }
+                        catch (err) {
+                            e.diagnostics.push({
+                                blockId: definition.id,
+                                message: pxt.Util.lf("Function '{0}' has an invalid return type", name)
+                            });
+                            res = mkPoint("any");
+                        }
+                    }
+                }
+                e.userFunctionReturnValues[name] = res;
+            }
+            return e.userFunctionReturnValues[name];
+        }
+        function getReturnTypeOfFunctionCall(e, call) {
+            const name = call.getField("function_name").getText();
+            return getReturnTypeOfFunction(e, name);
+        }
+        // Basic type unification routine; easy, because there's no structural types.
+        // FIXME: Generics are not supported
+        function unify(t1, t2) {
+            if (t1 == null || t1 === "Array" && isArrayType(t2))
+                return t2;
+            else if (t2 == null || t2 === "Array" && isArrayType(t1))
+                return t1;
+            else if (t1 == t2)
+                return t1;
+            else
+                throw new Error("cannot mix " + t1 + " with " + t2);
+        }
+        function isArrayType(type) {
+            return type && (type.indexOf("[]") !== -1 || type == "Array");
+        }
+        function mkPlaceholderBlock(e, parent, type) {
+            // XXX define a proper placeholder block type
+            return {
+                type: "placeholder",
+                p: mkPoint(type || null),
+                workspace: e.workspace,
+                parentBlock_: parent
+            };
+        }
+        function attachPlaceholderIf(e, b, n, type) {
+            // Ugly hack to keep track of the type we want there.
+            const target = b.getInputTargetBlock(n);
+            if (!target) {
+                if (!placeholders[b.id]) {
+                    placeholders[b.id] = {};
+                }
+                if (!placeholders[b.id][n]) {
+                    placeholders[b.id][n] = mkPlaceholderBlock(e, b, type);
+                }
+            }
+            else if (target.type === pxtc.TS_OUTPUT_TYPE && !(target.p)) {
+                target.p = mkPoint(null);
+            }
+        }
+        function getLoopVariableField(b) {
+            return (b.type == "pxt_controls_for" || b.type == "pxt_controls_for_of") ?
+                getInputTargetBlock(b, "VAR") : b;
+        }
+        function getInputTargetBlock(b, n) {
+            const res = b.getInputTargetBlock(n);
+            if (!res) {
+                return placeholders[b.id] && placeholders[b.id][n];
+            }
+            else {
+                return res;
+            }
+        }
+        function removeAllPlaceholders() {
+            placeholders = {};
+        }
+        // Unify the *return* type of the parameter [n] of block [b] with point [p].
+        function unionParam(e, b, n, p) {
+            attachPlaceholderIf(e, b, n);
+            try {
+                union(returnType(e, getInputTargetBlock(b, n)), p);
+            }
+            catch (e) {
+                // TypeScript should catch this error and bubble it up
+            }
+        }
+        function infer(allBlocks, e, w) {
+            if (allBlocks)
+                allBlocks.filter(b => b.isEnabled()).forEach((b) => {
+                    try {
+                        switch (b.type) {
+                            case "math_op2":
+                                unionParam(e, b, "x", ground(pNumber.type));
+                                unionParam(e, b, "y", ground(pNumber.type));
+                                break;
+                            case "math_op3":
+                                unionParam(e, b, "x", ground(pNumber.type));
+                                break;
+                            case "math_arithmetic":
+                            case "logic_compare":
+                                switch (b.getFieldValue("OP")) {
+                                    case "ADD":
+                                    case "MINUS":
+                                    case "MULTIPLY":
+                                    case "DIVIDE":
+                                    case "LT":
+                                    case "LTE":
+                                    case "GT":
+                                    case "GTE":
+                                    case "POWER":
+                                        unionParam(e, b, "A", ground(pNumber.type));
+                                        unionParam(e, b, "B", ground(pNumber.type));
+                                        break;
+                                    case "AND":
+                                    case "OR":
+                                        attachPlaceholderIf(e, b, "A", pBoolean.type);
+                                        attachPlaceholderIf(e, b, "B", pBoolean.type);
+                                        break;
+                                    case "EQ":
+                                    case "NEQ":
+                                        attachPlaceholderIf(e, b, "A");
+                                        attachPlaceholderIf(e, b, "B");
+                                        let p1 = returnType(e, getInputTargetBlock(b, "A"));
+                                        let p2 = returnType(e, getInputTargetBlock(b, "B"));
+                                        try {
+                                            union(p1, p2);
+                                        }
+                                        catch (e) {
+                                            // TypeScript should catch this error and bubble it up
+                                        }
+                                        break;
+                                }
+                                break;
+                            case "logic_operation":
+                                attachPlaceholderIf(e, b, "A", pBoolean.type);
+                                attachPlaceholderIf(e, b, "B", pBoolean.type);
+                                break;
+                            case "logic_negate":
+                                attachPlaceholderIf(e, b, "BOOL", pBoolean.type);
+                                break;
+                            case "controls_if":
+                                for (let i = 0; i <= b.elseifCount_; ++i)
+                                    attachPlaceholderIf(e, b, "IF" + i, pBoolean.type);
+                                break;
+                            case "pxt_controls_for":
+                            case "controls_simple_for":
+                                unionParam(e, b, "TO", ground(pNumber.type));
+                                break;
+                            case "pxt_controls_for_of":
+                            case "controls_for_of":
+                                const listTp = returnType(e, getInputTargetBlock(b, "LIST"));
+                                const elementTp = lookup(e, b, getLoopVariableField(b).getField("VAR").getText()).type;
+                                genericLink(listTp, elementTp);
+                                break;
+                            case "variables_set":
+                            case "variables_change":
+                                let p1 = lookup(e, b, b.getField("VAR").getText()).type;
+                                attachPlaceholderIf(e, b, "VALUE");
+                                let rhs = getInputTargetBlock(b, "VALUE");
+                                if (rhs) {
+                                    // Get the inheritance chain for this type and check to see if the existing
+                                    // type shows up in it somewhere
+                                    let tr = returnTypeWithInheritance(e, rhs);
+                                    const t1 = find(p1);
+                                    if (t1.type && tr.slice(1).some(p => p.type === t1.type)) {
+                                        // If it does, we want to take the most narrow type (which will always be in 0)
+                                        p1.link = find(tr[0]);
+                                    }
+                                    else {
+                                        try {
+                                            union(p1, tr[0]);
+                                        }
+                                        catch (e) {
+                                            // TypeScript should catch this error and bubble it up
+                                        }
+                                    }
+                                }
+                                break;
+                            case "controls_repeat_ext":
+                                unionParam(e, b, "TIMES", ground(pNumber.type));
+                                break;
+                            case "device_while":
+                                attachPlaceholderIf(e, b, "COND", pBoolean.type);
+                                break;
+                            case "lists_index_get":
+                                unionParam(e, b, "LIST", ground("Array"));
+                                unionParam(e, b, "INDEX", ground(pNumber.type));
+                                const listType = returnType(e, getInputTargetBlock(b, "LIST"));
+                                const ret = returnType(e, b);
+                                genericLink(listType, ret);
+                                break;
+                            case "lists_index_set":
+                                unionParam(e, b, "LIST", ground("Array"));
+                                attachPlaceholderIf(e, b, "VALUE");
+                                handleGenericType(b, "LIST");
+                                unionParam(e, b, "INDEX", ground(pNumber.type));
+                                break;
+                            case 'function_definition':
+                                getReturnTypeOfFunction(e, b.getField("function_name").getText());
+                                break;
+                            case 'function_call':
+                            case 'function_call_output':
+                                b.getArguments().forEach(arg => {
+                                    unionParam(e, b, arg.id, ground(arg.type));
+                                });
+                                break;
+                            case pxtc.TS_RETURN_STATEMENT_TYPE:
+                                attachPlaceholderIf(e, b, "RETURN_VALUE");
+                                break;
+                            case pxtc.PAUSE_UNTIL_TYPE:
+                                unionParam(e, b, "PREDICATE", pBoolean);
+                                break;
+                            default:
+                                if (b.type in e.stdCallTable) {
+                                    const call = e.stdCallTable[b.type];
+                                    if (call.attrs.shim === "ENUM_GET" || call.attrs.shim === "KIND_GET")
+                                        return;
+                                    visibleParams(call, countOptionals(b, call)).forEach((p, i) => {
+                                        const isInstance = call.isExtensionMethod && i === 0;
+                                        if (p.definitionName && !b.getFieldValue(p.definitionName)) {
+                                            let i = b.inputList.find((i) => i.name == p.definitionName);
+                                            if (i && i.connection && i.connection.check_) {
+                                                if (isInstance && connectionCheck(i) === "Array") {
+                                                    let gen = handleGenericType(b, p.definitionName);
+                                                    if (gen) {
+                                                        return;
+                                                    }
+                                                }
+                                                // All of our injected blocks have single output checks, but the builtin
+                                                // blockly ones like string.length and array.length might have multiple
+                                                for (let j = 0; j < i.connection.check_.length; j++) {
+                                                    try {
+                                                        let t = i.connection.check_[j];
+                                                        unionParam(e, b, p.definitionName, ground(t));
+                                                        break;
+                                                    }
+                                                    catch (e) {
+                                                        // Ignore type checking errors in the blocks...
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                        }
+                    }
+                    catch (err) {
+                        const be = err.block || b;
+                        be.setWarningText(err + "");
+                        e.errors.push(be);
+                    }
+                });
+            // Last pass: if some variable has no type (because it was never used or
+            // assigned to), just unify it with int...
+            e.allVariables.forEach((v) => {
+                if (getConcreteType(v.type).type == null) {
+                    if (!v.isFunctionParameter) {
+                        union(v.type, ground(v.type.isArrayType ? "number[]" : pNumber.type));
+                    }
+                    else if (v.type.isArrayType) {
+                        v.type.type = "any[]";
+                    }
+                }
+            });
+            function connectionCheck(i) {
+                return i.name ? i.connection && i.connection.check_ && i.connection.check_.length ? i.connection.check_[0] : "T" : undefined;
+            }
+            function handleGenericType(b, name) {
+                let genericArgs = b.inputList.filter((input) => connectionCheck(input) === "T");
+                if (genericArgs.length) {
+                    const gen = getInputTargetBlock(b, genericArgs[0].name);
+                    if (gen) {
+                        const arg = returnType(e, gen);
+                        const arrayType = arg.type ? ground(returnType(e, gen).type + "[]") : ground(null);
+                        genericLink(arrayType, arg);
+                        unionParam(e, b, name, arrayType);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        function genericLink(parent, child) {
+            const p = find(parent);
+            const c = find(child);
+            if (p.childType) {
+                union(p.childType, c);
+            }
+            else if (!p.type) {
+                p.childType = c;
+            }
+            if (c.parentType) {
+                union(c.parentType, p);
+            }
+            else if (!c.type) {
+                c.parentType = p;
+            }
+            if (isArrayType(p.type))
+                p.isArrayType = true;
+        }
+        function getConcreteType(point, found = []) {
+            const t = find(point);
+            if (found.indexOf(t) === -1) {
+                found.push(t);
+                if (!t.type || t.type === "Array") {
+                    if (t.parentType) {
+                        const parent = getConcreteType(t.parentType, found);
+                        if (parent.type && parent.type !== "Array") {
+                            if (isArrayType(parent.type)) {
+                                t.type = parent.type.substr(0, parent.type.length - 2);
+                            }
+                            else {
+                                t.type = parent.type;
+                            }
+                            return t;
+                        }
+                    }
+                    if (t.childType) {
+                        const child = getConcreteType(t.childType, found);
+                        if (child.type) {
+                            t.type = child.type + "[]";
+                            return t;
+                        }
+                    }
+                }
+            }
+            return t;
+        }
+        ///////////////////////////////////////////////////////////////////////////////
+        // Expressions
+        //
+        // Expressions are now directly compiled as a tree. This requires knowing, for
+        // each property ref, the right value for its [parent] property.
+        ///////////////////////////////////////////////////////////////////////////////
+        function extractNumber(b) {
+            let v = b.getFieldValue(b.type === "math_number_minmax" ? "SLIDER" : "NUM");
+            const parsed = parseFloat(v);
+            checkNumber(parsed, b);
+            return parsed;
+        }
+        function checkNumber(n, b) {
+            if (!isFinite(n) || isNaN(n)) {
+                throwBlockError(lf("Number entered is either too large or too small"), b);
+            }
+        }
+        function extractTsExpression(e, b, comments) {
+            return blocks_1.mkText(b.getFieldValue("EXPRESSION").trim());
+        }
+        function compileNumber(e, b, comments) {
+            return blocks_1.H.mkNumberLiteral(extractNumber(b));
+        }
+        function isNumericLiteral(e, b) {
+            if (!b)
+                return false;
+            if (b.type === "math_number" || b.type === "math_integer" || b.type === "math_number_minmax" || b.type === "math_whole_number") {
+                return true;
+            }
+            const blockInfo = e.stdCallTable[b.type];
+            if (!blockInfo)
+                return false;
+            const { comp } = blockInfo;
+            if (blockInfo.attrs.shim === "TD_ID" && comp.parameters.length === 1) {
+                const fieldValue = b.getFieldValue(comp.parameters[0].definitionName);
+                if (fieldValue) {
+                    return !isNaN(parseInt(fieldValue));
+                }
+                else {
+                    return isNumericLiteral(e, getInputTargetBlock(b, comp.parameters[0].definitionName));
+                }
+            }
+            return false;
+        }
+        function isLiteral(e, b) {
+            return isNumericLiteral(e, b) || b.type === "logic_boolean" || b.type === "text";
+        }
+        let opToTok = {
+            "ADD": "+",
+            "MINUS": "-",
+            "MULTIPLY": "*",
+            "DIVIDE": "/",
+            "LT": "<",
+            "LTE": "<=",
+            "GT": ">",
+            "GTE": ">=",
+            "AND": "&&",
+            "OR": "||",
+            "EQ": "==",
+            "NEQ": "!=",
+            "POWER": "**"
+        };
+        function isComparisonOp(op) {
+            return ["LT", "LTE", "GT", "GTE", "EQ", "NEQ"].indexOf(op) !== -1;
+        }
+        function compileArithmetic(e, b, comments) {
+            let bOp = b.getFieldValue("OP");
+            let left = getInputTargetBlock(b, "A");
+            let right = getInputTargetBlock(b, "B");
+            let args = [compileExpression(e, left, comments), compileExpression(e, right, comments)];
+            // Special handling for the case of comparing two literals (e.g. 0 === 5). TypeScript
+            // throws an error if we don't first cast to any
+            if (isComparisonOp(bOp) && isLiteral(e, left) && isLiteral(e, right)) {
+                if (blocks_1.flattenNode([args[0]]).output !== blocks_1.flattenNode([args[1]]).output) {
+                    args = args.map(arg => blocks_1.H.mkParenthesizedExpression(blocks_1.mkGroup([arg, blocks_1.mkText(" as any")])));
+                }
+            }
+            let t = returnType(e, left).type;
+            if (t == pString.type) {
+                if (bOp == "EQ")
+                    return blocks_1.H.mkSimpleCall("==", args);
+                else if (bOp == "NEQ")
+                    return blocks_1.H.mkSimpleCall("!=", args);
+            }
+            else if (t == pBoolean.type)
+                return blocks_1.H.mkSimpleCall(opToTok[bOp], args);
+            // Compilation of math operators.
+            assert(bOp in opToTok);
+            return blocks_1.H.mkSimpleCall(opToTok[bOp], args);
+        }
+        function compileModulo(e, b, comments) {
+            let left = getInputTargetBlock(b, "DIVIDEND");
+            let right = getInputTargetBlock(b, "DIVISOR");
+            let args = [compileExpression(e, left, comments), compileExpression(e, right, comments)];
+            return blocks_1.H.mkSimpleCall("%", args);
+        }
+        function compileMathOp2(e, b, comments) {
+            let op = b.getFieldValue("op");
+            let x = compileExpression(e, getInputTargetBlock(b, "x"), comments);
+            let y = compileExpression(e, getInputTargetBlock(b, "y"), comments);
+            return blocks_1.H.mathCall(op, [x, y]);
+        }
+        function compileMathOp3(e, b, comments) {
+            let x = compileExpression(e, getInputTargetBlock(b, "x"), comments);
+            return blocks_1.H.mathCall("abs", [x]);
+        }
+        function compileText(e, b, comments) {
+            return blocks_1.H.mkStringLiteral(b.getFieldValue("TEXT"));
+        }
+        function compileTextJoin(e, b, comments) {
+            let last;
+            let i = 0;
+            while (true) {
+                const val = getInputTargetBlock(b, "ADD" + i);
+                i++;
+                if (!val) {
+                    if (i < b.inputList.length) {
+                        continue;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                const compiled = compileExpression(e, val, comments);
+                if (!last) {
+                    if (val.type.indexOf("text") === 0) {
+                        last = compiled;
+                    }
+                    else {
+                        // If we don't start with a string, then the TS won't match
+                        // the implied semantics of the blocks
+                        last = blocks_1.H.mkSimpleCall("+", [blocks_1.H.mkStringLiteral(""), compiled]);
+                    }
+                }
+                else {
+                    last = blocks_1.H.mkSimpleCall("+", [last, compiled]);
+                }
+            }
+            if (!last) {
+                return blocks_1.H.mkStringLiteral("");
+            }
+            return last;
+        }
+        function compileBoolean(e, b, comments) {
+            return blocks_1.H.mkBooleanLiteral(b.getFieldValue("BOOL") == "TRUE");
+        }
+        function compileNot(e, b, comments) {
+            let expr = compileExpression(e, getInputTargetBlock(b, "BOOL"), comments);
+            return blocks_1.mkPrefix("!", [blocks_1.H.mkParenthesizedExpression(expr)]);
+        }
+        function compileCreateList(e, b, comments) {
+            // collect argument
+            let args = b.inputList.map(input => input.connection && input.connection.targetBlock() ? compileExpression(e, input.connection.targetBlock(), comments) : undefined)
+                .filter(e => !!e);
+            return blocks_1.H.mkArrayLiteral(args, !b.getInputsInline());
+        }
+        function compileListGet(e, b, comments) {
+            const listBlock = getInputTargetBlock(b, "LIST");
+            const listExpr = compileExpression(e, listBlock, comments);
+            const index = compileExpression(e, getInputTargetBlock(b, "INDEX"), comments);
+            const res = blocks_1.mkGroup([listExpr, blocks_1.mkText("["), index, blocks_1.mkText("]")]);
+            return res;
+        }
+        function compileListSet(e, b, comments) {
+            const listBlock = getInputTargetBlock(b, "LIST");
+            const listExpr = compileExpression(e, listBlock, comments);
+            const index = compileExpression(e, getInputTargetBlock(b, "INDEX"), comments);
+            const value = compileExpression(e, getInputTargetBlock(b, "VALUE"), comments);
+            const res = blocks_1.mkGroup([listExpr, blocks_1.mkText("["), index, blocks_1.mkText("] = "), value]);
+            return listBlock.type === "lists_create_with" ? prefixWithSemicolon(res) : res;
+        }
+        function compileMathJsOp(e, b, comments) {
+            const op = b.getFieldValue("OP");
+            const args = [compileExpression(e, getInputTargetBlock(b, "ARG0"), comments)];
+            if (b.getInput("ARG1")) {
+                args.push(compileExpression(e, getInputTargetBlock(b, "ARG1"), comments));
+            }
+            return blocks_1.H.mathCall(op, args);
+        }
+        function compileFunctionDefinition(e, b, comments) {
+            const name = escapeVarName(b.getField("function_name").getText(), e, true);
+            const stmts = getInputTargetBlock(b, "STACK");
+            const argsDeclaration = b.getArguments().map(a => {
+                if (a.type == "Array") {
+                    const binding = lookup(e, b, a.name);
+                    const declaredType = getConcreteType(binding.type);
+                    const paramType = ((declaredType === null || declaredType === void 0 ? void 0 : declaredType.type) && declaredType.type !== "Array") ? declaredType.type : "any[]";
+                    return `${escapeVarName(a.name, e)}: ${paramType}`;
+                }
+                return `${escapeVarName(a.name, e)}: ${a.type}`;
+            });
+            const isRecursive = isFunctionRecursive(b, false);
+            return [
+                blocks_1.mkText(`function ${name} (${argsDeclaration.join(", ")})${isRecursive ? ": any" : ""}`),
+                compileStatements(e, stmts)
+            ];
+        }
+        function compileProcedure(e, b, comments) {
+            const name = escapeVarName(b.getFieldValue("NAME"), e, true);
+            const stmts = getInputTargetBlock(b, "STACK");
+            return [
+                blocks_1.mkText("function " + name + "() "),
+                compileStatements(e, stmts)
+            ];
+        }
+        function compileProcedureCall(e, b, comments) {
+            const name = escapeVarName(b.getFieldValue("NAME"), e, true);
+            return blocks_1.mkStmt(blocks_1.mkText(name + "()"));
+        }
+        function compileFunctionCall(e, b, comments, statement) {
+            const name = escapeVarName(b.getField("function_name").getText(), e, true);
+            const externalInputs = !b.getInputsInline();
+            const args = b.getArguments().map(a => {
+                return {
+                    actualName: a.name,
+                    definitionName: a.id
+                };
+            });
+            const compiledArgs = args.map(a => compileArgument(e, b, a, comments));
+            const res = blocks_1.H.stdCall(name, compiledArgs, externalInputs);
+            if (statement) {
+                return blocks_1.mkStmt(res);
+            }
+            return res;
+        }
+        function compileReturnStatement(e, b, comments) {
+            const expression = getInputTargetBlock(b, "RETURN_VALUE");
+            if (expression && expression.type != "placeholder") {
+                return blocks_1.mkStmt(blocks_1.mkText("return "), compileExpression(e, expression, comments));
+            }
+            else {
+                return blocks_1.mkStmt(blocks_1.mkText("return"));
+            }
+        }
+        function compileArgumentReporter(e, b, comments) {
+            const name = escapeVarName(b.getFieldValue("VALUE"), e);
+            return blocks_1.mkText(name);
+        }
+        function compileWorkspaceComment(c) {
+            const content = c.getContent();
+            return blocks_1.Helpers.mkMultiComment(content.trim());
+        }
+        function defaultValueForType(t) {
+            if (t.type == null) {
+                union(t, ground(pNumber.type));
+                t = find(t);
+            }
+            if (isArrayType(t.type) || t.isArrayType) {
+                return blocks_1.mkText("[]");
+            }
+            switch (t.type) {
+                case "boolean":
+                    return blocks_1.H.mkBooleanLiteral(false);
+                case "number":
+                    return blocks_1.H.mkNumberLiteral(0);
+                case "string":
+                    return blocks_1.H.mkStringLiteral("");
+                default:
+                    return blocks_1.mkText("null");
+            }
+        }
+        // [t] is the expected type; we assume that we never null block children
+        // (because placeholder blocks have been inserted by the type-checking phase
+        // whenever a block was actually missing).
+        function compileExpression(e, b, comments) {
+            assert(b != null);
+            e.stats[b.type] = (e.stats[b.type] || 0) + 1;
+            maybeAddComment(b, comments);
+            let expr;
+            if (b.type == "placeholder" || !(b.isEnabled && b.isEnabled())) {
+                const ret = find(returnType(e, b));
+                if (ret.type === "Array") {
+                    // FIXME: Can't use default type here because TS complains about
+                    // the array having an implicit any type. However, forcing this
+                    // to be a number array may cause type issues. Also, potential semicolon
+                    // issues if we ever have a block where the array is not the first argument...
+                    let isExpression = b.parentBlock_.type === "lists_index_get";
+                    if (!isExpression) {
+                        const call = e.stdCallTable[b.parentBlock_.type];
+                        isExpression = call && call.isExpression;
+                    }
+                    const arrayNode = blocks_1.mkText("[0]");
+                    expr = isExpression ? arrayNode : prefixWithSemicolon(arrayNode);
+                }
+                else {
+                    expr = defaultValueForType(returnType(e, b));
+                }
+            }
+            else
+                switch (b.type) {
+                    case "math_number":
+                    case "math_integer":
+                    case "math_whole_number":
+                        expr = compileNumber(e, b, comments);
+                        break;
+                    case "math_number_minmax":
+                        expr = compileNumber(e, b, comments);
+                        break;
+                    case "math_op2":
+                        expr = compileMathOp2(e, b, comments);
+                        break;
+                    case "math_op3":
+                        expr = compileMathOp3(e, b, comments);
+                        break;
+                    case "math_arithmetic":
+                    case "logic_compare":
+                    case "logic_operation":
+                        expr = compileArithmetic(e, b, comments);
+                        break;
+                    case "math_modulo":
+                        expr = compileModulo(e, b, comments);
+                        break;
+                    case "logic_boolean":
+                        expr = compileBoolean(e, b, comments);
+                        break;
+                    case "logic_negate":
+                        expr = compileNot(e, b, comments);
+                        break;
+                    case "variables_get":
+                        expr = compileVariableGet(e, b);
+                        break;
+                    case "text":
+                        expr = compileText(e, b, comments);
+                        break;
+                    case "text_join":
+                        expr = compileTextJoin(e, b, comments);
+                        break;
+                    case "lists_create_with":
+                        expr = compileCreateList(e, b, comments);
+                        break;
+                    case "lists_index_get":
+                        expr = compileListGet(e, b, comments);
+                        break;
+                    case "lists_index_set":
+                        expr = compileListSet(e, b, comments);
+                        break;
+                    case "math_js_op":
+                    case "math_js_round":
+                        expr = compileMathJsOp(e, b, comments);
+                        break;
+                    case pxtc.TS_OUTPUT_TYPE:
+                        expr = extractTsExpression(e, b, comments);
+                        break;
+                    case "argument_reporter_boolean":
+                    case "argument_reporter_number":
+                    case "argument_reporter_string":
+                    case "argument_reporter_array":
+                    case "argument_reporter_custom":
+                        expr = compileArgumentReporter(e, b, comments);
+                        break;
+                    case "function_call_output":
+                        expr = compileFunctionCall(e, b, comments, false);
+                        break;
+                    default:
+                        let call = e.stdCallTable[b.type];
+                        if (call) {
+                            if (call.imageLiteral)
+                                expr = compileImage(e, b, call.imageLiteral, call.imageLiteralColumns, call.imageLiteralRows, call.namespace, call.f, visibleParams(call, countOptionals(b, call)).map(ar => compileArgument(e, b, ar, comments)));
+                            else
+                                expr = compileStdCall(e, b, call, comments);
+                        }
+                        else {
+                            pxt.reportError("blocks", "unable to compile expression", { "details": b.type });
+                            expr = defaultValueForType(returnType(e, b));
+                        }
+                        break;
+                }
+            expr.id = b.id;
+            return expr;
+        }
+        blocks_1.compileExpression = compileExpression;
+        function lookup(e, b, name) {
+            return getVarInfo(name, e.idToScope[b.id]);
+        }
+        function emptyEnv(w, options) {
+            return {
+                workspace: w,
+                options,
+                stdCallTable: {},
+                userFunctionReturnValues: {},
+                diagnostics: [],
+                errors: [],
+                renames: {
+                    oldToNew: {},
+                    takenNames: {},
+                    oldToNewFunctions: {}
+                },
+                stats: {},
+                enums: [],
+                kinds: [],
+                idToScope: {},
+                blockDeclarations: {},
+                allVariables: [],
+                blocksInfo: null
+            };
+        }
+        ;
+        ///////////////////////////////////////////////////////////////////////////////
+        // Statements
+        ///////////////////////////////////////////////////////////////////////////////
+        function compileControlsIf(e, b, comments) {
+            let stmts = [];
+            // Notice the <= (if there's no else-if, we still compile the primary if).
+            for (let i = 0; i <= b.elseifCount_; ++i) {
+                let cond = compileExpression(e, getInputTargetBlock(b, "IF" + i), comments);
+                let thenBranch = compileStatements(e, getInputTargetBlock(b, "DO" + i));
+                let startNode = blocks_1.mkText("if (");
+                if (i > 0) {
+                    startNode = blocks_1.mkText("else if (");
+                    startNode.glueToBlock = blocks_1.GlueMode.WithSpace;
+                }
+                append(stmts, [
+                    startNode,
+                    cond,
+                    blocks_1.mkText(")"),
+                    thenBranch
+                ]);
+            }
+            if (b.elseCount_) {
+                let elseNode = blocks_1.mkText("else");
+                elseNode.glueToBlock = blocks_1.GlueMode.WithSpace;
+                append(stmts, [
+                    elseNode,
+                    compileStatements(e, getInputTargetBlock(b, "ELSE"))
+                ]);
+            }
+            return stmts;
+        }
+        function compileControlsFor(e, b, comments) {
+            let bTo = getInputTargetBlock(b, "TO");
+            let bDo = getInputTargetBlock(b, "DO");
+            let bBy = getInputTargetBlock(b, "BY");
+            let bFrom = getInputTargetBlock(b, "FROM");
+            let incOne = !bBy || (bBy.type.match(/^math_number/) && extractNumber(bBy) == 1);
+            let binding = lookup(e, b, getLoopVariableField(b).getField("VAR").getText());
+            return [
+                blocks_1.mkText("for (let " + binding.escapedName + " = "),
+                bFrom ? compileExpression(e, bFrom, comments) : blocks_1.mkText("0"),
+                blocks_1.mkText("; "),
+                blocks_1.mkInfix(blocks_1.mkText(binding.escapedName), "<=", compileExpression(e, bTo, comments)),
+                blocks_1.mkText("; "),
+                incOne ? blocks_1.mkText(binding.escapedName + "++") : blocks_1.mkInfix(blocks_1.mkText(binding.escapedName), "+=", compileExpression(e, bBy, comments)),
+                blocks_1.mkText(")"),
+                compileStatements(e, bDo)
+            ];
+        }
+        function compileControlsRepeat(e, b, comments) {
+            let bound = compileExpression(e, getInputTargetBlock(b, "TIMES"), comments);
+            let body = compileStatements(e, getInputTargetBlock(b, "DO"));
+            let valid = (x) => !lookup(e, b, x);
+            let name = "index";
+            // Start at 2 because index0 and index1 are bad names
+            for (let i = 2; !valid(name); i++)
+                name = "index" + i;
+            return [
+                blocks_1.mkText("for (let " + name + " = 0; "),
+                blocks_1.mkInfix(blocks_1.mkText(name), "<", bound),
+                blocks_1.mkText("; " + name + "++)"),
+                body
+            ];
+        }
+        function compileWhile(e, b, comments) {
+            let cond = compileExpression(e, getInputTargetBlock(b, "COND"), comments);
+            let body = compileStatements(e, getInputTargetBlock(b, "DO"));
+            return [
+                blocks_1.mkText("while ("),
+                cond,
+                blocks_1.mkText(")"),
+                body
+            ];
+        }
+        function compileControlsForOf(e, b, comments) {
+            let bOf = getInputTargetBlock(b, "LIST");
+            let bDo = getInputTargetBlock(b, "DO");
+            let binding = lookup(e, b, getLoopVariableField(b).getField("VAR").getText());
+            return [
+                blocks_1.mkText("for (let " + binding.escapedName + " of "),
+                compileExpression(e, bOf, comments),
+                blocks_1.mkText(")"),
+                compileStatements(e, bDo)
+            ];
+        }
+        function compileForever(e, b) {
+            let bBody = getInputTargetBlock(b, "HANDLER");
+            let body = compileStatements(e, bBody);
+            return mkCallWithCallback(e, "basic", "forever", [], body);
+        }
+        // convert to javascript friendly name
+        function escapeVarName(name, e, isFunction = false) {
+            if (!name)
+                return '_';
+            if (isFunction) {
+                if (e.renames.oldToNewFunctions[name]) {
+                    return e.renames.oldToNewFunctions[name];
+                }
+            }
+            else if (e.renames.oldToNew[name]) {
+                return e.renames.oldToNew[name];
+            }
+            let n = ts.pxtc.escapeIdentifier(name);
+            if (e.renames.takenNames[n]) {
+                let i = 2;
+                while (e.renames.takenNames[n + i]) {
+                    i++;
+                }
+                n += i;
+            }
+            if (isFunction) {
+                e.renames.oldToNewFunctions[name] = n;
+                e.renames.takenNames[n] = true;
+            }
+            else {
+                e.renames.oldToNew[name] = n;
+            }
+            return n;
+        }
+        blocks_1.escapeVarName = escapeVarName;
+        function compileVariableGet(e, b) {
+            const name = b.getField("VAR").getText();
+            let binding = lookup(e, b, name);
+            if (!binding) // trying to compile a disabled block with a bogus variable
+                return blocks_1.mkText(name);
+            if (!binding.firstReference)
+                binding.firstReference = b;
+            assert(binding != null && binding.type != null);
+            return blocks_1.mkText(binding.escapedName);
+        }
+        function compileSet(e, b, comments) {
+            let bExpr = getInputTargetBlock(b, "VALUE");
+            let binding = lookup(e, b, b.getField("VAR").getText());
+            const currentScope = e.idToScope[b.id];
+            let isDef = currentScope.declaredVars[binding.name] === binding && !binding.firstReference && !binding.alreadyDeclared;
+            if (isDef) {
+                // Check the expression of the set block to determine if it references itself and needs
+                // to be hoisted
+                forEachChildExpression(b, child => {
+                    if (child.type === "variables_get") {
+                        let childBinding = lookup(e, child, child.getField("VAR").getText());
+                        if (childBinding === binding)
+                            isDef = false;
+                    }
+                }, true);
+            }
+            let expr = compileExpression(e, bExpr, comments);
+            let bindString = binding.escapedName + " = ";
+            binding.isAssigned = true;
+            if (isDef) {
+                binding.alreadyDeclared = BlockDeclarationType.Assigned;
+                const declaredType = getConcreteType(binding.type);
+                bindString = `let ${binding.escapedName} = `;
+                if (declaredType) {
+                    const expressionType = getConcreteType(returnType(e, bExpr));
+                    if (declaredType.type !== expressionType.type) {
+                        bindString = `let ${binding.escapedName}: ${declaredType.type} = `;
+                    }
+                }
+            }
+            else if (!binding.firstReference) {
+                binding.firstReference = b;
+            }
+            return blocks_1.mkStmt(blocks_1.mkText(bindString), expr);
+        }
+        function compileChange(e, b, comments) {
+            let bExpr = getInputTargetBlock(b, "VALUE");
+            let binding = lookup(e, b, b.getField("VAR").getText());
+            let expr = compileExpression(e, bExpr, comments);
+            let ref = blocks_1.mkText(binding.escapedName);
+            return blocks_1.mkStmt(blocks_1.mkInfix(ref, "+=", expr));
+        }
+        function eventArgs(call, b) {
+            return visibleParams(call, countOptionals(b, call)).filter(ar => !!ar.definitionName);
+        }
+        function compileCall(e, b, comments) {
+            const call = e.stdCallTable[b.type];
+            if (call.imageLiteral)
+                return blocks_1.mkStmt(compileImage(e, b, call.imageLiteral, call.imageLiteralColumns, call.imageLiteralRows, call.namespace, call.f, visibleParams(call, countOptionals(b, call)).map(ar => compileArgument(e, b, ar, comments))));
+            else if (call.hasHandler)
+                return compileEvent(e, b, call, eventArgs(call, b), call.namespace, comments);
+            else
+                return blocks_1.mkStmt(compileStdCall(e, b, call, comments));
+        }
+        function compileArgument(e, b, p, comments, beginningOfStatement = false) {
+            let f = b.getFieldValue(p.definitionName);
+            if (f != null) {
+                const field = b.getField(p.definitionName);
+                if (field instanceof pxtblockly.FieldTextInput) {
+                    return blocks_1.H.mkStringLiteral(f);
+                }
+                else if (field instanceof pxtblockly.FieldTilemap && !field.isGreyBlock) {
+                    const project = pxt.react.getTilemapProject();
+                    const tmString = field.getValue();
+                    if (tmString.startsWith("tilemap`")) {
+                        return blocks_1.mkText(tmString);
+                    }
+                    if (e.options.emitTilemapLiterals) {
+                        try {
+                            const data = pxt.sprite.decodeTilemap(tmString, "typescript", project);
+                            if (data) {
+                                const [name] = project.createNewTilemapFromData(data);
+                                return blocks_1.mkText(`tilemap\`${name}\``);
+                            }
+                        }
+                        catch (e) {
+                            // This is a legacy tilemap or a grey block, ignore the exception
+                            // and compile as a normal field
+                        }
+                    }
+                }
+                // For some enums in pxt-minecraft, we emit the members as constants that are defined in
+                // libs/core. For example, Blocks.GoldBlock is emitted as GOLD_BLOCK
+                const type = e.blocksInfo.apis.byQName[p.type];
+                if (type && type.attributes.emitAsConstant) {
+                    for (const symbolName of Object.keys(e.blocksInfo.apis.byQName)) {
+                        const symbol = e.blocksInfo.apis.byQName[symbolName];
+                        if (symbol && symbol.attributes && symbol.attributes.enumIdentity === f) {
+                            return blocks_1.mkText(symbolName);
+                        }
+                    }
+                }
+                let text = blocks_1.mkText(f);
+                text.canIndentInside = typeof f == "string" && f.indexOf('\n') >= 0;
+                return text;
+            }
+            else {
+                attachPlaceholderIf(e, b, p.definitionName);
+                const target = getInputTargetBlock(b, p.definitionName);
+                if (beginningOfStatement && target.type === "lists_create_with") {
+                    // We have to be careful of array literals at the beginning of a statement
+                    // because they can cause errors (i.e. they get parsed as an index). Add a
+                    // semicolon to the previous statement just in case.
+                    // FIXME: No need to do this if the previous statement was a code block
+                    return prefixWithSemicolon(compileExpression(e, target, comments));
+                }
+                if (p.shadowOptions && p.shadowOptions.toString && returnType(e, target) !== pString) {
+                    return blocks_1.H.mkSimpleCall("+", [blocks_1.H.mkStringLiteral(""), blocks_1.H.mkParenthesizedExpression(compileExpression(e, target, comments))]);
+                }
+                return compileExpression(e, target, comments);
+            }
+        }
+        function compileStdCall(e, b, func, comments) {
+            let args;
+            if (isMutatingBlock(b) && b.mutation.getMutationType() === blocks_1.MutatorTypes.RestParameterMutator) {
+                args = b.mutation.compileMutation(e, comments).children;
+            }
+            else if (func.attrs.shim === "ENUM_GET") {
+                const enumName = func.attrs.enumName;
+                const enumMember = b.getFieldValue("MEMBER").replace(/^\d+/, "");
+                return blocks_1.H.mkPropertyAccess(enumMember, blocks_1.mkText(enumName));
+            }
+            else if (func.attrs.shim === "KIND_GET") {
+                const info = e.kinds.filter(k => k.blockId === func.attrs.blockId)[0];
+                return blocks_1.H.mkPropertyAccess(b.getFieldValue("MEMBER"), blocks_1.mkText(info.name));
+            }
+            else {
+                args = visibleParams(func, countOptionals(b, func)).map((p, i) => compileArgument(e, b, p, comments, func.isExtensionMethod && i === 0 && !func.isExpression));
+            }
+            let callNamespace = func.namespace;
+            let callName = func.f;
+            if (func.attrs.blockAliasFor) {
+                const aliased = e.blocksInfo.apis.byQName[func.attrs.blockAliasFor];
+                if (aliased) {
+                    callName = aliased.name;
+                    callNamespace = aliased.namespace;
+                }
+            }
+            const externalInputs = !b.getInputsInline();
+            if (func.isIdentity)
+                return args[0];
+            else if (func.property) {
+                return blocks_1.H.mkPropertyAccess(callName, args[0]);
+            }
+            else if (callName == "@get@") {
+                return blocks_1.H.mkPropertyAccess(args[1].op.replace(/.*\./, ""), args[0]);
+            }
+            else if (callName == "@set@") {
+                return blocks_1.H.mkAssign(blocks_1.H.mkPropertyAccess(args[1].op.replace(/.*\./, "").replace(/@set/, ""), args[0]), args[2]);
+            }
+            else if (callName == "@change@") {
+                return blocks_1.H.mkSimpleCall("+=", [blocks_1.H.mkPropertyAccess(args[1].op.replace(/.*\./, "").replace(/@set/, ""), args[0]), args[2]]);
+            }
+            else if (func.isExtensionMethod) {
+                if (func.attrs.defaultInstance) {
+                    let instance;
+                    if (isMutatingBlock(b) && b.mutation.getMutationType() === blocks_1.MutatorTypes.DefaultInstanceMutator) {
+                        instance = b.mutation.compileMutation(e, comments);
+                    }
+                    if (instance) {
+                        args.unshift(instance);
+                    }
+                    else {
+                        args.unshift(blocks_1.mkText(func.attrs.defaultInstance));
+                    }
+                }
+                return blocks_1.H.extensionCall(callName, args, externalInputs);
+            }
+            else if (callNamespace) {
+                return blocks_1.H.namespaceCall(callNamespace, callName, args, externalInputs);
+            }
+            else {
+                return blocks_1.H.stdCall(callName, args, externalInputs);
+            }
+        }
+        function compileStdBlock(e, b, f, comments) {
+            return blocks_1.mkStmt(compileStdCall(e, b, f, comments));
+        }
+        function mkCallWithCallback(e, n, f, args, body, argumentDeclaration, isExtension = false) {
+            body.noFinalNewline = true;
+            let callback;
+            if (argumentDeclaration) {
+                callback = blocks_1.mkGroup([argumentDeclaration, body]);
+            }
+            else {
+                callback = blocks_1.mkGroup([blocks_1.mkText("function ()"), body]);
+            }
+            if (isExtension)
+                return blocks_1.mkStmt(blocks_1.H.extensionCall(f, args.concat([callback]), false));
+            else if (n)
+                return blocks_1.mkStmt(blocks_1.H.namespaceCall(n, f, args.concat([callback]), false));
+            else
+                return blocks_1.mkStmt(blocks_1.H.mkCall(f, args.concat([callback]), false));
+        }
+        function compileStartEvent(e, b) {
+            const bBody = getInputTargetBlock(b, "HANDLER");
+            const body = compileStatements(e, bBody);
+            if (pxt.appTarget.compile && pxt.appTarget.compile.onStartText && body && body.children) {
+                body.children.unshift(blocks_1.mkStmt(blocks_1.mkText(`// ${pxtc.ON_START_COMMENT}\n`)));
+            }
+            return body;
+        }
+        function compileEvent(e, b, stdfun, args, ns, comments) {
+            const compiledArgs = args.map(arg => compileArgument(e, b, arg, comments));
+            const bBody = getInputTargetBlock(b, "HANDLER");
+            const body = compileStatements(e, bBody);
+            if (pxt.appTarget.compile && pxt.appTarget.compile.emptyEventHandlerComments && body.children.length === 0) {
+                body.children.unshift(blocks_1.mkStmt(blocks_1.mkText(`// ${pxtc.HANDLER_COMMENT}`)));
+            }
+            let argumentDeclaration;
+            if (isMutatingBlock(b) && b.mutation.getMutationType() === blocks_1.MutatorTypes.ObjectDestructuringMutator) {
+                argumentDeclaration = b.mutation.compileMutation(e, comments);
+            }
+            else if (stdfun.comp.handlerArgs.length) {
+                let handlerArgs = getEscapedCBParameters(b, stdfun, e);
+                argumentDeclaration = blocks_1.mkText(`function (${handlerArgs.join(", ")})`);
+            }
+            return mkCallWithCallback(e, ns, stdfun.f, compiledArgs, body, argumentDeclaration, stdfun.isExtensionMethod);
+        }
+        function isMutatingBlock(b) {
+            return !!b.mutation;
+        }
+        function compileImage(e, b, frames, columns, rows, n, f, args) {
+            args = args === undefined ? [] : args;
+            let state = "\n";
+            rows = rows || 5;
+            columns = (columns || 5) * frames;
+            let leds = b.getFieldValue("LEDS");
+            leds = leds.replace(/[ `\n]+/g, '');
+            for (let i = 0; i < rows; ++i) {
+                for (let j = 0; j < columns; ++j) {
+                    if (j > 0)
+                        state += ' ';
+                    state += (leds[(i * columns) + j] === '#') ? "#" : ".";
+                }
+                state += '\n';
+            }
+            let lit = blocks_1.H.mkStringLiteral(state);
+            lit.canIndentInside = true;
+            return blocks_1.H.namespaceCall(n, f, [lit].concat(args), false);
+        }
+        function compileStatementBlock(e, b) {
+            let r;
+            const comments = [];
+            e.stats[b.type] = (e.stats[b.type] || 0) + 1;
+            maybeAddComment(b, comments);
+            switch (b.type) {
+                case 'controls_if':
+                    r = compileControlsIf(e, b, comments);
+                    break;
+                case 'pxt_controls_for':
+                case 'controls_for':
+                case 'controls_simple_for':
+                    r = compileControlsFor(e, b, comments);
+                    break;
+                case 'pxt_controls_for_of':
+                case 'controls_for_of':
+                    r = compileControlsForOf(e, b, comments);
+                    break;
+                case 'variables_set':
+                    r = [compileSet(e, b, comments)];
+                    break;
+                case 'variables_change':
+                    r = [compileChange(e, b, comments)];
+                    break;
+                case 'controls_repeat_ext':
+                    r = compileControlsRepeat(e, b, comments);
+                    break;
+                case 'device_while':
+                    r = compileWhile(e, b, comments);
+                    break;
+                case 'procedures_defnoreturn':
+                    r = compileProcedure(e, b, comments);
+                    break;
+                case 'function_definition':
+                    r = compileFunctionDefinition(e, b, comments);
+                    break;
+                case 'procedures_callnoreturn':
+                    r = [compileProcedureCall(e, b, comments)];
+                    break;
+                case 'function_call':
+                    r = [compileFunctionCall(e, b, comments, true)];
+                    break;
+                case pxtc.TS_RETURN_STATEMENT_TYPE:
+                    r = [compileReturnStatement(e, b, comments)];
+                    break;
+                case ts.pxtc.ON_START_TYPE:
+                    r = compileStartEvent(e, b).children;
+                    break;
+                case pxtc.TS_STATEMENT_TYPE:
+                    r = compileTypescriptBlock(e, b);
+                    break;
+                case pxtc.PAUSE_UNTIL_TYPE:
+                    r = compilePauseUntilBlock(e, b, comments);
+                    break;
+                case pxtc.TS_DEBUGGER_TYPE:
+                    r = compileDebuggeStatementBlock(e, b);
+                    break;
+                case pxtc.TS_BREAK_TYPE:
+                    r = compileBreakStatementBlock(e, b);
+                    break;
+                case pxtc.TS_CONTINUE_TYPE:
+                    r = compileContinueStatementBlock(e, b);
+                    break;
+                default:
+                    let call = e.stdCallTable[b.type];
+                    if (call)
+                        r = [compileCall(e, b, comments)];
+                    else
+                        r = [blocks_1.mkStmt(compileExpression(e, b, comments))];
+                    break;
+            }
+            let l = r[r.length - 1];
+            if (l && !l.id)
+                l.id = b.id;
+            if (comments.length) {
+                addCommentNodes(comments, r);
+            }
+            r.forEach(l => {
+                if ((l.type === blocks_1.NT.Block || l.type === blocks_1.NT.Prefix && pxt.Util.startsWith(l.op, "//")) && (b.type != pxtc.ON_START_TYPE || !l.id)) {
+                    l.id = b.id;
+                }
+            });
+            return r;
+        }
+        function compileStatements(e, b) {
+            let stmts = [];
+            let firstBlock = b;
+            while (b) {
+                if (b.isEnabled())
+                    append(stmts, compileStatementBlock(e, b));
+                b = b.getNextBlock();
+            }
+            if (firstBlock && e.blockDeclarations[firstBlock.id]) {
+                e.blockDeclarations[firstBlock.id].filter(v => !v.alreadyDeclared).forEach(varInfo => {
+                    stmts.unshift(mkVariableDeclaration(varInfo, e.blocksInfo));
+                    varInfo.alreadyDeclared = BlockDeclarationType.Implicit;
+                });
+            }
+            return blocks_1.mkBlock(stmts);
+        }
+        function compileTypescriptBlock(e, b) {
+            return b.getLines().map(line => blocks_1.mkText(line + "\n"));
+        }
+        function compileDebuggeStatementBlock(e, b) {
+            if (b.getFieldValue("ON_OFF") == "1") {
+                return [
+                    blocks_1.mkText("debugger;\n")
+                ];
+            }
+            return [];
+        }
+        function compileBreakStatementBlock(e, b) {
+            return [blocks_1.mkText("break;\n")];
+        }
+        function compileContinueStatementBlock(e, b) {
+            return [blocks_1.mkText("continue;\n")];
+        }
+        function prefixWithSemicolon(n) {
+            const emptyStatement = blocks_1.mkStmt(blocks_1.mkText(";"));
+            emptyStatement.glueToBlock = blocks_1.GlueMode.NoSpace;
+            return blocks_1.mkGroup([emptyStatement, n]);
+        }
+        function compilePauseUntilBlock(e, b, comments) {
+            const options = pxt.appTarget.runtime && pxt.appTarget.runtime.pauseUntilBlock;
+            pxt.Util.assert(!!options, "target has block enabled");
+            const ns = options.namespace;
+            const name = options.callName || "pauseUntil";
+            const arg = compileArgument(e, b, { definitionName: "PREDICATE", actualName: "PREDICATE" }, comments);
+            const lambda = [blocks_1.mkGroup([blocks_1.mkText("() => "), arg])];
+            if (ns) {
+                return [blocks_1.mkStmt(blocks_1.H.namespaceCall(ns, name, lambda, false))];
+            }
+            else {
+                return [blocks_1.mkStmt(blocks_1.H.mkCall(name, lambda, false, false))];
+            }
+        }
+        // This function creates an empty environment where type inference has NOT yet
+        // been performed.
+        // - All variables have been assigned an initial [Point] in the union-find.
+        // - Variables have been marked to indicate if they are compatible with the
+        //   TouchDevelop for-loop model.
+        function mkEnv(w, blockInfo, options = {}) {
+            // The to-be-returned environment.
+            let e = emptyEnv(w, options);
+            e.blocksInfo = blockInfo;
+            // append functions in stdcalltable
+            if (blockInfo) {
+                // Enums, tagged templates, and namespaces are not enclosed in namespaces,
+                // so add them to the taken names to avoid collision
+                Object.keys(blockInfo.apis.byQName).forEach(name => {
+                    const info = blockInfo.apis.byQName[name];
+                    // Note: the check for info.pkg filters out functions defined in the user's project.
+                    // Otherwise, after the first compile the function will be renamed because it conflicts
+                    // with itself. You can still get collisions if you attempt to define a function with
+                    // the same name as a function defined in another file in the user's project (e.g. custom.ts)
+                    if (info.pkg && (info.kind === 6 /* Enum */ || info.kind === 3 /* Function */ || info.kind === 5 /* Module */ || info.kind === 4 /* Variable */)) {
+                        e.renames.takenNames[info.qName] = true;
+                    }
+                });
+                if (blockInfo.enumsByName) {
+                    Object.keys(blockInfo.enumsByName).forEach(k => e.enums.push(blockInfo.enumsByName[k]));
+                }
+                if (blockInfo.kindsByName) {
+                    Object.keys(blockInfo.kindsByName).forEach(k => e.kinds.push(blockInfo.kindsByName[k]));
+                }
+                blockInfo.blocks
+                    .forEach(fn => {
+                    if (e.stdCallTable[fn.attributes.blockId]) {
+                        pxt.reportError("blocks", "function already defined", {
+                            "details": fn.attributes.blockId,
+                            "qualifiedName": fn.qName,
+                            "packageName": fn.pkg,
+                        });
+                        return;
+                    }
+                    e.renames.takenNames[fn.namespace] = true;
+                    const comp = pxt.blocks.compileInfo(fn);
+                    const instance = !!comp.thisParameter;
+                    e.stdCallTable[fn.attributes.blockId] = {
+                        namespace: fn.namespace,
+                        f: fn.name,
+                        comp,
+                        attrs: fn.attributes,
+                        isExtensionMethod: instance,
+                        isExpression: fn.retType && fn.retType !== "void",
+                        imageLiteral: fn.attributes.imageLiteral,
+                        imageLiteralColumns: fn.attributes.imageLiteralColumns,
+                        imageLiteralRows: fn.attributes.imageLiteralRows,
+                        hasHandler: pxt.blocks.hasHandler(fn),
+                        property: !fn.parameters,
+                        isIdentity: fn.attributes.shim == "TD_ID"
+                    };
+                });
+                w.getTopBlocks(false).filter(isFunctionDefinition).forEach(b => {
+                    // Add functions to the rename map to prevent name collisions with variables
+                    const name = b.type === "procedures_defnoreturn" ? b.getFieldValue("NAME") : b.getField("function_name").getText();
+                    escapeVarName(name, e, true);
+                });
+            }
+            return e;
+        }
+        blocks_1.mkEnv = mkEnv;
+        function compileBlockAsync(b, blockInfo) {
+            const w = b.workspace;
+            const e = mkEnv(w, blockInfo);
+            infer(w && w.getAllBlocks(false), e, w);
+            const compiled = compileStatementBlock(e, b);
+            removeAllPlaceholders();
+            return tdASTtoTS(e, compiled);
+        }
+        blocks_1.compileBlockAsync = compileBlockAsync;
+        function eventWeight(b, e) {
+            if (b.type === ts.pxtc.ON_START_TYPE) {
+                return 0;
+            }
+            const api = e.stdCallTable[b.type];
+            const key = callKey(e, b);
+            const hash = 1 + ts.pxtc.Util.codalHash16(key);
+            if (api && api.attrs.afterOnStart)
+                return hash;
+            else
+                return -hash;
+        }
+        function compileWorkspace(e, w, blockInfo) {
+            try {
+                // all compiled top level blocks are events
+                let allBlocks = w.getAllBlocks(false);
+                if (pxt.react.getTilemapProject) {
+                    pxt.react.getTilemapProject().removeInactiveBlockAssets(allBlocks.map(b => b.id));
+                }
+                // the top blocks are storted by blockly
+                let topblocks = w.getTopBlocks(true);
+                // reorder remaining events by names (top blocks still contains disabled blocks)
+                topblocks = topblocks.sort((a, b) => {
+                    return eventWeight(a, e) - eventWeight(b, e);
+                });
+                // update disable blocks
+                updateDisabledBlocks(e, allBlocks, topblocks);
+                // drop disabled blocks
+                allBlocks = allBlocks.filter(b => b.isEnabled());
+                topblocks = topblocks.filter(b => b.isEnabled());
+                trackAllVariables(topblocks, e);
+                infer(allBlocks, e, w);
+                const stmtsMain = [];
+                // compile workspace comments, add them to the top
+                const topComments = w.getTopComments(true);
+                const commentMap = groupWorkspaceComments(topblocks, topComments);
+                commentMap.orphans.forEach(comment => append(stmtsMain, compileWorkspaceComment(comment).children));
+                topblocks.forEach(b => {
+                    if (commentMap.idToComments[b.id]) {
+                        commentMap.idToComments[b.id].forEach(comment => {
+                            append(stmtsMain, compileWorkspaceComment(comment).children);
+                        });
+                    }
+                    if (b.type == ts.pxtc.ON_START_TYPE)
+                        append(stmtsMain, compileStatementBlock(e, b));
+                    else {
+                        const compiled = blocks_1.mkBlock(compileStatementBlock(e, b));
+                        if (compiled.type == blocks_1.NT.Block)
+                            append(stmtsMain, compiled.children);
+                        else
+                            stmtsMain.push(compiled);
+                    }
+                });
+                const stmtsEnums = [];
+                e.enums.forEach(info => {
+                    const models = w.getVariablesOfType(info.name);
+                    if (models && models.length) {
+                        const members = models.map(m => {
+                            const match = /^(\d+)([^0-9].*)$/.exec(m.name);
+                            if (match) {
+                                return [match[2], parseInt(match[1])];
+                            }
+                            else {
+                                // Someone has been messing with the XML...
+                                return [m.name, -1];
+                            }
+                        });
+                        members.sort((a, b) => a[1] - b[1]);
+                        const nodes = [];
+                        let lastValue = -1;
+                        members.forEach(([name, value], index) => {
+                            let newNode;
+                            if (info.isBitMask) {
+                                const shift = Math.log2(value);
+                                if (shift >= 0 && Math.floor(shift) === shift) {
+                                    newNode = blocks_1.H.mkAssign(blocks_1.mkText(name), blocks_1.H.mkSimpleCall("<<", [blocks_1.H.mkNumberLiteral(1), blocks_1.H.mkNumberLiteral(shift)]));
+                                }
+                            }
+                            else if (info.isHash) {
+                                const hash = ts.pxtc.Util.codalHash16(name.toLowerCase());
+                                newNode = blocks_1.H.mkAssign(blocks_1.mkText(name), blocks_1.H.mkNumberLiteral(hash));
+                            }
+                            if (!newNode) {
+                                if (value === lastValue + 1) {
+                                    newNode = blocks_1.mkText(name);
+                                }
+                                else {
+                                    newNode = blocks_1.H.mkAssign(blocks_1.mkText(name), blocks_1.H.mkNumberLiteral(value));
+                                }
+                            }
+                            nodes.push(newNode);
+                            lastValue = value;
+                        });
+                        const declarations = blocks_1.mkCommaSep(nodes, true);
+                        declarations.glueToBlock = blocks_1.GlueMode.NoSpace;
+                        stmtsEnums.push(blocks_1.mkGroup([
+                            blocks_1.mkText(`enum ${info.name}`),
+                            blocks_1.mkBlock([declarations])
+                        ]));
+                    }
+                });
+                e.kinds.forEach(info => {
+                    const models = w.getVariablesOfType("KIND_" + info.name);
+                    if (models && models.length) {
+                        const userDefined = models.map(m => m.name).filter(n => info.initialMembers.indexOf(n) === -1);
+                        if (userDefined.length) {
+                            stmtsEnums.push(blocks_1.mkGroup([
+                                blocks_1.mkText(`namespace ${info.name}`),
+                                blocks_1.mkBlock(userDefined.map(varName => blocks_1.mkStmt(blocks_1.mkText(`export const ${varName} = ${info.name}.${info.createFunctionName}()`))))
+                            ]));
+                        }
+                    }
+                });
+                const leftoverVars = e.allVariables.filter(v => !v.alreadyDeclared).map(v => mkVariableDeclaration(v, blockInfo));
+                e.allVariables.filter(v => v.alreadyDeclared === BlockDeclarationType.Implicit && !v.isAssigned).forEach(v => {
+                    const t = getConcreteType(v.type);
+                    // The primitive types all get initializers set to default values, other types are set to null
+                    if (t.type === "string" || t.type === "number" || t.type === "boolean" || isArrayType(t.type))
+                        return;
+                    e.diagnostics.push({
+                        blockId: v.firstReference && v.firstReference.id,
+                        message: lf("Variable '{0}' is never assigned", v.name)
+                    });
+                });
+                return [stmtsEnums.concat(leftoverVars.concat(stmtsMain)), e.diagnostics];
+            }
+            catch (err) {
+                let be = err.block;
+                if (be) {
+                    be.setWarningText(err + "");
+                    e.errors.push(be);
+                }
+                else {
+                    throw err;
+                }
+            }
+            finally {
+                removeAllPlaceholders();
+            }
+            return [null, null]; // unreachable
+        }
+        function callKey(e, b) {
+            if (b.type == ts.pxtc.ON_START_TYPE)
+                return JSON.stringify({ name: ts.pxtc.ON_START_TYPE });
+            else if (b.type == ts.pxtc.FUNCTION_DEFINITION_TYPE)
+                return JSON.stringify({ type: "function", name: b.getFieldValue("function_name") });
+            const key = JSON.stringify(blockKey(b))
+                .replace(/"id"\s*:\s*"[^"]+"/g, ''); // remove blockly ids
+            return key;
+        }
+        blocks_1.callKey = callKey;
+        function blockKey(b) {
+            const fields = [];
+            const inputs = [];
+            for (const input of b.inputList) {
+                for (const field of input.fieldRow) {
+                    if (field.name) {
+                        fields.push(field.getText());
+                    }
+                }
+                if (input.type === Blockly.INPUT_VALUE) {
+                    if (input.connection.targetBlock()) {
+                        inputs.push(blockKey(input.connection.targetBlock()));
+                    }
+                    else {
+                        inputs.push(null);
+                    }
+                }
+            }
+            return {
+                type: b.type,
+                fields,
+                inputs
+            };
+        }
+        function setChildrenEnabled(block, enabled) {
+            block.setEnabled(enabled);
+            // propagate changes
+            const children = block.getDescendants(false);
+            for (const child of children) {
+                child.setEnabled(enabled);
+            }
+        }
+        function updateDisabledBlocks(e, allBlocks, topBlocks) {
+            // unset disabled
+            allBlocks.forEach(b => b.setEnabled(true));
+            // update top blocks
+            const events = {};
+            function flagDuplicate(key, block) {
+                const otherEvent = events[key];
+                if (otherEvent) {
+                    // another block is already registered
+                    setChildrenEnabled(block, false);
+                }
+                else {
+                    setChildrenEnabled(block, true);
+                    events[key] = block;
+                }
+            }
+            topBlocks.forEach(b => {
+                const call = e.stdCallTable[b.type];
+                // multiple calls allowed
+                if (b.type == ts.pxtc.ON_START_TYPE)
+                    flagDuplicate(ts.pxtc.ON_START_TYPE, b);
+                else if (isFunctionDefinition(b) || call && call.attrs.blockAllowMultiple && !call.attrs.handlerStatement)
+                    return;
+                // is this an event?
+                else if (call && call.hasHandler && !call.attrs.handlerStatement) {
+                    // compute key that identifies event call
+                    // detect if same event is registered already
+                    const key = call.attrs.blockHandlerKey || callKey(e, b);
+                    flagDuplicate(key, b);
+                }
+                else {
+                    // all non-events are disabled
+                    let t = b;
+                    while (t) {
+                        setChildrenEnabled(b, false);
+                        t = t.getNextBlock();
+                    }
+                }
+            });
+        }
+        function findBlockIdByPosition(sourceMap, loc) {
+            if (!loc)
+                return undefined;
+            let bestChunk;
+            let bestChunkLength;
+            // look for smallest chunk containing the block
+            for (let i = 0; i < sourceMap.length; ++i) {
+                let chunk = sourceMap[i];
+                if (chunk.startPos <= loc.start
+                    && chunk.endPos >= loc.start + loc.length
+                    && (!bestChunk || bestChunkLength > chunk.endPos - chunk.startPos)) {
+                    bestChunk = chunk;
+                    bestChunkLength = chunk.endPos - chunk.startPos;
+                }
+            }
+            if (bestChunk) {
+                return bestChunk.id;
+            }
+            return undefined;
+        }
+        blocks_1.findBlockIdByPosition = findBlockIdByPosition;
+        function findBlockIdByLine(sourceMap, loc) {
+            if (!loc)
+                return undefined;
+            let bestChunk;
+            let bestChunkLength;
+            // look for smallest chunk containing the block
+            for (let i = 0; i < sourceMap.length; ++i) {
+                let chunk = sourceMap[i];
+                if (chunk.startLine <= loc.start
+                    && chunk.endLine > loc.start + loc.length
+                    && (!bestChunk || bestChunkLength > chunk.endLine - chunk.startLine)) {
+                    bestChunk = chunk;
+                    bestChunkLength = chunk.endLine - chunk.startLine;
+                }
+            }
+            if (bestChunk) {
+                return bestChunk.id;
+            }
+            return undefined;
+        }
+        blocks_1.findBlockIdByLine = findBlockIdByLine;
+        function compileAsync(b, blockInfo, opts = {}) {
+            const e = mkEnv(b, blockInfo, opts);
+            const [nodes, diags] = compileWorkspace(e, b, blockInfo);
+            const result = tdASTtoTS(e, nodes, diags);
+            return result;
+        }
+        blocks_1.compileAsync = compileAsync;
+        function tdASTtoTS(env, app, diags) {
+            let res = blocks_1.flattenNode(app);
+            // Note: the result of format is not used!
+            return workerOpAsync("format", { format: { input: res.output, pos: 1 } }).then(() => {
+                return {
+                    source: res.output,
+                    sourceMap: res.sourceMap,
+                    stats: env.stats,
+                    diagnostics: diags || []
+                };
+            });
+        }
+        function maybeAddComment(b, comments) {
+            var _a;
+            // Check if getCommentText exists, block may be placeholder
+            const text = (_a = b.getCommentText) === null || _a === void 0 ? void 0 : _a.call(b);
+            if (text) {
+                comments.push(text);
+            }
+        }
+        function addCommentNodes(comments, r) {
+            const commentNodes = [];
+            for (const comment of comments) {
+                for (const line of comment.split("\n")) {
+                    commentNodes.push(blocks_1.mkText(`// ${line}`));
+                    commentNodes.push(blocks_1.mkNewLine());
+                }
+            }
+            for (const commentNode of commentNodes.reverse()) {
+                r.unshift(commentNode);
+            }
+        }
+        function mkVariableDeclaration(v, blockInfo) {
+            const t = getConcreteType(v.type);
+            let defl;
+            if (t.type === "Array") {
+                defl = blocks_1.mkText("[]");
+            }
+            else {
+                defl = defaultValueForType(t);
+            }
+            let tp = "";
+            if (defl.op == "null" || defl.op == "[]") {
+                let tpname = t.type;
+                // If the type is "Array" or null[] it means that we failed to narrow the type of array.
+                // Best we can do is just default to number[]
+                if (tpname === "Array" || tpname === "null[]") {
+                    tpname = "number[]";
+                }
+                let tpinfo = blockInfo.apis.byQName[tpname];
+                if (tpinfo && tpinfo.attributes.autoCreate)
+                    defl = blocks_1.mkText(tpinfo.attributes.autoCreate + "()");
+                else
+                    tp = ": " + tpname;
+            }
+            return blocks_1.mkStmt(blocks_1.mkText("let " + v.escapedName + tp + " = "), defl);
+        }
+        function countOptionals(b, func) {
+            if (func.attrs.compileHiddenArguments) {
+                return func.comp.parameters.reduce((prev, block) => {
+                    if (block.isOptional)
+                        prev++;
+                    return prev;
+                }, 0);
+            }
+            if (b.mutationToDom) {
+                const el = b.mutationToDom();
+                if (el.hasAttribute("_expanded")) {
+                    const val = parseInt(el.getAttribute("_expanded"));
+                    return isNaN(val) ? 0 : Math.max(val, 0);
+                }
+            }
+            return 0;
+        }
+        function visibleParams({ comp }, optionalCount) {
+            const res = [];
+            if (comp.thisParameter) {
+                res.push(comp.thisParameter);
+            }
+            comp.parameters.forEach(p => {
+                if (p.isOptional && optionalCount > 0) {
+                    res.push(p);
+                    --optionalCount;
+                }
+                else if (!p.isOptional) {
+                    res.push(p);
+                }
+            });
+            return res;
+        }
+        function getEscapedCBParameters(b, stdfun, e) {
+            return getCBParameters(b, stdfun).map(binding => lookup(e, b, binding.name).escapedName);
+        }
+        function getCBParameters(b, stdfun) {
+            let handlerArgs = [];
+            if (stdfun.attrs.draggableParameters) {
+                for (let i = 0; i < stdfun.comp.handlerArgs.length; i++) {
+                    const arg = stdfun.comp.handlerArgs[i];
+                    let varName;
+                    const varBlock = getInputTargetBlock(b, "HANDLER_DRAG_PARAM_" + arg.name);
+                    if (stdfun.attrs.draggableParameters === "reporter") {
+                        varName = varBlock && varBlock.getFieldValue("VALUE");
+                    }
+                    else {
+                        varName = varBlock && varBlock.getField("VAR").getText();
+                    }
+                    if (varName !== null) {
+                        handlerArgs.push({
+                            name: varName,
+                            type: mkPoint(arg.type)
+                        });
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            else {
+                for (let i = 0; i < stdfun.comp.handlerArgs.length; i++) {
+                    const arg = stdfun.comp.handlerArgs[i];
+                    const varField = b.getField("HANDLER_" + arg.name);
+                    const varName = varField && varField.getText();
+                    if (varName !== null) {
+                        handlerArgs.push({
+                            name: varName,
+                            type: mkPoint(arg.type)
+                        });
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            return handlerArgs;
+        }
+        function groupWorkspaceComments(blocks, comments) {
+            if (!blocks.length || blocks.some(b => !b.rendered)) {
+                return {
+                    orphans: comments,
+                    idToComments: {}
+                };
+            }
+            const blockBounds = blocks.map(block => {
+                const bounds = block.getBoundingRectangle();
+                const size = block.getHeightWidth();
+                return {
+                    id: block.id,
+                    x: bounds.left,
+                    y: bounds.top,
+                    width: size.width,
+                    height: size.height
+                };
+            });
+            const map = {
+                orphans: [],
+                idToComments: {}
+            };
+            const radius = 20;
+            for (const comment of comments) {
+                const bounds = comment.getBoundingRectangle();
+                const size = comment.getHeightWidth();
+                const x = bounds.left;
+                const y = bounds.top;
+                let parent;
+                for (const rect of blockBounds) {
+                    if (doesIntersect(x, y, size.width, size.height, rect)) {
+                        parent = rect;
+                    }
+                    else if (!parent && doesIntersect(x - radius, y - radius, size.width + radius * 2, size.height + radius * 2, rect)) {
+                        parent = rect;
+                    }
+                }
+                if (parent) {
+                    if (!map.idToComments[parent.id]) {
+                        map.idToComments[parent.id] = [];
+                    }
+                    map.idToComments[parent.id].push(comment);
+                }
+                else {
+                    map.orphans.push(comment);
+                }
+            }
+            return map;
+        }
+        function referencedWithinScope(scope, varID) {
+            if (scope.referencedVars.indexOf(varID) !== -1) {
+                return true;
+            }
+            else {
+                for (const child of scope.children) {
+                    if (referencedWithinScope(child, varID))
+                        return true;
+                }
+            }
+            return false;
+        }
+        function assignedWithinScope(scope, varID) {
+            if (scope.assignedVars.indexOf(varID) !== -1) {
+                return true;
+            }
+            else {
+                for (const child of scope.children) {
+                    if (assignedWithinScope(child, varID))
+                        return true;
+                }
+            }
+            return false;
+        }
+        function escapeVariables(current, e) {
+            for (const varName of Object.keys(current.declaredVars)) {
+                const info = current.declaredVars[varName];
+                if (!info.escapedName)
+                    info.escapedName = escapeVarName(varName);
+            }
+            current.children.forEach(c => escapeVariables(c, e));
+            function escapeVarName(originalName) {
+                if (!originalName)
+                    return '_';
+                let n = ts.pxtc.escapeIdentifier(originalName);
+                if (e.renames.takenNames[n] || nameIsTaken(n, current, originalName)) {
+                    let i = 2;
+                    while (e.renames.takenNames[n + i] || nameIsTaken(n + i, current, originalName)) {
+                        i++;
+                    }
+                    n += i;
+                }
+                return n;
+            }
+            function nameIsTaken(name, scope, originalName) {
+                if (scope) {
+                    for (const varName of Object.keys(scope.declaredVars)) {
+                        const info = scope.declaredVars[varName];
+                        if ((originalName !== info.name || info.name !== info.escapedName) && info.escapedName === name)
+                            return true;
+                    }
+                    return nameIsTaken(name, scope.parent, originalName);
+                }
+                return false;
+            }
+        }
+        function findCommonScope(current, varID) {
+            let ref;
+            if (current.referencedVars.indexOf(varID) !== -1) {
+                return current;
+            }
+            for (const child of current.children) {
+                if (referencedWithinScope(child, varID)) {
+                    if (assignedWithinScope(child, varID)) {
+                        return current;
+                    }
+                    if (!ref) {
+                        ref = child;
+                    }
+                    else {
+                        return current;
+                    }
+                }
+            }
+            return ref ? findCommonScope(ref, varID) : undefined;
+        }
+        function trackAllVariables(topBlocks, e) {
+            let id = 1;
+            let topScope;
+            // First, look for on-start
+            topBlocks.forEach(block => {
+                if (block.type === ts.pxtc.ON_START_TYPE) {
+                    const firstStatement = block.getInputTargetBlock("HANDLER");
+                    if (firstStatement) {
+                        topScope = {
+                            firstStatement: firstStatement,
+                            declaredVars: {},
+                            referencedVars: [],
+                            children: [],
+                            assignedVars: []
+                        };
+                        trackVariables(firstStatement, topScope, e);
+                    }
+                }
+            });
+            // If we didn't find on-start, then create an empty top scope
+            if (!topScope) {
+                topScope = {
+                    firstStatement: null,
+                    declaredVars: {},
+                    referencedVars: [],
+                    children: [],
+                    assignedVars: []
+                };
+            }
+            topBlocks.forEach(block => {
+                if (block.type === ts.pxtc.ON_START_TYPE) {
+                    return;
+                }
+                trackVariables(block, topScope, e);
+            });
+            Object.keys(topScope.declaredVars).forEach(varName => {
+                const varID = topScope.declaredVars[varName];
+                delete topScope.declaredVars[varName];
+                const declaringScope = findCommonScope(topScope, varID.id) || topScope;
+                declaringScope.declaredVars[varName] = varID;
+            });
+            markDeclarationLocations(topScope, e);
+            escapeVariables(topScope, e);
+            return topScope;
+            function trackVariables(block, currentScope, e) {
+                e.idToScope[block.id] = currentScope;
+                if (block.type === "variables_get") {
+                    const name = block.getField("VAR").getText();
+                    const info = findOrDeclareVariable(name, currentScope);
+                    currentScope.referencedVars.push(info.id);
+                }
+                else if (block.type === "variables_set" || block.type === "variables_change") {
+                    const name = block.getField("VAR").getText();
+                    const info = findOrDeclareVariable(name, currentScope);
+                    currentScope.assignedVars.push(info.id);
+                    currentScope.referencedVars.push(info.id);
+                }
+                else if (block.type === pxtc.TS_STATEMENT_TYPE) {
+                    const declaredVars = block.declaredVariables;
+                    if (declaredVars) {
+                        const varNames = declaredVars.split(",");
+                        varNames.forEach(vName => {
+                            const info = findOrDeclareVariable(vName, currentScope);
+                            info.alreadyDeclared = BlockDeclarationType.Argument;
+                        });
+                    }
+                }
+                if (hasStatementInput(block)) {
+                    const vars = getDeclaredVariables(block, e).map(binding => {
+                        return Object.assign(Object.assign({}, binding), { id: id++ });
+                    });
+                    let parentScope = currentScope;
+                    if (vars.length) {
+                        // We need to create a scope for this block, and then a scope
+                        // for each statement input (in case there are multiple)
+                        parentScope = {
+                            parent: currentScope,
+                            firstStatement: block,
+                            declaredVars: {},
+                            referencedVars: [],
+                            assignedVars: [],
+                            children: []
+                        };
+                        vars.forEach(v => {
+                            v.alreadyDeclared = BlockDeclarationType.Assigned;
+                            parentScope.declaredVars[v.name] = v;
+                        });
+                        e.idToScope[block.id] = parentScope;
+                    }
+                    if (currentScope !== parentScope) {
+                        currentScope.children.push(parentScope);
+                    }
+                    forEachChildExpression(block, child => {
+                        trackVariables(child, parentScope, e);
+                    });
+                    forEachStatementInput(block, connectedBlock => {
+                        const newScope = {
+                            parent: parentScope,
+                            firstStatement: connectedBlock,
+                            declaredVars: {},
+                            referencedVars: [],
+                            assignedVars: [],
+                            children: []
+                        };
+                        parentScope.children.push(newScope);
+                        trackVariables(connectedBlock, newScope, e);
+                    });
+                }
+                else {
+                    forEachChildExpression(block, child => {
+                        trackVariables(child, currentScope, e);
+                    });
+                }
+                if (block.nextConnection && block.nextConnection.targetBlock()) {
+                    trackVariables(block.nextConnection.targetBlock(), currentScope, e);
+                }
+            }
+            function findOrDeclareVariable(name, scope) {
+                if (scope.declaredVars[name]) {
+                    return scope.declaredVars[name];
+                }
+                else if (scope.parent) {
+                    return findOrDeclareVariable(name, scope.parent);
+                }
+                else {
+                    // Declare it in the top scope
+                    scope.declaredVars[name] = {
+                        name,
+                        type: mkPoint(null),
+                        id: id++
+                    };
+                    return scope.declaredVars[name];
+                }
+            }
+        }
+        function getVarInfo(name, scope) {
+            if (scope && scope.declaredVars[name]) {
+                return scope.declaredVars[name];
+            }
+            else if (scope && scope.parent) {
+                return getVarInfo(name, scope.parent);
+            }
+            else {
+                return null;
+            }
+        }
+        function hasStatementInput(block) {
+            return block.inputList.some(i => i.type === Blockly.NEXT_STATEMENT);
+        }
+        function getDeclaredVariables(block, e) {
+            switch (block.type) {
+                case 'pxt_controls_for':
+                case 'controls_simple_for':
+                    return [{
+                            name: getLoopVariableField(block).getField("VAR").getText(),
+                            type: pNumber
+                        }];
+                case 'pxt_controls_for_of':
+                case 'controls_for_of':
+                    return [{
+                            name: getLoopVariableField(block).getField("VAR").getText(),
+                            type: mkPoint(null)
+                        }];
+                case 'function_definition':
+                    return block.getArguments().filter(arg => arg.type === "Array")
+                        .map(arg => {
+                        const point = mkPoint(null);
+                        point.isArrayType = true;
+                        return {
+                            name: arg.name,
+                            type: point,
+                            isFunctionParameter: true
+                        };
+                    });
+                default:
+                    break;
+            }
+            if (isMutatingBlock(block)) {
+                const declarations = block.mutation.getDeclaredVariables();
+                if (declarations) {
+                    return Object.keys(declarations).map(varName => ({
+                        name: varName,
+                        type: mkPoint(declarations[varName])
+                    }));
+                }
+            }
+            let stdFunc = e.stdCallTable[block.type];
+            if (stdFunc && stdFunc.comp.handlerArgs.length) {
+                return getCBParameters(block, stdFunc);
+            }
+            return [];
+        }
+        function forEachChildExpression(block, cb, recursive = false) {
+            block.inputList.filter(i => i.type === Blockly.INPUT_VALUE).forEach(i => {
+                if (i.connection && i.connection.targetBlock()) {
+                    cb(i.connection.targetBlock());
+                    if (recursive) {
+                        forEachChildExpression(i.connection.targetBlock(), cb, recursive);
+                    }
+                }
+            });
+        }
+        function forEachStatementInput(block, cb) {
+            block.inputList.filter(i => i.type === Blockly.NEXT_STATEMENT).forEach(i => {
+                if (i.connection && i.connection.targetBlock()) {
+                    cb(i.connection.targetBlock());
+                }
+            });
+        }
+        function printScope(scope, depth = 0) {
+            const declared = Object.keys(scope.declaredVars).map(k => `${k}(${scope.declaredVars[k].id})`).join(",");
+            const referenced = scope.referencedVars.join(", ");
+            console.log(`${mkIndent(depth)}SCOPE: ${scope.firstStatement ? scope.firstStatement.type : "TOP-LEVEL"}`);
+            if (declared.length) {
+                console.log(`${mkIndent(depth)}DECS: ${declared}`);
+            }
+            // console.log(`${mkIndent(depth)}REFS: ${referenced}`)
+            scope.children.forEach(s => printScope(s, depth + 1));
+        }
+        function mkIndent(depth) {
+            let res = "";
+            for (let i = 0; i < depth; i++) {
+                res += "    ";
+            }
+            return res;
+        }
+        function markDeclarationLocations(scope, e) {
+            const declared = Object.keys(scope.declaredVars);
+            if (declared.length) {
+                const decls = declared.map(name => scope.declaredVars[name]);
+                if (scope.firstStatement) {
+                    // If we can't find a better place to declare the variable, we'll declare
+                    // it before the first statement in the code block so we need to keep
+                    // track of the blocks ids
+                    e.blockDeclarations[scope.firstStatement.id] = decls.concat(e.blockDeclarations[scope.firstStatement.id] || []);
+                }
+                decls.forEach(d => e.allVariables.push(d));
+            }
+            scope.children.forEach(child => markDeclarationLocations(child, e));
+        }
+        function doesIntersect(x, y, width, height, other) {
+            const xOverlap = between(x, other.x, other.x + other.width) || between(other.x, x, x + width);
+            const yOverlap = between(y, other.y, other.y + other.height) || between(other.y, y, y + height);
+            return xOverlap && yOverlap;
+            function between(val, lower, upper) {
+                return val >= lower && val <= upper;
+            }
+        }
+        function isFunctionDefinition(b) {
+            return b.type === "procedures_defnoreturn" || b.type === "function_definition";
+        }
+        function getFunctionName(functionBlock) {
+            return functionBlock.getField("function_name").getText();
+        }
+        // @param strict - if true, only return true if there is a return statement
+        // somewhere in the call graph that returns a call to this function. If false,
+        // return true if the function is called as an expression anywhere in the call
+        // graph
+        function isFunctionRecursive(b, strict) {
+            const functionName = getFunctionName(b);
+            const visited = {};
+            return checkForCallRecursive(b);
+            function checkForCallRecursive(functionDefinition) {
+                let calls;
+                if (strict) {
+                    calls = functionDefinition.getDescendants(false)
+                        .filter(child => child.type == "function_return")
+                        .map(returnStatement => getInputTargetBlock(returnStatement, "RETURN_VALUE"))
+                        .filter(returnValue => returnValue && returnValue.type === "function_call_output");
+                }
+                else {
+                    calls = functionDefinition.getDescendants(false).filter(child => child.type == "function_call_output");
+                }
+                for (const call of calls) {
+                    const callName = getFunctionName(call);
+                    if (callName === functionName)
+                        return true;
+                    if (visited[callName])
+                        continue;
+                    visited[callName] = true;
+                    if (checkForCallRecursive(Blockly.Functions.getDefinition(callName, call.workspace))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        function isPlaceholderBlock(b) {
+            return b.type == "placeholder" || b.type === pxtc.TS_OUTPUT_TYPE;
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        let registeredFieldEditors = {};
+        function initFieldEditors() {
+            registerFieldEditor('text', pxtblockly.FieldTextInput);
+            registerFieldEditor('note', pxtblockly.FieldNote);
+            registerFieldEditor('gridpicker', pxtblockly.FieldGridPicker);
+            registerFieldEditor('textdropdown', pxtblockly.FieldTextDropdown);
+            registerFieldEditor('numberdropdown', pxtblockly.FieldNumberDropdown);
+            registerFieldEditor('imagedropdown', pxtblockly.FieldImageDropdown);
+            registerFieldEditor('colorwheel', pxtblockly.FieldColorWheel);
+            registerFieldEditor('toggle', pxtblockly.FieldToggle);
+            registerFieldEditor('toggleonoff', pxtblockly.FieldToggleOnOff);
+            registerFieldEditor('toggleyesno', pxtblockly.FieldToggleYesNo);
+            registerFieldEditor('toggleupdown', pxtblockly.FieldToggleUpDown);
+            registerFieldEditor('toggledownup', pxtblockly.FieldToggleDownUp);
+            registerFieldEditor('togglehighlow', pxtblockly.FieldToggleHighLow);
+            registerFieldEditor('togglewinlose', pxtblockly.FieldToggleWinLose);
+            registerFieldEditor('colornumber', pxtblockly.FieldColorNumber);
+            registerFieldEditor('images', pxtblockly.FieldImages);
+            registerFieldEditor('sprite', pxtblockly.FieldSpriteEditor);
+            registerFieldEditor('animation', pxtblockly.FieldAnimationEditor);
+            registerFieldEditor('tilemap', pxtblockly.FieldTilemap);
+            registerFieldEditor('tileset', pxtblockly.FieldTileset);
+            registerFieldEditor('speed', pxtblockly.FieldSpeed);
+            registerFieldEditor('turnratio', pxtblockly.FieldTurnRatio);
+            registerFieldEditor('protractor', pxtblockly.FieldProtractor);
+            registerFieldEditor('position', pxtblockly.FieldPosition);
+            registerFieldEditor('melody', pxtblockly.FieldCustomMelody);
+            registerFieldEditor('soundeffect', pxtblockly.FieldSoundEffect);
+            registerFieldEditor('autocomplete', pxtblockly.FieldAutoComplete);
+        }
+        blocks.initFieldEditors = initFieldEditors;
+        function registerFieldEditor(selector, field, validator) {
+            if (registeredFieldEditors[selector] == undefined) {
+                registeredFieldEditors[selector] = {
+                    field: field,
+                    validator: validator
+                };
+            }
+        }
+        blocks.registerFieldEditor = registerFieldEditor;
+        function createFieldEditor(selector, text, params) {
+            if (registeredFieldEditors[selector] == undefined) {
+                console.error(`Field editor ${selector} not registered`);
+                return null;
+            }
+            if (!params) {
+                params = {};
+            }
+            pxt.Util.assert(params.lightMode == undefined, "lightMode is a reserved parameter for custom fields");
+            params.lightMode = pxt.options.light;
+            let customField = registeredFieldEditors[selector];
+            let instance = new customField.field(text, params, customField.validator);
+            return instance;
+        }
+        blocks.createFieldEditor = createFieldEditor;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        // sniff ids to see if the xml was completly reconstructed
+        function needsDecompiledDiff(oldXml, newXml) {
+            if (!oldXml || !newXml)
+                return false;
+            // collect all ids
+            const oldids = {};
+            oldXml.replace(/id="([^"]+)"/g, (m, id) => { oldids[id] = true; return ""; });
+            if (!Object.keys(oldids).length)
+                return false;
+            // test if any newid exists in old
+            let total = 0;
+            let found = 0;
+            newXml.replace(/id="([^"]+)"/g, (m, id) => {
+                total++;
+                if (oldids[id])
+                    found++;
+                return "";
+            });
+            return total > 0 && found == 0;
+        }
+        blocks.needsDecompiledDiff = needsDecompiledDiff;
+        function diffXml(oldXml, newXml, options) {
+            const oldWs = pxt.blocks.loadWorkspaceXml(oldXml, true);
+            const newWs = pxt.blocks.loadWorkspaceXml(newXml, true);
+            return diffWorkspace(oldWs, newWs, options);
+        }
+        blocks.diffXml = diffXml;
+        const UNMODIFIED_COLOR = "#d0d0d0";
+        // Workspaces are modified in place!
+        function diffWorkspace(oldWs, newWs, options) {
+            try {
+                Blockly.Events.disable();
+                return diffWorkspaceNoEvents(oldWs, newWs, options);
+            }
+            catch (e) {
+                pxt.reportException(e);
+                return {
+                    ws: undefined,
+                    message: lf("Oops, we could not diff those blocks."),
+                    error: e,
+                    deleted: 0,
+                    added: 0,
+                    modified: 0
+                };
+            }
+            finally {
+                Blockly.Events.enable();
+            }
+        }
+        function logger() {
+            const log = pxt.options.debug || (window && /diffdbg=1/.test(window.location.href))
+                ? console.log : (message, ...args) => { };
+            return log;
+        }
+        function diffWorkspaceNoEvents(oldWs, newWs, options) {
+            pxt.tickEvent("blocks.diff", { started: 1 });
+            options = options || {};
+            const log = logger();
+            if (!oldWs) {
+                return {
+                    ws: undefined,
+                    message: lf("All blocks are new."),
+                    added: 0,
+                    deleted: 0,
+                    modified: 1
+                }; // corrupted blocks
+            }
+            if (!newWs) {
+                return {
+                    ws: undefined,
+                    message: lf("The current blocks seem corrupted."),
+                    added: 0,
+                    deleted: 0,
+                    modified: 1
+                }; // corrupted blocks
+            }
+            // remove all unmodified topblocks
+            // when doing a Blocks->TS roundtrip, all ids are trashed.
+            const oldXml = pxt.Util.toDictionary(oldWs.getTopBlocks(false), b => normalizedDom(b, true));
+            newWs.getTopBlocks(false)
+                .forEach(newb => {
+                const newn = normalizedDom(newb, true);
+                // try to find by id or by matching normalized xml
+                const oldb = oldWs.getBlockById(newb.id) || oldXml[newn];
+                if (oldb) {
+                    const oldn = normalizedDom(oldb, true);
+                    if (newn == oldn) {
+                        log(`fast unmodified top `, newb.id);
+                        newb.dispose(false);
+                        oldb.dispose(false);
+                    }
+                }
+            });
+            // we'll ignore disabled blocks in the final output
+            const oldBlocks = oldWs.getAllBlocks(false).filter(b => b.isEnabled());
+            const oldTopBlocks = oldWs.getTopBlocks(false).filter(b => b.isEnabled());
+            const newBlocks = newWs.getAllBlocks(false).filter(b => b.isEnabled());
+            log(`blocks`, newBlocks.map(b => b.toDevString()));
+            log(newBlocks);
+            if (oldBlocks.length == 0 && newBlocks.length == 0) {
+                pxt.tickEvent("blocks.diff", { moves: 1 });
+                return {
+                    ws: undefined,
+                    message: lf("Some blocks were moved or changed."),
+                    added: 0,
+                    deleted: 0,
+                    modified: 1
+                }; // just moves
+            }
+            // locate deleted and added blocks
+            const deletedTopBlocks = oldTopBlocks.filter(b => !newWs.getBlockById(b.id));
+            const deletedBlocks = oldBlocks.filter(b => !newWs.getBlockById(b.id));
+            const addedBlocks = newBlocks.filter(b => !oldWs.getBlockById(b.id));
+            // clone new workspace into rendering workspace
+            const ws = pxt.blocks.initRenderingWorkspace();
+            const newXml = pxt.blocks.saveWorkspaceXml(newWs, true);
+            pxt.blocks.domToWorkspaceNoEvents(Blockly.Xml.textToDom(newXml), ws);
+            // delete disabled blocks from final workspace
+            ws.getAllBlocks(false).filter(b => !b.isEnabled()).forEach(b => {
+                log('disabled ', b.toDevString());
+                b.dispose(false);
+            });
+            const todoBlocks = pxt.Util.toDictionary(ws.getAllBlocks(false), b => b.id);
+            log(`todo blocks`, todoBlocks);
+            logTodo('start');
+            // 1. deleted top blocks
+            if (!options.hideDeletedTopBlocks) {
+                deletedTopBlocks.forEach(b => {
+                    log(`deleted top ${b.toDevString()}`);
+                    done(b);
+                    const b2 = cloneIntoDiff(b);
+                    done(b2);
+                    b2.setEnabled(false);
+                });
+                logTodo('deleted top');
+            }
+            // 2. added blocks
+            addedBlocks.map(b => ws.getBlockById(b.id))
+                .filter(b => !!b) // ignore disabled
+                .forEach(b => {
+                log(`added ${b.toDevString()}`);
+                //b.inputList[0].insertFieldAt(0, new Blockly.FieldImage(ADD_IMAGE_DATAURI, 24, 24, false));
+                done(b);
+            });
+            logTodo('added');
+            // 3. delete statement blocks
+            // inject deleted blocks in new workspace
+            const dids = {};
+            if (!options.hideDeletedBlocks) {
+                const deletedStatementBlocks = deletedBlocks
+                    .filter(b => !todoBlocks[b.id]
+                    && !isUsed(b)
+                    && (!b.outputConnection || !b.outputConnection.isConnected()) // ignore reporters
+                );
+                deletedStatementBlocks
+                    .forEach(b => {
+                    const b2 = cloneIntoDiff(b);
+                    dids[b.id] = b2.id;
+                    log(`deleted block ${b.toDevString()}->${b2.toDevString()}`);
+                });
+                // connect deleted blocks together
+                deletedStatementBlocks
+                    .forEach(b => stitch(b));
+            }
+            // 4. moved blocks
+            let modified = 0;
+            pxt.Util.values(todoBlocks).filter(b => moved(b)).forEach(b => {
+                log(`moved ${b.toDevString()}`);
+                delete todoBlocks[b.id];
+                markUsed(b);
+                modified++;
+            });
+            logTodo('moved');
+            // 5. blocks with field properties that changed
+            pxt.Util.values(todoBlocks).filter(b => changed(b)).forEach(b => {
+                log(`changed ${b.toDevString()}`);
+                delete todoBlocks[b.id];
+                markUsed(b);
+                modified++;
+            });
+            logTodo('changed');
+            // delete unmodified top blocks
+            ws.getTopBlocks(false)
+                .forEach(b => {
+                if (!findUsed(b)) {
+                    log(`unmodified top ${b.toDevString()}`);
+                    delete todoBlocks[b.id];
+                    b.dispose(false);
+                }
+            });
+            logTodo('cleaned');
+            // all unmodifed blocks are greyed out
+            pxt.Util.values(todoBlocks).filter(b => !!ws.getBlockById(b.id)).forEach(b => {
+                unmodified(b);
+            });
+            logTodo('unmodified');
+            // if nothing is left in the workspace, we "missed" change
+            if (!ws.getAllBlocks(false).length) {
+                pxt.tickEvent("blocks.diff", { missed: 1 });
+                return {
+                    ws,
+                    message: lf("Some blocks were changed."),
+                    deleted: deletedBlocks.length,
+                    added: addedBlocks.length,
+                    modified: modified
+                };
+            }
+            // make sure everything is rendered
+            ws.resize();
+            Blockly.svgResize(ws);
+            // final render
+            const svg = pxt.blocks.renderWorkspace(options.renderOptions || {
+                emPixels: 20,
+                layout: blocks.BlockLayout.Flow,
+                aspectRatio: 0.5,
+                useViewWidth: true
+            });
+            // and we're done
+            const r = {
+                ws,
+                svg: svg,
+                deleted: deletedBlocks.length,
+                added: addedBlocks.length,
+                modified: modified
+            };
+            pxt.tickEvent("blocks.diff", { deleted: r.deleted, added: r.added, modified: r.modified });
+            return r;
+            function stitch(b) {
+                log(`stitching ${b.toDevString()}->${dids[b.id]}`);
+                const wb = ws.getBlockById(dids[b.id]);
+                wb.setEnabled(false);
+                markUsed(wb);
+                done(wb);
+                // connect previous connection to delted or existing block
+                const previous = b.getPreviousBlock();
+                if (previous) {
+                    const previousw = ws.getBlockById(dids[previous.id]) || ws.getBlockById(previous.id);
+                    log(`previous ${b.id}->${wb.toDevString()}: ${previousw.toDevString()}`);
+                    if (previousw) {
+                        // either connected under or in the block
+                        if (previousw.nextConnection)
+                            wb.previousConnection.connect(previousw.nextConnection);
+                        else {
+                            const ic = previousw.inputList.slice()
+                                .reverse()
+                                .find(input => input.connection && input.connection.type == Blockly.NEXT_STATEMENT);
+                            if (ic)
+                                wb.previousConnection.connect(ic.connection);
+                        }
+                    }
+                }
+                // connect next connection to delete or existing block
+                const next = b.getNextBlock();
+                if (next) {
+                    const nextw = ws.getBlockById(dids[next.id]) || ws.getBlockById(next.id);
+                    if (nextw) {
+                        log(`next ${b.id}->${wb.toDevString()}: ${nextw.toDevString()}`);
+                        wb.nextConnection.connect(nextw.previousConnection);
+                    }
+                }
+            }
+            function markUsed(b) {
+                b.__pxt_used = true;
+            }
+            function isUsed(b) {
+                return !!b.__pxt_used;
+            }
+            function cloneIntoDiff(b) {
+                const bdom = Blockly.Xml.blockToDom(b, false);
+                const b2 = Blockly.Xml.domToBlock(bdom, ws);
+                // disconnect
+                if (b2.nextConnection && b2.nextConnection.targetConnection)
+                    b2.nextConnection.disconnect();
+                if (b2.previousConnection && b2.previousConnection.targetConnection)
+                    b2.previousConnection.disconnect();
+                return b2;
+            }
+            function forceRender(b) {
+                const a = b;
+                a.rendered = false;
+                b.inputList.forEach(i => i.fieldRow.forEach(f => {
+                    f.init();
+                    if (f.borderRect_) {
+                        f.borderRect_.setAttribute('fill', b.getColour());
+                        f.borderRect_.setAttribute('stroke', b.getColourTertiary());
+                    }
+                }));
+            }
+            function done(b) {
+                b.getDescendants(false).forEach(t => { delete todoBlocks[t.id]; markUsed(t); });
+            }
+            function findUsed(b) {
+                return !!b.getDescendants(false).find(c => isUsed(c));
+            }
+            function logTodo(msg) {
+                log(`${msg}:`, pxt.Util.values(todoBlocks).map(b => b.toDevString()));
+            }
+            function moved(b) {
+                const oldb = oldWs.getBlockById(b.id); // extra block created in added step
+                if (!oldb)
+                    return false;
+                const newPrevious = b.getPreviousBlock();
+                // connection already already processed
+                if (newPrevious && !todoBlocks[newPrevious.id])
+                    return false;
+                const newNext = b.getNextBlock();
+                // already processed
+                if (newNext && !todoBlocks[newNext.id])
+                    return false;
+                const oldPrevious = oldb.getPreviousBlock();
+                if (!oldPrevious && !newPrevious)
+                    return false; // no connection
+                if (!!oldPrevious != !!newPrevious // new connection
+                    || oldPrevious.id != newPrevious.id) // new connected blocks
+                    return true;
+                const oldNext = oldb.getNextBlock();
+                if (!oldNext && !newNext)
+                    return false; // no connection
+                if (!!oldNext != !!newNext // new connection
+                    || oldNext.id != newNext.id) // new connected blocks
+                    return true;
+                return false;
+            }
+            function changed(b) {
+                let oldb = oldWs.getBlockById(b.id); // extra block created in added step
+                if (!oldb)
+                    return false;
+                // normalize
+                //oldb = copyToTrashWs(oldb);
+                const oldText = normalizedDom(oldb);
+                //b = copyToTrashWs(b);
+                const newText = normalizedDom(b);
+                if (oldText != newText) {
+                    log(`old ${oldb.toDevString()}`, oldText);
+                    log(`new ${b.toDevString()}`, newText);
+                    return true;
+                }
+                // not changed!
+                return false;
+            }
+            function unmodified(b) {
+                b.setColour(UNMODIFIED_COLOR);
+                forceRender(b);
+                if (options.statementsOnly) {
+                    // mark all nested reporters as unmodified
+                    (b.inputList || [])
+                        .map(input => input.type == Blockly.INPUT_VALUE && input.connection && input.connection.targetBlock())
+                        .filter(argBlock => !!argBlock)
+                        .forEach(argBlock => unmodified(argBlock));
+                }
+            }
+        }
+        function mergeXml(xmlA, xmlO, xmlB) {
+            if (xmlA == xmlO)
+                return xmlB;
+            if (xmlB == xmlO)
+                return xmlA;
+            // TODO merge
+            return undefined;
+        }
+        blocks.mergeXml = mergeXml;
+        function normalizedDom(b, keepChildren) {
+            const dom = Blockly.Xml.blockToDom(b, true);
+            normalizeAttributes(dom);
+            visDom(dom, (e) => {
+                normalizeAttributes(e);
+                if (!keepChildren) {
+                    if (e.localName == "next")
+                        e.remove(); // disconnect or unplug not working propertly
+                    else if (e.localName == "statement")
+                        e.remove();
+                    else if (e.localName == "shadow") // ignore internal nodes
+                        e.remove();
+                }
+            });
+            return Blockly.Xml.domToText(dom);
+        }
+        function normalizeAttributes(e) {
+            e.removeAttribute("id");
+            e.removeAttribute("x");
+            e.removeAttribute("y");
+            e.removeAttribute("deletable");
+            e.removeAttribute("editable");
+            e.removeAttribute("movable");
+        }
+        function visDom(el, f) {
+            if (!el)
+                return;
+            f(el);
+            for (const child of pxt.Util.toArray(el.children))
+                visDom(child, f);
+        }
+        function decompiledDiffAsync(oldTs, oldResp, newTs, newResp, options = {}) {
+            const log = logger();
+            const oldXml = oldResp.outfiles[pxt.MAIN_BLOCKS];
+            let newXml = newResp.outfiles[pxt.MAIN_BLOCKS];
+            log(oldXml);
+            log(newXml);
+            // compute diff of typescript sources
+            const diffLines = pxt.diff.compute(oldTs, newTs, {
+                ignoreWhitespace: true,
+                full: true
+            });
+            log(diffLines);
+            // build old -> new lines mapping
+            const newids = {};
+            let oldLineStart = 0;
+            let newLineStart = 0;
+            diffLines.forEach((ln, index) => {
+                // moving cursors
+                const marker = ln[0];
+                const line = ln.substr(2);
+                let lineLength = line.length;
+                switch (marker) {
+                    case "-": // removed
+                        oldLineStart += lineLength + 1;
+                        break;
+                    case "+": // added
+                        newLineStart += lineLength + 1;
+                        break;
+                    default: // unchanged
+                        // skip leading white space
+                        const lw = /^\s+/.exec(line);
+                        if (lw) {
+                            const lwl = lw[0].length;
+                            oldLineStart += lwl;
+                            newLineStart += lwl;
+                            lineLength -= lwl;
+                        }
+                        // find block ids mapped to the ranges
+                        const newid = pxt.blocks.findBlockIdByPosition(newResp.blockSourceMap, {
+                            start: newLineStart,
+                            length: lineLength
+                        });
+                        if (newid && !newids[newid]) {
+                            const oldid = pxt.blocks.findBlockIdByPosition(oldResp.blockSourceMap, {
+                                start: oldLineStart,
+                                length: lineLength
+                            });
+                            // patch workspace
+                            if (oldid) {
+                                log(ln);
+                                log(`id ${oldLineStart}:${line.length}>${oldid} ==> ${newLineStart}:${line.length}>${newid}`);
+                                newids[newid] = oldid;
+                                newXml = newXml.replace(newid, oldid);
+                            }
+                        }
+                        oldLineStart += lineLength + 1;
+                        newLineStart += lineLength + 1;
+                        break;
+                }
+            });
+            // parse workspacews
+            const oldWs = pxt.blocks.loadWorkspaceXml(oldXml, true);
+            const newWs = pxt.blocks.loadWorkspaceXml(newXml, true);
+            options.statementsOnly = true; // no info on expression diffs
+            return diffWorkspace(oldWs, newWs, options);
+        }
+        blocks.decompiledDiffAsync = decompiledDiffAsync;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+///<reference path='../localtypings/pxtblockly.d.ts'/>
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_2) {
+        /**
+         * Converts a DOM into workspace without triggering any Blockly event. Returns the new block ids
+         * @param dom
+         * @param workspace
+         */
+        function domToWorkspaceNoEvents(dom, workspace) {
+            pxt.tickEvent(`blocks.domtow`);
+            let newBlockIds = [];
+            try {
+                Blockly.Events.disable();
+                newBlockIds = Blockly.Xml.domToWorkspace(dom, workspace);
+                applyMetaComments(workspace);
+            }
+            catch (e) {
+                pxt.reportException(e);
+            }
+            finally {
+                Blockly.Events.enable();
+            }
+            return newBlockIds;
+        }
+        blocks_2.domToWorkspaceNoEvents = domToWorkspaceNoEvents;
+        function applyMetaComments(workspace) {
+            // process meta comments
+            // @highlight -> highlight block
+            workspace.getAllBlocks(false)
+                .filter(b => !!b.getCommentText())
+                .forEach(b => {
+                var _a, _b;
+                const c = b.getCommentText();
+                if (/@highlight/.test(c)) {
+                    const cc = c.replace(/@highlight/g, '').trim();
+                    b.setCommentText(cc || null);
+                    (_b = (_a = workspace).highlightBlock) === null || _b === void 0 ? void 0 : _b.call(_a, b.id);
+                }
+            });
+        }
+        function clearWithoutEvents(workspace) {
+            pxt.tickEvent(`blocks.clear`);
+            if (!workspace)
+                return;
+            try {
+                Blockly.Events.disable();
+                workspace.clear();
+                workspace.clearUndo();
+            }
+            finally {
+                Blockly.Events.enable();
+            }
+        }
+        blocks_2.clearWithoutEvents = clearWithoutEvents;
+        // Saves entire workspace, including variables, into an xml string
+        function saveWorkspaceXml(ws, keepIds) {
+            const xml = Blockly.Xml.workspaceToDom(ws, !keepIds);
+            const text = Blockly.Xml.domToText(xml);
+            return text;
+        }
+        blocks_2.saveWorkspaceXml = saveWorkspaceXml;
+        // Saves only the blocks xml by iterating over the top blocks
+        function saveBlocksXml(ws, keepIds) {
+            let topBlocks = ws.getTopBlocks(false);
+            return topBlocks.map(block => {
+                return Blockly.Xml.domToText(Blockly.Xml.blockToDom(block, !keepIds));
+            });
+        }
+        blocks_2.saveBlocksXml = saveBlocksXml;
+        function getDirectChildren(parent, tag) {
+            const res = [];
+            for (let i = 0; i < parent.childNodes.length; i++) {
+                const n = parent.childNodes.item(i);
+                if (n.tagName === tag) {
+                    res.push(n);
+                }
+            }
+            return res;
+        }
+        blocks_2.getDirectChildren = getDirectChildren;
+        function getBlocksWithType(parent, type) {
+            return getChildrenWithAttr(parent, "block", "type", type).concat(getChildrenWithAttr(parent, "shadow", "type", type));
+        }
+        blocks_2.getBlocksWithType = getBlocksWithType;
+        function getChildrenWithAttr(parent, tag, attr, value) {
+            return pxt.Util.toArray(parent.getElementsByTagName(tag)).filter(b => b.getAttribute(attr) === value);
+        }
+        blocks_2.getChildrenWithAttr = getChildrenWithAttr;
+        function getFirstChildWithAttr(parent, tag, attr, value) {
+            const res = getChildrenWithAttr(parent, tag, attr, value);
+            return res.length ? res[0] : undefined;
+        }
+        blocks_2.getFirstChildWithAttr = getFirstChildWithAttr;
+        function loadBlocksXml(ws, text) {
+            let xmlBlock = Blockly.Xml.textToDom(text);
+            let block = Blockly.Xml.domToBlock(xmlBlock, ws);
+            if (ws.getMetrics) {
+                let metrics = ws.getMetrics();
+                let blockDimensions = block.getHeightWidth();
+                block.moveBy(metrics.viewLeft + (metrics.viewWidth / 2) - (blockDimensions.width / 2), metrics.viewTop + (metrics.viewHeight / 2) - (blockDimensions.height / 2));
+            }
+        }
+        blocks_2.loadBlocksXml = loadBlocksXml;
+        /**
+         * Loads the xml into a off-screen workspace (not suitable for size computations)
+         */
+        function loadWorkspaceXml(xml, skipReport = false) {
+            const workspace = new Blockly.Workspace();
+            try {
+                const dom = Blockly.Xml.textToDom(xml);
+                pxt.blocks.domToWorkspaceNoEvents(dom, workspace);
+                return workspace;
+            }
+            catch (e) {
+                if (!skipReport)
+                    pxt.reportException(e);
+                return null;
+            }
+        }
+        blocks_2.loadWorkspaceXml = loadWorkspaceXml;
+        function patchFloatingBlocks(dom, info) {
+            const onstarts = getBlocksWithType(dom, ts.pxtc.ON_START_TYPE);
+            let onstart = onstarts.length ? onstarts[0] : undefined;
+            if (onstart) { // nothing to do
+                onstart.removeAttribute("deletable");
+                return;
+            }
+            let newnodes = [];
+            const blocks = info.blocksById;
+            // walk top level blocks
+            let node = dom.firstElementChild;
+            let insertNode = undefined;
+            while (node) {
+                const nextNode = node.nextElementSibling;
+                // does this block is disable or have s nested statement block?
+                const nodeType = node.getAttribute("type");
+                if (!node.getAttribute("disabled") && !node.getElementsByTagName("statement").length
+                    && (pxt.blocks.buildinBlockStatements[nodeType] ||
+                        (blocks[nodeType] && blocks[nodeType].retType == "void" && !blocks_2.hasArrowFunction(blocks[nodeType])))) {
+                    // old block, needs to be wrapped in onstart
+                    if (!insertNode) {
+                        insertNode = dom.ownerDocument.createElement("statement");
+                        insertNode.setAttribute("name", "HANDLER");
+                        if (!onstart) {
+                            onstart = dom.ownerDocument.createElement("block");
+                            onstart.setAttribute("type", ts.pxtc.ON_START_TYPE);
+                            newnodes.push(onstart);
+                        }
+                        onstart.appendChild(insertNode);
+                        insertNode.appendChild(node);
+                        node.removeAttribute("x");
+                        node.removeAttribute("y");
+                        insertNode = node;
+                    }
+                    else {
+                        // event, add nested statement
+                        const next = dom.ownerDocument.createElement("next");
+                        next.appendChild(node);
+                        insertNode.appendChild(next);
+                        node.removeAttribute("x");
+                        node.removeAttribute("y");
+                        insertNode = node;
+                    }
+                }
+                node = nextNode;
+            }
+            newnodes.forEach(n => dom.appendChild(n));
+        }
+        /**
+         * Patch to transform old function blocks to new ones, and rename child nodes
+         */
+        function patchFunctionBlocks(dom, info) {
+            let functionNodes = pxt.U.toArray(dom.querySelectorAll("block[type=procedures_defnoreturn]"));
+            functionNodes.forEach(node => {
+                node.setAttribute("type", "function_definition");
+                node.querySelector("field[name=NAME]").setAttribute("name", "function_name");
+            });
+            let functionCallNodes = pxt.U.toArray(dom.querySelectorAll("block[type=procedures_callnoreturn]"));
+            functionCallNodes.forEach(node => {
+                node.setAttribute("type", "function_call");
+                node.querySelector("field[name=NAME]").setAttribute("name", "function_name");
+            });
+        }
+        function importXml(pkgTargetVersion, xml, info, skipReport = false) {
+            try {
+                // If it's the first project we're importing in the session, Blockly is not initialized
+                // and blocks haven't been injected yet
+                pxt.blocks.initializeAndInject(info);
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(xml, "application/xml");
+                const upgrades = pxt.patching.computePatches(pkgTargetVersion);
+                if (upgrades) {
+                    // patch block types
+                    upgrades.filter(up => up.type == "blockId")
+                        .forEach(up => Object.keys(up.map).forEach(type => {
+                        getBlocksWithType(doc, type)
+                            .forEach(blockNode => {
+                            blockNode.setAttribute("type", up.map[type]);
+                            pxt.debug(`patched block ${type} -> ${up.map[type]}`);
+                        });
+                    }));
+                    // patch block value
+                    upgrades.filter(up => up.type == "blockValue")
+                        .forEach(up => Object.keys(up.map).forEach(k => {
+                        const m = k.split('.');
+                        const type = m[0];
+                        const name = m[1];
+                        getBlocksWithType(doc, type)
+                            .reduce((prev, current) => prev.concat(getDirectChildren(current, "value")), [])
+                            .forEach(blockNode => {
+                            blockNode.setAttribute("name", up.map[k]);
+                            pxt.debug(`patched block value ${k} -> ${up.map[k]}`);
+                        });
+                    }));
+                    // patch enum variables
+                    upgrades.filter(up => up.type == "userenum")
+                        .forEach(up => Object.keys(up.map).forEach(k => {
+                        getChildrenWithAttr(doc, "variable", "type", k).forEach(el => {
+                            el.setAttribute("type", up.map[k]);
+                            pxt.debug(`patched enum variable type ${k} -> ${up.map[k]}`);
+                        });
+                    }));
+                }
+                // Blockly doesn't allow top-level shadow blocks. We've had bugs in the past where shadow blocks
+                // have ended up as top-level blocks, so promote them to regular blocks just in case
+                const shadows = getDirectChildren(doc.children.item(0), "shadow");
+                for (const shadow of shadows) {
+                    const block = doc.createElement("block");
+                    shadow.getAttributeNames().forEach(attr => block.setAttribute(attr, shadow.getAttribute(attr)));
+                    for (let j = 0; j < shadow.childNodes.length; j++) {
+                        block.appendChild(shadow.childNodes.item(j));
+                    }
+                    shadow.replaceWith(block);
+                }
+                // build upgrade map
+                const enums = {};
+                Object.keys(info.apis.byQName).forEach(k => {
+                    let api = info.apis.byQName[k];
+                    if (api.kind == 7 /* EnumMember */)
+                        enums[api.namespace + '.' + (api.attributes.blockImportId || api.attributes.block || api.attributes.blockId || api.name)]
+                            = api.namespace + '.' + api.name;
+                });
+                // walk through blocks and patch enums
+                const blocks = doc.getElementsByTagName("block");
+                for (let i = 0; i < blocks.length; ++i)
+                    patchBlock(info, enums, blocks[i]);
+                // patch floating blocks
+                patchFloatingBlocks(doc.documentElement, info);
+                // patch function blocks
+                patchFunctionBlocks(doc.documentElement, info);
+                // apply extension patches
+                if (pxt.blocks.extensionBlocklyPatch)
+                    pxt.blocks.extensionBlocklyPatch(pkgTargetVersion, doc.documentElement);
+                // serialize and return
+                return new XMLSerializer().serializeToString(doc);
+            }
+            catch (e) {
+                if (!skipReport)
+                    pxt.reportException(e);
+                return xml;
+            }
+        }
+        blocks_2.importXml = importXml;
+        function patchBlock(info, enums, block) {
+            var _a;
+            let type = block.getAttribute("type");
+            let b = Blockly.Blocks[type];
+            let symbol = blocks_2.blockSymbol(type);
+            if (!symbol || !b)
+                return;
+            let comp = blocks_2.compileInfo(symbol);
+            (_a = symbol.parameters) === null || _a === void 0 ? void 0 : _a.forEach((p, i) => {
+                let ptype = info.apis.byQName[p.type];
+                if (ptype && ptype.kind == 6 /* Enum */) {
+                    let field = getFirstChildWithAttr(block, "field", "name", comp.actualNameToParam[p.name].definitionName);
+                    if (field) {
+                        let en = enums[ptype.name + '.' + field.textContent];
+                        if (en)
+                            field.textContent = en;
+                    }
+                    /*
+    <block type="device_button_event" x="92" y="77">
+        <field name="NAME">Button.AB</field>
+      </block>
+                      */
+                }
+            });
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_3) {
+        var layout;
+        (function (layout) {
+            function patchBlocksFromOldWorkspace(blockInfo, oldWs, newXml) {
+                const newWs = pxt.blocks.loadWorkspaceXml(newXml, true);
+                // position blocks
+                alignBlocks(blockInfo, oldWs, newWs);
+                // inject disabled blocks
+                return injectDisabledBlocks(oldWs, newWs);
+            }
+            layout.patchBlocksFromOldWorkspace = patchBlocksFromOldWorkspace;
+            function injectDisabledBlocks(oldWs, newWs) {
+                const oldDom = Blockly.Xml.workspaceToDom(oldWs, true);
+                const newDom = Blockly.Xml.workspaceToDom(newWs, true);
+                pxt.Util.toArray(oldDom.childNodes)
+                    .filter((n) => n.nodeType == Node.ELEMENT_NODE && n.localName == "block" && n.getAttribute("disabled") == "true")
+                    .forEach(n => newDom.appendChild(newDom.ownerDocument.importNode(n, true)));
+                const updatedXml = Blockly.Xml.domToText(newDom);
+                return updatedXml;
+            }
+            function alignBlocks(blockInfo, oldWs, newWs) {
+                let env;
+                let newBlocks; // support for multiple events with similar name
+                oldWs.getTopBlocks(false).filter(ob => ob.isEnabled())
+                    .forEach(ob => {
+                    const otp = ob.xy_;
+                    if (otp && otp.x != 0 && otp.y != 0) {
+                        if (!env) {
+                            env = pxt.blocks.mkEnv(oldWs, blockInfo);
+                            newBlocks = {};
+                            newWs.getTopBlocks(false).forEach(b => {
+                                const nkey = pxt.blocks.callKey(env, b);
+                                const nbs = newBlocks[nkey] || [];
+                                nbs.push(b);
+                                newBlocks[nkey] = nbs;
+                            });
+                        }
+                        const oldKey = pxt.blocks.callKey(env, ob);
+                        const newBlock = (newBlocks[oldKey] || []).shift();
+                        if (newBlock)
+                            newBlock.xy_ = otp.clone();
+                    }
+                });
+            }
+            /**
+             * Splits a blockly SVG AFTER a vertical layout. This function relies on the ordering
+             * of blocks / comments to get as getTopBlock(true)/getTopComment(true)
+             */
+            function splitSvg(svg, ws, emPixels = 18) {
+                const comments = ws.getTopComments(true);
+                const blocks = ws.getTopBlocks(true);
+                // don't split for a single block
+                if (comments.length + blocks.length < 2)
+                    return svg;
+                const div = document.createElement("div");
+                div.className = `blocks-svg-list ${ws.getInjectionDiv().className}`;
+                function extract(parentClass, otherClass, blocki, size, translate, itemClass) {
+                    const svgclone = svg.cloneNode(true);
+                    // collect all blocks
+                    const parentSvg = svgclone.querySelector(`g.blocklyWorkspace > g.${parentClass}`);
+                    const otherSvg = svgclone.querySelector(`g.blocklyWorkspace > g.${otherClass}`);
+                    const blocksSvg = pxt.Util.toArray(parentSvg.querySelectorAll(`g.blocklyWorkspace > g.${parentClass} > ${itemClass ? ("." + itemClass) : "g[transform]"}`));
+                    const blockSvg = blocksSvg.splice(blocki, 1)[0];
+                    if (!blockSvg) {
+                        // seems like no blocks were generated
+                        pxt.log(`missing block, did block failed to load?`);
+                        return;
+                    }
+                    // remove all but the block we care about
+                    blocksSvg.filter(g => g != blockSvg)
+                        .forEach(g => {
+                        g.parentNode.removeChild(g);
+                    });
+                    // clear transform, remove other group
+                    parentSvg.removeAttribute("transform");
+                    otherSvg.parentNode.removeChild(otherSvg);
+                    // patch size
+                    blockSvg.setAttribute("transform", `translate(${translate.x}, ${translate.y})`);
+                    const width = (size.width / emPixels) + "em";
+                    const height = (size.height / emPixels) + "em";
+                    svgclone.setAttribute("viewBox", `0 0 ${size.width} ${size.height}`);
+                    svgclone.style.width = width;
+                    svgclone.style.height = height;
+                    svgclone.setAttribute("width", width);
+                    svgclone.setAttribute("height", height);
+                    div.appendChild(svgclone);
+                }
+                comments.forEach((comment, commenti) => extract('blocklyBubbleCanvas', 'blocklyBlockCanvas', commenti, comment.getHeightWidth(), { x: 0, y: 0 }, "blocklyComment"));
+                blocks.forEach((block, blocki) => {
+                    const size = block.getHeightWidth();
+                    const translate = { x: 0, y: 0 };
+                    if (block.getStartHat()) {
+                        size.height += emPixels;
+                        translate.y += emPixels;
+                    }
+                    extract('blocklyBlockCanvas', 'blocklyBubbleCanvas', blocki, size, translate);
+                });
+                return div;
+            }
+            layout.splitSvg = splitSvg;
+            function verticalAlign(ws, emPixels) {
+                let y = 0;
+                let comments = ws.getTopComments(true);
+                comments.forEach(comment => {
+                    comment.moveBy(0, y);
+                    y += comment.getHeightWidth().height;
+                    y += emPixels; //buffer
+                });
+                let blocks = ws.getTopBlocks(true);
+                blocks.forEach((block, bi) => {
+                    // TODO: REMOVE THIS WHEN FIXED IN PXT-BLOCKLY
+                    if (block.getStartHat())
+                        y += emPixels; // hat height
+                    block.moveBy(0, y);
+                    y += block.getHeightWidth().height;
+                    y += emPixels; //buffer
+                });
+            }
+            layout.verticalAlign = verticalAlign;
+            function setCollapsedAll(ws, collapsed) {
+                ws.getTopBlocks(false)
+                    .filter(b => b.isEnabled())
+                    .forEach(b => b.setCollapsed(collapsed));
+            }
+            layout.setCollapsedAll = setCollapsedAll;
+            // Workspace margins
+            const marginx = 20;
+            const marginy = 20;
+            function flow(ws, opts) {
+                if (opts) {
+                    if (opts.useViewWidth) {
+                        const metrics = ws.getMetrics();
+                        // Only use the width if in portrait, otherwise the blocks are too spread out
+                        if (metrics.viewHeight > metrics.viewWidth) {
+                            flowBlocks(ws.getTopComments(true), ws.getTopBlocks(true), undefined, metrics.viewWidth);
+                            ws.scroll(marginx, marginy);
+                            return;
+                        }
+                    }
+                    flowBlocks(ws.getTopComments(true), ws.getTopBlocks(true), opts.ratio);
+                }
+                else {
+                    flowBlocks(ws.getTopComments(true), ws.getTopBlocks(true));
+                }
+                ws.scroll(marginx, marginy);
+            }
+            layout.flow = flow;
+            function screenshotEnabled() {
+                return !pxt.BrowserUtils.isIE()
+                    && !pxt.BrowserUtils.isUwpEdge(); // TODO figure out why screenshots are not working in UWP; disable for now
+            }
+            layout.screenshotEnabled = screenshotEnabled;
+            function screenshotAsync(ws, pixelDensity, encodeBlocks) {
+                return toPngAsync(ws, pixelDensity, encodeBlocks);
+            }
+            layout.screenshotAsync = screenshotAsync;
+            function toPngAsync(ws, pixelDensity, encodeBlocks) {
+                let blockSnippet;
+                if (encodeBlocks) {
+                    blockSnippet = {
+                        target: pxt.appTarget.id,
+                        versions: pxt.appTarget.versions,
+                        xml: pxt.blocks.saveBlocksXml(ws).map(text => pxt.Util.htmlEscape(text))
+                    };
+                }
+                const density = (pixelDensity | 0) || 4;
+                return toSvgAsync(ws, density)
+                    .then(sg => {
+                    if (!sg)
+                        return Promise.resolve(undefined);
+                    return pxt.BrowserUtils.encodeToPngAsync(sg.xml, {
+                        width: sg.width,
+                        height: sg.height,
+                        pixelDensity: density,
+                        text: encodeBlocks ? JSON.stringify(blockSnippet, null, 2) : null
+                    });
+                }).catch(e => {
+                    pxt.reportException(e);
+                    return undefined;
+                });
+            }
+            layout.toPngAsync = toPngAsync;
+            const XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
+            const MAX_AREA = 120000000; // https://github.com/jhildenbiddle/canvas-size
+            function toSvgAsync(ws, pixelDensity) {
+                if (!ws)
+                    return Promise.resolve(undefined);
+                const metrics = ws.getBlocksBoundingBox();
+                const sg = ws.getParentSvg().cloneNode(true);
+                cleanUpBlocklySvg(sg);
+                let width = metrics.right - metrics.left;
+                let height = metrics.bottom - metrics.top;
+                let scale = 1;
+                const area = width * height * Math.pow(pixelDensity, 2);
+                if (area > MAX_AREA) {
+                    scale = Math.sqrt(MAX_AREA / area);
+                }
+                return blocklyToSvgAsync(sg, metrics.left, metrics.top, width, height, scale);
+            }
+            layout.toSvgAsync = toSvgAsync;
+            function serializeNode(sg) {
+                return serializeSvgString(new XMLSerializer().serializeToString(sg));
+            }
+            layout.serializeNode = serializeNode;
+            function serializeSvgString(xmlString) {
+                return xmlString
+                    .replace(new RegExp('&nbsp;', 'g'), '&#160;'); // Replace &nbsp; with &#160; as a workaround for having nbsp missing from SVG xml
+            }
+            layout.serializeSvgString = serializeSvgString;
+            function cleanUpBlocklySvg(svg) {
+                pxt.BrowserUtils.removeClass(svg, "blocklySvg");
+                pxt.BrowserUtils.addClass(svg, "blocklyPreview pxt-renderer classic-theme");
+                // Remove background elements
+                pxt.U.toArray(svg.querySelectorAll('.blocklyMainBackground,.blocklyScrollbarBackground'))
+                    .forEach(el => { if (el)
+                    el.parentNode.removeChild(el); });
+                // Remove connection indicator elements
+                pxt.U.toArray(svg.querySelectorAll('.blocklyConnectionIndicator,.blocklyInputConnectionIndicator'))
+                    .forEach(el => { if (el)
+                    el.parentNode.removeChild(el); });
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                pxt.U.toArray(svg.querySelectorAll('.blocklyBlockCanvas,.blocklyBubbleCanvas'))
+                    .forEach(el => el.removeAttribute('transform'));
+                // In order to get the Blockly comment's text area to serialize properly they have to have names
+                const parser = new DOMParser();
+                pxt.U.toArray(svg.querySelectorAll('.blocklyCommentTextarea'))
+                    .forEach(el => {
+                    const dom = parser.parseFromString('<!doctype html><body>' + pxt.docs.html2Quote(el.value), 'text/html');
+                    el.textContent = dom.body.textContent;
+                });
+                return svg;
+            }
+            layout.cleanUpBlocklySvg = cleanUpBlocklySvg;
+            function blocklyToSvgAsync(sg, x, y, width, height, scale) {
+                if (!sg.childNodes[0])
+                    return Promise.resolve(undefined);
+                sg.removeAttribute("width");
+                sg.removeAttribute("height");
+                sg.removeAttribute("transform");
+                let renderWidth = Math.round(width * (scale || 1));
+                let renderHeight = Math.round(height * (scale || 1));
+                const xmlString = serializeNode(sg)
+                    .replace(/^\s*<svg[^>]+>/i, '')
+                    .replace(/<\/svg>\s*$/i, ''); // strip out svg tag
+                const svgXml = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="${XLINK_NAMESPACE}" width="${renderWidth}" height="${renderHeight}" viewBox="${x} ${y} ${width} ${height}" class="pxt-renderer">${xmlString}</svg>`;
+                const xsg = new DOMParser().parseFromString(svgXml, "image/svg+xml");
+                const cssLink = xsg.createElementNS("http://www.w3.org/1999/xhtml", "style");
+                const isRtl = pxt.Util.isUserLanguageRtl();
+                const customCssHref = document.getElementById(`style-${isRtl ? 'rtl' : ''}blockly.css`).href;
+                const semanticCssHref = pxt.Util.toArray(document.head.getElementsByTagName("link"))
+                    .filter(l => pxt.Util.endsWith(l.getAttribute("href"), "semantic.css"))[0].href;
+                return Promise.all([pxt.BrowserUtils.loadAjaxAsync(customCssHref), pxt.BrowserUtils.loadAjaxAsync(semanticCssHref)])
+                    .then((customCss) => {
+                    var _a, _b;
+                    const blocklySvg = pxt.Util.toArray(document.head.querySelectorAll("style"))
+                        .filter((el) => /\.blocklySvg/.test(el.innerText))[0];
+                    // Custom CSS injected directly into the DOM by Blockly
+                    customCss.unshift(((_a = document.getElementById(`blockly-common-style`)) === null || _a === void 0 ? void 0 : _a.innerText) || "");
+                    customCss.unshift(((_b = document.getElementById(`blockly-renderer-style-pxt`)) === null || _b === void 0 ? void 0 : _b.innerText) || "");
+                    // CSS may contain <, > which need to be stored in CDATA section
+                    const cssString = (blocklySvg ? blocklySvg.innerText : "") + '\n\n' + customCss.map(el => el + '\n\n');
+                    cssLink.appendChild(xsg.createCDATASection(cssString));
+                    xsg.documentElement.insertBefore(cssLink, xsg.documentElement.firstElementChild);
+                    return expandImagesAsync(xsg)
+                        .then(() => convertIconsToPngAsync(xsg))
+                        .then(() => {
+                        return {
+                            width: renderWidth,
+                            height: renderHeight,
+                            svg: serializeNode(xsg).replace('<style xmlns="http://www.w3.org/1999/xhtml">', '<style>'),
+                            xml: documentToSvg(xsg),
+                            css: cssString
+                        };
+                    });
+                });
+            }
+            layout.blocklyToSvgAsync = blocklyToSvgAsync;
+            function documentToSvg(xsg) {
+                const xml = new XMLSerializer().serializeToString(xsg);
+                const data = "data:image/svg+xml;base64," + ts.pxtc.encodeBase64(unescape(encodeURIComponent(xml)));
+                return data;
+            }
+            layout.documentToSvg = documentToSvg;
+            let imageXLinkCache;
+            function expandImagesAsync(xsg) {
+                if (!imageXLinkCache)
+                    imageXLinkCache = {};
+                const images = xsg.getElementsByTagName("image");
+                const p = pxt.Util.toArray(images)
+                    .filter(image => {
+                    const href = image.getAttributeNS(XLINK_NAMESPACE, "href");
+                    return href && !/^data:/.test(href);
+                })
+                    .map(img => img)
+                    .map((image) => {
+                    const href = image.getAttributeNS(XLINK_NAMESPACE, "href");
+                    let dataUri = imageXLinkCache[href];
+                    return (dataUri ? Promise.resolve(imageXLinkCache[href])
+                        : pxt.BrowserUtils.loadImageAsync(image.getAttributeNS(XLINK_NAMESPACE, "href"))
+                            .then((img) => {
+                            const cvs = document.createElement("canvas");
+                            const ctx = cvs.getContext("2d");
+                            let w = img.width;
+                            let h = img.height;
+                            cvs.width = w;
+                            cvs.height = h;
+                            ctx.drawImage(img, 0, 0, w, h, 0, 0, cvs.width, cvs.height);
+                            imageXLinkCache[href] = dataUri = cvs.toDataURL("image/png");
+                            return dataUri;
+                        }).catch(e => {
+                            // ignore load error
+                            pxt.debug(`svg render: failed to load ${href}`);
+                            return "";
+                        }))
+                        .then(href => { image.setAttributeNS(XLINK_NAMESPACE, "href", href); });
+                });
+                return Promise.all(p).then(() => { });
+            }
+            let imageIconCache;
+            function convertIconsToPngAsync(xsg) {
+                if (!imageIconCache)
+                    imageIconCache = {};
+                if (!pxt.BrowserUtils.isEdge())
+                    return Promise.resolve();
+                const images = xsg.getElementsByTagName("image");
+                const p = pxt.Util.toArray(images)
+                    .filter(image => /^data:image\/svg\+xml/.test(image.getAttributeNS(XLINK_NAMESPACE, "href")))
+                    .map(img => img)
+                    .map((image) => {
+                    const svgUri = image.getAttributeNS(XLINK_NAMESPACE, "href");
+                    const width = parseInt(image.getAttribute("width").replace(/[^0-9]/g, ""));
+                    const height = parseInt(image.getAttribute("height").replace(/[^0-9]/g, ""));
+                    let pngUri = imageIconCache[svgUri];
+                    return (pngUri ? Promise.resolve(pngUri)
+                        : pxt.BrowserUtils.encodeToPngAsync(svgUri, { width, height, pixelDensity: 2 }))
+                        .then(href => {
+                        imageIconCache[svgUri] = href;
+                        image.setAttributeNS(XLINK_NAMESPACE, "href", href);
+                    });
+                });
+                return Promise.all(p).then(() => { });
+            }
+            function flowBlocks(comments, blocks, ratio = 1.62, maxWidth) {
+                // Margin between blocks and their comments
+                const innerGroupMargin = 13;
+                // Margin between groups of blocks and comments
+                const outerGroupMargin = 45;
+                const groups = [];
+                const commentMap = {};
+                comments.forEach(comment => {
+                    const ref = comment.data;
+                    if (ref != undefined) {
+                        commentMap[ref] = comment;
+                    }
+                });
+                let onStart;
+                // Sort so that on-start is first, events are second, functions are third, and disabled blocks are last
+                blocks.sort((a, b) => {
+                    if (a.isEnabled() === b.isEnabled()) {
+                        if (a.type === b.type)
+                            return 0;
+                        else if (a.type === "function_definition")
+                            return 1;
+                        else if (b.type === "function_definition")
+                            return -1;
+                        else
+                            return a.type.localeCompare(b.type);
+                    }
+                    else if (a.isEnabled())
+                        return -1;
+                    else
+                        return 1;
+                });
+                blocks.forEach(block => {
+                    const refs = blocks_3.getBlockData(block).commentRefs;
+                    if (refs.length) {
+                        const children = [];
+                        for (let i = 0; i < refs.length; i++) {
+                            const comment = commentMap[refs[i]];
+                            if (comment) {
+                                children.push(formattable(comment));
+                                delete commentMap[refs[i]];
+                            }
+                        }
+                        if (children.length) {
+                            groups.push({ value: block, width: -1, height: -1, children });
+                            return;
+                        }
+                    }
+                    const f = formattable(block);
+                    if (!onStart && block.isEnabled() && block.type === pxtc.ON_START_TYPE) { // there might be duplicate on-start blocks
+                        onStart = f;
+                    }
+                    else {
+                        groups.push(f);
+                    }
+                });
+                if (onStart) {
+                    groups.unshift(onStart);
+                }
+                // Collect the comments that were not linked to a top-level block
+                Object.keys(commentMap).sort((a, b) => {
+                    // These are strings of integers (eg "0", "17", etc.) with no duplicates
+                    if (a.length === b.length) {
+                        return a > b ? -1 : 1;
+                    }
+                    else {
+                        return a.length > b.length ? -1 : 1;
+                    }
+                }).forEach(key => {
+                    if (commentMap[key]) {
+                        // Comments go at the end after disabled blocks
+                        groups.push(formattable(commentMap[key]));
+                    }
+                });
+                comments.forEach(comment => {
+                    const ref = comment.data;
+                    if (ref == undefined) {
+                        groups.push(formattable(comment));
+                    }
+                });
+                let surfaceArea = 0;
+                for (let i = 0; i < groups.length; i++) {
+                    const group = groups[i];
+                    if (group.children) {
+                        const valueDimensions = group.value.getHeightWidth();
+                        group.x = 0;
+                        group.y = 0;
+                        let x = valueDimensions.width + innerGroupMargin;
+                        let y = 0;
+                        // Lay comments out to the right of the parent node
+                        for (let j = 0; j < group.children.length; j++) {
+                            const child = group.children[j];
+                            child.x = x;
+                            child.y = y;
+                            y += child.height + innerGroupMargin;
+                            group.width = Math.max(group.width, x + child.width);
+                        }
+                        group.height = Math.max(y - innerGroupMargin, valueDimensions.height);
+                    }
+                    surfaceArea += (group.height + innerGroupMargin) * (group.width + innerGroupMargin);
+                }
+                let maxx;
+                if (maxWidth > marginx) {
+                    maxx = maxWidth - marginx;
+                }
+                else {
+                    maxx = Math.sqrt(surfaceArea) * ratio;
+                }
+                let insertx = marginx;
+                let inserty = marginy;
+                let rowBottom = 0;
+                for (let i = 0; i < groups.length; i++) {
+                    const group = groups[i];
+                    if (group.children) {
+                        moveFormattable(group, insertx + group.x, inserty + group.y);
+                        for (let j = 0; j < group.children.length; j++) {
+                            const child = group.children[j];
+                            moveFormattable(child, insertx + child.x, inserty + child.y);
+                        }
+                    }
+                    else {
+                        moveFormattable(group, insertx, inserty);
+                    }
+                    insertx += group.width + outerGroupMargin;
+                    rowBottom = Math.max(rowBottom, inserty + group.height + outerGroupMargin);
+                    if (insertx > maxx) {
+                        insertx = marginx;
+                        inserty = rowBottom;
+                    }
+                }
+                function moveFormattable(f, x, y) {
+                    const bounds = f.value.getBoundingRectangle();
+                    f.value.moveBy(x - bounds.left, y - bounds.top);
+                }
+            }
+            function formattable(entity) {
+                const hw = entity.getHeightWidth();
+                return { value: entity, height: hw.height, width: hw.width };
+            }
+        })(layout = blocks_3.layout || (blocks_3.layout = {}));
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/blockly.d.ts" />
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_4) {
+        const typeDefaults = {
+            "string": {
+                field: "TEXT",
+                block: "text",
+                defaultValue: ""
+            },
+            "number": {
+                field: "NUM",
+                block: "math_number",
+                defaultValue: "0"
+            },
+            "boolean": {
+                field: "BOOL",
+                block: "logic_boolean",
+                defaultValue: "false"
+            },
+            "Array": {
+                field: "VAR",
+                block: "variables_get",
+                defaultValue: "list"
+            }
+        };
+        // Add numbers before input names to prevent clashes with the ones added by BlocklyLoader
+        blocks_4.optionalDummyInputPrefix = "0_optional_dummy";
+        blocks_4.optionalInputWithFieldPrefix = "0_optional_field";
+        // Matches arrays
+        function isArrayType(type) {
+            const arrayTypeRegex = /^(?:Array<(.+)>)|(?:(.+)\[\])|(?:\[.+\])$/;
+            let parsed = arrayTypeRegex.exec(type);
+            if (parsed) {
+                // Is an array, returns what type it is an array of
+                if (parsed[1]) {
+                    // Is an array with form Array<type>
+                    return parsed[1];
+                }
+                else {
+                    // Is an array with form type[]
+                    return parsed[2];
+                }
+            }
+            else {
+                // Not an array
+                return undefined;
+            }
+        }
+        blocks_4.isArrayType = isArrayType;
+        // Matches tuples
+        function isTupleType(type) {
+            const tupleTypeRegex = /^\[(.+)\]$/;
+            let parsed = tupleTypeRegex.exec(type);
+            if (parsed) {
+                // Returns an array containing the types of the tuple
+                return parsed[1].split(/,\s*/);
+            }
+            else {
+                // Not a tuple
+                return undefined;
+            }
+        }
+        blocks_4.isTupleType = isTupleType;
+        const primitiveTypeRegex = /^(string|number|boolean)$/;
+        // list of built-in blocks, should be touched.
+        let _builtinBlocks;
+        function builtinBlocks() {
+            if (!_builtinBlocks) {
+                _builtinBlocks = {};
+                Object.keys(Blockly.Blocks)
+                    .forEach(k => _builtinBlocks[k] = { block: Blockly.Blocks[k] });
+            }
+            return _builtinBlocks;
+        }
+        blocks_4.builtinBlocks = builtinBlocks;
+        blocks_4.buildinBlockStatements = {
+            "controls_if": true,
+            "controls_for": true,
+            "pxt_controls_for": true,
+            "controls_simple_for": true,
+            "controls_repeat_ext": true,
+            "pxt_controls_for_of": true,
+            "controls_for_of": true,
+            "variables_set": true,
+            "variables_change": true,
+            "device_while": true
+        };
+        // Cached block info from the last inject operation
+        let cachedBlockInfo;
+        let cachedBlocks = {};
+        function blockSymbol(type) {
+            let b = cachedBlocks[type];
+            return b ? b.fn : undefined;
+        }
+        blocks_4.blockSymbol = blockSymbol;
+        function createShadowValue(info, p, shadowId, defaultV) {
+            defaultV = defaultV || p.defaultValue;
+            shadowId = shadowId || p.shadowBlockId;
+            if (!shadowId && p.range)
+                shadowId = "math_number_minmax";
+            let defaultValue;
+            if (defaultV && defaultV.slice(0, 1) == "\"")
+                defaultValue = JSON.parse(defaultV);
+            else {
+                defaultValue = defaultV;
+            }
+            if (p.type == "number" && shadowId == "value") {
+                const field = document.createElement("field");
+                field.setAttribute("name", p.definitionName);
+                field.appendChild(document.createTextNode("0"));
+                return field;
+            }
+            const isVariable = shadowId == "variables_get";
+            const isText = shadowId == "text";
+            const value = document.createElement("value");
+            value.setAttribute("name", p.definitionName);
+            const isArray = isArrayType(p.type);
+            const shadow = document.createElement(isVariable || isArray ? "block" : "shadow");
+            value.appendChild(shadow);
+            const typeInfo = typeDefaults[isArray || p.type];
+            shadow.setAttribute("type", shadowId || (isArray ? 'lists_create_with' : typeInfo && typeInfo.block || p.type));
+            shadow.setAttribute("colour", Blockly.Colours.textField);
+            if (isArray) {
+                // if an array of booleans, numbers, or strings
+                if (typeInfo && !shadowId) {
+                    let fieldValues;
+                    switch (isArray) {
+                        case "number":
+                            fieldValues = ["0", "1"];
+                            break;
+                        case "string":
+                            fieldValues = ["a", "b", "c"];
+                            break;
+                        case "boolean":
+                            fieldValues = ["FALSE", "FALSE", "FALSE"];
+                            break;
+                    }
+                    buildArrayShadow(shadow, typeInfo.block, typeInfo.field, fieldValues);
+                    return value;
+                }
+                else if (shadowId && defaultValue) {
+                    buildArrayShadow(shadow, defaultValue);
+                    return value;
+                }
+            }
+            if (typeInfo && (!shadowId || typeInfo.block === shadowId || shadowId === "math_number_minmax")) {
+                const field = document.createElement("field");
+                shadow.appendChild(field);
+                let fieldName;
+                switch (shadowId) {
+                    case "variables_get":
+                        fieldName = "VAR";
+                        break;
+                    case "math_number_minmax":
+                        fieldName = "SLIDER";
+                        break;
+                    default:
+                        fieldName = typeInfo.field;
+                        break;
+                }
+                field.setAttribute("name", fieldName);
+                let value;
+                if (p.type == "boolean") {
+                    value = document.createTextNode((defaultValue || typeInfo.defaultValue).toUpperCase());
+                }
+                else {
+                    value = document.createTextNode(defaultValue || typeInfo.defaultValue);
+                }
+                field.appendChild(value);
+            }
+            else if (defaultValue) {
+                const field = document.createElement("field");
+                field.textContent = defaultValue;
+                if (isVariable) {
+                    field.setAttribute("name", "VAR");
+                    shadow.appendChild(field);
+                }
+                else if (isText) {
+                    field.setAttribute("name", "TEXT");
+                    shadow.appendChild(field);
+                }
+                else if (shadowId) {
+                    const shadowInfo = info.blocksById[shadowId];
+                    if (shadowInfo && shadowInfo.attributes._def && shadowInfo.attributes._def.parameters.length) {
+                        const shadowParam = shadowInfo.attributes._def.parameters[0];
+                        field.setAttribute("name", shadowParam.name);
+                        shadow.appendChild(field);
+                    }
+                }
+                else {
+                    field.setAttribute("name", p.definitionName);
+                    shadow.appendChild(field);
+                }
+            }
+            let mut;
+            if (p.range) {
+                mut = document.createElement('mutation');
+                mut.setAttribute('min', p.range.min.toString());
+                mut.setAttribute('max', p.range.max.toString());
+                mut.setAttribute('label', p.actualName.charAt(0).toUpperCase() + p.actualName.slice(1));
+                if (p.fieldOptions) {
+                    if (p.fieldOptions['step'])
+                        mut.setAttribute('step', p.fieldOptions['step']);
+                    if (p.fieldOptions['color'])
+                        mut.setAttribute('color', p.fieldOptions['color']);
+                    if (p.fieldOptions['precision'])
+                        mut.setAttribute('precision', p.fieldOptions['precision']);
+                }
+            }
+            if (p.fieldOptions) {
+                if (!mut)
+                    mut = document.createElement('mutation');
+                mut.setAttribute(`customfield`, JSON.stringify(p.fieldOptions));
+            }
+            if (mut) {
+                shadow.appendChild(mut);
+            }
+            return value;
+        }
+        blocks_4.createShadowValue = createShadowValue;
+        function buildArrayShadow(shadow, blockType, fieldName, fieldValues) {
+            const itemCount = fieldValues ? fieldValues.length : 2;
+            const mut = document.createElement('mutation');
+            mut.setAttribute("items", "" + itemCount);
+            mut.setAttribute("horizontalafter", "" + itemCount);
+            shadow.appendChild(mut);
+            for (let i = 0; i < itemCount; i++) {
+                const innerValue = document.createElement("value");
+                innerValue.setAttribute("name", "ADD" + i);
+                const innerShadow = document.createElement("shadow");
+                innerShadow.setAttribute("type", blockType);
+                if (fieldName) {
+                    const field = document.createElement("field");
+                    field.setAttribute("name", fieldName);
+                    if (fieldValues) {
+                        field.appendChild(document.createTextNode(fieldValues[i]));
+                    }
+                    innerShadow.appendChild(field);
+                }
+                innerValue.appendChild(innerShadow);
+                shadow.appendChild(innerValue);
+            }
+        }
+        function createFlyoutHeadingLabel(name, color, icon, iconClass) {
+            const headingLabel = createFlyoutLabel(name, pxt.toolbox.convertColor(color), icon, iconClass);
+            headingLabel.setAttribute('web-class', 'blocklyFlyoutHeading');
+            return headingLabel;
+        }
+        blocks_4.createFlyoutHeadingLabel = createFlyoutHeadingLabel;
+        function createFlyoutGroupLabel(name, icon, labelLineWidth, helpCallback) {
+            const groupLabel = createFlyoutLabel(name, undefined, icon);
+            groupLabel.setAttribute('web-class', 'blocklyFlyoutGroup');
+            groupLabel.setAttribute('web-line', '1.5');
+            if (labelLineWidth)
+                groupLabel.setAttribute('web-line-width', labelLineWidth);
+            if (helpCallback) {
+                groupLabel.setAttribute('web-help-button', 'true');
+                groupLabel.setAttribute('callbackKey', helpCallback);
+            }
+            return groupLabel;
+        }
+        blocks_4.createFlyoutGroupLabel = createFlyoutGroupLabel;
+        function createFlyoutLabel(name, color, icon, iconClass) {
+            // Add the Heading label
+            let headingLabel = Blockly.utils.xml.createElement('label');
+            headingLabel.setAttribute('text', name);
+            if (color) {
+                headingLabel.setAttribute('web-icon-color', pxt.toolbox.convertColor(color));
+            }
+            if (icon) {
+                if (icon.length === 1) {
+                    headingLabel.setAttribute('web-icon', icon);
+                    if (iconClass)
+                        headingLabel.setAttribute('web-icon-class', iconClass);
+                }
+                else {
+                    headingLabel.setAttribute('web-icon-class', `blocklyFlyoutIcon${name}`);
+                }
+            }
+            return headingLabel;
+        }
+        function createFlyoutButton(callbackKey, label) {
+            let button = Blockly.utils.xml.createElement('button');
+            button.setAttribute('text', label);
+            button.setAttribute('callbackKey', callbackKey);
+            return button;
+        }
+        blocks_4.createFlyoutButton = createFlyoutButton;
+        function createToolboxBlock(info, fn, comp) {
+            let parent;
+            let parentInput;
+            if (fn.attributes.toolboxParent) {
+                const parentFn = info.blocksById[fn.attributes.toolboxParent];
+                if (parentFn) {
+                    parent = createToolboxBlock(info, parentFn, pxt.blocks.compileInfo(parentFn));
+                    parentInput = fn.attributes.toolboxParentArgument ?
+                        parent.querySelector(`value[name=${fn.attributes.toolboxParentArgument}]`) :
+                        parent.querySelector(`value`);
+                    if (parentInput) {
+                        while (parentInput.firstChild)
+                            parentInput.removeChild(parentInput.firstChild);
+                    }
+                    else {
+                        parent = undefined;
+                    }
+                }
+            }
+            //
+            // toolbox update
+            //
+            let block = document.createElement(parent ? "shadow" : "block");
+            block.setAttribute("type", fn.attributes.blockId);
+            if (fn.attributes.blockGap)
+                block.setAttribute("gap", fn.attributes.blockGap);
+            else if (pxt.appTarget.appTheme && pxt.appTarget.appTheme.defaultBlockGap)
+                block.setAttribute("gap", pxt.appTarget.appTheme.defaultBlockGap.toString());
+            if (comp.thisParameter) {
+                const t = comp.thisParameter;
+                block.appendChild(createShadowValue(info, t, t.shadowBlockId || "variables_get", t.defaultValue || t.definitionName));
+            }
+            if (fn.parameters) {
+                comp.parameters.filter(pr => primitiveTypeRegex.test(pr.type)
+                    || primitiveTypeRegex.test(isArrayType(pr.type))
+                    || pr.shadowBlockId
+                    || pr.defaultValue)
+                    .forEach(pr => {
+                    block.appendChild(createShadowValue(info, pr));
+                });
+                if (fn.attributes.draggableParameters) {
+                    comp.handlerArgs.forEach(arg => {
+                        // draggableParameters="variable":
+                        // <value name="HANDLER_DRAG_PARAM_arg">
+                        // <shadow type="variables_get_reporter">
+                        //     <field name="VAR">defaultName</field>
+                        // </shadow>
+                        // </value>
+                        // draggableParameters="reporter"
+                        // <value name="HANDLER_DRAG_PARAM_arg">
+                        //     <shadow type="argument_reporter_custom">
+                        //         <mutation typename="Sprite"></mutation>
+                        //         <field name="VALUE">mySprite</field>
+                        //     </shadow>
+                        // </value>
+                        const useReporter = fn.attributes.draggableParameters === "reporter";
+                        const value = document.createElement("value");
+                        value.setAttribute("name", "HANDLER_DRAG_PARAM_" + arg.name);
+                        const blockType = useReporter ? pxt.blocks.reporterTypeForArgType(arg.type) : "variables_get_reporter";
+                        const shadow = document.createElement("shadow");
+                        shadow.setAttribute("type", blockType);
+                        if (useReporter && blockType === "argument_reporter_custom") {
+                            const mutation = document.createElement("mutation");
+                            mutation.setAttribute("typename", arg.type);
+                            shadow.appendChild(mutation);
+                        }
+                        const field = document.createElement("field");
+                        field.setAttribute("name", useReporter ? "VALUE" : "VAR");
+                        field.textContent = pxt.Util.htmlEscape(arg.name);
+                        shadow.appendChild(field);
+                        value.appendChild(shadow);
+                        block.appendChild(value);
+                    });
+                }
+                else {
+                    comp.handlerArgs.forEach(arg => {
+                        const field = document.createElement("field");
+                        field.setAttribute("name", "HANDLER_" + arg.name);
+                        field.textContent = arg.name;
+                        block.appendChild(field);
+                    });
+                }
+            }
+            if (parent) {
+                parentInput.appendChild(block);
+                return parent;
+            }
+            return block;
+        }
+        blocks_4.createToolboxBlock = createToolboxBlock;
+        function injectBlocks(blockInfo) {
+            cachedBlockInfo = blockInfo;
+            Blockly.pxtBlocklyUtils.whitelistDraggableBlockTypes(blockInfo.blocks.filter(fn => fn.attributes.duplicateShadowOnDrag).map(fn => fn.attributes.blockId));
+            // inject Blockly with all block definitions
+            return blockInfo.blocks
+                .map(fn => {
+                const comp = blocks_4.compileInfo(fn);
+                const block = createToolboxBlock(blockInfo, fn, comp);
+                if (fn.attributes.blockBuiltin) {
+                    pxt.Util.assert(!!builtinBlocks()[fn.attributes.blockId]);
+                    const builtin = builtinBlocks()[fn.attributes.blockId];
+                    builtin.symbol = fn;
+                    builtin.block.codeCard = mkCard(fn, block);
+                }
+                else {
+                    injectBlockDefinition(blockInfo, fn, comp, block);
+                }
+                return fn;
+            });
+        }
+        blocks_4.injectBlocks = injectBlocks;
+        function injectBlockDefinition(info, fn, comp, blockXml) {
+            let id = fn.attributes.blockId;
+            if (builtinBlocks()[id]) {
+                pxt.reportError("blocks", 'trying to override builtin block', { "details": id });
+                return false;
+            }
+            let hash = JSON.stringify(fn);
+            if (cachedBlocks[id] && cachedBlocks[id].hash == hash) {
+                return true;
+            }
+            if (Blockly.Blocks[fn.attributes.blockId]) {
+                console.error("duplicate block definition: " + id);
+                return false;
+            }
+            let cachedBlock = {
+                hash: hash,
+                fn: fn,
+                block: {
+                    codeCard: mkCard(fn, blockXml),
+                    init: function () { initBlock(this, info, fn, comp); }
+                }
+            };
+            if (pxt.Util.isTranslationMode()
+                && pxt.blocks.promptTranslateBlock) {
+                cachedBlock.block.customContextMenu = (options) => {
+                    if (fn.attributes.translationId) {
+                        options.push({
+                            enabled: true,
+                            text: lf("Translate this block"),
+                            callback: function () {
+                                pxt.blocks.promptTranslateBlock(id, [fn.attributes.translationId]);
+                            }
+                        });
+                    }
+                };
+            }
+            cachedBlocks[id] = cachedBlock;
+            Blockly.Blocks[id] = cachedBlock.block;
+            return true;
+        }
+        function newLabel(part) {
+            if (part.kind === "image") {
+                return iconToFieldImage(part.uri);
+            }
+            const txt = removeOuterSpace(part.text);
+            if (!txt) {
+                return undefined;
+            }
+            if (part.cssClass) {
+                return new Blockly.FieldLabel(txt, part.cssClass);
+            }
+            else if (part.style.length) {
+                return new pxtblockly.FieldStyledLabel(txt, {
+                    bold: part.style.indexOf("bold") !== -1,
+                    italics: part.style.indexOf("italics") !== -1,
+                    blocksInfo: undefined
+                });
+            }
+            else {
+                return new Blockly.FieldLabel(txt, undefined);
+            }
+        }
+        function cleanOuterHTML(el) {
+            // remove IE11 junk
+            return el.outerHTML.replace(/^<\?[^>]*>/, '');
+        }
+        function mkCard(fn, blockXml) {
+            return {
+                name: fn.namespace + '.' + fn.name,
+                shortName: fn.name,
+                description: fn.attributes.jsDoc,
+                url: fn.attributes.help ? 'reference/' + fn.attributes.help.replace(/^\//, '') : undefined,
+                blocksXml: `<xml xmlns="http://www.w3.org/1999/xhtml">${cleanOuterHTML(blockXml)}</xml>`,
+            };
+        }
+        function isSubtype(apis, specific, general) {
+            if (specific == general)
+                return true;
+            let inf = apis.byQName[specific];
+            if (inf && inf.extendsTypes)
+                return inf.extendsTypes.indexOf(general) >= 0;
+            return false;
+        }
+        function initBlock(block, info, fn, comp) {
+            var _a;
+            const ns = (fn.attributes.blockNamespace || fn.namespace).split('.')[0];
+            const instance = fn.kind == 1 /* Method */ || fn.kind == 2 /* Property */;
+            const nsinfo = info.apis.byQName[ns];
+            const color = 
+            // blockNamespace overrides color on block
+            (fn.attributes.blockNamespace && nsinfo && nsinfo.attributes.color)
+                || fn.attributes.color
+                || (nsinfo && nsinfo.attributes.color)
+                || pxt.toolbox.getNamespaceColor(ns)
+                || 255;
+            const helpUrl = pxt.blocks.getHelpUrl(fn);
+            if (helpUrl)
+                block.setHelpUrl(helpUrl);
+            block.setColour(color);
+            let blockShape = Blockly.OUTPUT_SHAPE_ROUND;
+            if (fn.retType == "boolean")
+                blockShape = Blockly.OUTPUT_SHAPE_HEXAGONAL;
+            block.setOutputShape(blockShape);
+            if (fn.attributes.undeletable)
+                block.setDeletable(false);
+            buildBlockFromDef(fn.attributes._def);
+            let hasHandler = false;
+            if (fn.attributes.mutate) {
+                blocks_4.addMutation(block, fn, fn.attributes.mutate);
+            }
+            else if (fn.attributes.defaultInstance) {
+                blocks_4.addMutation(block, fn, blocks_4.MutatorTypes.DefaultInstanceMutator);
+            }
+            else if (fn.attributes._expandedDef && fn.attributes.expandableArgumentMode !== "disabled") {
+                const shouldToggle = fn.attributes.expandableArgumentMode === "toggle";
+                blocks_4.initExpandableBlock(info, block, fn.attributes._expandedDef, comp, shouldToggle, () => buildBlockFromDef(fn.attributes._expandedDef, true));
+            }
+            else if (comp.handlerArgs.length) {
+                /**
+                 * We support four modes for handler parameters: variable dropdowns,
+                 * expandable variable dropdowns with +/- buttons (used for chat commands),
+                 * draggable variable blocks, and draggable reporter blocks.
+                 */
+                hasHandler = true;
+                if (fn.attributes.optionalVariableArgs) {
+                    blocks_4.initVariableArgsBlock(block, comp.handlerArgs);
+                }
+                else if (fn.attributes.draggableParameters) {
+                    comp.handlerArgs.filter(a => !a.inBlockDef).forEach(arg => {
+                        const i = block.appendValueInput("HANDLER_DRAG_PARAM_" + arg.name);
+                        if (fn.attributes.draggableParameters == "reporter") {
+                            i.setCheck(getBlocklyCheckForType(arg.type, info));
+                        }
+                        else {
+                            i.setCheck("Variable");
+                        }
+                    });
+                }
+                else {
+                    let i = block.appendDummyInput();
+                    comp.handlerArgs.filter(a => !a.inBlockDef).forEach(arg => {
+                        i.appendField(new Blockly.FieldVariable(arg.name), "HANDLER_" + arg.name);
+                    });
+                }
+            }
+            // Add mutation to save and restore custom field settings
+            blocks_4.appendMutation(block, {
+                mutationToDom: (el) => {
+                    block.inputList.forEach(input => {
+                        input.fieldRow.forEach((fieldRow) => {
+                            if (fieldRow.isFieldCustom_ && fieldRow.saveOptions) {
+                                const getOptions = fieldRow.saveOptions();
+                                if (getOptions) {
+                                    el.setAttribute(`customfield`, JSON.stringify(getOptions));
+                                }
+                            }
+                        });
+                    });
+                    return el;
+                },
+                domToMutation: (saved) => {
+                    block.inputList.forEach(input => {
+                        input.fieldRow.forEach((fieldRow) => {
+                            if (fieldRow.isFieldCustom_ && fieldRow.restoreOptions) {
+                                const options = JSON.parse(saved.getAttribute(`customfield`));
+                                if (options) {
+                                    fieldRow.restoreOptions(options);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+            if (fn.attributes.imageLiteral) {
+                const columns = (fn.attributes.imageLiteralColumns || 5) * fn.attributes.imageLiteral;
+                const rows = fn.attributes.imageLiteralRows || 5;
+                const scale = fn.attributes.imageLiteralScale;
+                let ri = block.appendDummyInput();
+                ri.appendField(new pxtblockly.FieldMatrix("", { columns, rows, scale }), "LEDS");
+            }
+            if (fn.attributes.inlineInputMode === "external") {
+                block.setInputsInline(false);
+            }
+            else if (fn.attributes.inlineInputMode === "inline") {
+                block.setInputsInline(true);
+            }
+            else {
+                block.setInputsInline(!fn.parameters || (fn.parameters.length < 4 && !fn.attributes.imageLiteral));
+            }
+            const body = (_a = fn.parameters) === null || _a === void 0 ? void 0 : _a.find(pr => pxtc.parameterTypeIsArrowFunction(pr));
+            if (body || hasHandler) {
+                block.appendStatementInput("HANDLER")
+                    .setCheck(null);
+                block.setInputsInline(true);
+            }
+            setOutputCheck(block, fn.retType, info);
+            // hook up/down if return value is void
+            const hasHandlers = hasArrowFunction(fn);
+            block.setPreviousStatement(!(hasHandlers && !fn.attributes.handlerStatement) && fn.retType == "void");
+            block.setNextStatement(!(hasHandlers && !fn.attributes.handlerStatement) && fn.retType == "void");
+            block.setTooltip(/^__/.test(fn.namespace) ? "" : fn.attributes.jsDoc);
+            function buildBlockFromDef(def, expanded = false) {
+                let anonIndex = 0;
+                let firstParam = !expanded && !!comp.thisParameter;
+                const inputs = splitInputs(def);
+                const imgConv = new pxt.ImageConverter();
+                if (fn.attributes.shim === "ENUM_GET" || fn.attributes.shim === "KIND_GET") {
+                    if (comp.parameters.length > 1 || comp.thisParameter) {
+                        console.warn(`Enum blocks may only have 1 parameter but ${fn.attributes.blockId} has ${comp.parameters.length}`);
+                        return;
+                    }
+                }
+                const hasInput = (name) => { var _a; return (_a = block.inputList) === null || _a === void 0 ? void 0 : _a.some(i => i.name === name); };
+                inputs.forEach(inputParts => {
+                    const fields = [];
+                    let inputName;
+                    let inputCheck;
+                    let hasParameter = false;
+                    inputParts.forEach(part => {
+                        if (part.kind !== "param") {
+                            const f = newLabel(part);
+                            if (f) {
+                                fields.push({ field: f });
+                            }
+                        }
+                        else if (fn.attributes.shim === "ENUM_GET") {
+                            pxt.U.assert(!!fn.attributes.enumName, "Trying to create an ENUM_GET block without a valid enum name");
+                            fields.push({
+                                name: "MEMBER",
+                                field: new pxtblockly.FieldUserEnum(info.enumsByName[fn.attributes.enumName])
+                            });
+                            return;
+                        }
+                        else if (fn.attributes.shim === "KIND_GET") {
+                            fields.push({
+                                name: "MEMBER",
+                                field: new pxtblockly.FieldKind(info.kindsByName[fn.attributes.kindNamespace || fn.attributes.blockNamespace || fn.namespace])
+                            });
+                            return;
+                        }
+                        else {
+                            // find argument
+                            let pr = getParameterFromDef(part, comp, firstParam);
+                            firstParam = false;
+                            if (!pr) {
+                                console.error("block " + fn.attributes.blockId + ": unknown parameter " + part.name + (part.ref ? ` (${part.ref})` : ""));
+                                return;
+                            }
+                            if (isHandlerArg(pr)) {
+                                inputName = "HANDLER_DRAG_PARAM_" + pr.name;
+                                inputCheck = fn.attributes.draggableParameters === "reporter" ? getBlocklyCheckForType(pr.type, info) : "Variable";
+                                return;
+                            }
+                            let typeInfo = pxt.U.lookup(info.apis.byQName, pr.type);
+                            hasParameter = true;
+                            const defName = pr.definitionName;
+                            const actName = pr.actualName;
+                            let isEnum = typeInfo && typeInfo.kind == 6 /* Enum */;
+                            let isFixed = typeInfo && !!typeInfo.attributes.fixedInstances && !pr.shadowBlockId;
+                            let isConstantShim = !!fn.attributes.constantShim;
+                            let isCombined = pr.type == "@combined@";
+                            let customField = pr.fieldEditor;
+                            let fieldLabel = defName.charAt(0).toUpperCase() + defName.slice(1);
+                            let fieldType = pr.type;
+                            if (isEnum || isFixed || isConstantShim || isCombined) {
+                                let syms;
+                                if (isEnum) {
+                                    syms = getEnumDropdownValues(info.apis, pr.type);
+                                }
+                                else if (isFixed) {
+                                    syms = getFixedInstanceDropdownValues(info.apis, typeInfo.qName);
+                                }
+                                else if (isCombined) {
+                                    syms = fn.combinedProperties.map(p => pxt.U.lookup(info.apis.byQName, p));
+                                }
+                                else {
+                                    syms = getConstantDropdownValues(info.apis, fn.qName);
+                                }
+                                if (syms.length == 0) {
+                                    console.error(`no instances of ${typeInfo.qName} found`);
+                                }
+                                const dd = syms.map(v => {
+                                    let k = v.attributes.block || v.attributes.blockId || v.name;
+                                    let comb = v.attributes.blockCombine;
+                                    if (v.attributes.jresURL && !v.attributes.iconURL && pxt.U.startsWith(v.attributes.jresURL, "data:image/x-mkcd-f")) {
+                                        v.attributes.iconURL = imgConv.convert(v.attributes.jresURL);
+                                    }
+                                    if (!!comb)
+                                        k = k.replace(/@set/, "");
+                                    return [
+                                        v.attributes.iconURL || v.attributes.blockImage ? {
+                                            src: v.attributes.iconURL || pxt.Util.pathJoin(pxt.webConfig.commitCdnUrl, `blocks/${v.namespace.toLowerCase()}/${v.name.toLowerCase()}.png`),
+                                            alt: k,
+                                            width: 36,
+                                            height: 36,
+                                            value: v.name
+                                        } : k,
+                                        v.namespace + "." + v.name
+                                    ];
+                                });
+                                // if a value is provided, move it first
+                                if (pr.defaultValue) {
+                                    let shadowValueIndex = -1;
+                                    dd.some((v, i) => {
+                                        if (v[1] === pr.defaultValue) {
+                                            shadowValueIndex = i;
+                                            return true;
+                                        }
+                                        return false;
+                                    });
+                                    if (shadowValueIndex > -1) {
+                                        const shadowValue = dd.splice(shadowValueIndex, 1)[0];
+                                        dd.unshift(shadowValue);
+                                    }
+                                }
+                                if (customField) {
+                                    let defl = fn.attributes.paramDefl[actName] || "";
+                                    const options = {
+                                        data: dd,
+                                        colour: color,
+                                        label: fieldLabel,
+                                        type: fieldType,
+                                        blocksInfo: info
+                                    };
+                                    pxt.Util.jsonMergeFrom(options, fn.attributes.paramFieldEditorOptions && fn.attributes.paramFieldEditorOptions[actName] || {});
+                                    fields.push(namedField(blocks_4.createFieldEditor(customField, defl, options), defName));
+                                }
+                                else
+                                    fields.push(namedField(new Blockly.FieldDropdown(dd), defName));
+                            }
+                            else if (customField) {
+                                const defl = fn.attributes.paramDefl[pr.actualName] || "";
+                                const options = {
+                                    colour: color,
+                                    label: fieldLabel,
+                                    type: fieldType,
+                                    blocksInfo: info
+                                };
+                                pxt.Util.jsonMergeFrom(options, fn.attributes.paramFieldEditorOptions && fn.attributes.paramFieldEditorOptions[pr.actualName] || {});
+                                fields.push(namedField(blocks_4.createFieldEditor(customField, defl, options), pr.definitionName));
+                            }
+                            else {
+                                inputName = defName;
+                                if (instance && part.name === "this") {
+                                    inputCheck = pr.type;
+                                }
+                                else if (pr.type == "number" && pr.shadowBlockId && pr.shadowBlockId == "value") {
+                                    inputName = undefined;
+                                    fields.push(namedField(new Blockly.FieldNumber("0"), defName));
+                                }
+                                else if (pr.type == "string" && pr.shadowOptions && pr.shadowOptions.toString) {
+                                    inputCheck = null;
+                                }
+                                else {
+                                    inputCheck = getBlocklyCheckForType(pr.type, info);
+                                }
+                            }
+                        }
+                    });
+                    let input;
+                    if (inputName) {
+                        // Don't add duplicate inputs
+                        if (hasInput(inputName))
+                            return;
+                        input = block.appendValueInput(inputName);
+                        input.setAlign(Blockly.ALIGN_LEFT);
+                    }
+                    else if (expanded) {
+                        const prefix = hasParameter ? blocks_4.optionalInputWithFieldPrefix : blocks_4.optionalDummyInputPrefix;
+                        inputName = prefix + (anonIndex++);
+                        // Don't add duplicate inputs
+                        if (hasInput(inputName))
+                            return;
+                        input = block.appendDummyInput(inputName);
+                    }
+                    else {
+                        input = block.appendDummyInput();
+                    }
+                    if (inputCheck) {
+                        input.setCheck(inputCheck);
+                    }
+                    fields.forEach(f => input.appendField(f.field, f.name));
+                });
+                imgConv.logTime();
+            }
+        }
+        function getParameterFromDef(part, comp, isThis = false) {
+            if (part.ref) {
+                const result = (part.name === "this") ? comp.thisParameter : comp.actualNameToParam[part.name];
+                if (!result) {
+                    let ha;
+                    comp.handlerArgs.forEach(arg => {
+                        if (arg.name === part.name)
+                            ha = arg;
+                    });
+                    if (ha)
+                        return ha;
+                }
+                return result;
+            }
+            else {
+                return isThis ? comp.thisParameter : comp.definitionNameToParam[part.name];
+            }
+        }
+        function isHandlerArg(arg) {
+            return !arg.definitionName;
+        }
+        function hasArrowFunction(fn) {
+            var _a;
+            return !!((_a = fn.parameters) === null || _a === void 0 ? void 0 : _a.some(pr => pxtc.parameterTypeIsArrowFunction(pr)));
+        }
+        blocks_4.hasArrowFunction = hasArrowFunction;
+        function cleanBlocks() {
+            pxt.debug('removing all custom blocks');
+            for (const b in cachedBlocks)
+                removeBlock(cachedBlocks[b].fn);
+        }
+        blocks_4.cleanBlocks = cleanBlocks;
+        /**
+         * Used by pxtrunner to initialize blocks in the docs
+         */
+        function initializeAndInject(blockInfo) {
+            init();
+            injectBlocks(blockInfo);
+        }
+        blocks_4.initializeAndInject = initializeAndInject;
+        /**
+         * Used by main app to initialize blockly blocks.
+         * Blocks are injected separately by called injectBlocks
+         */
+        function initialize(blockInfo) {
+            init();
+            initJresIcons(blockInfo);
+        }
+        blocks_4.initialize = initialize;
+        let blocklyInitialized = false;
+        function init() {
+            if (blocklyInitialized)
+                return;
+            blocklyInitialized = true;
+            goog.provide('Blockly.Blocks.device');
+            goog.require('Blockly.Blocks');
+            Blockly.FieldCheckbox.CHECK_CHAR = '■';
+            Blockly.Constants.ADD_START_HATS = !!pxt.appTarget.appTheme.blockHats;
+            blocks_4.initFieldEditors();
+            initContextMenu();
+            initOnStart();
+            initMath();
+            initVariables();
+            initFunctions();
+            initLists();
+            initLoops();
+            initLogic();
+            initText();
+            initDrag();
+            initDebugger();
+            initComments();
+            initTooltip();
+            // PXT is in charge of disabling, don't record undo for disabled events
+            Blockly.Block.prototype.setEnabled = function (enabled) {
+                if (this.disabled == enabled) {
+                    let oldRecordUndo = Blockly.Events.recordUndo;
+                    Blockly.Events.recordUndo = false;
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'disabled', null, this.disabled, !enabled));
+                    Blockly.Events.recordUndo = oldRecordUndo;
+                    this.disabled = !enabled;
+                }
+            };
+        }
+        /**
+         * Converts a TypeScript type into an array of type checks for Blockly inputs/outputs. Use
+         * with block.setOutput() and input.setCheck().
+         *
+         * @returns An array of checks if the type is valid, undefined if there are no valid checks
+         *      (e.g. type is void), and null if all checks should be accepted (e.g. type is generic)
+         */
+        function getBlocklyCheckForType(type, info) {
+            const types = type.split(/\s*\|\s*/);
+            const output = [];
+            for (const subtype of types) {
+                switch (subtype) {
+                    // Blockly capitalizes primitive types for its builtin math/string/logic blocks
+                    case "number":
+                        output.push("Number");
+                        break;
+                    case "string":
+                        output.push("String");
+                        break;
+                    case "boolean":
+                        output.push("Boolean");
+                        break;
+                    case "T":
+                    // The type is generic, so accept any checks. This is mostly used with functions that
+                    // get values from arrays. This could be improved if we ever add proper type
+                    // inference for generic types
+                    case "any":
+                        return null;
+                    case "void":
+                        return undefined;
+                    default:
+                        // We add "Array" to the front for array types so that they can be connected
+                        // to the blocks that accept any array (e.g. length, push, pop, etc)
+                        if (isArrayType(subtype)) {
+                            if (types.length > 1) {
+                                // type inference will potentially break non-trivial arrays in intersections
+                                // until we have better type handling in blocks,
+                                // so escape and allow any block to be dropped in.
+                                return null;
+                            }
+                            else {
+                                output.push("Array");
+                            }
+                        }
+                        // Blockly has no concept of inheritance, so we need to add all
+                        // super classes to the check array
+                        const si_r = info.apis.byQName[subtype];
+                        if (si_r && si_r.extendsTypes && 0 < si_r.extendsTypes.length) {
+                            output.push(...si_r.extendsTypes);
+                        }
+                        else {
+                            output.push(subtype);
+                        }
+                }
+            }
+            return output;
+        }
+        function setOutputCheck(block, retType, info) {
+            const check = getBlocklyCheckForType(retType, info);
+            if (check || check === null) {
+                block.setOutput(true, check);
+            }
+        }
+        function setBuiltinHelpInfo(block, id) {
+            const info = pxt.blocks.getBlockDefinition(id);
+            setHelpResources(block, id, info.name, info.tooltip, info.url, pxt.toolbox.getNamespaceColor(info.category));
+        }
+        function installBuiltinHelpInfo(id) {
+            const info = pxt.blocks.getBlockDefinition(id);
+            installHelpResources(id, info.name, info.tooltip, info.url, pxt.toolbox.getNamespaceColor(info.category));
+        }
+        function setHelpResources(block, id, name, tooltip, url, colour, colourSecondary, colourTertiary, undeletable) {
+            if (tooltip && (typeof tooltip === "string" || typeof tooltip === "function"))
+                block.setTooltip(tooltip);
+            if (url)
+                block.setHelpUrl(url);
+            if (colour)
+                block.setColour(colour, colourSecondary, colourTertiary);
+            if (undeletable)
+                block.setDeletable(false);
+            let tb = document.getElementById('blocklyToolboxDefinition');
+            let xml = tb ? blocks_4.getFirstChildWithAttr(tb, "block", "type", id) : undefined;
+            block.codeCard = {
+                header: name,
+                name: name,
+                software: 1,
+                description: goog.isFunction(tooltip) ? tooltip(block) : tooltip,
+                blocksXml: xml ? (`<xml xmlns="http://www.w3.org/1999/xhtml">` + (cleanOuterHTML(xml) || `<block type="${id}"></block>`) + "</xml>") : undefined,
+                url: url
+            };
+            if (pxt.Util.isTranslationMode()
+                && pxt.blocks.promptTranslateBlock) {
+                block.customContextMenu = (options) => {
+                    const blockd = pxt.blocks.getBlockDefinition(block.type);
+                    if (blockd && blockd.translationIds) {
+                        options.push({
+                            enabled: true,
+                            text: lf("Translate this block"),
+                            callback: function () {
+                                pxt.blocks.promptTranslateBlock(id, blockd.translationIds);
+                            }
+                        });
+                    }
+                };
+            }
+        }
+        function installHelpResources(id, name, tooltip, url, colour, colourSecondary, colourTertiary) {
+            let block = Blockly.Blocks[id];
+            let old = block.init;
+            if (!old)
+                return;
+            block.init = function () {
+                old.call(this);
+                let block = this;
+                setHelpResources(this, id, name, tooltip, url, colour, colourSecondary, colourTertiary);
+            };
+        }
+        blocks_4.installHelpResources = installHelpResources;
+        function initLists() {
+            const msg = Blockly.Msg;
+            // lists_create_with
+            const listsCreateWithId = "lists_create_with";
+            const listsCreateWithDef = pxt.blocks.getBlockDefinition(listsCreateWithId);
+            msg.LISTS_CREATE_EMPTY_TITLE = listsCreateWithDef.block["LISTS_CREATE_EMPTY_TITLE"];
+            msg.LISTS_CREATE_WITH_INPUT_WITH = listsCreateWithDef.block["LISTS_CREATE_WITH_INPUT_WITH"];
+            msg.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD = listsCreateWithDef.block["LISTS_CREATE_WITH_CONTAINER_TITLE_ADD"];
+            msg.LISTS_CREATE_WITH_ITEM_TITLE = listsCreateWithDef.block["LISTS_CREATE_WITH_ITEM_TITLE"];
+            installBuiltinHelpInfo(listsCreateWithId);
+            // lists_length
+            const listsLengthId = "lists_length";
+            const listsLengthDef = pxt.blocks.getBlockDefinition(listsLengthId);
+            msg.LISTS_LENGTH_TITLE = listsLengthDef.block["LISTS_LENGTH_TITLE"];
+            // We have to override this block definition because the builtin block
+            // allows both Strings and Arrays in its input check and that confuses
+            // our Blockly compiler
+            let block = Blockly.Blocks[listsLengthId];
+            block.init = function () {
+                this.jsonInit({
+                    "message0": msg.LISTS_LENGTH_TITLE,
+                    "args0": [
+                        {
+                            "type": "input_value",
+                            "name": "VALUE",
+                            "check": ['Array']
+                        }
+                    ],
+                    "output": 'Number',
+                    "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+                });
+            };
+            installBuiltinHelpInfo(listsLengthId);
+        }
+        function initLoops() {
+            const msg = Blockly.Msg;
+            // controls_repeat_ext
+            const controlsRepeatExtId = "controls_repeat_ext";
+            const controlsRepeatExtDef = pxt.blocks.getBlockDefinition(controlsRepeatExtId);
+            msg.CONTROLS_REPEAT_TITLE = controlsRepeatExtDef.block["CONTROLS_REPEAT_TITLE"];
+            msg.CONTROLS_REPEAT_INPUT_DO = controlsRepeatExtDef.block["CONTROLS_REPEAT_INPUT_DO"];
+            installBuiltinHelpInfo(controlsRepeatExtId);
+            // device_while
+            const deviceWhileId = "device_while";
+            const deviceWhileDef = pxt.blocks.getBlockDefinition(deviceWhileId);
+            Blockly.Blocks[deviceWhileId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": deviceWhileDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "COND",
+                                "check": "Boolean"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('loops')
+                    });
+                    this.appendStatementInput("DO")
+                        .appendField(deviceWhileDef.block["appendField"]);
+                    setBuiltinHelpInfo(this, deviceWhileId);
+                }
+            };
+            // pxt_controls_for
+            const pxtControlsForId = "pxt_controls_for";
+            const pxtControlsForDef = pxt.blocks.getBlockDefinition(pxtControlsForId);
+            Blockly.Blocks[pxtControlsForId] = {
+                /**
+                 * Block for 'for' loop.
+                 * @this Blockly.Block
+                 */
+                init: function () {
+                    this.jsonInit({
+                        "message0": pxtControlsForDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "VAR",
+                                "variable": pxtControlsForDef.block["variable"],
+                                "check": "Variable"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "TO",
+                                "check": "Number"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('loops'),
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(pxtControlsForDef.block["appendField"]);
+                    let thisBlock = this;
+                    setHelpResources(this, pxtControlsForId, pxtControlsForDef.name, function () {
+                        return pxt.U.rlf(pxtControlsForDef.tooltip, thisBlock.getInputTargetBlock('VAR') ? thisBlock.getInputTargetBlock('VAR').getField('VAR').getText() : '');
+                    }, pxtControlsForDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                },
+                /**
+                 * Return all variables referenced by this block.
+                 * @return {!Array.<string>} List of variable names.
+                 * @this Blockly.Block
+                 */
+                getVars: function () {
+                    return [this.getField('VAR').getText()];
+                },
+                /**
+                 * Notification that a variable is renaming.
+                 * If the name matches one of this block's variables, rename it.
+                 * @param {string} oldName Previous name of variable.
+                 * @param {string} newName Renamed variable.
+                 * @this Blockly.Block
+                 */
+                renameVar: function (oldName, newName) {
+                    const varField = this.getField('VAR');
+                    if (Blockly.Names.equals(oldName, varField.getText())) {
+                        varField.setValue(newName);
+                    }
+                }
+            };
+            // controls_simple_for
+            const controlsSimpleForId = "controls_simple_for";
+            const controlsSimpleForDef = pxt.blocks.getBlockDefinition(controlsSimpleForId);
+            Blockly.Blocks[controlsSimpleForId] = {
+                /**
+                 * Block for 'for' loop.
+                 * @this Blockly.Block
+                 */
+                init: function () {
+                    this.jsonInit({
+                        "message0": controlsSimpleForDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "field_variable",
+                                "name": "VAR",
+                                "variable": controlsSimpleForDef.block["variable"]
+                                // Please note that most multilingual characters
+                                // cannot be used as variable name at this point.
+                                // Translate or decide the default variable name
+                                // with care.
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "TO",
+                                "check": "Number"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('loops'),
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(controlsSimpleForDef.block["appendField"]);
+                    let thisBlock = this;
+                    setHelpResources(this, controlsSimpleForId, controlsSimpleForDef.name, function () {
+                        return pxt.U.rlf(controlsSimpleForDef.tooltip, thisBlock.getField('VAR').getText());
+                    }, controlsSimpleForDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                },
+                /**
+                 * Return all variables referenced by this block.
+                 * @return {!Array.<string>} List of variable names.
+                 * @this Blockly.Block
+                 */
+                getVars: function () {
+                    return [this.getField('VAR').getText()];
+                },
+                /**
+                 * Notification that a variable is renaming.
+                 * If the name matches one of this block's variables, rename it.
+                 * @param {string} oldName Previous name of variable.
+                 * @param {string} newName Renamed variable.
+                 * @this Blockly.Block
+                 */
+                renameVar: function (oldName, newName) {
+                    const varField = this.getField('VAR');
+                    if (Blockly.Names.equals(oldName, varField.getText())) {
+                        varField.setValue(newName);
+                    }
+                },
+                /**
+                 * Add menu option to create getter block for loop variable.
+                 * @param {!Array} options List of menu options to add to.
+                 * @this Blockly.Block
+                 */
+                customContextMenu: function (options) {
+                    if (!this.isCollapsed() && !this.inDebugWorkspace()) {
+                        let option = { enabled: true };
+                        let name = this.getField('VAR').getText();
+                        option.text = lf("Create 'get {0}'", name);
+                        let xmlField = goog.dom.createDom('field', null, name);
+                        xmlField.setAttribute('name', 'VAR');
+                        let xmlBlock = goog.dom.createDom('block', null, xmlField);
+                        xmlBlock.setAttribute('type', 'variables_get');
+                        option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+                        options.push(option);
+                    }
+                }
+            };
+            // break statement
+            const breakBlockDef = pxt.blocks.getBlockDefinition(ts.pxtc.TS_BREAK_TYPE);
+            Blockly.Blocks[pxtc.TS_BREAK_TYPE] = {
+                init: function () {
+                    const color = pxt.toolbox.getNamespaceColor('loops');
+                    this.jsonInit({
+                        "message0": breakBlockDef.block["message0"],
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": color
+                    });
+                    setHelpResources(this, ts.pxtc.TS_BREAK_TYPE, breakBlockDef.name, breakBlockDef.tooltip, breakBlockDef.url, color, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                }
+            };
+            // continue statement
+            const continueBlockDef = pxt.blocks.getBlockDefinition(ts.pxtc.TS_CONTINUE_TYPE);
+            Blockly.Blocks[pxtc.TS_CONTINUE_TYPE] = {
+                init: function () {
+                    const color = pxt.toolbox.getNamespaceColor('loops');
+                    this.jsonInit({
+                        "message0": continueBlockDef.block["message0"],
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": color
+                    });
+                    setHelpResources(this, ts.pxtc.TS_CONTINUE_TYPE, continueBlockDef.name, continueBlockDef.tooltip, continueBlockDef.url, color, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                }
+            };
+            const collapsedColor = "#cccccc";
+            Blockly.Blocks[pxtc.COLLAPSED_BLOCK] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": "...",
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": collapsedColor
+                    });
+                    setHelpResources(this, ts.pxtc.COLLAPSED_BLOCK, "...", lf("a few blocks"), undefined, collapsedColor, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                }
+            };
+        }
+        blocks_4.onShowContextMenu = undefined;
+        /**
+         * The following patch to blockly is to add the Trash icon on top of the toolbox,
+         * the trash icon should only show when a user drags a block that is already in the workspace.
+         */
+        function initDrag() {
+            const calculateDistance = (elemBounds, mouseX) => {
+                return Math.abs(mouseX - (elemBounds.left + (elemBounds.width / 2)));
+            };
+            /**
+             * Execute a step of block dragging, based on the given event.  Update the
+             * display accordingly.
+             * @param {!Event} e The most recent move event.
+             * @param {!goog.math.Coordinate} currentDragDeltaXY How far the pointer has
+             *     moved from the position at the start of the drag, in pixel units.
+             * @package
+             */
+            const blockDrag = Blockly.BlockDragger.prototype.drag;
+            Blockly.BlockDragger.prototype.drag = function (e, currentDragDeltaXY) {
+                const blocklyToolboxDiv = document.getElementsByClassName('blocklyToolboxDiv')[0];
+                const blocklyTreeRoot = document.getElementsByClassName('blocklyTreeRoot')[0]
+                    || document.getElementsByClassName('blocklyFlyout')[0];
+                const trashIcon = document.getElementById("blocklyTrashIcon");
+                if (blocklyTreeRoot && trashIcon) {
+                    const distance = calculateDistance(blocklyTreeRoot.getBoundingClientRect(), e.clientX);
+                    if (distance < 200) {
+                        const opacity = distance / 200;
+                        trashIcon.style.opacity = `${1 - opacity}`;
+                        trashIcon.style.display = 'block';
+                        if (blocklyToolboxDiv) {
+                            blocklyTreeRoot.style.opacity = `${opacity}`;
+                            if (distance < 50) {
+                                pxt.BrowserUtils.addClass(blocklyToolboxDiv, 'blocklyToolboxDeleting');
+                            }
+                        }
+                    }
+                    else {
+                        trashIcon.style.display = 'none';
+                        blocklyTreeRoot.style.opacity = '1';
+                        if (blocklyToolboxDiv)
+                            pxt.BrowserUtils.removeClass(blocklyToolboxDiv, 'blocklyToolboxDeleting');
+                    }
+                }
+                return blockDrag.call(this, e, currentDragDeltaXY);
+            };
+            /**
+             * Finish dragging the workspace and put everything back where it belongs.
+             * @param {!goog.math.Coordinate} currentDragDeltaXY How far the pointer has
+             *     moved from the position at the start of the drag, in pixel coordinates.
+             * @package
+             */
+            const blockEndDrag = Blockly.BlockDragger.prototype.endDrag;
+            Blockly.BlockDragger.prototype.endDrag = function (e, currentDragDeltaXY) {
+                blockEndDrag.call(this, e, currentDragDeltaXY);
+                const blocklyToolboxDiv = document.getElementsByClassName('blocklyToolboxDiv')[0];
+                const blocklyTreeRoot = document.getElementsByClassName('blocklyTreeRoot')[0]
+                    || document.getElementsByClassName('blocklyFlyout')[0];
+                const trashIcon = document.getElementById("blocklyTrashIcon");
+                if (trashIcon && blocklyTreeRoot) {
+                    trashIcon.style.display = 'none';
+                    blocklyTreeRoot.style.opacity = '1';
+                    if (blocklyToolboxDiv)
+                        pxt.BrowserUtils.removeClass(blocklyToolboxDiv, 'blocklyToolboxDeleting');
+                }
+            };
+        }
+        function initContextMenu() {
+            // Translate the context menu for blocks.
+            const msg = Blockly.Msg;
+            msg.DUPLICATE_BLOCK = lf("{id:block}Duplicate");
+            msg.DUPLICATE_COMMENT = lf("Duplicate Comment");
+            msg.REMOVE_COMMENT = lf("Remove Comment");
+            msg.ADD_COMMENT = lf("Add Comment");
+            msg.EXTERNAL_INPUTS = lf("External Inputs");
+            msg.INLINE_INPUTS = lf("Inline Inputs");
+            msg.EXPAND_BLOCK = lf("Expand Block");
+            msg.COLLAPSE_BLOCK = lf("Collapse Block");
+            msg.ENABLE_BLOCK = lf("Enable Block");
+            msg.DISABLE_BLOCK = lf("Disable Block");
+            msg.DELETE_BLOCK = lf("Delete Block");
+            msg.DELETE_X_BLOCKS = lf("Delete Blocks");
+            msg.DELETE_ALL_BLOCKS = lf("Delete All Blocks");
+            msg.HELP = lf("Help");
+            // inject hook to handle openings docs
+            Blockly.BlockSvg.prototype.showHelp = function () {
+                const url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
+                if (url)
+                    (pxt.blocks.openHelpUrl || window.open)(url);
+            };
+            // Use Blockly hook to customize context menu
+            Blockly.WorkspaceSvg.prototype.configureContextMenu = function (options, e) {
+                if (this.options.readOnly || this.isFlyout) {
+                    return;
+                }
+                // Clear default Blockly options
+                options.length = 0;
+                let topBlocks = this.getTopBlocks(true);
+                let eventGroup = Blockly.utils.genUid();
+                let topComments = this.getTopComments();
+                let ws = this;
+                const editable = !(this.options.debugMode || this.options.readOnly);
+                // Option to add a workspace comment.
+                if (this.options.comments && !pxt.BrowserUtils.isIE()) {
+                    const commentOption = Blockly.ContextMenu.workspaceCommentOption(ws, e);
+                    commentOption.enabled = commentOption.enabled && editable;
+                    options.push(commentOption);
+                }
+                // Option to delete all blocks.
+                // Count the number of blocks that are deletable.
+                let deleteList = Blockly.WorkspaceSvg.buildDeleteList_(topBlocks);
+                let deleteCount = 0;
+                for (let i = 0; i < deleteList.length; i++) {
+                    if (!deleteList[i].isShadow()) {
+                        deleteCount++;
+                    }
+                }
+                // Add a little animation to deleting.
+                const DELAY = 10;
+                function deleteNext() {
+                    Blockly.Events.setGroup(eventGroup);
+                    let block = deleteList.shift();
+                    if (block) {
+                        if (block.workspace) {
+                            block.dispose(false, true);
+                            setTimeout(deleteNext, DELAY);
+                        }
+                        else {
+                            deleteNext();
+                        }
+                    }
+                    Blockly.Events.setGroup(false);
+                }
+                const deleteOption = {
+                    text: deleteCount == 1 ? msg.DELETE_BLOCK : msg.DELETE_ALL_BLOCKS,
+                    enabled: deleteCount > 0 && editable,
+                    callback: () => {
+                        pxt.tickEvent("blocks.context.delete", undefined, { interactiveConsent: true });
+                        if (deleteCount < 2) {
+                            deleteNext();
+                        }
+                        else {
+                            Blockly.confirm(lf("Delete all {0} blocks?", deleteCount), (ok) => {
+                                if (ok) {
+                                    deleteNext();
+                                }
+                            });
+                        }
+                    }
+                };
+                options.push(deleteOption);
+                const formatCodeOption = {
+                    text: lf("Format Code"),
+                    enabled: editable,
+                    callback: () => {
+                        pxt.tickEvent("blocks.context.format", undefined, { interactiveConsent: true });
+                        pxt.blocks.layout.flow(this, { useViewWidth: true });
+                    }
+                };
+                options.push(formatCodeOption);
+                if (pxt.appTarget.appTheme.blocksCollapsing) {
+                    // Option to collapse all top-level (enabled) blocks
+                    const collapseAllOption = {
+                        text: lf("Collapse Blocks"),
+                        enabled: topBlocks.length && topBlocks.find((b) => b.isEnabled() && !b.isCollapsed()) && editable,
+                        callback: () => {
+                            pxt.tickEvent("blocks.context.collapse", undefined, { interactiveConsent: true });
+                            pxt.blocks.layout.setCollapsedAll(this, true);
+                        }
+                    };
+                    options.push(collapseAllOption);
+                    // Option to expand all collapsed blocks
+                    const expandAllOption = {
+                        text: lf("Expand Blocks"),
+                        enabled: topBlocks.length && topBlocks.find((b) => b.isEnabled() && b.isCollapsed()) && editable,
+                        callback: () => {
+                            pxt.tickEvent("blocks.context.expand", undefined, { interactiveConsent: true });
+                            pxt.blocks.layout.setCollapsedAll(this, false);
+                        }
+                    };
+                    options.push(expandAllOption);
+                }
+                if (pxt.blocks.layout.screenshotEnabled()) {
+                    const screenshotOption = {
+                        text: lf("Snapshot"),
+                        enabled: topBlocks.length > 0 || topComments.length > 0,
+                        callback: () => {
+                            var _a;
+                            pxt.tickEvent("blocks.context.screenshot", undefined, { interactiveConsent: true });
+                            pxt.blocks.layout.screenshotAsync(this, null, (_a = pxt.appTarget.appTheme) === null || _a === void 0 ? void 0 : _a.embedBlocksInSnapshot)
+                                .then((uri) => {
+                                if (pxt.BrowserUtils.isSafari())
+                                    uri = uri.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+                                pxt.BrowserUtils.browserDownloadDataUri(uri, `${pxt.appTarget.nickname || pxt.appTarget.id}-${lf("screenshot")}.png`);
+                            });
+                        },
+                    };
+                    options.push(screenshotOption);
+                }
+                if (pxt.appTarget.appTheme.workspaceSearch) {
+                    options.push({
+                        text: lf("Find..."),
+                        enabled: topBlocks.length > 0,
+                        callback: () => {
+                            var _a, _b;
+                            pxt.tickEvent("blocks.context.workspacesearch", undefined, { interactiveConsent: true });
+                            (_b = (_a = this.getComponentManager()) === null || _a === void 0 ? void 0 : _a.getComponent("workspaceSearch")) === null || _b === void 0 ? void 0 : _b.open();
+                        }
+                    });
+                }
+                // custom options...
+                if (blocks_4.onShowContextMenu)
+                    blocks_4.onShowContextMenu(this, options);
+            };
+            // Get rid of bumping behavior
+            Blockly.Constants.Logic.LOGIC_COMPARE_ONCHANGE_MIXIN.onchange = function () { };
+        }
+        function initOnStart() {
+            // on_start
+            const onStartDef = pxt.blocks.getBlockDefinition(ts.pxtc.ON_START_TYPE);
+            Blockly.Blocks[ts.pxtc.ON_START_TYPE] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": onStartDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_dummy"
+                            },
+                            {
+                                "type": "input_statement",
+                                "name": "HANDLER"
+                            }
+                        ],
+                        "colour": (pxt.appTarget.runtime ? pxt.appTarget.runtime.onStartColor : '') || pxt.toolbox.getNamespaceColor('loops')
+                    });
+                    setHelpResources(this, ts.pxtc.ON_START_TYPE, onStartDef.name, onStartDef.tooltip, onStartDef.url, String((pxt.appTarget.runtime ? pxt.appTarget.runtime.onStartColor : '') || pxt.toolbox.getNamespaceColor('loops')), undefined, undefined, pxt.appTarget.runtime ? pxt.appTarget.runtime.onStartUnDeletable : false);
+                }
+            };
+            Blockly.Blocks[pxtc.TS_STATEMENT_TYPE] = {
+                init: function () {
+                    let that = this;
+                    that.setColour("#717171");
+                    that.setPreviousStatement(true);
+                    that.setNextStatement(true);
+                    that.setInputsInline(false);
+                    let pythonMode;
+                    let lines;
+                    that.domToMutation = (element) => {
+                        const n = parseInt(element.getAttribute("numlines"));
+                        that.declaredVariables = element.getAttribute("declaredvars");
+                        lines = [];
+                        for (let i = 0; i < n; i++) {
+                            const line = element.getAttribute("line" + i);
+                            lines.push(line);
+                        }
+                        // Add the initial TS inputs
+                        that.setPythonEnabled(false);
+                    };
+                    that.mutationToDom = () => {
+                        let mutation = document.createElement("mutation");
+                        if (lines) {
+                            lines.forEach((line, index) => mutation.setAttribute("line" + index, line));
+                            mutation.setAttribute("numlines", lines.length.toString());
+                        }
+                        if (that.declaredVariables) {
+                            mutation.setAttribute("declaredvars", this.declaredVariables);
+                        }
+                        return mutation;
+                    };
+                    // Consumed by the webapp
+                    that.setPythonEnabled = (enabled) => {
+                        if (pythonMode === enabled)
+                            return;
+                        // Remove all inputs
+                        while (that.inputList.length) {
+                            that.removeInput(that.inputList[0].name);
+                        }
+                        pythonMode = enabled;
+                        if (enabled) {
+                            // This field must be named LINE0 because otherwise Blockly will crash
+                            // when trying to make an insertion marker. All insertion marker blocks
+                            // need to have the same fields as the real block, and this field will
+                            // always be created by domToMutation regardless of TS or Python mode
+                            that.appendDummyInput().appendField(pxt.Util.lf("<python code>"), "LINE0");
+                            that.setTooltip(lf("A Python statement that could not be converted to blocks"));
+                        }
+                        else {
+                            lines.forEach((line, index) => {
+                                that.appendDummyInput().appendField(line, "LINE" + index);
+                            });
+                            that.setTooltip(lf("A JavaScript statement that could not be converted to blocks"));
+                        }
+                    };
+                    // Consumed by BlocklyCompiler
+                    that.getLines = () => lines;
+                    that.setEditable(false);
+                    setHelpResources(this, pxtc.TS_STATEMENT_TYPE, lf("JavaScript statement"), lf("A JavaScript statement that could not be converted to blocks"), '/blocks/javascript-blocks', '#717171');
+                }
+            };
+            Blockly.Blocks[pxtc.TS_OUTPUT_TYPE] = {
+                init: function () {
+                    let that = this;
+                    that.setColour("#717171");
+                    that.setPreviousStatement(false);
+                    that.setNextStatement(false);
+                    that.setOutput(true);
+                    that.setEditable(false);
+                    that.appendDummyInput().appendField(new pxtblockly.FieldTsExpression(""), "EXPRESSION");
+                    that.setPythonEnabled = (enabled) => {
+                        that.getField("EXPRESSION").setPythonEnabled(enabled);
+                        if (enabled) {
+                            that.setTooltip(lf("A Python expression that could not be converted to blocks"));
+                        }
+                        else {
+                            that.setTooltip(lf("A JavaScript expression that could not be converted to blocks"));
+                        }
+                    };
+                    setHelpResources(that, pxtc.TS_OUTPUT_TYPE, lf("JavaScript expression"), lf("A JavaScript expression that could not be converted to blocks"), '/blocks/javascript-blocks', "#717171");
+                }
+            };
+            if (pxt.appTarget.runtime && pxt.appTarget.runtime.pauseUntilBlock) {
+                const blockOptions = pxt.appTarget.runtime.pauseUntilBlock;
+                const blockDef = pxt.blocks.getBlockDefinition(ts.pxtc.PAUSE_UNTIL_TYPE);
+                Blockly.Blocks[pxtc.PAUSE_UNTIL_TYPE] = {
+                    init: function () {
+                        const color = blockOptions.color || pxt.toolbox.getNamespaceColor('loops');
+                        this.jsonInit({
+                            "message0": blockDef.block["message0"],
+                            "args0": [
+                                {
+                                    "type": "input_value",
+                                    "name": "PREDICATE",
+                                    "check": "Boolean"
+                                }
+                            ],
+                            "inputsInline": true,
+                            "previousStatement": null,
+                            "nextStatement": null,
+                            "colour": color
+                        });
+                        setHelpResources(this, ts.pxtc.PAUSE_UNTIL_TYPE, blockDef.name, blockDef.tooltip, blockDef.url, color, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                    }
+                };
+            }
+            // pxt_controls_for_of
+            const pxtControlsForOfId = "pxt_controls_for_of";
+            const pxtControlsForOfDef = pxt.blocks.getBlockDefinition(pxtControlsForOfId);
+            Blockly.Blocks[pxtControlsForOfId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": pxtControlsForOfDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "VAR",
+                                "variable": pxtControlsForOfDef.block["variable"],
+                                "check": "Variable"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": ["Array", "String"]
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.blockColors['loops'],
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(pxtControlsForOfDef.block["appendField"]);
+                    let thisBlock = this;
+                    setHelpResources(this, pxtControlsForOfId, pxtControlsForOfDef.name, function () {
+                        return pxt.U.rlf(pxtControlsForOfDef.tooltip, thisBlock.getInputTargetBlock('VAR') ? thisBlock.getInputTargetBlock('VAR').getField('VAR').getText() : '');
+                    }, pxtControlsForOfDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                }
+            };
+            // controls_for_of
+            const controlsForOfId = "controls_for_of";
+            const controlsForOfDef = pxt.blocks.getBlockDefinition(controlsForOfId);
+            Blockly.Blocks[controlsForOfId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": controlsForOfDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "field_variable",
+                                "name": "VAR",
+                                "variable": controlsForOfDef.block["variable"]
+                                // Please note that most multilingual characters
+                                // cannot be used as variable name at this point.
+                                // Translate or decide the default variable name
+                                // with care.
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": "Array"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.blockColors['loops'],
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(controlsForOfDef.block["appendField"]);
+                    let thisBlock = this;
+                    setHelpResources(this, controlsForOfId, controlsForOfDef.name, function () {
+                        return pxt.U.rlf(controlsForOfDef.tooltip, thisBlock.getField('VAR').getText());
+                    }, controlsForOfDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                }
+            };
+            // lists_index_get
+            const listsIndexGetId = "lists_index_get";
+            const listsIndexGetDef = pxt.blocks.getBlockDefinition(listsIndexGetId);
+            Blockly.Blocks["lists_index_get"] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": listsIndexGetDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": "Array"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "INDEX",
+                                "check": "Number"
+                            }
+                        ],
+                        "colour": pxt.toolbox.blockColors['arrays'],
+                        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+                        "inputsInline": true
+                    });
+                    this.setPreviousStatement(false);
+                    this.setNextStatement(false);
+                    this.setOutput(true);
+                    setBuiltinHelpInfo(this, listsIndexGetId);
+                }
+            };
+            // lists_index_set
+            const listsIndexSetId = "lists_index_set";
+            const listsIndexSetDef = pxt.blocks.getBlockDefinition(listsIndexSetId);
+            Blockly.Blocks[listsIndexSetId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": listsIndexSetDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": "Array"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "INDEX",
+                                "check": "Number"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "VALUE",
+                                "check": null
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.blockColors['arrays'],
+                        "inputsInline": true
+                    });
+                    setBuiltinHelpInfo(this, listsIndexSetId);
+                }
+            };
+        }
+        function initMath() {
+            // math_op2
+            const mathOp2Id = "math_op2";
+            const mathOp2Def = pxt.blocks.getBlockDefinition(mathOp2Id);
+            const mathOp2Tooltips = mathOp2Def.tooltip;
+            Blockly.Blocks[mathOp2Id] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": lf("%1 of %2 and %3"),
+                        "args0": [
+                            {
+                                "type": "field_dropdown",
+                                "name": "op",
+                                "options": [
+                                    [lf("{id:op}min"), "min"],
+                                    [lf("{id:op}max"), "max"]
+                                ]
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "x",
+                                "check": "Number"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "y",
+                                "check": "Number"
+                            }
+                        ],
+                        "inputsInline": true,
+                        "output": "Number",
+                        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+                        "colour": pxt.toolbox.getNamespaceColor('math')
+                    });
+                    let thisBlock = this;
+                    setHelpResources(this, mathOp2Id, mathOp2Def.name, function (block) {
+                        return mathOp2Tooltips[block.getFieldValue('op')];
+                    }, mathOp2Def.url, pxt.toolbox.getNamespaceColor(mathOp2Def.category));
+                }
+            };
+            // math_op3
+            const mathOp3Id = "math_op3";
+            const mathOp3Def = pxt.blocks.getBlockDefinition(mathOp3Id);
+            Blockly.Blocks[mathOp3Id] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": mathOp3Def.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "x",
+                                "check": "Number"
+                            }
+                        ],
+                        "inputsInline": true,
+                        "output": "Number",
+                        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+                        "colour": pxt.toolbox.getNamespaceColor('math')
+                    });
+                    setBuiltinHelpInfo(this, mathOp3Id);
+                }
+            };
+            // builtin math_number, math_integer, math_whole_number, math_number_minmax
+            //XXX Integer validation needed.
+            const numberBlocks = ['math_number', 'math_integer', 'math_whole_number', 'math_number_minmax'];
+            numberBlocks.forEach(num_id => {
+                const mInfo = pxt.blocks.getBlockDefinition(num_id);
+                installHelpResources(num_id, mInfo.name, mInfo.tooltip, mInfo.url, Blockly.Colours.textField, Blockly.Colours.textField, Blockly.Colours.textField);
+            });
+            // builtin math_arithmetic
+            const msg = Blockly.Msg;
+            const mathArithmeticId = "math_arithmetic";
+            const mathArithmeticDef = pxt.blocks.getBlockDefinition(mathArithmeticId);
+            const mathArithmeticTooltips = mathArithmeticDef.tooltip;
+            msg.MATH_ADDITION_SYMBOL = mathArithmeticDef.block["MATH_ADDITION_SYMBOL"];
+            msg.MATH_SUBTRACTION_SYMBOL = mathArithmeticDef.block["MATH_SUBTRACTION_SYMBOL"];
+            msg.MATH_MULTIPLICATION_SYMBOL = mathArithmeticDef.block["MATH_MULTIPLICATION_SYMBOL"];
+            msg.MATH_DIVISION_SYMBOL = mathArithmeticDef.block["MATH_DIVISION_SYMBOL"];
+            msg.MATH_POWER_SYMBOL = mathArithmeticDef.block["MATH_POWER_SYMBOL"];
+            installHelpResources(mathArithmeticId, mathArithmeticDef.name, function (block) {
+                return mathArithmeticTooltips[block.getFieldValue('OP')];
+            }, mathArithmeticDef.url, pxt.toolbox.getNamespaceColor(mathArithmeticDef.category));
+            // builtin math_modulo
+            const mathModuloId = "math_modulo";
+            const mathModuloDef = pxt.blocks.getBlockDefinition(mathModuloId);
+            msg.MATH_MODULO_TITLE = mathModuloDef.block["MATH_MODULO_TITLE"];
+            installBuiltinHelpInfo(mathModuloId);
+            blocks_4.initMathOpBlock();
+            blocks_4.initMathRoundBlock();
+        }
+        function initVariables() {
+            // We only give types to "special" variables like enum members and we don't
+            // want those showing up in the variable dropdown so filter the variables
+            // that show up to only ones that have an empty type
+            Blockly.FieldVariable.prototype.getVariableTypes_ = () => [""];
+            let varname = lf("{id:var}item");
+            Blockly.Variables.flyoutCategory = function (workspace) {
+                let xmlList = [];
+                if (!pxt.appTarget.appTheme.hideFlyoutHeadings) {
+                    // Add the Heading label
+                    let headingLabel = createFlyoutHeadingLabel(lf("Variables"), pxt.toolbox.getNamespaceColor('variables'), pxt.toolbox.getNamespaceIcon('variables'));
+                    xmlList.push(headingLabel);
+                }
+                let button = document.createElement('button');
+                button.setAttribute('text', lf("Make a Variable..."));
+                button.setAttribute('callbackKey', 'CREATE_VARIABLE');
+                workspace.registerButtonCallback('CREATE_VARIABLE', function (button) {
+                    Blockly.Variables.createVariable(button.getTargetWorkspace());
+                });
+                xmlList.push(button);
+                let blockList = Blockly.Variables.flyoutCategoryBlocks(workspace);
+                xmlList = xmlList.concat(blockList);
+                return xmlList;
+            };
+            Blockly.Variables.flyoutCategoryBlocks = function (workspace) {
+                let variableModelList = workspace.getVariablesOfType('');
+                let xmlList = [];
+                if (variableModelList.length > 0) {
+                    let mostRecentVariable = variableModelList[variableModelList.length - 1];
+                    variableModelList.sort(Blockly.VariableModel.compareByName);
+                    // variables getters first
+                    for (let i = 0; i < variableModelList.length; i++) {
+                        const variable = variableModelList[i];
+                        if (Blockly.Blocks['variables_get']) {
+                            let blockText = '<xml>' +
+                                '<block type="variables_get" gap="8">' +
+                                Blockly.Variables.generateVariableFieldXmlString(variable) +
+                                '</block>' +
+                                '</xml>';
+                            let block = Blockly.Xml.textToDom(blockText).firstChild;
+                            xmlList.push(block);
+                        }
+                    }
+                    xmlList[xmlList.length - 1].setAttribute('gap', '24');
+                    if (Blockly.Blocks['variables_change'] || Blockly.Blocks['variables_set']) {
+                        xmlList.unshift(createFlyoutGroupLabel("Your Variables"));
+                    }
+                    if (Blockly.Blocks['variables_change']) {
+                        let gap = Blockly.Blocks['variables_get'] ? 20 : 8;
+                        let blockText = '<xml>' +
+                            '<block type="variables_change" gap="' + gap + '">' +
+                            Blockly.Variables.generateVariableFieldXmlString(mostRecentVariable) +
+                            '</block>' +
+                            '</xml>';
+                        let block = Blockly.Xml.textToDom(blockText).firstChild;
+                        {
+                            let value = goog.dom.createDom('value');
+                            value.setAttribute('name', 'VALUE');
+                            let shadow = goog.dom.createDom('shadow');
+                            shadow.setAttribute("type", "math_number");
+                            value.appendChild(shadow);
+                            let field = goog.dom.createDom('field');
+                            field.setAttribute('name', 'NUM');
+                            field.appendChild(document.createTextNode("1"));
+                            shadow.appendChild(field);
+                            block.appendChild(value);
+                        }
+                        xmlList.unshift(block);
+                    }
+                    if (Blockly.Blocks['variables_set']) {
+                        let gap = Blockly.Blocks['variables_change'] ? 8 : 24;
+                        let blockText = '<xml>' +
+                            '<block type="variables_set" gap="' + gap + '">' +
+                            Blockly.Variables.generateVariableFieldXmlString(mostRecentVariable) +
+                            '</block>' +
+                            '</xml>';
+                        let block = Blockly.Xml.textToDom(blockText).firstChild;
+                        {
+                            let value = goog.dom.createDom('value');
+                            value.setAttribute('name', 'VALUE');
+                            let shadow = goog.dom.createDom('shadow');
+                            shadow.setAttribute("type", "math_number");
+                            value.appendChild(shadow);
+                            let field = goog.dom.createDom('field');
+                            field.setAttribute('name', 'NUM');
+                            field.appendChild(document.createTextNode("0"));
+                            shadow.appendChild(field);
+                            block.appendChild(value);
+                        }
+                        xmlList.unshift(block);
+                    }
+                }
+                return xmlList;
+            };
+            // builtin variables_get
+            const msg = Blockly.Msg;
+            const variablesGetId = "variables_get";
+            const variablesGetDef = pxt.blocks.getBlockDefinition(variablesGetId);
+            msg.VARIABLES_GET_CREATE_SET = variablesGetDef.block["VARIABLES_GET_CREATE_SET"];
+            installBuiltinHelpInfo(variablesGetId);
+            const variablesReporterGetId = "variables_get_reporter";
+            installBuiltinHelpInfo(variablesReporterGetId);
+            // Dropdown menu of variables_get
+            msg.RENAME_VARIABLE = lf("Rename variable...");
+            msg.DELETE_VARIABLE = lf("Delete the \"%1\" variable");
+            msg.DELETE_VARIABLE_CONFIRMATION = lf("Delete %1 uses of the \"%2\" variable?");
+            msg.NEW_VARIABLE_DROPDOWN = lf("New variable...");
+            // builtin variables_set
+            const variablesSetId = "variables_set";
+            const variablesSetDef = pxt.blocks.getBlockDefinition(variablesSetId);
+            msg.VARIABLES_SET = variablesSetDef.block["VARIABLES_SET"];
+            msg.VARIABLES_DEFAULT_NAME = varname;
+            msg.VARIABLES_SET_CREATE_GET = lf("Create 'get %1'");
+            installBuiltinHelpInfo(variablesSetId);
+            // pxt variables_change
+            const variablesChangeId = "variables_change";
+            const variablesChangeDef = pxt.blocks.getBlockDefinition(variablesChangeId);
+            Blockly.Blocks[variablesChangeId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": variablesChangeDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "field_variable",
+                                "name": "VAR",
+                                "variable": varname
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "VALUE",
+                                "check": "Number"
+                            }
+                        ],
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('variables')
+                    });
+                    setBuiltinHelpInfo(this, variablesChangeId);
+                },
+                /**
+                 * Add menu option to create getter block for this variable
+                 * @param {!Array} options List of menu options to add to.
+                 * @this Blockly.Block
+                 */
+                customContextMenu: function (options) {
+                    if (!(this.inDebugWorkspace())) {
+                        let option = {
+                            enabled: this.workspace.remainingCapacity() > 0
+                        };
+                        let name = this.getField("VAR").getText();
+                        option.text = lf("Create 'get {0}'", name);
+                        let xmlField = goog.dom.createDom('field', null, name);
+                        xmlField.setAttribute('name', 'VAR');
+                        let xmlBlock = goog.dom.createDom('block', null, xmlField);
+                        xmlBlock.setAttribute('type', "variables_get");
+                        option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+                        options.push(option);
+                    }
+                }
+            };
+            // New variable dialog
+            msg.NEW_VARIABLE_TITLE = lf("New variable name:");
+            // Rename variable dialog
+            msg.RENAME_VARIABLE_TITLE = lf("Rename all '%1' variables to:");
+        }
+        function initFunctions() {
+            const msg = Blockly.Msg;
+            // New functions implementation messages
+            msg.FUNCTION_CREATE_NEW = lf("Make a Function...");
+            msg.FUNCTION_WARNING_DUPLICATE_ARG = lf("Functions cannot use the same argument name more than once.");
+            msg.FUNCTION_WARNING_ARG_NAME_IS_FUNCTION_NAME = lf("Argument names must not be the same as the function name.");
+            msg.FUNCTION_WARNING_EMPTY_NAME = lf("Function and argument names cannot be empty.");
+            msg.FUNCTIONS_DEFAULT_FUNCTION_NAME = lf("doSomething");
+            msg.FUNCTIONS_DEFAULT_BOOLEAN_ARG_NAME = lf("bool");
+            msg.FUNCTIONS_DEFAULT_STRING_ARG_NAME = lf("text");
+            msg.FUNCTIONS_DEFAULT_NUMBER_ARG_NAME = lf("num");
+            msg.FUNCTIONS_DEFAULT_CUSTOM_ARG_NAME = lf("arg");
+            msg.PROCEDURES_HUE = pxt.toolbox.getNamespaceColor("functions");
+            msg.REPORTERS_HUE = pxt.toolbox.getNamespaceColor("variables");
+            // builtin procedures_defnoreturn
+            const proceduresDefId = "procedures_defnoreturn";
+            const proceduresDef = pxt.blocks.getBlockDefinition(proceduresDefId);
+            msg.PROCEDURES_DEFNORETURN_TITLE = proceduresDef.block["PROCEDURES_DEFNORETURN_TITLE"];
+            msg.PROCEDURE_ALREADY_EXISTS = proceduresDef.block["PROCEDURE_ALREADY_EXISTS"];
+            (Blockly.Blocks['procedures_defnoreturn']).init = function () {
+                let nameField = new Blockly.FieldTextInput('', Blockly.Procedures.rename);
+                //nameField.setSpellcheck(false); //TODO
+                this.appendDummyInput()
+                    .appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE)
+                    .appendField(nameField, 'NAME')
+                    .appendField('', 'PARAMS');
+                this.setColour(pxt.toolbox.getNamespaceColor('functions'));
+                this.arguments_ = [];
+                this.argumentVarModels_ = [];
+                this.setStartHat(true);
+                this.setStatements_(true);
+                this.statementConnection_ = null;
+            };
+            installBuiltinHelpInfo(proceduresDefId);
+            // builtin procedures_defnoreturn
+            const proceduresCallId = "procedures_callnoreturn";
+            const proceduresCallDef = pxt.blocks.getBlockDefinition(proceduresCallId);
+            msg.PROCEDURES_CALLRETURN_TOOLTIP = proceduresDef.tooltip.toString();
+            Blockly.Blocks['procedures_callnoreturn'] = {
+                init: function () {
+                    let nameField = new pxtblockly.FieldProcedure('');
+                    this.appendDummyInput('TOPROW')
+                        .appendField(proceduresCallDef.block['PROCEDURES_CALLNORETURN_TITLE'])
+                        .appendField(nameField, 'NAME');
+                    this.setPreviousStatement(true);
+                    this.setNextStatement(true);
+                    this.setColour(pxt.toolbox.getNamespaceColor('functions'));
+                    this.arguments_ = [];
+                    this.quarkConnections_ = {};
+                    this.quarkIds_ = null;
+                },
+                /**
+                 * Returns the name of the procedure this block calls.
+                 * @return {string} Procedure name.
+                 * @this Blockly.Block
+                 */
+                getProcedureCall: function () {
+                    // The NAME field is guaranteed to exist, null will never be returned.
+                    return /** @type {string} */ (this.getFieldValue('NAME'));
+                },
+                /**
+                 * Notification that a procedure is renaming.
+                 * If the name matches this block's procedure, rename it.
+                 * @param {string} oldName Previous name of procedure.
+                 * @param {string} newName Renamed procedure.
+                 * @this Blockly.Block
+                 */
+                renameProcedure: function (oldName, newName) {
+                    if (Blockly.Names.equals(oldName, this.getProcedureCall())) {
+                        this.setFieldValue(newName, 'NAME');
+                    }
+                },
+                /**
+                 * Procedure calls cannot exist without the corresponding procedure
+                 * definition.  Enforce this link whenever an event is fired.
+                 * @param {!Blockly.Events.Abstract} event Change event.
+                 * @this Blockly.Block
+                 */
+                onchange: function (event) {
+                    if (!this.workspace || this.workspace.isFlyout || this.isInsertionMarker()) {
+                        // Block is deleted or is in a flyout or insertion marker.
+                        return;
+                    }
+                    if (event.type == Blockly.Events.CREATE &&
+                        event.ids.indexOf(this.id) != -1) {
+                        // Look for the case where a procedure call was created (usually through
+                        // paste) and there is no matching definition.  In this case, create
+                        // an empty definition block with the correct signature.
+                        let name = this.getProcedureCall();
+                        let def = Blockly.Procedures.getDefinition(name, this.workspace);
+                        if (def && (def.type != this.defType_ ||
+                            JSON.stringify(def.arguments_) != JSON.stringify(this.arguments_))) {
+                            // The signatures don't match.
+                            def = null;
+                        }
+                        if (!def) {
+                            Blockly.Events.setGroup(event.group);
+                            /**
+                             * Create matching definition block.
+                             * <xml>
+                             *   <block type="procedures_defreturn" x="10" y="20">
+                             *     <field name="NAME">test</field>
+                             *   </block>
+                             * </xml>
+                             */
+                            let xml = Blockly.utils.xml.createElement('xml');
+                            let block = Blockly.utils.xml.createElement('block');
+                            block.setAttribute('type', this.defType_);
+                            let xy = this.getRelativeToSurfaceXY();
+                            let x = xy.x + Blockly.SNAP_RADIUS * (this.RTL ? -1 : 1);
+                            let y = xy.y + Blockly.SNAP_RADIUS * 2;
+                            block.setAttribute('x', x);
+                            block.setAttribute('y', y);
+                            let field = Blockly.utils.xml.createElement('field');
+                            field.setAttribute('name', 'NAME');
+                            field.appendChild(document.createTextNode(this.getProcedureCall()));
+                            block.appendChild(field);
+                            xml.appendChild(block);
+                            pxt.blocks.domToWorkspaceNoEvents(xml, this.workspace);
+                            Blockly.Events.setGroup(false);
+                        }
+                    }
+                    else if (event.type == Blockly.Events.DELETE) {
+                        // Look for the case where a procedure definition has been deleted,
+                        // leaving this block (a procedure call) orphaned.  In this case, delete
+                        // the orphan.
+                        let name = this.getProcedureCall();
+                        let def = Blockly.Procedures.getDefinition(name, this.workspace);
+                        if (!def) {
+                            Blockly.Events.setGroup(event.group);
+                            this.dispose(true, false);
+                            Blockly.Events.setGroup(false);
+                        }
+                    }
+                },
+                mutationToDom: function () {
+                    const mutationElement = document.createElement("mutation");
+                    mutationElement.setAttribute("name", this.getProcedureCall());
+                    return mutationElement;
+                },
+                domToMutation: function (element) {
+                    const name = element.getAttribute("name");
+                    this.renameProcedure(this.getProcedureCall(), name);
+                },
+                /**
+                 * Add menu option to find the definition block for this call.
+                 * @param {!Array} options List of menu options to add to.
+                 * @this Blockly.Block
+                 */
+                customContextMenu: function (options) {
+                    let option = { enabled: true };
+                    option.text = Blockly.Msg.PROCEDURES_HIGHLIGHT_DEF;
+                    let name = this.getProcedureCall();
+                    let workspace = this.workspace;
+                    option.callback = function () {
+                        let def = Blockly.Procedures.getDefinition(name, workspace);
+                        if (def)
+                            def.select();
+                    };
+                    options.push(option);
+                },
+                defType_: 'procedures_defnoreturn'
+            };
+            installBuiltinHelpInfo(proceduresCallId);
+            // New functions implementation function_definition
+            const functionDefinitionId = "function_definition";
+            const functionDefinition = pxt.blocks.getBlockDefinition(functionDefinitionId);
+            msg.FUNCTIONS_EDIT_OPTION = functionDefinition.block["FUNCTIONS_EDIT_OPTION"];
+            installBuiltinHelpInfo(functionDefinitionId);
+            // New functions implementation function_call
+            const functionCallId = "function_call";
+            const functionCall = pxt.blocks.getBlockDefinition(functionCallId);
+            msg.FUNCTIONS_CALL_TITLE = functionCall.block["FUNCTIONS_CALL_TITLE"];
+            msg.FUNCTIONS_GO_TO_DEFINITION_OPTION = functionCall.block["FUNCTIONS_GO_TO_DEFINITION_OPTION"];
+            installBuiltinHelpInfo(functionCallId);
+            installBuiltinHelpInfo("function_call_output");
+            const functionReturnId = "function_return";
+            Blockly.Blocks[functionReturnId] = {
+                init: function () {
+                    blocks_4.initReturnStatement(this);
+                },
+                onchange: function (event) {
+                    const block = this;
+                    if (!block.workspace || block.workspace.isFlyout) {
+                        // Block is deleted or is in a flyout.
+                        return;
+                    }
+                    const thisWasCreated = event.type === Blockly.Events.BLOCK_CREATE && event.ids.indexOf(block.id) != -1;
+                    const thisWasDragged = event.type === Blockly.Events.END_DRAG && event.allNestedIds.indexOf(block.id) != -1;
+                    if (thisWasCreated || thisWasDragged) {
+                        const rootBlock = block.getRootBlock();
+                        const isTopBlock = rootBlock.type === functionReturnId;
+                        if (isTopBlock || rootBlock.previousConnection != null) {
+                            // Statement is by itself on the workspace, or it is slotted into a
+                            // stack of statements that is not attached to a function or event. Let
+                            // it exist until it is connected to a function
+                            return;
+                        }
+                        if (rootBlock.type !== functionDefinitionId) {
+                            // Not a function block, so disconnect
+                            Blockly.Events.setGroup(event.group);
+                            block.previousConnection.disconnect();
+                            Blockly.Events.setGroup(false);
+                        }
+                    }
+                }
+            };
+            installBuiltinHelpInfo(functionReturnId);
+            Blockly.Procedures.flyoutCategory = function (workspace) {
+                let xmlList = [];
+                if (!pxt.appTarget.appTheme.hideFlyoutHeadings) {
+                    // Add the Heading label
+                    let headingLabel = createFlyoutHeadingLabel(lf("Functions"), pxt.toolbox.getNamespaceColor('functions'), pxt.toolbox.getNamespaceIcon('functions'), 'blocklyFlyoutIconfunctions');
+                    xmlList.push(headingLabel);
+                }
+                const newFunction = lf("Make a Function...");
+                const newFunctionTitle = lf("New function name:");
+                // Add the "Make a function" button
+                let button = Blockly.utils.xml.createElement('button');
+                button.setAttribute('text', newFunction);
+                button.setAttribute('callbackKey', 'CREATE_FUNCTION');
+                let createFunction = (name) => {
+                    /**
+                     * Create matching definition block.
+                     * <xml>
+                     *   <block type="procedures_defreturn" x="10" y="20">
+                     *     <field name="NAME">test</field>
+                     *   </block>
+                     * </xml>
+                     */
+                    let topBlock = workspace.getTopBlocks(true)[0];
+                    let x = 10, y = 10;
+                    if (topBlock) {
+                        let xy = topBlock.getRelativeToSurfaceXY();
+                        x = xy.x + Blockly.SNAP_RADIUS * (topBlock.RTL ? -1 : 1);
+                        y = xy.y + Blockly.SNAP_RADIUS * 2;
+                    }
+                    let xml = Blockly.utils.xml.createElement('xml');
+                    let block = Blockly.utils.xml.createElement('block');
+                    block.setAttribute('type', 'procedures_defnoreturn');
+                    block.setAttribute('x', String(x));
+                    block.setAttribute('y', String(y));
+                    let field = Blockly.utils.xml.createElement('field');
+                    field.setAttribute('name', 'NAME');
+                    field.appendChild(document.createTextNode(name));
+                    block.appendChild(field);
+                    xml.appendChild(block);
+                    let newBlockIds = pxt.blocks.domToWorkspaceNoEvents(xml, workspace);
+                    // Close flyout and highlight block
+                    Blockly.hideChaff();
+                    let newBlock = workspace.getBlockById(newBlockIds[0]);
+                    newBlock.select();
+                    // Center on the new block so we know where it is
+                    workspace.centerOnBlock(newBlock.id);
+                };
+                workspace.registerButtonCallback('CREATE_FUNCTION', function (button) {
+                    let promptAndCheckWithAlert = (defaultName) => {
+                        Blockly.prompt(newFunctionTitle, defaultName, function (newFunc) {
+                            pxt.tickEvent('blocks.makeafunction');
+                            // Merge runs of whitespace.  Strip leading and trailing whitespace.
+                            // Beyond this, all names are legal.
+                            if (newFunc) {
+                                newFunc = newFunc.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
+                                if (newFunc == newFunction) {
+                                    // Ok, not ALL names are legal...
+                                    newFunc = null;
+                                }
+                            }
+                            if (newFunc) {
+                                if (workspace.getVariable(newFunc)) {
+                                    Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1', newFunc.toLowerCase()), function () {
+                                        promptAndCheckWithAlert(newFunc); // Recurse
+                                    });
+                                }
+                                else if (!Blockly.Procedures.isLegalName_(newFunc, workspace)) {
+                                    Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace('%1', newFunc.toLowerCase()), function () {
+                                        promptAndCheckWithAlert(newFunc); // Recurse
+                                    });
+                                }
+                                else {
+                                    createFunction(newFunc);
+                                }
+                            }
+                        });
+                    };
+                    promptAndCheckWithAlert('doSomething');
+                });
+                xmlList.push(button);
+                function populateProcedures(procedureList, templateName) {
+                    for (let i = 0; i < procedureList.length; i++) {
+                        let name = procedureList[i][0];
+                        let args = procedureList[i][1];
+                        // <block type="procedures_callnoreturn" gap="16">
+                        //   <field name="NAME">name</field>
+                        // </block>
+                        let block = Blockly.utils.xml.createElement('block');
+                        block.setAttribute('type', templateName);
+                        block.setAttribute('gap', '16');
+                        block.setAttribute('colour', pxt.toolbox.getNamespaceColor('functions'));
+                        let field = goog.dom.createDom('field', null, name);
+                        field.setAttribute('name', 'NAME');
+                        block.appendChild(field);
+                        xmlList.push(block);
+                    }
+                }
+                let tuple = Blockly.Procedures.allProcedures(workspace);
+                populateProcedures(tuple[0], 'procedures_callnoreturn');
+                return xmlList;
+            };
+            // Patch new functions flyout to add the heading
+            const oldFlyout = Blockly.Functions.flyoutCategory;
+            Blockly.Functions.flyoutCategory = (workspace) => {
+                const elems = oldFlyout(workspace);
+                if (elems.length > 1) {
+                    let returnBlock = mkReturnStatementBlock();
+                    // Add divider
+                    elems.splice(1, 0, createFlyoutGroupLabel("Your Functions"));
+                    // Insert after the "make a function" button
+                    elems.splice(1, 0, returnBlock);
+                }
+                const functionsWithReturn = Blockly.Functions.getAllFunctionDefinitionBlocks(workspace)
+                    .filter(def => def.getDescendants(false).some(child => child.type === "function_return" && child.getInputTargetBlock("RETURN_VALUE")))
+                    .map(def => def.getField("function_name").getText());
+                const headingLabel = createFlyoutHeadingLabel(lf("Functions"), pxt.toolbox.getNamespaceColor('functions'), pxt.toolbox.getNamespaceIcon('functions'), 'blocklyFlyoutIconfunctions');
+                elems.unshift(headingLabel);
+                const res = [];
+                for (const e of elems) {
+                    res.push(e);
+                    if (e.getAttribute("type") === "function_call") {
+                        const mutation = e.children.item(0);
+                        if (mutation) {
+                            const name = mutation.getAttribute("name");
+                            if (functionsWithReturn.some(n => n === name)) {
+                                const clone = e.cloneNode(true);
+                                clone.setAttribute("type", "function_call_output");
+                                res.push(clone);
+                            }
+                        }
+                    }
+                }
+                return res;
+            };
+            // Configure function editor argument icons
+            const iconsMap = {
+                number: pxt.blocks.defaultIconForArgType("number"),
+                boolean: pxt.blocks.defaultIconForArgType("boolean"),
+                string: pxt.blocks.defaultIconForArgType("string"),
+                Array: pxt.blocks.defaultIconForArgType("Array")
+            };
+            const customNames = {};
+            const functionOptions = pxt.appTarget.runtime && pxt.appTarget.runtime.functionsOptions;
+            if (functionOptions && functionOptions.extraFunctionEditorTypes) {
+                functionOptions.extraFunctionEditorTypes.forEach(t => {
+                    iconsMap[t.typeName] = t.icon || pxt.blocks.defaultIconForArgType();
+                    if (t.defaultName) {
+                        customNames[t.typeName] = t.defaultName;
+                    }
+                });
+            }
+            Blockly.PXTBlockly.FunctionUtils.argumentIcons = iconsMap;
+            Blockly.PXTBlockly.FunctionUtils.argumentDefaultNames = customNames;
+            if (Blockly.Blocks["argument_reporter_custom"]) {
+                // The logic for setting the output check relies on the internals of PXT
+                // too much to be refactored into pxt-blockly, so we need to monkey patch
+                // it here
+                (Blockly.Blocks["argument_reporter_custom"]).domToMutation = function (xmlElement) {
+                    const typeName = xmlElement.getAttribute('typename');
+                    this.typeName_ = typeName;
+                    setOutputCheck(this, typeName, cachedBlockInfo);
+                };
+            }
+            /**
+             * Make a context menu option for creating a function call block.
+             * This appears in the context menu for function definitions.
+             * @param {!Blockly.BlockSvg} block The block where the right-click originated.
+             * @return {!Object} A menu option, containing text, enabled, and a callback.
+             * @package
+             */
+            const makeCreateCallOptionOriginal = Blockly.Functions.makeCreateCallOption;
+            // needs to exist or makeCreateCallOptionOriginal will throw an exception
+            Blockly.Msg.FUNCTIONS_CREATE_CALL_OPTION = "";
+            Blockly.Functions.makeCreateCallOption = function (block) {
+                let option = makeCreateCallOptionOriginal(block);
+                let functionName = block.getField("function_name").getText();
+                option.text = pxt.Util.lf("Create 'call {0}'", functionName);
+                return option;
+            };
+        }
+        function initLogic() {
+            const msg = Blockly.Msg;
+            // builtin controls_if
+            const controlsIfId = "controls_if";
+            const controlsIfDef = pxt.blocks.getBlockDefinition(controlsIfId);
+            const controlsIfTooltips = controlsIfDef.tooltip;
+            msg.CONTROLS_IF_MSG_IF = controlsIfDef.block["CONTROLS_IF_MSG_IF"];
+            msg.CONTROLS_IF_MSG_THEN = controlsIfDef.block["CONTROLS_IF_MSG_THEN"];
+            msg.CONTROLS_IF_MSG_ELSE = controlsIfDef.block["CONTROLS_IF_MSG_ELSE"];
+            msg.CONTROLS_IF_MSG_ELSEIF = controlsIfDef.block["CONTROLS_IF_MSG_ELSEIF"];
+            msg.CONTROLS_IF_TOOLTIP_1 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_1"];
+            msg.CONTROLS_IF_TOOLTIP_2 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_2"];
+            msg.CONTROLS_IF_TOOLTIP_3 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_3"];
+            msg.CONTROLS_IF_TOOLTIP_4 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_4"];
+            installBuiltinHelpInfo(controlsIfId);
+            // builtin logic_compare
+            const logicCompareId = "logic_compare";
+            const logicCompareDef = pxt.blocks.getBlockDefinition(logicCompareId);
+            const logicCompareTooltips = logicCompareDef.tooltip;
+            msg.LOGIC_COMPARE_TOOLTIP_EQ = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_EQ"];
+            msg.LOGIC_COMPARE_TOOLTIP_NEQ = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_NEQ"];
+            msg.LOGIC_COMPARE_TOOLTIP_LT = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_LT"];
+            msg.LOGIC_COMPARE_TOOLTIP_LTE = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_LTE"];
+            msg.LOGIC_COMPARE_TOOLTIP_GT = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_GT"];
+            msg.LOGIC_COMPARE_TOOLTIP_GTE = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_GTE"];
+            installBuiltinHelpInfo(logicCompareId);
+            // builtin logic_operation
+            const logicOperationId = "logic_operation";
+            const logicOperationDef = pxt.blocks.getBlockDefinition(logicOperationId);
+            const logicOperationTooltips = logicOperationDef.tooltip;
+            msg.LOGIC_OPERATION_AND = logicOperationDef.block["LOGIC_OPERATION_AND"];
+            msg.LOGIC_OPERATION_OR = logicOperationDef.block["LOGIC_OPERATION_OR"];
+            msg.LOGIC_OPERATION_TOOLTIP_AND = logicOperationTooltips["LOGIC_OPERATION_TOOLTIP_AND"];
+            msg.LOGIC_OPERATION_TOOLTIP_OR = logicOperationTooltips["LOGIC_OPERATION_TOOLTIP_OR"];
+            installBuiltinHelpInfo(logicOperationId);
+            // builtin logic_negate
+            const logicNegateId = "logic_negate";
+            const logicNegateDef = pxt.blocks.getBlockDefinition(logicNegateId);
+            msg.LOGIC_NEGATE_TITLE = logicNegateDef.block["LOGIC_NEGATE_TITLE"];
+            installBuiltinHelpInfo(logicNegateId);
+            // builtin logic_boolean
+            const logicBooleanId = "logic_boolean";
+            const logicBooleanDef = pxt.blocks.getBlockDefinition(logicBooleanId);
+            msg.LOGIC_BOOLEAN_TRUE = logicBooleanDef.block["LOGIC_BOOLEAN_TRUE"];
+            msg.LOGIC_BOOLEAN_FALSE = logicBooleanDef.block["LOGIC_BOOLEAN_FALSE"];
+            installBuiltinHelpInfo(logicBooleanId);
+        }
+        function initText() {
+            // builtin text
+            const textInfo = pxt.blocks.getBlockDefinition('text');
+            installHelpResources('text', textInfo.name, textInfo.tooltip, textInfo.url, Blockly.Colours.textField, Blockly.Colours.textField, Blockly.Colours.textField);
+            // builtin text_length
+            const msg = Blockly.Msg;
+            const textLengthId = "text_length";
+            const textLengthDef = pxt.blocks.getBlockDefinition(textLengthId);
+            msg.TEXT_LENGTH_TITLE = textLengthDef.block["TEXT_LENGTH_TITLE"];
+            // We have to override this block definition because the builtin block
+            // allows both Strings and Arrays in its input check and that confuses
+            // our Blockly compiler
+            let block = Blockly.Blocks[textLengthId];
+            block.init = function () {
+                this.jsonInit({
+                    "message0": msg.TEXT_LENGTH_TITLE,
+                    "args0": [
+                        {
+                            "type": "input_value",
+                            "name": "VALUE",
+                            "check": ['String']
+                        }
+                    ],
+                    "output": 'Number',
+                    "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+                });
+            };
+            installBuiltinHelpInfo(textLengthId);
+            // builtin text_join
+            const textJoinId = "text_join";
+            const textJoinDef = pxt.blocks.getBlockDefinition(textJoinId);
+            msg.TEXT_JOIN_TITLE_CREATEWITH = textJoinDef.block["TEXT_JOIN_TITLE_CREATEWITH"];
+            installBuiltinHelpInfo(textJoinId);
+        }
+        function initDebugger() {
+            Blockly.Blocks[pxtc.TS_DEBUGGER_TYPE] = {
+                init: function () {
+                    let that = this;
+                    that.setColour(pxt.toolbox.getNamespaceColor('debug'));
+                    that.setPreviousStatement(true);
+                    that.setNextStatement(true);
+                    that.setInputsInline(false);
+                    that.appendDummyInput('ON_OFF')
+                        .appendField(new Blockly.FieldLabel(lf("breakpoint"), undefined), "DEBUGGER")
+                        .appendField(new pxtblockly.FieldBreakpoint("1", { 'type': 'number' }), "ON_OFF");
+                    setHelpResources(this, pxtc.TS_DEBUGGER_TYPE, lf("Debugger statement"), lf("A debugger statement invokes any available debugging functionality"), '/javascript/debugger', pxt.toolbox.getNamespaceColor('debug'));
+                }
+            };
+        }
+        function initComments() {
+            Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT = '';
+        }
+        function initTooltip() {
+            const renderTip = (el) => {
+                if (el.disabled)
+                    return lf("This block is disabled and will not run. Attach this block to an event to enable it.");
+                let tip = el.tooltip;
+                while (goog.isFunction(tip)) {
+                    tip = tip(el);
+                }
+                return tip;
+            };
+            /**
+             * Override Blockly tooltip rendering with our own.
+             * TODO shakao check if tooltip can be modified in a cleaner way
+             * @private
+             */
+            Blockly.Tooltip.show_ = function () {
+                const BlocklyTooltip = Blockly.Tooltip;
+                BlocklyTooltip.poisonedElement_ = BlocklyTooltip.element_;
+                if (!Blockly.Tooltip.DIV) {
+                    return;
+                }
+                // Erase all existing text.
+                goog.dom.removeChildren(/** @type {!Element} */ (Blockly.Tooltip.DIV));
+                // Get the new text.
+                const card = BlocklyTooltip.element_.codeCard;
+                function render() {
+                    let rtl = BlocklyTooltip.element_.RTL;
+                    let windowSize = goog.dom.getViewportSize();
+                    // Display the tooltip.
+                    let tooltip = Blockly.Tooltip.DIV;
+                    tooltip.style.direction = rtl ? 'rtl' : 'ltr';
+                    tooltip.style.display = 'block';
+                    Blockly.Tooltip.visible = true;
+                    // Move the tooltip to just below the cursor.
+                    let anchorX = BlocklyTooltip.lastX_;
+                    if (rtl) {
+                        anchorX -= Blockly.Tooltip.OFFSET_X + tooltip.offsetWidth;
+                    }
+                    else {
+                        anchorX += Blockly.Tooltip.OFFSET_X;
+                    }
+                    let anchorY = BlocklyTooltip.lastY_ + Blockly.Tooltip.OFFSET_Y;
+                    if (anchorY + tooltip.offsetHeight >
+                        windowSize.height + window.scrollY) {
+                        // Falling off the bottom of the screen; shift the tooltip up.
+                        anchorY -= tooltip.offsetHeight + 2 * Blockly.Tooltip.OFFSET_Y;
+                    }
+                    if (rtl) {
+                        // Prevent falling off left edge in RTL mode.
+                        anchorX = Math.max(Blockly.Tooltip.MARGINS - window.scrollX, anchorX);
+                    }
+                    else {
+                        if (anchorX + tooltip.offsetWidth >
+                            windowSize.width + window.scrollX - 2 * Blockly.Tooltip.MARGINS) {
+                            // Falling off the right edge of the screen;
+                            // clamp the tooltip on the edge.
+                            anchorX = windowSize.width - tooltip.offsetWidth -
+                                2 * Blockly.Tooltip.MARGINS;
+                        }
+                    }
+                    tooltip.style.top = anchorY + 'px';
+                    tooltip.style.left = anchorX + 'px';
+                }
+                if (card) {
+                    const cardEl = pxt.docs.codeCard.render({
+                        header: renderTip(BlocklyTooltip.element_)
+                    });
+                    Blockly.Tooltip.DIV.appendChild(cardEl);
+                    render();
+                }
+                else {
+                    let tip = renderTip(BlocklyTooltip.element_);
+                    tip = Blockly.utils._string.wrap(tip, Blockly.Tooltip.LIMIT);
+                    // Create new text, line by line.
+                    let lines = tip.split('\n');
+                    for (let i = 0; i < lines.length; i++) {
+                        let div = document.createElement('div');
+                        div.appendChild(document.createTextNode(lines[i]));
+                        Blockly.Tooltip.DIV.appendChild(div);
+                    }
+                    render();
+                }
+            };
+        }
+        function removeBlock(fn) {
+            delete Blockly.Blocks[fn.attributes.blockId];
+            delete cachedBlocks[fn.attributes.blockId];
+        }
+        /**
+         * <block type="pxt_wait_until">
+         *     <value name="PREDICATE">
+         *          <shadow type="logic_boolean">
+         *              <field name="BOOL">TRUE</field>
+         *          </shadow>
+         *     </value>
+         * </block>
+         */
+        function mkPredicateBlock(type) {
+            const block = document.createElement("block");
+            block.setAttribute("type", type);
+            const value = document.createElement("value");
+            value.setAttribute("name", "PREDICATE");
+            block.appendChild(value);
+            const shadow = mkFieldBlock("logic_boolean", "BOOL", "TRUE", true);
+            value.appendChild(shadow);
+            return block;
+        }
+        blocks_4.mkPredicateBlock = mkPredicateBlock;
+        function mkFieldBlock(type, fieldName, fieldValue, isShadow) {
+            const fieldBlock = document.createElement(isShadow ? "shadow" : "block");
+            fieldBlock.setAttribute("type", pxt.Util.htmlEscape(type));
+            const field = document.createElement("field");
+            field.setAttribute("name", pxt.Util.htmlEscape(fieldName));
+            field.textContent = pxt.Util.htmlEscape(fieldValue);
+            fieldBlock.appendChild(field);
+            return fieldBlock;
+        }
+        blocks_4.mkFieldBlock = mkFieldBlock;
+        function mkReturnStatementBlock() {
+            const block = document.createElement("block");
+            block.setAttribute("type", "function_return");
+            const value = document.createElement("value");
+            value.setAttribute("name", "RETURN_VALUE");
+            block.appendChild(value);
+            const shadow = mkFieldBlock("math_number", "NUM", "0", true);
+            value.appendChild(shadow);
+            return block;
+        }
+        blocks_4.mkReturnStatementBlock = mkReturnStatementBlock;
+        let jresIconCache = {};
+        function iconToFieldImage(id) {
+            let url = jresIconCache[id];
+            if (!url) {
+                pxt.log(`missing jres icon ${id}`);
+                return undefined;
+            }
+            return new Blockly.FieldImage(url, 40, 40, '', null, pxt.Util.isUserLanguageRtl());
+        }
+        function initJresIcons(blockInfo) {
+            jresIconCache = {}; // clear previous cache
+            const jres = blockInfo.apis.jres;
+            if (!jres)
+                return;
+            Object.keys(jres).forEach((jresId) => {
+                const jresObject = jres[jresId];
+                if (jresObject && jresObject.icon)
+                    jresIconCache[jresId] = jresObject.icon;
+            });
+        }
+        function splitInputs(def) {
+            const res = [];
+            let current = [];
+            def.parts.forEach(part => {
+                switch (part.kind) {
+                    case "break":
+                        newInput();
+                        break;
+                    case "param":
+                        current.push(part);
+                        newInput();
+                        break;
+                    case "image":
+                    case "label":
+                        current.push(part);
+                        break;
+                }
+            });
+            newInput();
+            return res;
+            function newInput() {
+                if (current.length) {
+                    res.push(current);
+                    current = [];
+                }
+            }
+        }
+        function namedField(field, name) {
+            return { field, name };
+        }
+        function getEnumDropdownValues(apis, enumName) {
+            return pxt.Util.values(apis.byQName).filter(sym => sym.namespace === enumName && !sym.attributes.blockHidden);
+        }
+        function getFixedInstanceDropdownValues(apis, qName) {
+            const symbols = pxt.Util.values(apis.byQName).filter(sym => sym.kind === 4 /* Variable */
+                && sym.attributes.fixedInstance
+                && isSubtype(apis, sym.retType, qName))
+                .sort((l, r) => (r.attributes.weight || 50) - (l.attributes.weight || 50));
+            return symbols;
+        }
+        blocks_4.getFixedInstanceDropdownValues = getFixedInstanceDropdownValues;
+        function generateIcons(instanceSymbols) {
+            const imgConv = new pxt.ImageConverter();
+            instanceSymbols.forEach(v => {
+                if (v.attributes.jresURL && !v.attributes.iconURL && pxt.U.startsWith(v.attributes.jresURL, "data:image/x-mkcd-f")) {
+                    v.attributes.iconURL = imgConv.convert(v.attributes.jresURL);
+                }
+            });
+        }
+        blocks_4.generateIcons = generateIcons;
+        function getConstantDropdownValues(apis, qName) {
+            return pxt.Util.values(apis.byQName).filter(sym => sym.attributes.blockIdentity === qName);
+        }
+        // Trims off a single space from beginning and end (if present)
+        function removeOuterSpace(str) {
+            if (str === " ") {
+                return "";
+            }
+            else if (str.length > 1) {
+                const startSpace = str.charAt(0) == " ";
+                const endSpace = str.charAt(str.length - 1) == " ";
+                if (startSpace || endSpace) {
+                    return str.substring(startSpace ? 1 : 0, endSpace ? str.length - 1 : str.length);
+                }
+            }
+            return str;
+        }
+        /**
+         * Blockly variable fields can't be set directly; you either have to use the
+         * variable ID or set the value of the model and not the field
+         */
+        function setVarFieldValue(block, fieldName, newName) {
+            const varField = block.getField(fieldName);
+            // Check for an existing model with this name; otherwise we'll create
+            // a second variable with the same name and it will show up twice in the UI
+            const vars = block.workspace.getAllVariables();
+            let foundIt = false;
+            if (vars && vars.length) {
+                for (let v = 0; v < vars.length; v++) {
+                    const model = vars[v];
+                    if (model.name === newName) {
+                        varField.setValue(model.getId());
+                        foundIt = true;
+                    }
+                }
+            }
+            if (!foundIt) {
+                varField.initModel();
+                const model = varField.getVariable();
+                model.name = newName;
+                varField.setValue(model.getId());
+            }
+        }
+        blocks_4.setVarFieldValue = setVarFieldValue;
+        function getBlockData(block) {
+            if (!block.data) {
+                return {
+                    commentRefs: [],
+                    fieldData: {}
+                };
+            }
+            if (/^(?:\d+;?)+$/.test(block.data)) {
+                return {
+                    commentRefs: block.data.split(";"),
+                    fieldData: {}
+                };
+            }
+            return JSON.parse(block.data);
+        }
+        blocks_4.getBlockData = getBlockData;
+        function setBlockData(block, data) {
+            block.data = JSON.stringify(data);
+        }
+        blocks_4.setBlockData = setBlockData;
+        function setBlockDataForField(block, field, data) {
+            const blockData = getBlockData(block);
+            blockData.fieldData[field] = data;
+            setBlockData(block, blockData);
+        }
+        blocks_4.setBlockDataForField = setBlockDataForField;
+        function getBlockDataForField(block, field) {
+            return getBlockData(block).fieldData[field];
+        }
+        blocks_4.getBlockDataForField = getBlockDataForField;
+        class PxtWorkspaceSearch extends WorkspaceSearch {
+            createDom_() {
+                super.createDom_();
+                this.addEvent_(this.workspace_.getInjectionDiv(), "click", this, (e) => {
+                    if (this.htmlDiv_.style.display == "flex" && !this.htmlDiv_.contains(e.target)) {
+                        this.close();
+                    }
+                });
+            }
+            highlightSearchGroup_(blocks) {
+                blocks.forEach((block) => {
+                    const blockPath = block.pathObject.svgPath;
+                    Blockly.utils.dom.addClass(blockPath, 'blockly-ws-search-highlight-pxt');
+                });
+            }
+            unhighlightSearchGroup_(blocks) {
+                blocks.forEach((block) => {
+                    const blockPath = block.pathObject.svgPath;
+                    Blockly.utils.dom.removeClass(blockPath, 'blockly-ws-search-highlight-pxt');
+                });
+            }
+            /**
+             * https://github.com/google/blockly-samples/blob/master/plugins/workspace-search/src/WorkspaceSearch.js#L633
+             *
+             * Modified to center offscreen blocks.
+             */
+            scrollToVisible_(block) {
+                if (!this.workspace_.isMovable()) {
+                    // Cannot scroll to block in a non-movable workspace.
+                    return;
+                }
+                // XY is in workspace coordinates.
+                const xy = block.getRelativeToSurfaceXY();
+                const scale = this.workspace_.scale;
+                // Block bounds in pixels relative to the workspace origin (0,0 is centre).
+                const width = block.width * scale;
+                const height = block.height * scale;
+                const top = xy.y * scale;
+                const bottom = (xy.y + block.height) * scale;
+                // In RTL the block's position is the top right of the block, not top left.
+                const left = this.workspace_.RTL ? xy.x * scale - width : xy.x * scale;
+                const right = this.workspace_.RTL ? xy.x * scale : xy.x * scale + width;
+                const metrics = this.workspace_.getMetrics();
+                let targetLeft = metrics.viewLeft;
+                const overflowLeft = left < metrics.viewLeft;
+                const overflowRight = right > metrics.viewLeft + metrics.viewWidth;
+                const wideBlock = width > metrics.viewWidth;
+                if ((!wideBlock && overflowLeft) || (wideBlock && !this.workspace_.RTL)) {
+                    // Scroll to show left side of block
+                    targetLeft = left;
+                }
+                else if ((!wideBlock && overflowRight) ||
+                    (wideBlock && this.workspace_.RTL)) {
+                    // Scroll to show right side of block
+                    targetLeft = right - metrics.viewWidth;
+                }
+                let targetTop = metrics.viewTop;
+                const overflowTop = top < metrics.viewTop;
+                const overflowBottom = bottom > metrics.viewTop + metrics.viewHeight;
+                const tallBlock = height > metrics.viewHeight;
+                if (overflowTop || (tallBlock && overflowBottom)) {
+                    // Scroll to show top of block
+                    targetTop = top;
+                }
+                else if (overflowBottom) {
+                    // Scroll to show bottom of block
+                    targetTop = bottom - metrics.viewHeight;
+                }
+                if (targetLeft !== metrics.viewLeft || targetTop !== metrics.viewTop) {
+                    const activeEl = document.activeElement;
+                    if (wideBlock || tallBlock) {
+                        this.workspace_.scroll(-targetLeft, -targetTop);
+                    }
+                    else {
+                        this.workspace_.centerOnBlock(block.id);
+                    }
+                    if (activeEl) {
+                        // Blockly.WidgetDiv.hide called in scroll is taking away focus.
+                        // TODO: Review setFocused call in Blockly.WidgetDiv.hide.
+                        activeEl.focus();
+                    }
+                }
+            }
+            open() {
+                super.open();
+                this.inputElement_.select();
+                Blockly.utils.dom.addClass(this.workspace_.getInjectionDiv(), 'blockly-ws-searching');
+            }
+            close() {
+                super.close();
+                Blockly.utils.dom.removeClass(this.workspace_.getInjectionDiv(), 'blockly-ws-searching');
+            }
+        }
+        blocks_4.PxtWorkspaceSearch = PxtWorkspaceSearch;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        let MutatorTypes;
+        (function (MutatorTypes) {
+            MutatorTypes.ObjectDestructuringMutator = "objectdestructuring";
+            MutatorTypes.RestParameterMutator = "restparameter";
+            MutatorTypes.DefaultInstanceMutator = "defaultinstance";
+        })(MutatorTypes = blocks.MutatorTypes || (blocks.MutatorTypes = {}));
+        function addMutation(b, info, mutationType) {
+            let m;
+            switch (mutationType) {
+                case MutatorTypes.ObjectDestructuringMutator:
+                    if (!info.parameters || info.parameters.length < 1) {
+                        console.error("Destructuring mutations require at least one parameter");
+                    }
+                    else {
+                        let found = false;
+                        for (const param of info.parameters) {
+                            if (param.type.indexOf("=>") !== -1) {
+                                if (!param.properties || param.properties.length === 0) {
+                                    console.error("Destructuring mutations only supported for functions with an event parameter that has multiple properties");
+                                    return;
+                                }
+                                found = true;
+                            }
+                        }
+                        if (!found) {
+                            console.error("Destructuring mutations must have an event parameter");
+                            return;
+                        }
+                    }
+                    m = new DestructuringMutator(b, info);
+                    break;
+                case MutatorTypes.RestParameterMutator:
+                    m = new ArrayMutator(b, info);
+                    break;
+                case MutatorTypes.DefaultInstanceMutator:
+                    m = new DefaultInstanceMutator(b, info);
+                    break;
+                default:
+                    console.warn("Ignoring unknown mutation type: " + mutationType);
+                    return;
+            }
+            b.mutationToDom = m.mutationToDom.bind(m);
+            b.domToMutation = m.domToMutation.bind(m);
+            b.compose = m.compose.bind(m);
+            b.decompose = m.decompose.bind(m);
+            b.mutation = m;
+        }
+        blocks.addMutation = addMutation;
+        function mutateToolboxBlock(block, mutationType, mutation) {
+            const mutationElement = document.createElement("mutation");
+            switch (mutationType) {
+                case MutatorTypes.ObjectDestructuringMutator:
+                    mutationElement.setAttribute(DestructuringMutator.propertiesAttributeName, mutation);
+                    break;
+                case MutatorTypes.RestParameterMutator:
+                    mutationElement.setAttribute(ArrayMutator.countAttributeName, mutation);
+                    break;
+                case MutatorTypes.DefaultInstanceMutator:
+                    mutationElement.setAttribute(DefaultInstanceMutator.attributeName, mutation);
+                default:
+                    console.warn("Ignoring unknown mutation type: " + mutationType);
+                    return;
+            }
+            block.appendChild(mutationElement);
+        }
+        blocks.mutateToolboxBlock = mutateToolboxBlock;
+        class MutatorHelper {
+            constructor(b, info) {
+                this.info = info;
+                this.block = b;
+                this.topBlockType = this.block.type + "_mutator";
+                const subBlocks = this.getSubBlockNames();
+                this.initializeMutatorTopBlock();
+                this.initializeMutatorSubBlocks(subBlocks);
+                const mutatorToolboxTypes = subBlocks.map(s => s.type);
+                this.block.setMutator(new Blockly.Mutator(mutatorToolboxTypes));
+            }
+            // Should be set to modify a block after a mutator dialog is updated
+            compose(topBlock) {
+                const allBlocks = topBlock.getDescendants(false).map(subBlock => {
+                    return {
+                        type: subBlock.type,
+                        name: subBlock.inputList[0].name
+                    };
+                });
+                // Toss the top block
+                allBlocks.shift();
+                this.updateBlock(allBlocks);
+            }
+            // Should be set to initialize the workspace inside a mutator dialog and return the top block
+            decompose(workspace) {
+                // Initialize flyout workspace's top block and add sub-blocks based on visible parameters
+                const topBlock = workspace.newBlock(this.topBlockType);
+                topBlock.initSvg();
+                for (const input of topBlock.inputList) {
+                    if (input.name === MutatorHelper.mutatorStatmentInput) {
+                        let currentConnection = input.connection;
+                        this.getVisibleBlockTypes().forEach(sub => {
+                            const subBlock = workspace.newBlock(sub);
+                            subBlock.initSvg();
+                            currentConnection.connect(subBlock.previousConnection);
+                            currentConnection = subBlock.nextConnection;
+                        });
+                        break;
+                    }
+                }
+                return topBlock;
+            }
+            compileMutation(e, comments) {
+                return undefined;
+            }
+            getDeclaredVariables() {
+                return undefined;
+            }
+            isDeclaredByMutation(varName) {
+                return false;
+            }
+            initializeMutatorSubBlock(sub, parameter, colour) {
+                sub.appendDummyInput(parameter)
+                    .appendField(parameter);
+                sub.setColour(colour);
+                sub.setNextStatement(true);
+                sub.setPreviousStatement(true);
+            }
+            initializeMutatorTopBlock() {
+                const topBlockTitle = this.info.attributes.mutateText;
+                const colour = this.block.getColour();
+                Blockly.Blocks[this.topBlockType] = Blockly.Blocks[this.topBlockType] || {
+                    init: function () {
+                        const top = this;
+                        top.appendDummyInput()
+                            .appendField(topBlockTitle);
+                        top.setColour(colour);
+                        top.appendStatementInput(MutatorHelper.mutatorStatmentInput);
+                    }
+                };
+            }
+            initializeMutatorSubBlocks(subBlocks) {
+                const colour = this.block.getColour();
+                const initializer = this.initializeMutatorSubBlock.bind(this);
+                subBlocks.forEach(blockName => {
+                    Blockly.Blocks[blockName.type] = Blockly.Blocks[blockName.type] || {
+                        init: function () { initializer(this, blockName.name, colour); }
+                    };
+                });
+            }
+        }
+        MutatorHelper.mutatorStatmentInput = "PROPERTIES";
+        MutatorHelper.mutatedVariableInputName = "properties";
+        class DestructuringMutator extends MutatorHelper {
+            constructor(b, info) {
+                super(b, info);
+                this.currentlyVisible = [];
+                this.parameterRenames = {};
+                this.prefix = this.info.attributes.mutatePrefix;
+                this.block.appendDummyInput(MutatorHelper.mutatedVariableInputName);
+                this.block.appendStatementInput("HANDLER")
+                    .setCheck("null");
+            }
+            getMutationType() {
+                return MutatorTypes.ObjectDestructuringMutator;
+            }
+            compileMutation(e, comments) {
+                if (!this.info.attributes.mutatePropertyEnum && !this.parameters.length) {
+                    return undefined;
+                }
+                const declarationString = this.parameters.map(param => {
+                    const varField = this.block.getField(param);
+                    const declaredName = varField && varField.getText();
+                    const escapedParam = blocks.escapeVarName(param, e);
+                    if (declaredName !== param) {
+                        this.parameterRenames[param] = declaredName;
+                        return `${param}: ${blocks.escapeVarName(declaredName, e)}`;
+                    }
+                    return escapedParam;
+                }).join(", ");
+                const functionString = `function ({ ${declarationString} })`;
+                if (this.info.attributes.mutatePropertyEnum) {
+                    return blocks.mkText(` [${this.parameters.map(p => `${this.info.attributes.mutatePropertyEnum}.${p}`).join(", ")}],${functionString}`);
+                }
+                else {
+                    return blocks.mkText(functionString);
+                }
+            }
+            getDeclaredVariables() {
+                const result = {};
+                this.parameters.forEach(param => {
+                    result[this.getVarFieldValue(param)] = this.parameterTypes[param];
+                });
+                return result;
+            }
+            isDeclaredByMutation(varName) {
+                return this.parameters.some(param => this.getVarFieldValue(param) === varName);
+            }
+            mutationToDom() {
+                // Save the parameters that are currently visible to the DOM along with their names
+                const mutation = document.createElement("mutation");
+                const attr = this.parameters.map(param => {
+                    const varName = this.getVarFieldValue(param);
+                    if (varName !== param) {
+                        this.parameterRenames[param] = pxt.Util.htmlEscape(varName);
+                    }
+                    return pxt.Util.htmlEscape(param);
+                }).join(",");
+                mutation.setAttribute(DestructuringMutator.propertiesAttributeName, attr);
+                for (const parameter in this.parameterRenames) {
+                    if (parameter === this.parameterRenames[parameter]) {
+                        delete this.parameterRenames[parameter];
+                    }
+                }
+                mutation.setAttribute(DestructuringMutator.renameAttributeName, JSON.stringify(this.parameterRenames));
+                return mutation;
+            }
+            domToMutation(xmlElement) {
+                // Restore visible parameters based on saved DOM
+                const savedParameters = xmlElement.getAttribute(DestructuringMutator.propertiesAttributeName);
+                if (savedParameters) {
+                    const split = savedParameters.split(",");
+                    const properties = [];
+                    if (this.paramIndex === undefined) {
+                        this.paramIndex = this.getParameterIndex();
+                    }
+                    split.forEach(saved => {
+                        // Parse the old way of storing renames to maintain backwards compatibility
+                        const parts = saved.split(":");
+                        if (this.info.parameters[this.paramIndex].properties.some(p => p.name === parts[0])) {
+                            properties.push({
+                                property: parts[0],
+                                newName: parts[1]
+                            });
+                        }
+                    });
+                    this.parameterRenames = undefined;
+                    if (xmlElement.hasAttribute(DestructuringMutator.renameAttributeName)) {
+                        try {
+                            this.parameterRenames = JSON.parse(xmlElement.getAttribute(DestructuringMutator.renameAttributeName));
+                        }
+                        catch (e) {
+                            console.warn("Ignoring invalid rename map in saved block mutation");
+                        }
+                    }
+                    this.parameterRenames = this.parameterRenames || {};
+                    // Create the fields for each property with default variable names
+                    this.parameters = [];
+                    properties.forEach(prop => {
+                        this.parameters.push(prop.property);
+                        if (prop.newName && prop.newName !== prop.property) {
+                            this.parameterRenames[prop.property] = prop.newName;
+                        }
+                    });
+                    this.updateVisibleProperties();
+                    // Override any names that the user has changed
+                    properties.filter(p => !!p.newName).forEach(p => this.setVarFieldValue(p.property, p.newName));
+                }
+            }
+            getVarFieldValue(fieldName) {
+                const varField = this.block.getField(fieldName);
+                return varField && varField.getText();
+            }
+            setVarFieldValue(fieldName, newValue) {
+                const varField = this.block.getField(fieldName);
+                if (this.block.getField(fieldName)) {
+                    blocks.setVarFieldValue(this.block, fieldName, newValue);
+                }
+            }
+            updateBlock(subBlocks) {
+                this.parameters = [];
+                // Ignore duplicate blocks
+                subBlocks.forEach(p => {
+                    if (this.parameters.indexOf(p.name) === -1) {
+                        this.parameters.push(p.name);
+                    }
+                });
+                this.updateVisibleProperties();
+            }
+            getSubBlockNames() {
+                this.parameters = [];
+                this.parameterTypes = {};
+                if (this.paramIndex === undefined) {
+                    this.paramIndex = this.getParameterIndex();
+                }
+                return this.info.parameters[this.paramIndex].properties.map(property => {
+                    // Used when compiling the destructured arguments
+                    this.parameterTypes[property.name] = property.type;
+                    return {
+                        type: this.propertyId(property.name),
+                        name: property.name
+                    };
+                });
+            }
+            getVisibleBlockTypes() {
+                return this.currentlyVisible.map(p => this.propertyId(p));
+            }
+            updateVisibleProperties() {
+                if (pxt.Util.listsEqual(this.currentlyVisible, this.parameters)) {
+                    return;
+                }
+                const dummyInput = this.block.inputList.find(i => i.name === MutatorHelper.mutatedVariableInputName);
+                if (this.prefix && this.currentlyVisible.length === 0) {
+                    dummyInput.appendField(this.prefix, DestructuringMutator.prefixLabel);
+                }
+                this.currentlyVisible.forEach(param => {
+                    if (this.parameters.indexOf(param) === -1) {
+                        const name = this.getVarFieldValue(param);
+                        // Persist renames
+                        if (name !== param) {
+                            this.parameterRenames[param] = name;
+                        }
+                        dummyInput.removeField(param);
+                    }
+                });
+                this.parameters.forEach(param => {
+                    if (this.currentlyVisible.indexOf(param) === -1) {
+                        const fieldValue = this.parameterRenames[param] || param;
+                        dummyInput.appendField(new Blockly.FieldVariable(fieldValue), param);
+                    }
+                });
+                if (this.prefix && this.parameters.length === 0) {
+                    dummyInput.removeField(DestructuringMutator.prefixLabel);
+                }
+                this.currentlyVisible = this.parameters;
+            }
+            propertyId(property) {
+                return this.block.type + "_" + property;
+            }
+            getParameterIndex() {
+                for (let i = 0; i < this.info.parameters.length; i++) {
+                    if (this.info.parameters[i].type.indexOf("=>") !== -1) {
+                        return i;
+                    }
+                }
+                return undefined;
+            }
+        }
+        DestructuringMutator.propertiesAttributeName = "callbackproperties";
+        DestructuringMutator.renameAttributeName = "renamemap";
+        // Avoid clashes by starting labels with a number
+        DestructuringMutator.prefixLabel = "0prefix_label_";
+        class ArrayMutator extends MutatorHelper {
+            constructor() {
+                super(...arguments);
+                this.count = 0;
+            }
+            getMutationType() {
+                return MutatorTypes.RestParameterMutator;
+            }
+            compileMutation(e, comments) {
+                const values = [];
+                this.forEachInput(block => values.push(blocks.compileExpression(e, block, comments)));
+                return blocks.mkGroup(values);
+            }
+            mutationToDom() {
+                const mutation = document.createElement("mutation");
+                mutation.setAttribute(ArrayMutator.countAttributeName, this.count.toString());
+                return mutation;
+            }
+            domToMutation(xmlElement) {
+                const attribute = xmlElement.getAttribute(ArrayMutator.countAttributeName);
+                if (attribute) {
+                    try {
+                        this.count = parseInt(attribute);
+                    }
+                    catch (e) {
+                        return;
+                    }
+                    for (let i = 0; i < this.count; i++) {
+                        this.addNumberField(false, i);
+                    }
+                }
+            }
+            updateBlock(subBlocks) {
+                if (subBlocks) {
+                    const diff = Math.abs(this.count - subBlocks.length);
+                    if (this.count < subBlocks.length) {
+                        for (let i = 0; i < diff; i++)
+                            this.addNumberField(true, this.count);
+                    }
+                    else if (this.count > subBlocks.length) {
+                        for (let i = 0; i < diff; i++)
+                            this.removeNumberField();
+                    }
+                }
+            }
+            getSubBlockNames() {
+                return [{
+                        name: "Value",
+                        type: ArrayMutator.entryTypeName
+                    }];
+            }
+            getVisibleBlockTypes() {
+                const result = [];
+                this.forEachInput(() => result.push(ArrayMutator.entryTypeName));
+                return result;
+            }
+            addNumberField(isNewField, index) {
+                const input = this.block.appendValueInput(ArrayMutator.valueInputPrefix + index).setCheck("Number");
+                if (isNewField) {
+                    const valueBlock = this.block.workspace.newBlock("math_number");
+                    valueBlock.initSvg();
+                    valueBlock.setShadow(true);
+                    input.connection.connect(valueBlock.outputConnection);
+                    this.block.workspace.render();
+                    this.count++;
+                }
+            }
+            removeNumberField() {
+                if (this.count > 0) {
+                    this.block.removeInput(ArrayMutator.valueInputPrefix + (this.count - 1));
+                }
+                this.count--;
+            }
+            forEachInput(cb) {
+                for (let i = 0; i < this.count; i++) {
+                    cb(this.block.getInputTargetBlock(ArrayMutator.valueInputPrefix + i), i);
+                }
+            }
+        }
+        ArrayMutator.countAttributeName = "count";
+        ArrayMutator.entryTypeName = "entry";
+        ArrayMutator.valueInputPrefix = "value_input_";
+        class DefaultInstanceMutator extends MutatorHelper {
+            constructor() {
+                super(...arguments);
+                this.showing = false;
+            }
+            getMutationType() {
+                return MutatorTypes.DefaultInstanceMutator;
+            }
+            compileMutation(e, comments) {
+                if (this.showing) {
+                    const target = this.block.getInputTargetBlock(DefaultInstanceMutator.instanceInputName);
+                    if (target) {
+                        return blocks.compileExpression(e, target, comments);
+                    }
+                }
+                return undefined;
+            }
+            mutationToDom() {
+                const mutation = document.createElement("mutation");
+                mutation.setAttribute(DefaultInstanceMutator.attributeName, this.showing ? "true" : "false");
+                return mutation;
+            }
+            domToMutation(xmlElement) {
+                const attribute = xmlElement.getAttribute(DefaultInstanceMutator.attributeName);
+                if (attribute) {
+                    this.updateShape(attribute === "true");
+                }
+                else {
+                    this.updateShape(false);
+                }
+            }
+            updateBlock(subBlocks) {
+                this.updateShape(!!(subBlocks && subBlocks.length));
+            }
+            getSubBlockNames() {
+                return [{
+                        name: "Instance",
+                        type: DefaultInstanceMutator.instanceSubBlockType
+                    }];
+            }
+            getVisibleBlockTypes() {
+                const result = [];
+                if (this.showing) {
+                    result.push(DefaultInstanceMutator.instanceSubBlockType);
+                }
+                return result;
+            }
+            updateShape(show) {
+                if (this.showing !== show) {
+                    if (show && !this.block.getInputTargetBlock(DefaultInstanceMutator.instanceInputName)) {
+                        this.block.appendValueInput(DefaultInstanceMutator.instanceInputName);
+                    }
+                    else {
+                        this.block.removeInput(DefaultInstanceMutator.instanceInputName);
+                    }
+                    this.showing = show;
+                }
+            }
+        }
+        DefaultInstanceMutator.attributeName = "showing";
+        DefaultInstanceMutator.instanceInputName = "__instance__";
+        DefaultInstanceMutator.instanceSubBlockType = "instance";
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/pxtblockly.d.ts" />
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_5) {
+        let workspace;
+        let blocklyDiv;
+        let BlockLayout;
+        (function (BlockLayout) {
+            BlockLayout[BlockLayout["None"] = 0] = "None";
+            BlockLayout[BlockLayout["Align"] = 1] = "Align";
+            // Shuffle deprecated
+            BlockLayout[BlockLayout["Clean"] = 3] = "Clean";
+            BlockLayout[BlockLayout["Flow"] = 4] = "Flow";
+        })(BlockLayout = blocks_5.BlockLayout || (blocks_5.BlockLayout = {}));
+        function initRenderingWorkspace() {
+            if (!workspace) {
+                blocklyDiv = document.createElement("div");
+                blocklyDiv.style.position = "absolute";
+                blocklyDiv.style.top = "0";
+                blocklyDiv.style.left = "0";
+                blocklyDiv.style.width = "1px";
+                blocklyDiv.style.height = "1px";
+                document.body.appendChild(blocklyDiv);
+                workspace = Blockly.inject(blocklyDiv, {
+                    move: {
+                        scrollbars: false
+                    },
+                    readOnly: true,
+                    sounds: false,
+                    media: pxt.webConfig.commitCdnUrl + "blockly/media/",
+                    rtl: pxt.Util.isUserLanguageRtl(),
+                    renderer: "pxt"
+                });
+            }
+            pxt.blocks.clearWithoutEvents(workspace);
+            return workspace;
+        }
+        blocks_5.initRenderingWorkspace = initRenderingWorkspace;
+        function cleanRenderingWorkspace() {
+            // We re-use the workspace across renders, catch any errors so we know to
+            // create a new workspace if there was an error
+            if (workspace)
+                workspace.dispose();
+            workspace = undefined;
+        }
+        blocks_5.cleanRenderingWorkspace = cleanRenderingWorkspace;
+        function renderWorkspace(options = { emPixels: 18, layout: BlockLayout.Align }) {
+            const layout = options.splitSvg ? BlockLayout.Align : (options.layout || BlockLayout.Flow);
+            switch (layout) {
+                case BlockLayout.Align:
+                    pxt.blocks.layout.verticalAlign(workspace, options.emPixels || 18);
+                    break;
+                case BlockLayout.Flow:
+                    pxt.blocks.layout.flow(workspace, { ratio: options.aspectRatio, useViewWidth: options.useViewWidth });
+                    break;
+                case BlockLayout.Clean:
+                    if (workspace.cleanUp_)
+                        workspace.cleanUp_();
+                    break;
+                default: // do nothing
+                    break;
+            }
+            let metrics = workspace.getMetrics();
+            const svg = blocklyDiv.querySelectorAll('svg')[0].cloneNode(true);
+            pxt.blocks.layout.cleanUpBlocklySvg(svg);
+            pxt.U.toArray(svg.querySelectorAll('.blocklyBlockCanvas,.blocklyBubbleCanvas'))
+                .forEach(el => el.setAttribute('transform', `translate(${-metrics.contentLeft}, ${-metrics.contentTop}) scale(1)`));
+            svg.setAttribute('viewBox', `0 0 ${metrics.contentWidth} ${metrics.contentHeight}`);
+            if (options.emPixels) {
+                svg.style.width = (metrics.contentWidth / options.emPixels) + 'em';
+                svg.style.height = (metrics.contentHeight / options.emPixels) + 'em';
+            }
+            return options.splitSvg
+                ? pxt.blocks.layout.splitSvg(svg, workspace, options.emPixels)
+                : svg;
+        }
+        blocks_5.renderWorkspace = renderWorkspace;
+        function render(blocksXml, options = { emPixels: 18, layout: BlockLayout.Align }) {
+            initRenderingWorkspace();
+            try {
+                let text = blocksXml || `<xml xmlns="http://www.w3.org/1999/xhtml"></xml>`;
+                let xml = Blockly.Xml.textToDom(text);
+                pxt.blocks.domToWorkspaceNoEvents(xml, workspace);
+                return renderWorkspace(options);
+            }
+            catch (e) {
+                pxt.reportException(e);
+                return undefined;
+            }
+            finally {
+                cleanRenderingWorkspace();
+            }
+        }
+        blocks_5.render = render;
+        function blocksMetrics(ws) {
+            const blocks = ws.getTopBlocks(false);
+            if (!blocks.length)
+                return { width: 0, height: 0 };
+            let m = undefined;
+            blocks.forEach((b) => {
+                const r = b.getBoundingRectangle();
+                if (!m)
+                    m = { l: r.left, r: r.right, t: r.top, b: r.bottom };
+                else {
+                    m.l = Math.min(m.l, r.left);
+                    m.r = Math.max(m.r, r.right);
+                    m.t = Math.min(m.t, r.top);
+                    m.b = Math.min(m.b, r.bottom);
+                }
+            });
+            return {
+                width: m.r - m.l,
+                height: m.b - m.t
+            };
+        }
+        blocks_5.blocksMetrics = blocksMetrics;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/blockly.d.ts" />
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_6) {
+        function findRootBlocks(xmlDOM, type) {
+            let blocks = [];
+            for (const child in xmlDOM.children) {
+                const xmlChild = xmlDOM.children[child];
+                if (xmlChild.tagName === 'block') {
+                    if (type) {
+                        const childType = xmlChild.getAttribute('type');
+                        if (childType && childType === type) {
+                            blocks.push(xmlChild);
+                        }
+                    }
+                    else {
+                        blocks.push(xmlChild);
+                    }
+                }
+                else {
+                    const childChildren = findRootBlock(xmlChild);
+                    if (childChildren) {
+                        blocks = blocks.concat(childChildren);
+                    }
+                }
+            }
+            return blocks;
+        }
+        blocks_6.findRootBlocks = findRootBlocks;
+        function findRootBlock(xmlDOM, type) {
+            let blks = findRootBlocks(xmlDOM, type);
+            if (blks.length)
+                return blks[0];
+            return null;
+        }
+        blocks_6.findRootBlock = findRootBlock;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var docs;
+    (function (docs) {
+        var codeCard;
+        (function (codeCard) {
+            function render(card, options = {}) {
+                const url = card.url ? /^[^:]+:\/\//.test(card.url) ? card.url : ('/' + card.url.replace(/^\.?\/?/, ''))
+                    : card.youTubeId ? `https://youtu.be/${card.youTubeId}` : undefined;
+                const link = !!url;
+                const div = (parent, cls, tag = "div", text = '') => {
+                    let d = document.createElement(tag);
+                    if (cls)
+                        d.className = cls;
+                    if (parent)
+                        parent.appendChild(d);
+                    if (text)
+                        d.appendChild(document.createTextNode(text + ''));
+                    return d;
+                };
+                const style = card.style || "card";
+                let r = div(null, 'ui ' + style + ' ' + (card.color || '') + (link ? ' link' : ''), link ? "a" : "div");
+                r.setAttribute("role", "option");
+                r.setAttribute("aria-selected", "true");
+                if (link) {
+                    const rAsLink = r;
+                    rAsLink.href = url;
+                    // pop out external links
+                    if (/^https?:\/\//.test(url)) {
+                        rAsLink.target = "_blank";
+                    }
+                }
+                if (!options.hideHeader && card.header) {
+                    let h = div(r, "ui content " + (card.responsive ? " tall desktop only" : ""));
+                    if (card.header)
+                        div(h, 'description', 'span', card.header);
+                }
+                const name = (options.shortName ? card.shortName : '') || card.name;
+                let img = div(r, "ui image" + (card.responsive ? " tall landscape only" : ""));
+                if (card.label) {
+                    let lbl = document.createElement("label");
+                    lbl.className = `ui ${card.labelClass ? card.labelClass : "orange right ribbon"} label`;
+                    lbl.textContent = card.label;
+                    img.appendChild(lbl);
+                }
+                if (card.blocksXml) {
+                    const svg = pxt.blocks.render(card.blocksXml);
+                    if (!svg) {
+                        console.error("failed to render blocks");
+                        pxt.debug(card.blocksXml);
+                    }
+                    else {
+                        let holder = div(img, '');
+                        holder.setAttribute('style', 'width:100%; min-height:10em');
+                        holder.appendChild(svg);
+                    }
+                }
+                if (card.typeScript) {
+                    let pre = document.createElement("pre");
+                    pre.appendChild(document.createTextNode(card.typeScript));
+                    img.appendChild(pre);
+                }
+                const imgUrl = card.imageUrl || (card.youTubeId ? `https://img.youtube.com/vi/${card.youTubeId}/0.jpg` : undefined);
+                if (imgUrl) {
+                    let imageWrapper = document.createElement("div");
+                    imageWrapper.className = "ui imagewrapper";
+                    let image = document.createElement("div");
+                    image.className = "ui cardimage";
+                    image.style.backgroundImage = `url("${card.imageUrl}")`;
+                    image.title = name;
+                    image.setAttribute("role", "presentation");
+                    imageWrapper.appendChild(image);
+                    img.appendChild(imageWrapper);
+                }
+                if (card.cardType == "file") {
+                    let file = div(r, "ui fileimage");
+                    img.appendChild(file);
+                }
+                if (name || card.description) {
+                    let ct = div(r, "ui content");
+                    if (name) {
+                        r.setAttribute("aria-label", name);
+                        div(ct, 'header', 'div', name);
+                    }
+                    if (card.description) {
+                        const descr = div(ct, 'ui description');
+                        const shortenedDescription = card.description.split('.')[0] + '.';
+                        descr.appendChild(document.createTextNode(shortenedDescription));
+                    }
+                }
+                if (card.time) {
+                    let meta = div(r, "meta");
+                    if (card.time) {
+                        let m = div(meta, "date", "span");
+                        m.appendChild(document.createTextNode(pxt.Util.timeSince(card.time)));
+                    }
+                }
+                if (card.extracontent) {
+                    let extracontent = div(r, "extra content", "div");
+                    extracontent.appendChild(document.createTextNode(card.extracontent));
+                }
+                return r;
+            }
+            codeCard.render = render;
+        })(codeCard = docs.codeCard || (docs.codeCard = {}));
+    })(docs = pxt.docs || (pxt.docs = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/blockly.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        function appendMutation(block, mutation) {
+            const b = block;
+            const oldMTD = b.mutationToDom;
+            const oldDTM = b.domToMutation;
+            b.mutationToDom = () => {
+                const el = oldMTD ? oldMTD() : document.createElement("mutation");
+                return mutation.mutationToDom(el);
+            };
+            b.domToMutation = saved => {
+                if (oldDTM) {
+                    oldDTM(saved);
+                }
+                mutation.domToMutation(saved);
+            };
+        }
+        blocks.appendMutation = appendMutation;
+        function initVariableArgsBlock(b, handlerArgs) {
+            let currentlyVisible = 0;
+            let actuallyVisible = 0;
+            let i = b.appendDummyInput();
+            let updateShape = () => {
+                if (currentlyVisible === actuallyVisible) {
+                    return;
+                }
+                if (currentlyVisible > actuallyVisible) {
+                    const diff = currentlyVisible - actuallyVisible;
+                    for (let j = 0; j < diff; j++) {
+                        const arg = handlerArgs[actuallyVisible + j];
+                        i.insertFieldAt(i.fieldRow.length - 1, new pxtblockly.FieldArgumentVariable(arg.name), "HANDLER_" + arg.name);
+                        const blockSvg = b;
+                        if (blockSvg === null || blockSvg === void 0 ? void 0 : blockSvg.initSvg)
+                            blockSvg.initSvg(); // call initSvg on block to initialize new fields
+                    }
+                }
+                else {
+                    let diff = actuallyVisible - currentlyVisible;
+                    for (let j = 0; j < diff; j++) {
+                        const arg = handlerArgs[actuallyVisible - j - 1];
+                        i.removeField("HANDLER_" + arg.name);
+                    }
+                }
+                if (currentlyVisible >= handlerArgs.length) {
+                    i.removeField("_HANDLER_ADD");
+                }
+                else if (actuallyVisible >= handlerArgs.length) {
+                    addPlusButton();
+                }
+                actuallyVisible = currentlyVisible;
+            };
+            Blockly.Extensions.apply('inline-svgs', b, false);
+            addPlusButton();
+            appendMutation(b, {
+                mutationToDom: (el) => {
+                    el.setAttribute("numArgs", currentlyVisible.toString());
+                    for (let j = 0; j < currentlyVisible; j++) {
+                        const varField = b.getField("HANDLER_" + handlerArgs[j].name);
+                        let varName = varField && varField.getText();
+                        el.setAttribute("arg" + j, varName);
+                    }
+                    return el;
+                },
+                domToMutation: (saved) => {
+                    let numArgs = parseInt(saved.getAttribute("numargs"));
+                    currentlyVisible = Math.min(isNaN(numArgs) ? 0 : numArgs, handlerArgs.length);
+                    updateShape();
+                    for (let j = 0; j < currentlyVisible; j++) {
+                        const varName = saved.getAttribute("arg" + j);
+                        const fieldName = "HANDLER_" + handlerArgs[j].name;
+                        if (b.getField(fieldName)) {
+                            blocks.setVarFieldValue(b, fieldName, varName);
+                        }
+                    }
+                }
+            });
+            function addPlusButton() {
+                i.appendField(new Blockly.FieldImage(b.ADD_IMAGE_DATAURI, 24, 24, lf("Add argument"), () => {
+                    currentlyVisible = Math.min(currentlyVisible + 1, handlerArgs.length);
+                    updateShape();
+                }, false), "_HANDLER_ADD");
+            }
+        }
+        blocks.initVariableArgsBlock = initVariableArgsBlock;
+        function initExpandableBlock(info, b, def, comp, toggle, addInputs) {
+            // Add numbers before input names to prevent clashes with the ones added
+            // by BlocklyLoader. The number makes it an invalid JS identifier
+            const buttonAddName = "0_add_button";
+            const buttonRemName = "0_rem_button";
+            const buttonAddRemName = "0_add_rem_button";
+            const numVisibleAttr = "_expanded";
+            const inputInitAttr = "_input_init";
+            const optionNames = def.parameters.map(p => p.name);
+            const totalOptions = def.parameters.length;
+            const buttonDelta = toggle ? totalOptions : 1;
+            const variableInlineInputs = info.blocksById[b.type].attributes.inlineInputMode === "variable";
+            const inlineInputModeLimit = info.blocksById[b.type].attributes.inlineInputModeLimit || 4;
+            const compileHiddenArguments = info.blocksById[b.type].attributes.compileHiddenArguments;
+            const breakString = info.blocksById[b.type].attributes.expandableArgumentBreaks;
+            let breaks;
+            if (breakString) {
+                breaks = breakString.split(/[;,]/).map(s => parseInt(s));
+            }
+            const state = new MutationState(b);
+            state.setEventsEnabled(false);
+            state.setValue(numVisibleAttr, 0);
+            state.setValue(inputInitAttr, false);
+            state.setEventsEnabled(true);
+            Blockly.Extensions.apply('inline-svgs', b, false);
+            let updatingInputs = false;
+            let firstRender = true;
+            appendMutation(b, {
+                mutationToDom: (el) => {
+                    // The reason we store the inputsInitialized variable separately from visibleOptions
+                    // is because it's possible for the block to get into a state where all inputs are
+                    // initialized but they aren't visible (i.e. the user hit the - button). Blockly
+                    // gets upset if a block has a different number of inputs when it is saved and restored.
+                    el.setAttribute(numVisibleAttr, state.getString(numVisibleAttr));
+                    el.setAttribute(inputInitAttr, state.getString(inputInitAttr));
+                    return el;
+                },
+                domToMutation: (saved) => {
+                    state.setEventsEnabled(false);
+                    if (saved.hasAttribute(inputInitAttr) && saved.getAttribute(inputInitAttr) == "true" && !state.getBoolean(inputInitAttr)) {
+                        state.setValue(inputInitAttr, true);
+                    }
+                    initOptionalInputs();
+                    if (saved.hasAttribute(numVisibleAttr)) {
+                        const val = parseInt(saved.getAttribute(numVisibleAttr));
+                        if (!isNaN(val)) {
+                            const delta = val - (state.getNumber(numVisibleAttr) || 0);
+                            if (state.getBoolean(inputInitAttr)) {
+                                if (b.rendered || b.isInsertionMarker()) {
+                                    updateShape(delta, true, b.isInsertionMarker());
+                                }
+                                else {
+                                    state.setValue(numVisibleAttr, addDelta(delta));
+                                    updateButtons();
+                                }
+                            }
+                            else {
+                                updateShape(delta, true);
+                            }
+                        }
+                    }
+                    state.setEventsEnabled(true);
+                }
+            });
+            initOptionalInputs();
+            if (compileHiddenArguments) {
+                // Make sure all inputs have shadow blocks attached
+                let optIndex = 0;
+                for (let i = 0; i < b.inputList.length; i++) {
+                    const input = b.inputList[i];
+                    if (pxt.Util.startsWith(input.name, blocks.optionalInputWithFieldPrefix) || optionNames.indexOf(input.name) !== -1) {
+                        if (input.connection && !input.connection.isConnected() && !b.isInsertionMarker()) {
+                            const param = comp.definitionNameToParam[def.parameters[optIndex].name];
+                            attachShadowBlock(input, param);
+                        }
+                        ++optIndex;
+                    }
+                }
+            }
+            b.render = (opt_bubble) => {
+                if (updatingInputs)
+                    return;
+                if (firstRender) {
+                    firstRender = false;
+                    updatingInputs = true;
+                    updateShape(0, undefined, true);
+                    updatingInputs = false;
+                }
+                Blockly.BlockSvg.prototype.render.call(b, opt_bubble);
+            };
+            // Set skipRender to true if the block is still initializing. Otherwise
+            // the inputs will render before their shadow blocks are created and
+            // leave behind annoying artifacts
+            function updateShape(delta, skipRender = false, force = false) {
+                const newValue = addDelta(delta);
+                if (!force && !skipRender && newValue === state.getNumber(numVisibleAttr))
+                    return;
+                state.setValue(numVisibleAttr, newValue);
+                const visibleOptions = newValue;
+                if (!state.getBoolean(inputInitAttr) && visibleOptions > 0) {
+                    initOptionalInputs();
+                    if (!b.rendered) {
+                        return;
+                    }
+                }
+                let optIndex = 0;
+                for (let i = 0; i < b.inputList.length; i++) {
+                    const input = b.inputList[i];
+                    if (pxt.Util.startsWith(input.name, blocks.optionalDummyInputPrefix)) {
+                        // The behavior for dummy inputs (i.e. labels) is that whenever a parameter is revealed,
+                        // all earlier labels are made visible as well. If the parameter is the last one in the
+                        // block then all labels are made visible
+                        setInputVisible(input, optIndex < visibleOptions || visibleOptions === totalOptions);
+                    }
+                    else if (pxt.Util.startsWith(input.name, blocks.optionalInputWithFieldPrefix) || optionNames.indexOf(input.name) !== -1) {
+                        const visible = optIndex < visibleOptions;
+                        setInputVisible(input, visible);
+                        if (visible && input.connection && !input.connection.isConnected() && !b.isInsertionMarker()) {
+                            const param = comp.definitionNameToParam[def.parameters[optIndex].name];
+                            attachShadowBlock(input, param);
+                        }
+                        ++optIndex;
+                    }
+                }
+                updateButtons();
+                if (variableInlineInputs)
+                    b.setInputsInline(visibleOptions < inlineInputModeLimit);
+                if (!skipRender)
+                    b.render();
+            }
+            function addButton(name, uri, alt, delta) {
+                b.appendDummyInput(name)
+                    .appendField(new Blockly.FieldImage(uri, 24, 24, alt, () => updateShape(delta), false));
+            }
+            function updateButtons() {
+                if (updatingInputs)
+                    return;
+                const visibleOptions = state.getNumber(numVisibleAttr);
+                const showPlus = visibleOptions !== totalOptions;
+                const showMinus = visibleOptions !== 0;
+                if (b.inputList.some(i => i.name === buttonAddName))
+                    b.removeInput(buttonAddName, true);
+                if (b.inputList.some(i => i.name === buttonRemName))
+                    b.removeInput(buttonRemName, true);
+                if (b.inputList.some(i => i.name === buttonAddRemName))
+                    b.removeInput(buttonAddRemName, true);
+                if (showPlus && showMinus) {
+                    addPlusAndMinusButtons();
+                }
+                else if (showPlus) {
+                    addPlusButton();
+                }
+                else if (showMinus) {
+                    addMinusButton();
+                }
+            }
+            function addPlusAndMinusButtons() {
+                b.appendDummyInput(buttonAddRemName)
+                    .appendField(new Blockly.FieldImage(b.REMOVE_IMAGE_DATAURI, 24, 24, lf("Hide optional arguments"), () => updateShape(-1 * buttonDelta), false))
+                    .appendField(new Blockly.FieldImage(b.ADD_IMAGE_DATAURI, 24, 24, lf("Reveal optional arguments"), () => updateShape(buttonDelta), false));
+            }
+            function addPlusButton() {
+                addButton(buttonAddName, b.ADD_IMAGE_DATAURI, lf("Reveal optional arguments"), buttonDelta);
+            }
+            function addMinusButton() {
+                addButton(buttonRemName, b.REMOVE_IMAGE_DATAURI, lf("Hide optional arguments"), -1 * buttonDelta);
+            }
+            function initOptionalInputs() {
+                state.setValue(inputInitAttr, true);
+                addInputs();
+                updateButtons();
+            }
+            function addDelta(delta) {
+                const newValue = Math.min(Math.max(state.getNumber(numVisibleAttr) + delta, 0), totalOptions);
+                if (breaks) {
+                    if (delta >= 0) {
+                        if (newValue === 0)
+                            return 0;
+                        for (const breakpoint of breaks) {
+                            if (breakpoint >= newValue) {
+                                return breakpoint;
+                            }
+                        }
+                        return totalOptions;
+                    }
+                    else {
+                        for (let i = 0; i < breaks.length; i++) {
+                            if (breaks[i] >= newValue) {
+                                return i > 0 ? breaks[i - 1] : 0;
+                            }
+                        }
+                        return breaks[breaks.length - 1];
+                    }
+                }
+                return newValue;
+            }
+            function setInputVisible(input, visible) {
+                // If the block isn't rendered, Blockly will crash
+                input.setVisible(visible);
+            }
+            function attachShadowBlock(input, param) {
+                let shadow = blocks.createShadowValue(info, param);
+                if (shadow.tagName.toLowerCase() === "value") {
+                    // Unwrap the block
+                    shadow = shadow.firstElementChild;
+                }
+                Blockly.Events.disable();
+                try {
+                    const nb = Blockly.Xml.domToBlock(shadow, b.workspace);
+                    if (nb) {
+                        input.connection.connect(nb.outputConnection);
+                    }
+                }
+                catch (e) { }
+                Blockly.Events.enable();
+            }
+        }
+        blocks.initExpandableBlock = initExpandableBlock;
+        function initReturnStatement(b) {
+            const returnDef = pxt.blocks.getBlockDefinition("function_return");
+            const buttonAddName = "0_add_button";
+            const buttonRemName = "0_rem_button";
+            Blockly.Extensions.apply('inline-svgs', b, false);
+            let returnValueVisible = true;
+            // When the value input is removed, we disconnect the block that was connected to it. This
+            // is the id of whatever block was last connected
+            let lastConnectedId;
+            updateShape();
+            b.domToMutation = saved => {
+                if (saved.hasAttribute("last_connected_id")) {
+                    lastConnectedId = saved.getAttribute("last_connected_id");
+                }
+                returnValueVisible = hasReturnValue(saved);
+                updateShape();
+            };
+            b.mutationToDom = () => {
+                const mutation = document.createElement("mutation");
+                setReturnValue(mutation, !!b.getInput("RETURN_VALUE"));
+                if (lastConnectedId) {
+                    mutation.setAttribute("last_connected_id", lastConnectedId);
+                }
+                return mutation;
+            };
+            function updateShape() {
+                const returnValueInput = b.getInput("RETURN_VALUE");
+                if (returnValueVisible) {
+                    if (!returnValueInput) {
+                        // Remove any labels
+                        while (b.getInput(""))
+                            b.removeInput("");
+                        b.jsonInit({
+                            "message0": returnDef.block["message_with_value"],
+                            "args0": [
+                                {
+                                    "type": "input_value",
+                                    "name": "RETURN_VALUE",
+                                    "check": null
+                                }
+                            ],
+                            "previousStatement": null,
+                            "colour": pxt.toolbox.getNamespaceColor('functions')
+                        });
+                    }
+                    if (b.getInput(buttonAddName)) {
+                        b.removeInput(buttonAddName);
+                    }
+                    if (!b.getInput(buttonRemName)) {
+                        addMinusButton();
+                    }
+                    if (lastConnectedId) {
+                        const lastConnected = b.workspace.getBlockById(lastConnectedId);
+                        if (lastConnected && lastConnected.outputConnection && !lastConnected.outputConnection.targetBlock()) {
+                            b.getInput("RETURN_VALUE").connection.connect(lastConnected.outputConnection);
+                        }
+                        lastConnectedId = undefined;
+                    }
+                }
+                else {
+                    if (returnValueInput) {
+                        const target = returnValueInput.connection.targetBlock();
+                        if (target) {
+                            if (target.isShadow())
+                                target.setShadow(false);
+                            returnValueInput.connection.disconnect();
+                            lastConnectedId = target.id;
+                        }
+                        b.removeInput("RETURN_VALUE");
+                        b.jsonInit({
+                            "message0": returnDef.block["message_no_value"],
+                            "args0": [],
+                            "previousStatement": null,
+                            "colour": pxt.toolbox.getNamespaceColor('functions')
+                        });
+                    }
+                    if (b.getInput(buttonRemName)) {
+                        b.removeInput(buttonRemName);
+                    }
+                    if (!b.getInput(buttonAddName)) {
+                        addPlusButton();
+                    }
+                }
+                b.setInputsInline(true);
+            }
+            function setReturnValue(mutation, hasReturnValue) {
+                mutation.setAttribute("no_return_value", hasReturnValue ? "false" : "true");
+            }
+            function hasReturnValue(mutation) {
+                return mutation.getAttribute("no_return_value") !== "true";
+            }
+            function addPlusButton() {
+                addButton(buttonAddName, b.ADD_IMAGE_DATAURI, lf("Add return value"));
+            }
+            function addMinusButton() {
+                addButton(buttonRemName, b.REMOVE_IMAGE_DATAURI, lf("Remove return value"));
+            }
+            function mutationString() {
+                return Blockly.Xml.domToText(b.mutationToDom());
+            }
+            function fireMutationChange(pre, post) {
+                if (pre !== post)
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(b, "mutation", null, pre, post));
+            }
+            function addButton(name, uri, alt) {
+                b.appendDummyInput(name)
+                    .appendField(new Blockly.FieldImage(uri, 24, 24, alt, () => {
+                    const oldMutation = mutationString();
+                    returnValueVisible = !returnValueVisible;
+                    const preUpdate = mutationString();
+                    fireMutationChange(oldMutation, preUpdate);
+                    updateShape();
+                    const postUpdate = mutationString();
+                    fireMutationChange(preUpdate, postUpdate);
+                }, false));
+            }
+        }
+        blocks.initReturnStatement = initReturnStatement;
+        class MutationState {
+            constructor(block, initState) {
+                this.block = block;
+                this.fireEvents = true;
+                this.state = initState || {};
+            }
+            setValue(attr, value) {
+                if (this.fireEvents && this.block.mutationToDom) {
+                    const oldMutation = this.block.mutationToDom();
+                    this.state[attr] = value.toString();
+                    const newMutation = this.block.mutationToDom();
+                    Object.keys(this.state).forEach(key => {
+                        if (oldMutation.getAttribute(key) !== this.state[key]) {
+                            newMutation.setAttribute(key, this.state[key]);
+                        }
+                    });
+                    const oldText = Blockly.Xml.domToText(oldMutation);
+                    const newText = Blockly.Xml.domToText(newMutation);
+                    if (oldText != newText) {
+                        Blockly.Events.fire(new Blockly.Events.BlockChange(this.block, "mutation", null, oldText, newText));
+                    }
+                }
+                else {
+                    this.state[attr] = value.toString();
+                }
+            }
+            getNumber(attr) {
+                return parseInt(this.state[attr]);
+            }
+            getBoolean(attr) {
+                return this.state[attr] != "false";
+            }
+            getString(attr) {
+                return this.state[attr];
+            }
+            setEventsEnabled(enabled) {
+                this.fireEvents = enabled;
+            }
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        const allOperations = pxt.blocks.MATH_FUNCTIONS.unary.concat(pxt.blocks.MATH_FUNCTIONS.binary).concat(pxt.blocks.MATH_FUNCTIONS.infix);
+        function initMathOpBlock() {
+            const mathOpId = "math_js_op";
+            const mathOpDef = pxt.blocks.getBlockDefinition(mathOpId);
+            Blockly.Blocks[mathOpId] = {
+                init: function () {
+                    const b = this;
+                    b.setPreviousStatement(false);
+                    b.setNextStatement(false);
+                    b.setOutput(true, "Number");
+                    b.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+                    b.setInputsInline(true);
+                    const ddi = b.appendDummyInput("op_dropdown");
+                    ddi.appendField(new Blockly.FieldDropdown(allOperations.map(op => [mathOpDef.block[op], op]), (op) => onOperatorSelect(b, op)), "OP");
+                    addArgInput(b, false);
+                    // Because the shape of inputs changes, we need a mutation. Technically the op tells us
+                    // how many inputs we should have but we can't read its value at init time
+                    blocks.appendMutation(b, {
+                        mutationToDom: mutation => {
+                            let infix;
+                            for (let i = 0; i < b.inputList.length; i++) {
+                                const input = b.inputList[i];
+                                if (input.name === "op_dropdown") {
+                                    infix = false;
+                                    break;
+                                }
+                                else if (input.name === "ARG0") {
+                                    infix = true;
+                                    break;
+                                }
+                            }
+                            mutation.setAttribute("op-type", (b.getInput("ARG1") ? (infix ? "infix" : "binary") : "unary").toString());
+                            return mutation;
+                        },
+                        domToMutation: saved => {
+                            if (saved.hasAttribute("op-type")) {
+                                const type = saved.getAttribute("op-type");
+                                if (type != "unary") {
+                                    addArgInput(b, true);
+                                }
+                                changeInputOrder(b, type === "infix");
+                            }
+                        }
+                    });
+                }
+            };
+            blocks.installHelpResources(mathOpId, mathOpDef.name, function (block) {
+                return mathOpDef.tooltip[block.getFieldValue("OP")];
+            }, mathOpDef.url, pxt.toolbox.getNamespaceColor(mathOpDef.category));
+            function onOperatorSelect(b, op) {
+                if (isUnaryOp(op)) {
+                    b.removeInput("ARG1", true);
+                }
+                else if (!b.getInput("ARG1")) {
+                    addArgInput(b, true);
+                }
+                changeInputOrder(b, isInfixOp(op));
+            }
+            function addArgInput(b, second) {
+                const i = b.appendValueInput("ARG" + (second ? 1 : 0));
+                i.setCheck("Number");
+                if (second) {
+                    i.connection.setShadowDom(numberShadowDom());
+                    i.connection.respawnShadow_();
+                }
+            }
+            function changeInputOrder(b, infix) {
+                let hasTwoArgs = !!b.getInput("ARG1");
+                if (infix) {
+                    if (hasTwoArgs) {
+                        b.moveInputBefore("op_dropdown", "ARG1");
+                    }
+                    b.moveInputBefore("ARG0", "op_dropdown");
+                }
+                else {
+                    if (hasTwoArgs) {
+                        b.moveInputBefore("ARG0", "ARG1");
+                    }
+                    b.moveInputBefore("op_dropdown", "ARG0");
+                }
+            }
+        }
+        blocks.initMathOpBlock = initMathOpBlock;
+        function isUnaryOp(op) {
+            return pxt.blocks.MATH_FUNCTIONS.unary.indexOf(op) !== -1;
+        }
+        function isInfixOp(op) {
+            return pxt.blocks.MATH_FUNCTIONS.infix.indexOf(op) !== -1;
+        }
+        let cachedDom;
+        function numberShadowDom() {
+            // <shadow type="math_number"><field name="NUM">0</field></shadow>
+            if (!cachedDom) {
+                cachedDom = document.createElement("shadow");
+                cachedDom.setAttribute("type", "math_number");
+                const field = document.createElement("field");
+                field.setAttribute("name", "NUM");
+                field.textContent = "0";
+                cachedDom.appendChild(field);
+            }
+            return cachedDom;
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        const allOperations = pxt.blocks.ROUNDING_FUNCTIONS;
+        function initMathRoundBlock() {
+            const mathRoundId = "math_js_round";
+            const mathRoundDef = pxt.blocks.getBlockDefinition(mathRoundId);
+            Blockly.Blocks[mathRoundId] = {
+                init: function () {
+                    const b = this;
+                    b.setPreviousStatement(false);
+                    b.setNextStatement(false);
+                    b.setOutput(true, "Number");
+                    b.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+                    b.setInputsInline(true);
+                    const ddi = b.appendDummyInput("round_dropdown");
+                    ddi.appendField(new Blockly.FieldDropdown(allOperations.map(op => [mathRoundDef.block[op], op]), (op) => onOperatorSelect(b, op)), "OP");
+                    addArgInput(b);
+                }
+            };
+            blocks.installHelpResources(mathRoundId, mathRoundDef.name, function (block) {
+                return mathRoundDef.tooltip[block.getFieldValue("OP")];
+            }, mathRoundDef.url, pxt.toolbox.getNamespaceColor(mathRoundDef.category));
+            function onOperatorSelect(b, op) {
+                // No-op
+            }
+            function addArgInput(b) {
+                const i = b.appendValueInput("ARG0");
+                i.setCheck("Number");
+            }
+        }
+        blocks.initMathRoundBlock = initMathRoundBlock;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldBase extends Blockly.Field {
+        constructor(text, params, validator) {
+            super(text, validator);
+            this.SERIALIZABLE = true;
+            this.options = params;
+            if (text && !this.valueText)
+                this.valueText = text;
+        }
+        init() {
+            super.init();
+            this.onInit();
+        }
+        dispose() {
+            this.onDispose();
+        }
+        getValue() {
+            return this.valueText;
+        }
+        doValueUpdate_(newValue) {
+            if (newValue === null)
+                return;
+            this.valueText = this.loaded ? this.onValueChanged(newValue) : newValue;
+        }
+        getDisplayText_() {
+            return this.valueText;
+        }
+        onLoadedIntoWorkspace() {
+            if (this.loaded)
+                return;
+            this.loaded = true;
+            this.valueText = this.onValueChanged(this.valueText);
+        }
+        getAnchorDimensions() {
+            const boundingBox = this.getScaledBBox();
+            if (this.sourceBlock_.RTL) {
+                boundingBox.right += Blockly.FieldDropdown.CHECKMARK_OVERHANG;
+            }
+            else {
+                boundingBox.left -= Blockly.FieldDropdown.CHECKMARK_OVERHANG;
+            }
+            return boundingBox;
+        }
+        ;
+        isInitialized() {
+            return !!this.fieldGroup_;
+        }
+        getBlockData() {
+            return pxt.blocks.getBlockDataForField(this.sourceBlock_, this.name);
+        }
+        setBlockData(value) {
+            pxt.blocks.setBlockDataForField(this.sourceBlock_, this.name, value);
+        }
+        getSiblingBlock(inputName, useGrandparent = false) {
+            const block = useGrandparent ? this.sourceBlock_.parentBlock_ : this.sourceBlock_;
+            if (!block || !block.inputList)
+                return undefined;
+            for (const input of block.inputList) {
+                if (input.name === inputName) {
+                    return input.connection.targetBlock();
+                }
+            }
+            return undefined;
+        }
+        getSiblingField(fieldName, useGrandparent = false) {
+            const block = useGrandparent ? this.sourceBlock_.parentBlock_ : this.sourceBlock_;
+            if (!block)
+                return undefined;
+            return block.getField(fieldName);
+        }
+    }
+    pxtblockly.FieldBase = FieldBase;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+/// <reference path="./field_base.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    // 32 is specifically chosen so that we can scale the images for the default
+    // sprite sizes without getting browser anti-aliasing
+    const PREVIEW_WIDTH = 32;
+    const X_PADDING = 5;
+    const Y_PADDING = 1;
+    const BG_PADDING = 4;
+    const BG_WIDTH = BG_PADDING * 2 + PREVIEW_WIDTH;
+    const TOTAL_HEIGHT = Y_PADDING * 2 + BG_PADDING * 2 + PREVIEW_WIDTH;
+    const TOTAL_WIDTH = X_PADDING * 2 + BG_PADDING * 2 + PREVIEW_WIDTH;
+    class FieldAssetEditor extends pxtblockly.FieldBase {
+        constructor(text, params, validator) {
+            super(text, params, validator);
+            this.pendingEdit = false;
+            this.isEmpty = false;
+            this.assetChangeListener = () => {
+                if (this.pendingEdit)
+                    return;
+                const id = this.getBlockData();
+                if (id) {
+                    this.asset = pxt.react.getTilemapProject().lookupAsset(this.getAssetType(), id);
+                }
+                this.redrawPreview();
+            };
+            this.lightMode = params.lightMode;
+            this.params = this.parseFieldOptions(params);
+            this.blocksInfo = params.blocksInfo;
+        }
+        onInit() {
+            this.redrawPreview();
+        }
+        onValueChanged(newValue) {
+            this.parseValueText(newValue);
+            this.redrawPreview();
+            return this.getValueText();
+        }
+        showEditor_() {
+            if (this.isGreyBlock)
+                return;
+            const params = Object.assign({}, this.params);
+            params.blocksInfo = this.blocksInfo;
+            let editorKind;
+            switch (this.asset.type) {
+                case "tile" /* Tile */:
+                case "image" /* Image */:
+                    editorKind = "image-editor";
+                    params.temporaryAssets = pxtblockly.getTemporaryAssets(this.sourceBlock_.workspace, "image" /* Image */);
+                    break;
+                case "animation" /* Animation */:
+                    editorKind = "animation-editor";
+                    params.temporaryAssets = pxtblockly.getTemporaryAssets(this.sourceBlock_.workspace, "image" /* Image */)
+                        .concat(pxtblockly.getTemporaryAssets(this.sourceBlock_.workspace, "animation" /* Animation */));
+                    break;
+                case "tilemap" /* Tilemap */:
+                    editorKind = "tilemap-editor";
+                    const project = pxt.react.getTilemapProject();
+                    pxt.sprite.addMissingTilemapTilesAndReferences(project, this.asset);
+                    break;
+            }
+            const fv = pxt.react.getFieldEditorView(editorKind, this.asset, params);
+            if (this.undoRedoState) {
+                fv.restorePersistentData(this.undoRedoState);
+            }
+            pxt.react.getTilemapProject().pushUndo();
+            fv.onHide(() => {
+                var _a;
+                const result = fv.getResult();
+                const project = pxt.react.getTilemapProject();
+                if (result) {
+                    const old = this.getValue();
+                    if (pxt.assetEquals(this.asset, result))
+                        return;
+                    const oldId = isTemporaryAsset(this.asset) ? null : this.asset.id;
+                    let newId = isTemporaryAsset(result) ? null : result.id;
+                    if (!oldId && newId === this.sourceBlock_.id) {
+                        // The temporary assets we create just use the block id as the id; give it something
+                        // a little nicer
+                        result.id = project.generateNewID(result.type);
+                        newId = result.id;
+                    }
+                    this.pendingEdit = true;
+                    if ((_a = result.meta) === null || _a === void 0 ? void 0 : _a.displayName)
+                        this.disposeOfTemporaryAsset();
+                    this.asset = result;
+                    const lastRevision = project.revision();
+                    this.onEditorClose(this.asset);
+                    this.updateAssetListener();
+                    this.updateAssetMeta();
+                    this.redrawPreview();
+                    this.undoRedoState = fv.getPersistentData();
+                    if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                        const event = new BlocklyTilemapChange(this.sourceBlock_, 'field', this.name, old, this.getValue(), lastRevision, project.revision());
+                        if (oldId !== newId) {
+                            event.oldAssetId = oldId;
+                            event.newAssetId = newId;
+                        }
+                        Blockly.Events.fire(event);
+                    }
+                    this.pendingEdit = false;
+                }
+            });
+            fv.show();
+        }
+        render_() {
+            if (this.isGreyBlock && !this.textElement_) {
+                this.createTextElement_();
+            }
+            super.render_();
+            if (!this.isGreyBlock) {
+                this.size_.height = TOTAL_HEIGHT;
+                this.size_.width = TOTAL_WIDTH;
+            }
+        }
+        getDisplayText_() {
+            // This is only used when isGreyBlock is true
+            if (this.isGreyBlock) {
+                const text = pxt.Util.htmlUnescape(this.valueText);
+                return text.substr(0, text.indexOf("(")) + "(...)";
+            }
+            return "";
+        }
+        updateEditable() {
+            if (this.isGreyBlock && this.fieldGroup_) {
+                const group = this.fieldGroup_;
+                Blockly.utils.dom.removeClass(group, 'blocklyNonEditableText');
+                Blockly.utils.dom.removeClass(group, 'blocklyEditableText');
+                group.style.cursor = '';
+            }
+            else {
+                super.updateEditable();
+            }
+        }
+        getValue() {
+            if (this.isGreyBlock)
+                return pxt.Util.htmlUnescape(this.valueText);
+            return this.getValueText();
+        }
+        onDispose() {
+            var _a;
+            if (((_a = this.sourceBlock_) === null || _a === void 0 ? void 0 : _a.workspace) && !this.sourceBlock_.workspace.rendered) {
+                this.disposeOfTemporaryAsset();
+            }
+            pxt.react.getTilemapProject().removeChangeListener(this.getAssetType(), this.assetChangeListener);
+        }
+        disposeOfTemporaryAsset() {
+            if (this.isTemporaryAsset()) {
+                pxt.react.getTilemapProject().removeAsset(this.asset);
+                this.setBlockData(null);
+                this.asset = undefined;
+            }
+        }
+        clearTemporaryAssetData() {
+            if (this.isTemporaryAsset()) {
+                this.setBlockData(null);
+            }
+        }
+        isTemporaryAsset() {
+            return isTemporaryAsset(this.asset);
+        }
+        getAsset() {
+            return this.asset;
+        }
+        updateAsset(asset) {
+            this.asset = asset;
+            this.setValue(this.getValue());
+        }
+        onEditorClose(newValue) {
+            // Subclass
+        }
+        redrawPreview() {
+            if (!this.fieldGroup_)
+                return;
+            pxsim.U.clear(this.fieldGroup_);
+            if (this.isGreyBlock) {
+                this.createTextElement_();
+                this.render_();
+                this.updateEditable();
+                return;
+            }
+            const bg = new svg.Rect()
+                .at(X_PADDING, Y_PADDING)
+                .size(BG_WIDTH, BG_WIDTH)
+                .setClass("blocklySpriteField")
+                .stroke("#898989", 1)
+                .corner(4);
+            this.fieldGroup_.appendChild(bg.el);
+            if (this.asset) {
+                let dataURI;
+                switch (this.asset.type) {
+                    case "image" /* Image */:
+                    case "tile" /* Tile */:
+                        dataURI = pxtblockly.bitmapToImageURI(pxt.sprite.Bitmap.fromData(this.asset.bitmap), PREVIEW_WIDTH, this.lightMode);
+                        break;
+                    case "animation" /* Animation */:
+                        dataURI = pxtblockly.bitmapToImageURI(pxt.sprite.Bitmap.fromData(this.asset.frames[0]), PREVIEW_WIDTH, this.lightMode);
+                        break;
+                    case "tilemap" /* Tilemap */:
+                        dataURI = pxtblockly.tilemapToImageURI(this.asset.data, PREVIEW_WIDTH, this.lightMode);
+                        break;
+                }
+                const img = new svg.Image()
+                    .src(dataURI)
+                    .at(X_PADDING + BG_PADDING, Y_PADDING + BG_PADDING)
+                    .size(PREVIEW_WIDTH, PREVIEW_WIDTH);
+                this.fieldGroup_.appendChild(img.el);
+            }
+        }
+        parseValueText(newText) {
+            newText = pxt.Util.htmlUnescape(newText);
+            if (this.sourceBlock_ && !this.sourceBlock_.isInFlyout) {
+                const project = pxt.react.getTilemapProject();
+                const id = this.getBlockData();
+                const existing = project.lookupAsset(this.getAssetType(), id);
+                if (existing && !(newText && this.isEmpty)) {
+                    this.asset = existing;
+                }
+                else {
+                    this.setBlockData(null);
+                    if (this.asset) {
+                        if (this.sourceBlock_ && this.asset.meta.blockIDs) {
+                            this.asset.meta.blockIDs = this.asset.meta.blockIDs.filter(id => id !== this.sourceBlock_.id);
+                            if (!this.isTemporaryAsset()) {
+                                project.updateAsset(this.asset);
+                            }
+                        }
+                    }
+                    this.isEmpty = !newText;
+                    this.asset = this.createNewAsset(newText);
+                }
+                this.updateAssetMeta();
+                this.updateAssetListener();
+            }
+        }
+        parseFieldOptions(opts) {
+            const parsed = {
+                initWidth: 16,
+                initHeight: 16,
+                disableResize: false,
+                lightMode: false
+            };
+            if (!opts) {
+                return parsed;
+            }
+            if (opts.disableResize) {
+                parsed.disableResize = opts.disableResize.toLowerCase() === "true" || opts.disableResize === "1";
+            }
+            parsed.initWidth = withDefault(opts.initWidth, parsed.initWidth);
+            parsed.initHeight = withDefault(opts.initHeight, parsed.initHeight);
+            parsed.lightMode = opts.lightMode;
+            return parsed;
+            function withDefault(raw, def) {
+                const res = parseInt(raw);
+                if (isNaN(res)) {
+                    return def;
+                }
+                return res;
+            }
+        }
+        updateAssetMeta() {
+            if (!this.asset)
+                return;
+            if (!this.asset.meta) {
+                this.asset.meta = {};
+            }
+            if (!this.asset.meta.blockIDs) {
+                this.asset.meta.blockIDs = [];
+            }
+            if (this.sourceBlock_) {
+                if (this.asset.meta.blockIDs.indexOf(this.sourceBlock_.id) === -1) {
+                    const blockIDs = this.asset.meta.blockIDs;
+                    if (blockIDs.length && this.isTemporaryAsset() && blockIDs.some(id => this.sourceBlock_.workspace.getBlockById(id))) {
+                        // This temporary asset is already used, so we should clone a copy for ourselves
+                        this.asset = pxt.cloneAsset(this.asset);
+                        this.asset.meta.blockIDs = [];
+                    }
+                    this.asset.meta.blockIDs.push(this.sourceBlock_.id);
+                }
+                this.setBlockData(this.asset.id);
+            }
+            if (!this.isTemporaryAsset()) {
+                pxt.react.getTilemapProject().updateAsset(this.asset);
+            }
+            else {
+                this.asset.meta.temporaryInfo = {
+                    blockId: this.sourceBlock_.id,
+                    fieldName: this.name
+                };
+            }
+        }
+        updateAssetListener() {
+            pxt.react.getTilemapProject().removeChangeListener(this.getAssetType(), this.assetChangeListener);
+            if (this.asset && !this.isTemporaryAsset()) {
+                pxt.react.getTilemapProject().addChangeListener(this.asset, this.assetChangeListener);
+            }
+        }
+    }
+    pxtblockly.FieldAssetEditor = FieldAssetEditor;
+    function isTemporaryAsset(asset) {
+        return asset && !asset.meta.displayName;
+    }
+    class BlocklyTilemapChange extends Blockly.Events.BlockChange {
+        constructor(block, element, name, oldValue, newValue, oldRevision, newRevision) {
+            super(block, element, name, oldValue, newValue);
+            this.oldRevision = oldRevision;
+            this.newRevision = newRevision;
+            this.fieldName = name;
+        }
+        isNull() {
+            return this.oldRevision === this.newRevision && super.isNull();
+        }
+        run(forward) {
+            if (this.newAssetId || this.oldAssetId) {
+                const block = this.getEventWorkspace_().getBlockById(this.blockId);
+                if (forward) {
+                    pxt.blocks.setBlockDataForField(block, this.fieldName, this.newAssetId);
+                }
+                else {
+                    pxt.blocks.setBlockDataForField(block, this.fieldName, this.oldAssetId);
+                }
+            }
+            if (forward) {
+                pxt.react.getTilemapProject().redo();
+                super.run(forward);
+            }
+            else {
+                pxt.react.getTilemapProject().undo();
+                super.run(forward);
+            }
+            const ws = this.getEventWorkspace_();
+            // Fire an event to force a recompile, but make sure it doesn't end up on the undo stack
+            const ev = new BlocklyTilemapChange(ws.getBlockById(this.blockId), 'tilemap-revision', "revision", null, pxt.react.getTilemapProject().revision(), 0, 0);
+            ev.recordUndo = false;
+            Blockly.Events.fire(ev);
+        }
+    }
+    pxtblockly.BlocklyTilemapChange = BlocklyTilemapChange;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+/// <reference path="./field_asset.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    // 32 is specifically chosen so that we can scale the images for the default
+    // sprite sizes without getting browser anti-aliasing
+    const PREVIEW_WIDTH = 32;
+    const X_PADDING = 5;
+    const Y_PADDING = 1;
+    const BG_PADDING = 4;
+    const BG_WIDTH = BG_PADDING * 2 + PREVIEW_WIDTH;
+    const ICON_WIDTH = 30;
+    const TOTAL_HEIGHT = Y_PADDING * 2 + BG_PADDING * 2 + PREVIEW_WIDTH;
+    const TOTAL_WIDTH = X_PADDING * 2 + BG_PADDING * 2 + PREVIEW_WIDTH + ICON_WIDTH;
+    class FieldAnimationEditor extends pxtblockly.FieldAssetEditor {
+        constructor() {
+            super(...arguments);
+            this.onMouseEnter = () => {
+                if (this.animateRef || !this.asset)
+                    return;
+                const assetInterval = this.getParentInterval() || this.asset.interval;
+                const interval = assetInterval > 50 ? assetInterval : 50;
+                let index = 0;
+                this.animateRef = setInterval(() => {
+                    if (this.preview && this.frames[index])
+                        this.preview.src(this.frames[index]);
+                    index = (index + 1) % this.frames.length;
+                }, interval);
+            };
+            this.onMouseLeave = () => {
+                if (this.animateRef)
+                    clearInterval(this.animateRef);
+                this.animateRef = undefined;
+                if (this.preview && this.frames[0]) {
+                    this.preview.src(this.frames[0]);
+                }
+            };
+        }
+        initView() {
+            // Register mouseover events for animating preview
+            this.sourceBlock_.getSvgRoot().addEventListener("mouseenter", this.onMouseEnter);
+            this.sourceBlock_.getSvgRoot().addEventListener("mouseleave", this.onMouseLeave);
+        }
+        showEditor_() {
+            // Read parent interval
+            if (this.asset) {
+                this.asset.interval = this.getParentInterval() || this.asset.interval;
+            }
+            super.showEditor_();
+        }
+        render_() {
+            super.render_();
+            this.size_.height = TOTAL_HEIGHT;
+            this.size_.width = TOTAL_WIDTH;
+        }
+        getAssetType() {
+            return "animation" /* Animation */;
+        }
+        createNewAsset(text) {
+            const project = pxt.react.getTilemapProject();
+            if (text) {
+                const existing = pxt.lookupProjectAssetByTSReference(text, project);
+                if (existing)
+                    return existing;
+                const frames = parseImageArrayString(text);
+                if (frames && frames.length) {
+                    const id = this.sourceBlock_.id;
+                    const newAnimation = {
+                        internalID: -1,
+                        id,
+                        type: "animation" /* Animation */,
+                        frames,
+                        interval: this.getParentInterval(),
+                        meta: {},
+                    };
+                    return newAnimation;
+                }
+                const asset = project.lookupAssetByName("animation" /* Animation */, text.trim());
+                if (asset)
+                    return asset;
+            }
+            const id = this.sourceBlock_.id;
+            const bitmap = new pxt.sprite.Bitmap(this.params.initWidth, this.params.initHeight).data();
+            const newAnimation = {
+                internalID: -1,
+                id,
+                type: "animation" /* Animation */,
+                frames: [bitmap],
+                interval: 500,
+                meta: {},
+            };
+            return newAnimation;
+        }
+        onEditorClose(newValue) {
+            this.setParentInterval(newValue.interval);
+        }
+        getValueText() {
+            if (!this.asset)
+                return "[]";
+            if (this.isTemporaryAsset()) {
+                return "[" + this.asset.frames.map(frame => pxt.sprite.bitmapToImageLiteral(pxt.sprite.Bitmap.fromData(frame), "typescript" /* TypeScript */)).join(",") + "]";
+            }
+            return pxt.getTSReferenceForAsset(this.asset);
+        }
+        redrawPreview() {
+            if (!this.fieldGroup_)
+                return;
+            pxsim.U.clear(this.fieldGroup_);
+            const bg = new svg.Rect()
+                .at(X_PADDING + ICON_WIDTH, Y_PADDING)
+                .size(BG_WIDTH, BG_WIDTH)
+                .corner(4)
+                .setClass("blocklyAnimationField");
+            this.fieldGroup_.appendChild(bg.el);
+            const icon = new svg.Text("\uf008")
+                .at(X_PADDING, 5 + (TOTAL_HEIGHT >> 1))
+                .fill(this.sourceBlock_.getColourSecondary())
+                .setClass("semanticIcon");
+            this.fieldGroup_.appendChild(icon.el);
+            if (this.asset) {
+                this.frames = this.asset.frames.map(frame => pxtblockly.bitmapToImageURI(pxt.sprite.Bitmap.fromData(frame), PREVIEW_WIDTH, this.lightMode));
+                this.preview = new svg.Image()
+                    .src(this.frames[0])
+                    .at(X_PADDING + BG_PADDING + ICON_WIDTH, Y_PADDING + BG_PADDING)
+                    .size(PREVIEW_WIDTH, PREVIEW_WIDTH);
+                this.fieldGroup_.appendChild(this.preview.el);
+            }
+        }
+        getParentIntervalBlock() {
+            const s = this.sourceBlock_;
+            if (s.parentBlock_) {
+                const p = s.parentBlock_;
+                for (const input of p.inputList) {
+                    if (input.name === "frameInterval") {
+                        return input.connection.targetBlock();
+                    }
+                }
+            }
+            return undefined;
+        }
+        setParentInterval(interval) {
+            const target = this.getParentIntervalBlock();
+            if (target) {
+                const fieldName = getFieldName(target);
+                if (fieldName) {
+                    target.setFieldValue(String(interval), fieldName);
+                }
+            }
+        }
+        getParentInterval() {
+            const target = this.getParentIntervalBlock();
+            if (target) {
+                const fieldName = getFieldName(target);
+                if (fieldName) {
+                    return Number(target.getFieldValue(fieldName));
+                }
+            }
+            return 100;
+        }
+        parseFieldOptions(opts) {
+            return parseFieldOptions(opts);
+        }
+    }
+    pxtblockly.FieldAnimationEditor = FieldAnimationEditor;
+    function parseFieldOptions(opts) {
+        const parsed = {
+            initWidth: 16,
+            initHeight: 16,
+            disableResize: false,
+            lightMode: false
+        };
+        if (!opts) {
+            return parsed;
+        }
+        parsed.lightMode = opts.lightMode;
+        if (opts.filter) {
+            parsed.filter = opts.filter;
+        }
+        parsed.initWidth = withDefault(opts.initWidth, parsed.initWidth);
+        parsed.initHeight = withDefault(opts.initHeight, parsed.initHeight);
+        return parsed;
+        function withDefault(raw, def) {
+            const res = parseInt(raw);
+            if (isNaN(res)) {
+                return def;
+            }
+            return res;
+        }
+    }
+    function parseImageArrayString(str) {
+        if (str.indexOf("[") === -1)
+            return null;
+        str = str.replace(/[\[\]]/mg, "");
+        return str.split(",").map(s => pxt.sprite.imageLiteralToBitmap(s).data()).filter(b => b.height && b.width);
+    }
+    function isNumberType(type) {
+        return type === "math_number" || type === "math_integer" || type === "math_whole_number";
+    }
+    function getFieldName(target) {
+        if (target.type === "math_number_minmax") {
+            return "SLIDER";
+        }
+        else if (isNumberType(target.type)) {
+            return "NUM";
+        }
+        else if (target.type === "timePicker") {
+            return "ms";
+        }
+        return null;
+    }
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    /**
+     * Subclass of FieldVariable to filter out the "delete" option when
+     * variables are part of a function argument (or else the whole function
+     * gets deleted).
+    */
+    class FieldArgumentVariable extends Blockly.FieldVariable {
+        constructor(varName) {
+            super(varName);
+            this.menuGenerator_ = this.dropdownCreate;
+        }
+        dropdownCreate() {
+            const options = Blockly.FieldVariable.dropdownCreate.call(this);
+            return options.filter((opt) => opt[1] != Blockly.DELETE_VARIABLE_ID);
+        }
+    }
+    pxtblockly.FieldArgumentVariable = FieldArgumentVariable;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldTextDropdown extends Blockly.FieldTextDropdown {
+        constructor(text, options, opt_validator) {
+            super(text, options.values, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+    }
+    pxtblockly.FieldTextDropdown = FieldTextDropdown;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+/// <reference path="./field_textdropdown.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldAutoComplete extends Blockly.FieldTextDropdown {
+        constructor(text, options, opt_validator) {
+            super(text, () => [], opt_validator);
+            this.isFieldCustom_ = true;
+            this.key = options.key;
+            this.isTextValid_ = true;
+        }
+        isOptionListDynamic() {
+            return true;
+        }
+        getDisplayText_() {
+            return this.parsedValue || "";
+        }
+        doValueUpdate_(newValue) {
+            if (newValue === null)
+                return;
+            if (/['"`].*['"`]/.test(newValue)) {
+                this.parsedValue = JSON.parse(newValue);
+            }
+            else {
+                this.parsedValue = newValue;
+            }
+            this.value_ = this.parsedValue;
+        }
+        getValue() {
+            if (this.parsedValue) {
+                return JSON.stringify(this.parsedValue);
+            }
+            else
+                return '""';
+        }
+        getOptions() {
+            var _a;
+            const workspace = (_a = this.sourceBlock_) === null || _a === void 0 ? void 0 : _a.workspace;
+            if (!workspace)
+                return [];
+            const res = [];
+            const fields = pxtblockly.getAllFields(workspace, field => field instanceof FieldAutoComplete && field.getKey() === this.key);
+            const options = fields.map(field => field.ref.getDisplayText_());
+            for (const option of options) {
+                if (!option.trim() || res.some(tuple => tuple[0] === option))
+                    continue;
+                res.push([option, option]);
+            }
+            res.sort((a, b) => a[0].localeCompare(b[0]));
+            return res;
+        }
+        showDropdown_() {
+            const options = this.getOptions();
+            if (options.length)
+                super.showDropdown_();
+        }
+        getKey() {
+            if (this.key)
+                return this.key;
+            if (this.sourceBlock_)
+                return this.sourceBlock_.type;
+            return undefined;
+        }
+        // Copied from field_string in pxt-blockly
+        initView() {
+            // Add quotes around the string
+            // Positioned on updatSize, after text size is calculated.
+            this.quoteSize_ = 16;
+            this.quoteWidth_ = 8;
+            this.quoteLeftX_ = 0;
+            this.quoteRightX_ = 0;
+            this.quoteY_ = 10;
+            if (this.quoteLeft_)
+                this.quoteLeft_.parentNode.removeChild(this.quoteLeft_);
+            this.quoteLeft_ = Blockly.utils.dom.createSvgElement('text', {
+                'font-size': this.quoteSize_ + 'px',
+                'class': 'field-text-quote'
+            }, this.fieldGroup_);
+            super.initView();
+            if (this.quoteRight_)
+                this.quoteRight_.parentNode.removeChild(this.quoteRight_);
+            this.quoteRight_ = Blockly.utils.dom.createSvgElement('text', {
+                'font-size': this.quoteSize_ + 'px',
+                'class': 'field-text-quote'
+            }, this.fieldGroup_);
+            this.quoteLeft_.appendChild(document.createTextNode('"'));
+            this.quoteRight_.appendChild(document.createTextNode('"'));
+        }
+        // Copied from field_string in pxt-blockly
+        updateSize_() {
+            super.updateSize_();
+            const sWidth = Math.max(this.size_.width, 1);
+            const xPadding = 3;
+            let addedWidth = this.positionLeft(sWidth + xPadding);
+            this.textElement_.setAttribute('x', addedWidth.toString());
+            addedWidth += this.positionRight(addedWidth + sWidth + xPadding);
+            this.size_.width = sWidth + addedWidth;
+        }
+        // Copied from field_string in pxt-blockly
+        positionRight(x) {
+            if (!this.quoteRight_) {
+                return 0;
+            }
+            let addedWidth = 0;
+            if (this.sourceBlock_.RTL) {
+                this.quoteRightX_ = Blockly.FieldString.quotePadding;
+                addedWidth = this.quoteWidth_ + Blockly.FieldString.quotePadding;
+            }
+            else {
+                this.quoteRightX_ = x + Blockly.FieldString.quotePadding;
+                addedWidth = this.quoteWidth_ + Blockly.FieldString.quotePadding;
+            }
+            this.quoteRight_.setAttribute('transform', 'translate(' + this.quoteRightX_ + ',' + this.quoteY_ + ')');
+            return addedWidth;
+        }
+        // Copied from field_string in pxt-blockly
+        positionLeft(x) {
+            if (!this.quoteLeft_) {
+                return 0;
+            }
+            let addedWidth = 0;
+            if (this.sourceBlock_.RTL) {
+                this.quoteLeftX_ = x + this.quoteWidth_ + Blockly.FieldString.quotePadding * 2;
+                addedWidth = this.quoteWidth_ + Blockly.FieldString.quotePadding;
+            }
+            else {
+                this.quoteLeftX_ = 0;
+                addedWidth = this.quoteWidth_ + Blockly.FieldString.quotePadding;
+            }
+            this.quoteLeft_.setAttribute('transform', 'translate(' + this.quoteLeftX_ + ',' + this.quoteY_ + ')');
+            return addedWidth;
+        }
+        createSVGArrow_() {
+            // This creates the little arrow for dropdown fields. Intentionally
+            // do nothing
+        }
+    }
+    pxtblockly.FieldAutoComplete = FieldAutoComplete;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="../../built/pxtsim.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldBreakpoint extends Blockly.FieldNumber {
+        constructor(state, params, opt_validator) {
+            super(state, undefined, undefined, undefined, opt_validator);
+            this.isFieldCustom_ = true;
+            this.CURSOR = 'pointer';
+            this.params = params;
+            this.setValue(state);
+            this.addArgType('toggle');
+            this.type_ = params.type;
+        }
+        initView() {
+            if (!this.fieldGroup_) {
+                return;
+            }
+            // Add an attribute to cassify the type of field.
+            if (this.getArgTypes() !== null) {
+                if (this.sourceBlock_.isShadow()) {
+                    this.sourceBlock_.svgGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+                else {
+                    // Fields without a shadow wrapper, like square dropdowns.
+                    this.fieldGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+            }
+            // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
+            const size = this.getSize();
+            this.checkElement_ = Blockly.utils.dom.createSvgElement('g', {
+                'class': `blocklyToggle ${this.state_ ? 'blocklyToggleOnBreakpoint' : 'blocklyToggleOffBreakpoint'}`,
+                'transform': `translate(8, ${size.height / 2})`,
+            }, this.fieldGroup_);
+            this.toggleThumb_ = Blockly.utils.dom.createSvgElement('polygon', {
+                'class': 'blocklyToggleRect',
+                'points': '50,5 100,5 125,30 125,80 100,105 50,105 25,80 25,30'
+            }, this.checkElement_);
+            let fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
+            /** @type {!Element} */
+            this.textElement_ = Blockly.utils.dom.createSvgElement('text', {
+                'class': 'blocklyText',
+                'x': fieldX,
+                'dy': '0.6ex',
+                'y': size.height / 2
+            }, this.fieldGroup_);
+            this.switchToggle(this.state_);
+            this.setValue(this.getValue());
+            // Force a render.
+            this.markDirty();
+        }
+        updateSize_() {
+            this.size_.width = 30;
+        }
+        /**
+         * Return 'TRUE' if the toggle is ON, 'FALSE' otherwise.
+         * @return {string} Current state.
+         */
+        getValue() {
+            return this.toVal(this.state_);
+        }
+        ;
+        /**
+         * Set the checkbox to be checked if newBool is 'TRUE' or true,
+         * unchecks otherwise.
+         * @param {string|boolean} newBool New state.
+         */
+        setValue(newBool) {
+            let newState = this.fromVal(newBool);
+            if (this.state_ !== newState) {
+                if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.state_, newState));
+                }
+                this.state_ = newState;
+                this.switchToggle(this.state_);
+            }
+        }
+        switchToggle(newState) {
+            if (this.checkElement_) {
+                this.updateSize_();
+                if (newState) {
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOnBreakpoint');
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOffBreakpoint');
+                }
+                else {
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOnBreakpoint');
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOffBreakpoint');
+                }
+                this.checkElement_.setAttribute('transform', `translate(-7, -1) scale(0.3)`);
+            }
+        }
+        updateDisplay_(newValue) {
+            super.updateDisplay_(newValue);
+            if (this.textElement_)
+                pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
+        }
+        render_() {
+            if (this.visible_ && this.textElement_) {
+                // Replace the text.
+                goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+                this.updateSize_();
+            }
+        }
+        /**
+         * Toggle the state of the toggle.
+         * @private
+         */
+        showEditor_() {
+            let newState = !this.state_;
+            /*
+            if (this.sourceBlock_) {
+              // Call any validation function, and allow it to override.
+              newState = this.callValidator(newState);
+            }*/
+            if (newState !== null) {
+                this.setValue(this.toVal(newState));
+            }
+        }
+        toVal(newState) {
+            if (this.type_ == "number")
+                return String(newState ? '1' : '0');
+            else
+                return String(newState ? 'true' : 'false');
+        }
+        fromVal(val) {
+            if (typeof val == "string") {
+                if (val == "1" || val.toUpperCase() == "TRUE")
+                    return true;
+                return false;
+            }
+            return !!val;
+        }
+    }
+    pxtblockly.FieldBreakpoint = FieldBreakpoint;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldColorWheel extends Blockly.FieldSlider {
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        constructor(value_, params, opt_validator) {
+            super(String(value_), '0', '255', '1', '10', 'Color', opt_validator);
+            this.isFieldCustom_ = true;
+            this.params = params;
+            if (this.params['min'])
+                this.min_ = parseFloat(this.params['min']);
+            if (this.params['max'])
+                this.max_ = parseFloat(this.params['max']);
+            if (this.params['label'])
+                this.labelText_ = this.params['label'];
+            if (this.params['channel'])
+                this.channel_ = this.params['channel'];
+        }
+        /**
+         * Set the gradient CSS properties for the given node and channel
+         * @param {Node} node - The DOM node the gradient will be set on.
+         * @private
+         */
+        setBackground_(node) {
+            let gradient = this.createColourStops_().join(',');
+            goog.style.setStyle(node, 'background', '-moz-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', '-webkit-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', '-o-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', '-ms-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', 'linear-gradient(left, ' + gradient + ')');
+            if (this.params['sliderWidth'])
+                goog.style.setStyle(node, 'width', `${this.params['sliderWidth']}px`);
+        }
+        ;
+        setReadout_(readout, value) {
+            const hexValue = this.colorWheel(parseInt(value), this.channel_);
+            // <span class="blocklyColorReadout" style="background-color: ${hexValue};"></span>
+            const readoutSpan = document.createElement('span');
+            readoutSpan.className = "blocklyColorReadout";
+            readoutSpan.style.backgroundColor = `${hexValue}`;
+            pxsim.U.clear(readout);
+            readout.appendChild(readoutSpan);
+        }
+        createColourStops_() {
+            let stops = [];
+            for (let n = 0; n <= 255; n += 20) {
+                stops.push(this.colorWheel(n, this.channel_));
+            }
+            return stops;
+        }
+        ;
+        colorWheel(wheelPos, channel) {
+            if (channel == "hsvfast") {
+                return this.hsvFast(wheelPos, 255, 255);
+            }
+            else {
+                wheelPos = 255 - wheelPos;
+                if (wheelPos < 85) {
+                    return this.hex(wheelPos * 3, 255, 255 - wheelPos * 3);
+                }
+                if (wheelPos < 170) {
+                    wheelPos -= 85;
+                    return this.hex(255, 255 - wheelPos * 3, wheelPos * 3);
+                }
+                wheelPos -= 170;
+                return this.hex(255 - wheelPos * 3, wheelPos * 3, 255);
+            }
+        }
+        hsvFast(hue, sat, val) {
+            let h = (hue % 255) >> 0;
+            if (h < 0)
+                h += 255;
+            // scale down to 0..192
+            h = (h * 192 / 255) >> 0;
+            //reference: based on FastLED's hsv2rgb rainbow algorithm [https://github.com/FastLED/FastLED](MIT)
+            let invsat = 255 - sat;
+            let brightness_floor = ((val * invsat) / 255) >> 0;
+            let color_amplitude = val - brightness_floor;
+            let section = (h / 0x40) >> 0; // [0..2]
+            let offset = (h % 0x40) >> 0; // [0..63]
+            let rampup = offset;
+            let rampdown = (0x40 - 1) - offset;
+            let rampup_amp_adj = ((rampup * color_amplitude) / (255 / 4)) >> 0;
+            let rampdown_amp_adj = ((rampdown * color_amplitude) / (255 / 4)) >> 0;
+            let rampup_adj_with_floor = (rampup_amp_adj + brightness_floor);
+            let rampdown_adj_with_floor = (rampdown_amp_adj + brightness_floor);
+            let r;
+            let g;
+            let b;
+            if (section) {
+                if (section == 1) {
+                    // section 1: 0x40..0x7F
+                    r = brightness_floor;
+                    g = rampdown_adj_with_floor;
+                    b = rampup_adj_with_floor;
+                }
+                else {
+                    // section 2; 0x80..0xBF
+                    r = rampup_adj_with_floor;
+                    g = brightness_floor;
+                    b = rampdown_adj_with_floor;
+                }
+            }
+            else {
+                // section 0: 0x00..0x3F
+                r = rampdown_adj_with_floor;
+                g = rampup_adj_with_floor;
+                b = brightness_floor;
+            }
+            return this.hex(r, g, b);
+        }
+        hex(red, green, blue) {
+            return `#${this.componentToHex(red & 0xFF)}${this.componentToHex(green & 0xFF)}${this.componentToHex(blue & 0xFF)}`;
+        }
+        componentToHex(c) {
+            let hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+    }
+    pxtblockly.FieldColorWheel = FieldColorWheel;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldColorNumber extends Blockly.FieldColour {
+        constructor(text, params, opt_validator) {
+            super(text, opt_validator);
+            this.isFieldCustom_ = true;
+            this.valueMode_ = "rgb";
+            if (params.colours)
+                this.setColours(JSON.parse(params.colours));
+            else if (pxt.appTarget.runtime && pxt.appTarget.runtime.palette) {
+                let p = pxt.Util.clone(pxt.appTarget.runtime.palette);
+                p[0] = "#dedede";
+                let t;
+                if (pxt.appTarget.runtime.paletteNames) {
+                    t = pxt.Util.clone(pxt.appTarget.runtime.paletteNames);
+                    t[0] = lf("transparent");
+                }
+                this.setColours(p, t);
+            }
+            // Set to first color in palette (for toolbox)
+            this.setValue(this.getColours_()[0]);
+            if (params.columns)
+                this.setColumns(parseInt(params.columns));
+            if (params.className)
+                this.className_ = params.className;
+            if (params.valueMode)
+                this.valueMode_ = params.valueMode;
+        }
+        /**
+         * @override
+         */
+        applyColour() {
+            var _a, _b, _c, _d, _e, _f;
+            if (this.borderRect_) {
+                this.borderRect_.style.fill = this.value_;
+            }
+            else if (this.sourceBlock_) {
+                (_c = (_b = (_a = this.sourceBlock_) === null || _a === void 0 ? void 0 : _a.pathObject) === null || _b === void 0 ? void 0 : _b.svgPath) === null || _c === void 0 ? void 0 : _c.setAttribute('fill', this.value_);
+                (_f = (_e = (_d = this.sourceBlock_) === null || _d === void 0 ? void 0 : _d.pathObject) === null || _e === void 0 ? void 0 : _e.svgPath) === null || _f === void 0 ? void 0 : _f.setAttribute('stroke', '#fff');
+            }
+        }
+        ;
+        doClassValidation_(colour) {
+            return "string" != typeof colour ? null : parseColour(colour, this.getColours_());
+        }
+        /**
+         * Return the current colour.
+         * @param {boolean} opt_asHex optional field if the returned value should be a hex
+         * @return {string} Current colour in '#rrggbb' format.
+         */
+        getValue(opt_asHex) {
+            if (opt_asHex)
+                return this.value_;
+            switch (this.valueMode_) {
+                case "hex":
+                    return `"${this.value_}"`;
+                case "rgb":
+                    if (this.value_.indexOf('#') > -1) {
+                        return `0x${this.value_.replace(/^#/, '')}`;
+                    }
+                    else {
+                        return this.value_;
+                    }
+                case "index":
+                    if (!this.value_)
+                        return "-1";
+                    const allColours = this.getColours_();
+                    for (let i = 0; i < allColours.length; i++) {
+                        if (this.value_.toUpperCase() === allColours[i].toUpperCase()) {
+                            return i + "";
+                        }
+                    }
+            }
+            return this.value_;
+        }
+        /**
+         * Set the colour.
+         * @param {string} colour The new colour in '#rrggbb' format.
+         */
+        doValueUpdate_(colour) {
+            this.value_ = parseColour(colour, this.getColours_());
+            this.applyColour();
+        }
+        showEditor_() {
+            super.showEditor_();
+            if (this.className_ && this.picker_)
+                pxt.BrowserUtils.addClass(this.picker_, this.className_);
+        }
+        getColours_() {
+            return this.colours_;
+        }
+    }
+    pxtblockly.FieldColorNumber = FieldColorNumber;
+    function parseColour(colour, allColours) {
+        if (colour) {
+            const enumSplit = /Colors\.([a-zA-Z]+)/.exec(colour);
+            const hexSplit = /(0x|#)([0-9a-fA-F]+)/.exec(colour);
+            if (enumSplit) {
+                switch (enumSplit[1].toLocaleLowerCase()) {
+                    case "red": return "#FF0000";
+                    case "orange": return "#FF7F00";
+                    case "yellow": return "#FFFF00";
+                    case "green": return "#00FF00";
+                    case "blue": return "#0000FF";
+                    case "indigo": return "#4B0082";
+                    case "violet": return "#8A2BE2";
+                    case "purple": return "#A033E5";
+                    case "pink": return "#FF007F";
+                    case "white": return "#FFFFFF";
+                    case "black": return "#000000";
+                    default: return colour;
+                }
+            }
+            else if (hexSplit) {
+                const hexLiteralNumber = hexSplit[2];
+                if (hexLiteralNumber.length === 3) {
+                    // if shorthand color, return standard hex triple
+                    let output = "#";
+                    for (let i = 0; i < hexLiteralNumber.length; i++) {
+                        const digit = hexLiteralNumber.charAt(i);
+                        output += digit + digit;
+                    }
+                    return output;
+                }
+                else if (hexLiteralNumber.length === 6) {
+                    return "#" + hexLiteralNumber;
+                }
+            }
+            if (allColours) {
+                const parsedAsInt = parseInt(colour);
+                // Might be the index and not the color
+                if (!isNaN(parsedAsInt) && allColours[parsedAsInt] != undefined) {
+                    return allColours[parsedAsInt];
+                }
+                else {
+                    return allColours[0];
+                }
+            }
+        }
+        return colour;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldGridPicker extends Blockly.FieldDropdown {
+        constructor(text, options, validator) {
+            super(options.data);
+            this.isFieldCustom_ = true;
+            /**
+             * Callback for when a button is clicked inside the drop-down.
+             * Should be bound to the FieldIconMenu.
+             * @param {Event} e DOM event for the click/touch
+             * @private
+             */
+            this.buttonClick_ = function (e) {
+                let value = e.target.getAttribute('data-value');
+                if (value !== null) {
+                    this.setValue(value);
+                    // Close the picker
+                    if (this.closeModal_) {
+                        this.close();
+                        this.closeModal_ = false;
+                    }
+                }
+            };
+            this.buttonClickAndClose_ = function (e) {
+                this.closeModal_ = true;
+                this.buttonClick_(e);
+            };
+            this.columns_ = parseInt(options.columns) || 4;
+            this.maxRows_ = parseInt(options.maxRows) || 0;
+            this.width_ = parseInt(options.width) || 200;
+            this.backgroundColour_ = pxtblockly.parseColour(options.colour);
+            this.borderColour_ = pxt.toolbox.fadeColor(this.backgroundColour_, 0.4, false);
+            let tooltipCfg = {
+                xOffset: parseInt(options.tooltipsXOffset) || 15,
+                yOffset: parseInt(options.tooltipsYOffset) || -10
+            };
+            this.tooltipConfig_ = tooltipCfg;
+            this.hasSearchBar_ = !!options.hasSearchBar || false;
+            this.hideRect_ = !!options.hideRect || false;
+        }
+        /**
+         * When disposing the grid picker, make sure the tooltips are disposed too.
+         * @public
+         */
+        dispose() {
+            super.dispose();
+            this.disposeTooltip();
+            this.disposeIntersectionObserver();
+        }
+        createTooltip_() {
+            if (this.gridTooltip_)
+                return;
+            // Create tooltip
+            this.gridTooltip_ = document.createElement('div');
+            this.gridTooltip_.className = 'goog-tooltip blocklyGridPickerTooltip';
+            this.gridTooltip_.style.position = 'absolute';
+            this.gridTooltip_.style.display = 'none';
+            this.gridTooltip_.style.visibility = 'hidden';
+            document.body.appendChild(this.gridTooltip_);
+        }
+        /**
+         * Create blocklyGridPickerRows and add them to table container
+         * @param options
+         * @param tableContainer
+         */
+        populateTableContainer(options, tableContainer, scrollContainer) {
+            pxsim.U.removeChildren(tableContainer);
+            if (options.length == 0) {
+                this.firstItem_ = undefined;
+            }
+            for (let i = 0; i < options.length / this.columns_; i++) {
+                let row = this.populateRow(i, options, tableContainer);
+                tableContainer.appendChild(row);
+            }
+        }
+        /**
+         * Populate a single row and add it to table container
+         * @param row
+         * @param options
+         * @param tableContainer
+         */
+        populateRow(row, options, tableContainer) {
+            const columns = this.columns_;
+            const rowContent = document.createElement('div');
+            rowContent.className = 'blocklyGridPickerRow';
+            for (let i = (columns * row); i < Math.min((columns * row) + columns, options.length); i++) {
+                let content = options[i][0]; // Human-readable text or image.
+                const value = options[i][1]; // Language-neutral value.
+                const menuItem = document.createElement('div');
+                menuItem.className = 'goog-menuitem goog-option';
+                menuItem.setAttribute('id', ':' + i); // For aria-activedescendant
+                menuItem.setAttribute('role', 'menuitem');
+                menuItem.style.userSelect = 'none';
+                menuItem.title = content['alt'] || content;
+                menuItem.setAttribute('data-value', value);
+                const menuItemContent = document.createElement('div');
+                menuItemContent.setAttribute('class', 'goog-menuitem-content');
+                menuItemContent.title = content['alt'] || content;
+                menuItemContent.setAttribute('data-value', value);
+                const hasImages = typeof content == 'object';
+                // Set colour
+                let backgroundColour = this.backgroundColour_;
+                if (value == this.getValue()) {
+                    // This option is selected
+                    menuItem.setAttribute('aria-selected', 'true');
+                    pxt.BrowserUtils.addClass(menuItem, 'goog-option-selected');
+                    backgroundColour = this.sourceBlock_.getColourTertiary();
+                    // Save so we can scroll to it later
+                    this.selectedItemDom = menuItem;
+                    if (hasImages && !this.shouldShowTooltips()) {
+                        this.updateSelectedBar_(content, value);
+                    }
+                }
+                menuItem.style.backgroundColor = backgroundColour;
+                menuItem.style.borderColor = this.borderColour_;
+                if (hasImages) {
+                    // An image, not text.
+                    const buttonImg = new Image(content['width'], content['height']);
+                    buttonImg.setAttribute('draggable', 'false');
+                    if (!('IntersectionObserver' in window)) {
+                        // No intersection observer support, set the image url immediately
+                        buttonImg.src = content['src'];
+                    }
+                    else {
+                        buttonImg.src = FieldGridPicker.DEFAULT_IMG;
+                        buttonImg.setAttribute('data-src', content['src']);
+                        this.observer.observe(buttonImg);
+                    }
+                    buttonImg.alt = content['alt'] || '';
+                    buttonImg.setAttribute('data-value', value);
+                    menuItemContent.appendChild(buttonImg);
+                }
+                else {
+                    // text
+                    menuItemContent.textContent = content;
+                }
+                if (this.shouldShowTooltips()) {
+                    Blockly.bindEvent_(menuItem, 'click', this, this.buttonClickAndClose_);
+                    // Setup hover tooltips
+                    const xOffset = (this.sourceBlock_.RTL ? -this.tooltipConfig_.xOffset : this.tooltipConfig_.xOffset);
+                    const yOffset = this.tooltipConfig_.yOffset;
+                    Blockly.bindEvent_(menuItem, 'mousemove', this, (e) => {
+                        if (hasImages) {
+                            this.gridTooltip_.style.top = `${e.clientY + yOffset}px`;
+                            this.gridTooltip_.style.left = `${e.clientX + xOffset}px`;
+                            // Set tooltip text
+                            const touchTarget = document.elementFromPoint(e.clientX, e.clientY);
+                            const title = touchTarget.title || touchTarget.alt;
+                            this.gridTooltip_.textContent = title;
+                            // Show the tooltip
+                            this.gridTooltip_.style.visibility = title ? 'visible' : 'hidden';
+                            this.gridTooltip_.style.display = title ? '' : 'none';
+                        }
+                        pxt.BrowserUtils.addClass(menuItem, 'goog-menuitem-highlight');
+                        tableContainer.setAttribute('aria-activedescendant', menuItem.id);
+                    });
+                    Blockly.bindEvent_(menuItem, 'mouseout', this, (e) => {
+                        if (hasImages) {
+                            // Hide the tooltip
+                            this.gridTooltip_.style.visibility = 'hidden';
+                            this.gridTooltip_.style.display = 'none';
+                        }
+                        pxt.BrowserUtils.removeClass(menuItem, 'goog-menuitem-highlight');
+                        tableContainer.removeAttribute('aria-activedescendant');
+                    });
+                }
+                else {
+                    if (hasImages) {
+                        // Show the selected bar
+                        this.selectedBar_.style.display = '';
+                        // Show the selected item (in the selected bar)
+                        Blockly.bindEvent_(menuItem, 'click', this, (e) => {
+                            if (this.closeModal_) {
+                                this.buttonClick_(e);
+                            }
+                            else {
+                                // Clear all current hovers.
+                                const currentHovers = tableContainer.getElementsByClassName('goog-menuitem-highlight');
+                                for (let i = 0; i < currentHovers.length; i++) {
+                                    pxt.BrowserUtils.removeClass(currentHovers[i], 'goog-menuitem-highlight');
+                                }
+                                // Set hover on current item
+                                pxt.BrowserUtils.addClass(menuItem, 'goog-menuitem-highlight');
+                                this.updateSelectedBar_(content, value);
+                            }
+                        });
+                    }
+                    else {
+                        Blockly.bindEvent_(menuItem, 'click', this, this.buttonClickAndClose_);
+                        Blockly.bindEvent_(menuItem, 'mouseup', this, this.buttonClickAndClose_);
+                    }
+                }
+                menuItem.appendChild(menuItemContent);
+                rowContent.appendChild(menuItem);
+                if (i == 0) {
+                    this.firstItem_ = menuItem;
+                }
+            }
+            return rowContent;
+        }
+        /**
+         * Whether or not to show a box around the dropdown menu.
+         * @return {boolean} True if we should show a box (rect) around the dropdown menu. Otherwise false.
+         * @private
+         */
+        shouldShowRect_() {
+            return !this.hideRect_ ? !this.sourceBlock_.isShadow() : false;
+        }
+        doClassValidation_(newValue) {
+            return newValue;
+        }
+        /**
+         * Closes the gridpicker.
+         */
+        close() {
+            this.disposeTooltip();
+            Blockly.WidgetDiv.hideIfOwner(this);
+            Blockly.Events.setGroup(false);
+        }
+        /**
+         * Getter method
+         */
+        getFirstItem() {
+            return this.firstItem_;
+        }
+        /**
+         * Highlight first item in menu, de-select and de-highlight all others
+         */
+        highlightFirstItem(tableContainerDom) {
+            let menuItemsDom = tableContainerDom.childNodes;
+            if (menuItemsDom.length && menuItemsDom[0].childNodes) {
+                for (let row = 0; row < menuItemsDom.length; ++row) {
+                    let rowLength = menuItemsDom[row].childNodes.length;
+                    for (let col = 0; col < rowLength; ++col) {
+                        const menuItem = menuItemsDom[row].childNodes[col];
+                        pxt.BrowserUtils.removeClass(menuItem, "goog-menuitem-highlight");
+                        pxt.BrowserUtils.removeClass(menuItem, "goog-option-selected");
+                    }
+                }
+                let firstItem = menuItemsDom[0].childNodes[0];
+                firstItem.className += " goog-menuitem-highlight";
+            }
+        }
+        /**
+         * Scroll menu to item that equals current value of gridpicker
+         */
+        highlightAndScrollSelected(tableContainerDom, scrollContainerDom) {
+            if (!this.selectedItemDom)
+                return;
+            goog.style.scrollIntoContainerView(this.selectedItemDom, scrollContainerDom, true);
+        }
+        /**
+         * Create a dropdown menu under the text.
+         * @private
+         */
+        showEditor_() {
+            Blockly.WidgetDiv.show(this, this.sourceBlock_.RTL, () => {
+                this.onClose_();
+            });
+            this.setupIntersectionObserver_();
+            this.createTooltip_();
+            const tableContainer = document.createElement("div");
+            this.positionMenu_(tableContainer);
+        }
+        positionMenu_(tableContainer) {
+            // Record viewport dimensions before adding the dropdown.
+            const viewportBBox = Blockly.utils.getViewportBBox();
+            const anchorBBox = this.getAnchorDimensions_();
+            const { paddingContainer, scrollContainer } = this.createWidget_(tableContainer);
+            const containerSize = {
+                width: paddingContainer.offsetWidth,
+                height: paddingContainer.offsetHeight
+            }; //goog.style.getSize(paddingContainer);
+            // Set width
+            const windowSize = goog.dom.getViewportSize();
+            if (this.width_ > windowSize.width) {
+                this.width_ = windowSize.width;
+            }
+            tableContainer.style.width = this.width_ + 'px';
+            let addedHeight = 0;
+            if (this.hasSearchBar_)
+                addedHeight += 50; // Account for search bar
+            if (this.selectedBar_)
+                addedHeight += 50; // Account for the selected bar
+            // Set height
+            if (this.maxRows_) {
+                // Calculate height
+                const firstRowDom = tableContainer.children[0];
+                const rowHeight = firstRowDom.offsetHeight;
+                // Compute maxHeight using maxRows + 0.3 to partially show next row, to hint at scrolling
+                let maxHeight = rowHeight * (this.maxRows_ + 0.3);
+                if (windowSize.height < (maxHeight + addedHeight)) {
+                    maxHeight = windowSize.height - addedHeight;
+                }
+                if (containerSize.height > maxHeight) {
+                    scrollContainer.style.overflowY = "auto";
+                    goog.style.setHeight(scrollContainer, maxHeight);
+                    containerSize.height = maxHeight;
+                }
+            }
+            containerSize.height += addedHeight;
+            if (this.sourceBlock_.RTL) {
+                Blockly.utils.uiMenu.adjustBBoxesForRTL(viewportBBox, anchorBBox, containerSize);
+            }
+            // Position the menu.
+            Blockly.WidgetDiv.positionWithAnchor(viewportBBox, anchorBBox, containerSize, this.sourceBlock_.RTL);
+            //            (<any>scrollContainer).focus();
+            this.highlightAndScrollSelected(tableContainer, scrollContainer);
+        }
+        ;
+        shouldShowTooltips() {
+            return !pxt.BrowserUtils.isMobile();
+        }
+        getAnchorDimensions_() {
+            const boundingBox = this.getScaledBBox();
+            if (this.sourceBlock_.RTL) {
+                boundingBox.right += Blockly.FieldDropdown.CHECKMARK_OVERHANG;
+            }
+            else {
+                boundingBox.left -= Blockly.FieldDropdown.CHECKMARK_OVERHANG;
+            }
+            return boundingBox;
+        }
+        ;
+        createWidget_(tableContainer) {
+            const div = Blockly.WidgetDiv.DIV;
+            const options = this.getOptions();
+            // Container for the menu rows
+            tableContainer.setAttribute("role", "menu");
+            tableContainer.setAttribute("aria-haspopup", "true");
+            // Container used to limit the height of the tableContainer, because the tableContainer uses
+            // display: table, which ignores height and maxHeight
+            const scrollContainer = document.createElement("div");
+            // Needed to correctly style borders and padding around the scrollContainer, because the padding around the
+            // scrollContainer is part of the scrollable area and will not be correctly shown at the top and bottom
+            // when scrolling
+            const paddingContainer = document.createElement("div");
+            paddingContainer.style.border = `solid 1px ${this.borderColour_}`;
+            tableContainer.style.backgroundColor = this.backgroundColour_;
+            scrollContainer.style.backgroundColor = this.backgroundColour_;
+            paddingContainer.style.backgroundColor = this.backgroundColour_;
+            tableContainer.className = 'blocklyGridPickerMenu';
+            scrollContainer.className = 'blocklyGridPickerScroller';
+            paddingContainer.className = 'blocklyGridPickerPadder';
+            paddingContainer.appendChild(scrollContainer);
+            scrollContainer.appendChild(tableContainer);
+            div.appendChild(paddingContainer);
+            // Search bar
+            if (this.hasSearchBar_) {
+                const searchBar = this.createSearchBar_(tableContainer, scrollContainer, options);
+                paddingContainer.insertBefore(searchBar, paddingContainer.childNodes[0]);
+            }
+            // Selected bar
+            if (!this.shouldShowTooltips()) {
+                this.selectedBar_ = this.createSelectedBar_();
+                paddingContainer.appendChild(this.selectedBar_);
+            }
+            // Render elements
+            this.populateTableContainer(options, tableContainer, scrollContainer);
+            return { paddingContainer, scrollContainer };
+        }
+        createSearchBar_(tableContainer, scrollContainer, options) {
+            const searchBarDiv = document.createElement("div");
+            searchBarDiv.setAttribute("class", "ui fluid icon input");
+            const searchIcon = document.createElement("i");
+            searchIcon.setAttribute("class", "search icon");
+            const searchBar = document.createElement("input");
+            searchBar.setAttribute("type", "search");
+            searchBar.setAttribute("id", "search-bar");
+            searchBar.setAttribute("class", "blocklyGridPickerSearchBar");
+            searchBar.setAttribute("placeholder", pxt.Util.lf("Search"));
+            searchBar.addEventListener("click", () => {
+                searchBar.focus();
+                searchBar.setSelectionRange(0, searchBar.value.length);
+            });
+            // Search on key change
+            searchBar.addEventListener("keyup", pxt.Util.debounce(() => {
+                let text = searchBar.value;
+                let re = new RegExp(text, "i");
+                let filteredOptions = options.filter((block) => {
+                    const alt = block[0].alt; // Human-readable text or image.
+                    const value = block[1]; // Language-neutral value.
+                    return alt ? re.test(alt) : re.test(value);
+                });
+                this.populateTableContainer.bind(this)(filteredOptions, tableContainer, scrollContainer);
+                if (text) {
+                    this.highlightFirstItem(tableContainer);
+                }
+                else {
+                    this.highlightAndScrollSelected(tableContainer, scrollContainer);
+                }
+                // Hide the tooltip
+                this.gridTooltip_.style.visibility = 'hidden';
+                this.gridTooltip_.style.display = 'none';
+            }, 300, false));
+            // Select the first item if the enter key is pressed
+            searchBar.addEventListener("keyup", (e) => {
+                const code = e.which;
+                if (code == 13) { /* Enter key */
+                    // Select the first item in the list
+                    const firstRow = tableContainer.childNodes[0];
+                    if (firstRow) {
+                        const firstItem = firstRow.childNodes[0];
+                        if (firstItem) {
+                            this.closeModal_ = true;
+                            firstItem.click();
+                        }
+                    }
+                }
+            });
+            searchBarDiv.appendChild(searchBar);
+            searchBarDiv.appendChild(searchIcon);
+            return searchBarDiv;
+        }
+        createSelectedBar_() {
+            const selectedBar = document.createElement("div");
+            selectedBar.setAttribute("class", "blocklyGridPickerSelectedBar");
+            selectedBar.style.display = 'none';
+            const selectedWrapper = document.createElement("div");
+            const selectedImgWrapper = document.createElement("div");
+            selectedImgWrapper.className = 'blocklyGridPickerSelectedImage';
+            selectedWrapper.appendChild(selectedImgWrapper);
+            this.selectedImg_ = document.createElement("img");
+            this.selectedImg_.setAttribute('width', '30px');
+            this.selectedImg_.setAttribute('height', '30px');
+            this.selectedImg_.setAttribute('draggable', 'false');
+            this.selectedImg_.style.display = 'none';
+            this.selectedImg_.src = FieldGridPicker.DEFAULT_IMG;
+            selectedImgWrapper.appendChild(this.selectedImg_);
+            this.selectedBarText_ = document.createElement("span");
+            this.selectedBarText_.className = 'blocklyGridPickerTooltip';
+            selectedWrapper.appendChild(this.selectedBarText_);
+            const buttonsWrapper = document.createElement("div");
+            const buttonsDiv = document.createElement("div");
+            buttonsDiv.className = 'ui buttons mini';
+            buttonsWrapper.appendChild(buttonsDiv);
+            const selectButton = document.createElement("button");
+            selectButton.className = "ui button icon green";
+            const selectButtonIcon = document.createElement("i");
+            selectButtonIcon.className = 'icon check';
+            selectButton.appendChild(selectButtonIcon);
+            Blockly.bindEvent_(selectButton, 'click', this, () => {
+                this.setValue(this.selectedBarValue_);
+                this.close();
+            });
+            const cancelButton = document.createElement("button");
+            cancelButton.className = "ui button icon red";
+            const cancelButtonIcon = document.createElement("i");
+            cancelButtonIcon.className = 'icon cancel';
+            cancelButton.appendChild(cancelButtonIcon);
+            Blockly.bindEvent_(cancelButton, 'click', this, () => {
+                this.close();
+            });
+            buttonsDiv.appendChild(selectButton);
+            buttonsDiv.appendChild(cancelButton);
+            selectedBar.appendChild(selectedWrapper);
+            selectedBar.appendChild(buttonsWrapper);
+            return selectedBar;
+        }
+        updateSelectedBar_(content, value) {
+            if (content['src']) {
+                this.selectedImg_.src = content['src'];
+                this.selectedImg_.style.display = '';
+            }
+            this.selectedImg_.alt = content['alt'] || content;
+            this.selectedBarText_.textContent = content['alt'] || content;
+            this.selectedBarValue_ = value;
+        }
+        setupIntersectionObserver_() {
+            if (!('IntersectionObserver' in window))
+                return;
+            this.disposeIntersectionObserver();
+            // setup intersection observer for the image
+            const preloadImage = (el) => {
+                const lazyImageUrl = el.getAttribute('data-src');
+                if (lazyImageUrl) {
+                    el.src = lazyImageUrl;
+                    el.removeAttribute('data-src');
+                }
+            };
+            const config = {
+                // If the image gets within 50px in the Y axis, start the download.
+                rootMargin: '20px 0px',
+                threshold: 0.01
+            };
+            const onIntersection = (entries) => {
+                entries.forEach(entry => {
+                    // Are we in viewport?
+                    if (entry.intersectionRatio > 0) {
+                        // Stop watching and load the image
+                        this.observer.unobserve(entry.target);
+                        preloadImage(entry.target);
+                    }
+                });
+            };
+            this.observer = new IntersectionObserver(onIntersection, config);
+        }
+        disposeIntersectionObserver() {
+            if (this.observer) {
+                this.observer = null;
+            }
+        }
+        /**
+         * Disposes the tooltip DOM.
+         * @private
+         */
+        disposeTooltip() {
+            if (this.gridTooltip_) {
+                pxsim.U.remove(this.gridTooltip_);
+                this.gridTooltip_ = null;
+            }
+        }
+        onClose_() {
+            this.disposeTooltip();
+        }
+    }
+    FieldGridPicker.DEFAULT_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+    pxtblockly.FieldGridPicker = FieldGridPicker;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldImageDropdown extends Blockly.FieldDropdown {
+        constructor(text, options, validator) {
+            super(options.data);
+            this.isFieldCustom_ = true;
+            /**
+             * Callback for when a button is clicked inside the drop-down.
+             * Should be bound to the FieldIconMenu.
+             * @param {Event} e DOM event for the click/touch
+             * @private
+             */
+            this.buttonClick_ = function (e) {
+                let value = e.target.getAttribute('data-value');
+                if (!value)
+                    return;
+                this.setValue(value);
+                Blockly.DropDownDiv.hide();
+            };
+            this.columns_ = parseInt(options.columns);
+            this.maxRows_ = parseInt(options.maxRows) || 0;
+            this.width_ = parseInt(options.width) || 300;
+            this.backgroundColour_ = pxtblockly.parseColour(options.colour);
+            this.borderColour_ = pxt.toolbox.fadeColor(this.backgroundColour_, 0.4, false);
+        }
+        /**
+         * Create a dropdown menu under the text.
+         * @private
+         */
+        showEditor_() {
+            // If there is an existing drop-down we own, this is a request to hide the drop-down.
+            if (Blockly.DropDownDiv.hideIfOwner(this)) {
+                return;
+            }
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            // Populate the drop-down with the icons for this field.
+            let dropdownDiv = Blockly.DropDownDiv.getContentDiv();
+            let contentDiv = document.createElement('div');
+            // Accessibility properties
+            contentDiv.setAttribute('role', 'menu');
+            contentDiv.setAttribute('aria-haspopup', 'true');
+            const options = this.getOptions();
+            let maxButtonHeight = 0;
+            for (let i = 0; i < options.length; i++) {
+                let content = options[i][0]; // Human-readable text or image.
+                const value = options[i][1]; // Language-neutral value.
+                // Icons with the type property placeholder take up space but don't have any functionality
+                // Use for special-case layouts
+                if (content.type == 'placeholder') {
+                    let placeholder = document.createElement('span');
+                    placeholder.setAttribute('class', 'blocklyDropDownPlaceholder');
+                    placeholder.style.width = content.width + 'px';
+                    placeholder.style.height = content.height + 'px';
+                    contentDiv.appendChild(placeholder);
+                    continue;
+                }
+                let button = document.createElement('button');
+                button.setAttribute('id', ':' + i); // For aria-activedescendant
+                button.setAttribute('role', 'menuitem');
+                button.setAttribute('class', 'blocklyDropDownButton');
+                button.title = content.alt;
+                let buttonSize = content.height;
+                if (this.columns_) {
+                    buttonSize = ((this.width_ / this.columns_) - 8);
+                    button.style.width = buttonSize + 'px';
+                    button.style.height = buttonSize + 'px';
+                }
+                else {
+                    button.style.width = content.width + 'px';
+                    button.style.height = content.height + 'px';
+                }
+                if (buttonSize > maxButtonHeight) {
+                    maxButtonHeight = buttonSize;
+                }
+                let backgroundColor = this.backgroundColour_;
+                if (value == this.getValue()) {
+                    // This icon is selected, show it in a different colour
+                    backgroundColor = this.sourceBlock_.getColourTertiary();
+                    button.setAttribute('aria-selected', 'true');
+                }
+                button.style.backgroundColor = backgroundColor;
+                button.style.borderColor = this.borderColour_;
+                Blockly.bindEvent_(button, 'click', this, this.buttonClick_);
+                Blockly.bindEvent_(button, 'mouseover', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
+                    contentDiv.setAttribute('aria-activedescendant', this.id);
+                });
+                Blockly.bindEvent_(button, 'mouseout', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton');
+                    contentDiv.removeAttribute('aria-activedescendant');
+                });
+                let buttonImg = document.createElement('img');
+                buttonImg.src = content.src;
+                //buttonImg.alt = icon.alt;
+                // Upon click/touch, we will be able to get the clicked element as e.target
+                // Store a data attribute on all possible click targets so we can match it to the icon.
+                button.setAttribute('data-value', value);
+                buttonImg.setAttribute('data-value', value);
+                button.appendChild(buttonImg);
+                contentDiv.appendChild(button);
+            }
+            contentDiv.style.width = this.width_ + 'px';
+            dropdownDiv.appendChild(contentDiv);
+            if (this.maxRows_) {
+                // Limit the number of rows shown, but add a partial next row to indicate scrolling
+                dropdownDiv.style.maxHeight = (this.maxRows_ + 0.4) * (maxButtonHeight + 8) + 'px';
+            }
+            if (pxt.BrowserUtils.isFirefox()) {
+                // This is to compensate for the scrollbar that overlays content in Firefox. It
+                // gets removed in onHide_()
+                dropdownDiv.style.paddingRight = "20px";
+            }
+            Blockly.DropDownDiv.setColour(this.backgroundColour_, this.borderColour_);
+            Blockly.DropDownDiv.showPositionedByField(this, this.onHide_.bind(this));
+            let source = this.sourceBlock_;
+            this.savedPrimary_ = source === null || source === void 0 ? void 0 : source.getColour();
+            if (source === null || source === void 0 ? void 0 : source.isShadow()) {
+                source.setColour(source.getColourTertiary());
+            }
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', source.getColourTertiary());
+            }
+        }
+        /**
+         * Callback for when the drop-down is hidden.
+         */
+        onHide_() {
+            let content = Blockly.DropDownDiv.getContentDiv();
+            content.removeAttribute('role');
+            content.removeAttribute('aria-haspopup');
+            content.removeAttribute('aria-activedescendant');
+            content.style.width = '';
+            content.style.paddingRight = '';
+            content.style.maxHeight = '';
+            let source = this.sourceBlock_;
+            if (source === null || source === void 0 ? void 0 : source.isShadow()) {
+                this.sourceBlock_.setColour(this.savedPrimary_);
+            }
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', this.savedPrimary_);
+            }
+        }
+        ;
+    }
+    pxtblockly.FieldImageDropdown = FieldImageDropdown;
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldImages extends pxtblockly.FieldImageDropdown {
+        constructor(text, options, validator) {
+            super(text, options, validator);
+            this.isFieldCustom_ = true;
+            this.shouldSort_ = options.sort;
+            this.addLabel_ = !!options.addLabel;
+        }
+        /**
+         * Create a dropdown menu under the text.
+         * @private
+         */
+        showEditor_() {
+            // If there is an existing drop-down we own, this is a request to hide the drop-down.
+            if (Blockly.DropDownDiv.hideIfOwner(this)) {
+                return;
+            }
+            let sourceBlock = this.sourceBlock_;
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            // Populate the drop-down with the icons for this field.
+            let dropdownDiv = Blockly.DropDownDiv.getContentDiv();
+            let contentDiv = document.createElement('div');
+            // Accessibility properties
+            contentDiv.setAttribute('role', 'menu');
+            contentDiv.setAttribute('aria-haspopup', 'true');
+            const options = this.getOptions();
+            if (this.shouldSort_)
+                options.sort();
+            for (let i = 0; i < options.length; i++) {
+                const content = options[i][0]; // Human-readable text or image.
+                const value = options[i][1]; // Language-neutral value.
+                // Icons with the type property placeholder take up space but don't have any functionality
+                // Use for special-case layouts
+                if (content.type == 'placeholder') {
+                    let placeholder = document.createElement('span');
+                    placeholder.setAttribute('class', 'blocklyDropDownPlaceholder');
+                    placeholder.style.width = content.width + 'px';
+                    placeholder.style.height = content.height + 'px';
+                    contentDiv.appendChild(placeholder);
+                    continue;
+                }
+                let button = document.createElement('button');
+                button.setAttribute('id', ':' + i); // For aria-activedescendant
+                button.setAttribute('role', 'menuitem');
+                button.setAttribute('class', 'blocklyDropDownButton');
+                button.title = content.alt;
+                if (this.columns_) {
+                    button.style.width = ((this.width_ / this.columns_) - 8) + 'px';
+                    //button.style.height = ((this.width_ / this.columns_) - 8) + 'px';
+                }
+                else {
+                    button.style.width = content.width + 'px';
+                    button.style.height = content.height + 'px';
+                }
+                let backgroundColor = sourceBlock.getColour();
+                if (value == this.getValue()) {
+                    // This icon is selected, show it in a different colour
+                    backgroundColor = sourceBlock.getColourTertiary();
+                    button.setAttribute('aria-selected', 'true');
+                }
+                button.style.backgroundColor = backgroundColor;
+                button.style.borderColor = sourceBlock.getColourTertiary();
+                Blockly.bindEvent_(button, 'click', this, this.buttonClick_);
+                Blockly.bindEvent_(button, 'mouseover', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
+                    contentDiv.setAttribute('aria-activedescendant', this.id);
+                });
+                Blockly.bindEvent_(button, 'mouseout', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton');
+                    contentDiv.removeAttribute('aria-activedescendant');
+                });
+                let buttonImg = document.createElement('img');
+                buttonImg.src = content.src;
+                //buttonImg.alt = icon.alt;
+                // Upon click/touch, we will be able to get the clicked element as e.target
+                // Store a data attribute on all possible click targets so we can match it to the icon.
+                button.setAttribute('data-value', value);
+                buttonImg.setAttribute('data-value', value);
+                button.appendChild(buttonImg);
+                if (this.addLabel_) {
+                    const buttonText = this.createTextNode_(content.alt);
+                    buttonText.setAttribute('data-value', value);
+                    button.appendChild(buttonText);
+                }
+                contentDiv.appendChild(button);
+            }
+            contentDiv.style.width = this.width_ + 'px';
+            dropdownDiv.appendChild(contentDiv);
+            Blockly.DropDownDiv.setColour(sourceBlock.getColour(), sourceBlock.getColourTertiary());
+            // Position based on the field position.
+            Blockly.DropDownDiv.showPositionedByField(this, this.onHideCallback.bind(this));
+            // Update colour to look selected.
+            this.savedPrimary_ = sourceBlock === null || sourceBlock === void 0 ? void 0 : sourceBlock.getColour();
+            if (sourceBlock === null || sourceBlock === void 0 ? void 0 : sourceBlock.isShadow()) {
+                sourceBlock.setColour(sourceBlock.style.colourTertiary);
+            }
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', sourceBlock.style.colourTertiary);
+            }
+        }
+        // Update color (deselect) on dropdown hide
+        onHideCallback() {
+            let source = this.sourceBlock_;
+            if (source === null || source === void 0 ? void 0 : source.isShadow()) {
+                source.setColour(this.savedPrimary_);
+            }
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', this.savedPrimary_);
+            }
+        }
+        createTextNode_(text) {
+            const textSpan = document.createElement('span');
+            textSpan.setAttribute('class', 'blocklyDropdownTextLabel');
+            textSpan.textContent = text;
+            return textSpan;
+        }
+    }
+    pxtblockly.FieldImages = FieldImages;
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldKind extends Blockly.FieldDropdown {
+        constructor(opts) {
+            super(createMenuGenerator(opts));
+            this.opts = opts;
+        }
+        initView() {
+            super.initView();
+        }
+        onItemSelected_(menu, menuItem) {
+            const value = menuItem.getValue();
+            if (value === "CREATE") {
+                promptAndCreateKind(this.sourceBlock_.workspace, this.opts, lf("New {0}:", this.opts.memberName), newName => newName && this.setValue(newName));
+            }
+            else {
+                super.onItemSelected_(menu, menuItem);
+            }
+        }
+        doClassValidation_(value) {
+            var _a;
+            // update cached option list when adding a new kind
+            if (((_a = this.opts) === null || _a === void 0 ? void 0 : _a.initialMembers) && !this.opts.initialMembers.find(el => el == value))
+                this.getOptions();
+            return super.doClassValidation_(value);
+        }
+        getOptions(opt_useCache) {
+            this.initVariables();
+            return super.getOptions(opt_useCache);
+        }
+        initVariables() {
+            if (this.sourceBlock_ && this.sourceBlock_.workspace) {
+                const ws = this.sourceBlock_.workspace;
+                const existing = getExistingKindMembers(ws, this.opts.name);
+                this.opts.initialMembers.forEach(memberName => {
+                    if (existing.indexOf(memberName) === -1) {
+                        createVariableForKind(ws, this.opts, memberName);
+                    }
+                });
+                if (this.getValue() === "CREATE") {
+                    if (this.opts.initialMembers.length) {
+                        this.setValue(this.opts.initialMembers[0]);
+                    }
+                }
+            }
+        }
+    }
+    pxtblockly.FieldKind = FieldKind;
+    function createMenuGenerator(opts) {
+        return function () {
+            const res = [];
+            const that = this;
+            if (that.sourceBlock_ && that.sourceBlock_.workspace) {
+                const options = that.sourceBlock_.workspace.getVariablesOfType(kindType(opts.name));
+                options.forEach(model => {
+                    res.push([model.name, model.name]);
+                });
+            }
+            else {
+                // Can't create variables from within the flyout, so we just have to fake it
+                opts.initialMembers.forEach((e) => res.push([e, e]));
+            }
+            res.push([lf("Add a new {0}...", opts.memberName), "CREATE"]);
+            return res;
+        };
+    }
+    function promptAndCreateKind(ws, opts, message, cb) {
+        Blockly.prompt(message, null, response => {
+            if (response) {
+                let nameIsValid = false;
+                if (pxtc.isIdentifierStart(response.charCodeAt(0), 2)) {
+                    nameIsValid = true;
+                    for (let i = 1; i < response.length; i++) {
+                        if (!pxtc.isIdentifierPart(response.charCodeAt(i), 2)) {
+                            nameIsValid = false;
+                        }
+                    }
+                }
+                if (!nameIsValid) {
+                    Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."), () => promptAndCreateKind(ws, opts, message, cb));
+                    return;
+                }
+                if (pxt.blocks.isReservedWord(response)) {
+                    Blockly.alert(lf("'{0}' is a reserved word and cannot be used.", response), () => promptAndCreateKind(ws, opts, message, cb));
+                    return;
+                }
+                const existing = getExistingKindMembers(ws, opts.name);
+                for (let i = 0; i < existing.length; i++) {
+                    const name = existing[i];
+                    if (name === response) {
+                        Blockly.alert(lf("A {0} named '{1}' already exists.", opts.memberName, response), () => promptAndCreateKind(ws, opts, message, cb));
+                        return;
+                    }
+                }
+                if (response === opts.createFunctionName) {
+                    Blockly.alert(lf("'{0}' is a reserved name.", opts.createFunctionName), () => promptAndCreateKind(ws, opts, message, cb));
+                }
+                cb(createVariableForKind(ws, opts, response));
+            }
+        }, { placeholder: opts.promptHint });
+    }
+    function getExistingKindMembers(ws, kindName) {
+        const existing = ws.getVariablesOfType(kindType(kindName));
+        if (existing && existing.length) {
+            return existing.map(m => m.name);
+        }
+        else {
+            return [];
+        }
+    }
+    function createVariableForKind(ws, opts, newName) {
+        Blockly.Variables.getOrCreateVariablePackage(ws, null, newName, kindType(opts.name));
+        return newName;
+    }
+    function kindType(name) {
+        return "KIND_" + name;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtsim.d.ts"/>
+const rowRegex = /^.*[\.#].*$/;
+var LabelMode;
+(function (LabelMode) {
+    LabelMode[LabelMode["None"] = 0] = "None";
+    LabelMode[LabelMode["Number"] = 1] = "Number";
+    LabelMode[LabelMode["Letter"] = 2] = "Letter";
+})(LabelMode || (LabelMode = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldMatrix extends Blockly.Field {
+        constructor(text, params, validator) {
+            super(text, validator);
+            this.isFieldCustom_ = true;
+            this.SERIALIZABLE = true;
+            this.onColor = "#FFFFFF";
+            this.scale = 1;
+            // The number of columns
+            this.matrixWidth = 5;
+            // The number of rows
+            this.matrixHeight = 5;
+            this.yAxisLabel = LabelMode.None;
+            this.xAxisLabel = LabelMode.None;
+            this.cellState = [];
+            this.cells = [];
+            this.dontHandleMouseEvent_ = (ev) => {
+                ev.stopPropagation();
+                ev.preventDefault();
+            };
+            this.clearLedDragHandler = (ev) => {
+                const svgRoot = this.sourceBlock_.getSvgRoot();
+                pxsim.pointerEvents.down.forEach(evid => svgRoot.removeEventListener(evid, this.dontHandleMouseEvent_));
+                svgRoot.removeEventListener(pxsim.pointerEvents.move, this.dontHandleMouseEvent_);
+                document.removeEventListener(pxsim.pointerEvents.up, this.clearLedDragHandler);
+                document.removeEventListener(pxsim.pointerEvents.leave, this.clearLedDragHandler);
+                Blockly.Touch.clearTouchIdentifier();
+                this.elt.removeEventListener(pxsim.pointerEvents.move, this.handleRootMouseMoveListener);
+                ev.stopPropagation();
+                ev.preventDefault();
+            };
+            this.toggleRect = (x, y) => {
+                this.cellState[x][y] = this.currentDragState_;
+                this.updateValue();
+            };
+            this.handleRootMouseMoveListener = (ev) => {
+                let clientX;
+                let clientY;
+                if (ev.changedTouches && ev.changedTouches.length == 1) {
+                    // Handle touch events
+                    clientX = ev.changedTouches[0].clientX;
+                    clientY = ev.changedTouches[0].clientY;
+                }
+                else {
+                    // All other events (pointer + mouse)
+                    clientX = ev.clientX;
+                    clientY = ev.clientY;
+                }
+                const target = document.elementFromPoint(clientX, clientY);
+                if (!target)
+                    return;
+                const x = target.getAttribute('data-x');
+                const y = target.getAttribute('data-y');
+                if (x != null && y != null) {
+                    this.toggleRect(parseInt(x), parseInt(y));
+                }
+            };
+            this.params = params;
+            if (this.params.rows !== undefined) {
+                let val = parseInt(this.params.rows);
+                if (!isNaN(val)) {
+                    this.matrixHeight = val;
+                }
+            }
+            if (this.params.columns !== undefined) {
+                let val = parseInt(this.params.columns);
+                if (!isNaN(val)) {
+                    this.matrixWidth = val;
+                }
+            }
+            if (this.params.onColor !== undefined) {
+                this.onColor = this.params.onColor;
+            }
+            if (this.params.offColor !== undefined) {
+                this.offColor = this.params.offColor;
+            }
+            if (this.params.scale !== undefined)
+                this.scale = Math.max(0.6, Math.min(2, Number(this.params.scale)));
+            else if (Math.max(this.matrixWidth, this.matrixHeight) > 15)
+                this.scale = 0.85;
+            else if (Math.max(this.matrixWidth, this.matrixHeight) > 10)
+                this.scale = 0.9;
+        }
+        /**
+         * Show the inline free-text editor on top of the text.
+         * @private
+         */
+        showEditor_() {
+            // Intentionally left empty
+        }
+        initMatrix() {
+            if (!this.sourceBlock_.isInsertionMarker()) {
+                this.elt = pxsim.svg.parseString(`<svg xmlns="http://www.w3.org/2000/svg" id="field-matrix" />`);
+                // Initialize the matrix that holds the state
+                for (let i = 0; i < this.matrixWidth; i++) {
+                    this.cellState.push([]);
+                    this.cells.push([]);
+                    for (let j = 0; j < this.matrixHeight; j++) {
+                        this.cellState[i].push(false);
+                    }
+                }
+                this.restoreStateFromString();
+                // Create the cells of the matrix that is displayed
+                for (let i = 0; i < this.matrixWidth; i++) {
+                    for (let j = 0; j < this.matrixHeight; j++) {
+                        this.createCell(i, j);
+                    }
+                }
+                this.updateValue();
+                if (this.xAxisLabel !== LabelMode.None) {
+                    const y = this.scale * this.matrixHeight * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN;
+                    const xAxis = pxsim.svg.child(this.elt, "g", { transform: `translate(${0} ${y})` });
+                    for (let i = 0; i < this.matrixWidth; i++) {
+                        const x = this.getYAxisWidth() + this.scale * i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_HORIZONTAL_MARGIN / 2;
+                        const lbl = pxsim.svg.child(xAxis, "text", { x, class: "blocklyText" });
+                        lbl.textContent = this.getLabel(i, this.xAxisLabel);
+                    }
+                }
+                if (this.yAxisLabel !== LabelMode.None) {
+                    const yAxis = pxsim.svg.child(this.elt, "g", {});
+                    for (let i = 0; i < this.matrixHeight; i++) {
+                        const y = this.scale * i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_VERTICAL_MARGIN * 2;
+                        const lbl = pxsim.svg.child(yAxis, "text", { x: 0, y, class: "blocklyText" });
+                        lbl.textContent = this.getLabel(i, this.yAxisLabel);
+                    }
+                }
+                this.fieldGroup_.replaceChild(this.elt, this.fieldGroup_.firstChild);
+            }
+        }
+        getLabel(index, mode) {
+            switch (mode) {
+                case LabelMode.Letter:
+                    return String.fromCharCode(index + /*char code for A*/ 65);
+                default:
+                    return (index + 1).toString();
+            }
+        }
+        createCell(x, y) {
+            const tx = this.scale * x * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_HORIZONTAL_MARGIN + this.getYAxisWidth();
+            const ty = this.scale * y * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN;
+            const cellG = pxsim.svg.child(this.elt, "g", { transform: `translate(${tx} ${ty})` });
+            const cellRect = pxsim.svg.child(cellG, "rect", {
+                'class': `blocklyLed${this.cellState[x][y] ? 'On' : 'Off'}`,
+                'cursor': 'pointer',
+                width: this.scale * FieldMatrix.CELL_WIDTH, height: this.scale * FieldMatrix.CELL_WIDTH,
+                fill: this.getColor(x, y),
+                'data-x': x,
+                'data-y': y,
+                rx: Math.max(2, this.scale * FieldMatrix.CELL_CORNER_RADIUS)
+            });
+            this.cells[x][y] = cellRect;
+            if (this.sourceBlock_.workspace.isFlyout)
+                return;
+            pxsim.pointerEvents.down.forEach(evid => cellRect.addEventListener(evid, (ev) => {
+                const svgRoot = this.sourceBlock_.getSvgRoot();
+                this.currentDragState_ = !this.cellState[x][y];
+                // select and hide chaff
+                Blockly.hideChaff();
+                this.sourceBlock_.select();
+                this.toggleRect(x, y);
+                pxsim.pointerEvents.down.forEach(evid => svgRoot.addEventListener(evid, this.dontHandleMouseEvent_));
+                svgRoot.addEventListener(pxsim.pointerEvents.move, this.dontHandleMouseEvent_);
+                document.addEventListener(pxsim.pointerEvents.up, this.clearLedDragHandler);
+                document.addEventListener(pxsim.pointerEvents.leave, this.clearLedDragHandler);
+                // Begin listening on the canvas and toggle any matches
+                this.elt.addEventListener(pxsim.pointerEvents.move, this.handleRootMouseMoveListener);
+                ev.stopPropagation();
+                ev.preventDefault();
+            }, false));
+        }
+        getColor(x, y) {
+            return this.cellState[x][y] ? this.onColor : (this.offColor || FieldMatrix.DEFAULT_OFF_COLOR);
+        }
+        getOpacity(x, y) {
+            return this.cellState[x][y] ? '1.0' : '0.2';
+        }
+        updateCell(x, y) {
+            const cellRect = this.cells[x][y];
+            cellRect.setAttribute("fill", this.getColor(x, y));
+            cellRect.setAttribute("fill-opacity", this.getOpacity(x, y));
+            cellRect.setAttribute('class', `blocklyLed${this.cellState[x][y] ? 'On' : 'Off'}`);
+        }
+        setValue(newValue, restoreState = true) {
+            super.setValue(String(newValue));
+            if (this.elt) {
+                if (restoreState)
+                    this.restoreStateFromString();
+                for (let x = 0; x < this.matrixWidth; x++) {
+                    for (let y = 0; y < this.matrixHeight; y++) {
+                        this.updateCell(x, y);
+                    }
+                }
+            }
+        }
+        render_() {
+            if (!this.visible_) {
+                this.markDirty();
+                return;
+            }
+            if (!this.elt) {
+                this.initMatrix();
+            }
+            // The height and width must be set by the render function
+            this.size_.height = this.scale * Number(this.matrixHeight) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN + this.getXAxisHeight();
+            this.size_.width = this.scale * Number(this.matrixWidth) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + this.getYAxisWidth();
+        }
+        // The return value of this function is inserted in the code
+        getValue() {
+            // getText() returns the value that is set by calls to setValue()
+            let text = removeQuotes(this.value_);
+            return `\`\n${FieldMatrix.TAB}${text}\n${FieldMatrix.TAB}\``;
+        }
+        // Restores the block state from the text value of the field
+        restoreStateFromString() {
+            let r = this.value_;
+            if (r) {
+                const rows = r.split("\n").filter(r => rowRegex.test(r));
+                for (let y = 0; y < rows.length && y < this.matrixHeight; y++) {
+                    let x = 0;
+                    const row = rows[y];
+                    for (let j = 0; j < row.length && x < this.matrixWidth; j++) {
+                        if (isNegativeCharacter(row[j])) {
+                            this.cellState[x][y] = false;
+                            x++;
+                        }
+                        else if (isPositiveCharacter(row[j])) {
+                            this.cellState[x][y] = true;
+                            x++;
+                        }
+                    }
+                }
+            }
+        }
+        // Composes the state into a string an updates the field's state
+        updateValue() {
+            let res = "";
+            for (let y = 0; y < this.matrixHeight; y++) {
+                for (let x = 0; x < this.matrixWidth; x++) {
+                    res += (this.cellState[x][y] ? "#" : ".") + " ";
+                }
+                res += "\n" + FieldMatrix.TAB;
+            }
+            // Blockly stores the state of the field as a string
+            this.setValue(res, false);
+        }
+        getYAxisWidth() {
+            return this.yAxisLabel === LabelMode.None ? 0 : FieldMatrix.Y_AXIS_WIDTH;
+        }
+        getXAxisHeight() {
+            return this.xAxisLabel === LabelMode.None ? 0 : FieldMatrix.X_AXIS_HEIGHT;
+        }
+    }
+    FieldMatrix.CELL_WIDTH = 25;
+    FieldMatrix.CELL_HORIZONTAL_MARGIN = 7;
+    FieldMatrix.CELL_VERTICAL_MARGIN = 5;
+    FieldMatrix.CELL_CORNER_RADIUS = 5;
+    FieldMatrix.BOTTOM_MARGIN = 9;
+    FieldMatrix.Y_AXIS_WIDTH = 9;
+    FieldMatrix.X_AXIS_HEIGHT = 10;
+    FieldMatrix.TAB = "        ";
+    FieldMatrix.DEFAULT_OFF_COLOR = "#000000";
+    pxtblockly.FieldMatrix = FieldMatrix;
+    function isPositiveCharacter(c) {
+        return c === "#" || c === "*" || c === "1";
+    }
+    function isNegativeCharacter(c) {
+        return c === "." || c === "_" || c === "0";
+    }
+    const allQuotes = ["'", '"', "`"];
+    function removeQuotes(str) {
+        str = (str || "").trim();
+        const start = str.charAt(0);
+        if (start === str.charAt(str.length - 1) && allQuotes.indexOf(start) !== -1) {
+            return str.substr(1, str.length - 2).trim();
+        }
+        return str;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    pxtblockly.HEADER_HEIGHT = 50;
+    pxtblockly.TOTAL_WIDTH = 300;
+    class FieldCustomMelody extends Blockly.Field {
+        constructor(value, params, validator) {
+            super(value, validator);
+            this.isFieldCustom_ = true;
+            this.SERIALIZABLE = true;
+            this.soundingKeys = 0;
+            this.numRow = 8;
+            this.numCol = 8;
+            this.tempo = 120;
+            this.isPlaying = false;
+            this.timeouts = []; // keep track of timeouts
+            this.params = params;
+            this.createMelodyIfDoesntExist();
+        }
+        init() {
+            super.init();
+            this.onInit();
+        }
+        showEditor_() {
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            Blockly.DropDownDiv.setColour(this.getDropdownBackgroundColour(), this.getDropdownBorderColour());
+            let contentDiv = Blockly.DropDownDiv.getContentDiv();
+            pxt.BrowserUtils.addClass(contentDiv, "melody-content-div");
+            pxt.BrowserUtils.addClass(contentDiv.parentElement, "melody-editor-dropdown");
+            this.gallery = new pxtmelody.MelodyGallery();
+            this.renderEditor(contentDiv);
+            this.prevString = this.getValue();
+            // The webapp listens to this event and stops the simulator so that you don't get the melody
+            // playing twice (once in the editor and once when the code runs in the sim)
+            Blockly.Events.fire(new Blockly.Events.Ui(this.sourceBlock_, "melody-editor", false, true));
+            Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_, () => {
+                this.onEditorClose();
+                // revert all style attributes for dropdown div
+                pxt.BrowserUtils.removeClass(contentDiv, "melody-content-div");
+                pxt.BrowserUtils.removeClass(contentDiv.parentElement, "melody-editor-dropdown");
+                Blockly.Events.fire(new Blockly.Events.Ui(this.sourceBlock_, "melody-editor", true, false));
+            });
+        }
+        getValue() {
+            this.stringRep = this.getTypeScriptValue();
+            return this.stringRep;
+        }
+        doValueUpdate_(newValue) {
+            if (newValue == null || newValue == "" || newValue == "\"\"" || (this.stringRep && this.stringRep === newValue)) { // ignore empty strings
+                return;
+            }
+            this.stringRep = newValue;
+            this.parseTypeScriptValue(newValue);
+            super.doValueUpdate_(this.getValue());
+        }
+        getText_() {
+            if (this.invalidString)
+                return pxt.Util.lf("Invalid Input");
+            else
+                return this.getValue();
+        }
+        // This will be run when the field is created (i.e. when it appears on the workspace)
+        onInit() {
+            this.render_();
+            this.createMelodyIfDoesntExist();
+            if (!this.invalidString) {
+                if (!this.fieldGroup_) {
+                    // Build the DOM.
+                    this.fieldGroup_ = Blockly.utils.dom.createSvgElement('g', {}, null);
+                }
+                if (!this.visible_) {
+                    this.fieldGroup_.style.display = 'none';
+                }
+                this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+                this.updateFieldLabel();
+            }
+        }
+        render_() {
+            super.render_();
+            if (!this.invalidString) {
+                this.size_.width = FieldCustomMelody.MUSIC_ICON_WIDTH + (FieldCustomMelody.COLOR_BLOCK_WIDTH + FieldCustomMelody.COLOR_BLOCK_SPACING) * this.numCol;
+            }
+            this.sourceBlock_.setColour("#ffffff");
+        }
+        // Render the editor that will appear in the dropdown div when the user clicks on the field
+        renderEditor(div) {
+            let color = this.getDropdownBackgroundColour();
+            let secondaryColor = this.getDropdownBorderColour();
+            this.topDiv = document.createElement("div");
+            pxt.BrowserUtils.addClass(this.topDiv, "melody-top-bar-div");
+            // Same toggle set up as sprite editor
+            this.root = new svg.SVG(this.topDiv).id("melody-editor-header-controls");
+            this.toggle = new Toggle(this.root, { leftText: lf("Editor"), rightText: lf("Gallery"), baseColor: color });
+            this.toggle.onStateChange(isLeft => {
+                if (isLeft) {
+                    this.hideGallery();
+                }
+                else {
+                    this.showGallery();
+                }
+            });
+            this.toggle.layout();
+            this.toggle.translate((pxtblockly.TOTAL_WIDTH - this.toggle.width()) / 2, 0);
+            div.appendChild(this.topDiv);
+            div.appendChild(this.gallery.getElement());
+            this.editorDiv = document.createElement("div");
+            pxt.BrowserUtils.addClass(this.editorDiv, "melody-editor-div");
+            this.editorDiv.style.setProperty("background-color", secondaryColor);
+            this.gridDiv = this.createGridDisplay();
+            this.editorDiv.appendChild(this.gridDiv);
+            this.bottomDiv = document.createElement("div");
+            pxt.BrowserUtils.addClass(this.bottomDiv, "melody-bottom-bar-div");
+            this.doneButton = document.createElement("button");
+            pxt.BrowserUtils.addClass(this.doneButton, "melody-confirm-button");
+            this.doneButton.innerText = lf("Done");
+            this.doneButton.addEventListener("click", () => this.onDone());
+            this.doneButton.style.setProperty("background-color", color);
+            this.playButton = document.createElement("button");
+            this.playButton.id = "melody-play-button";
+            this.playButton.addEventListener("click", () => this.togglePlay());
+            this.playIcon = document.createElement("i");
+            this.playIcon.id = "melody-play-icon";
+            pxt.BrowserUtils.addClass(this.playIcon, "play icon");
+            this.playButton.appendChild(this.playIcon);
+            this.tempoInput = document.createElement("input");
+            pxt.BrowserUtils.addClass(this.tempoInput, "ui input");
+            this.tempoInput.type = "number";
+            this.tempoInput.title = lf("tempo");
+            this.tempoInput.id = "melody-tempo-input";
+            this.tempoInput.addEventListener("input", () => this.setTempo(+this.tempoInput.value));
+            this.syncTempoField(true);
+            this.bottomDiv.appendChild(this.tempoInput);
+            this.bottomDiv.appendChild(this.playButton);
+            this.bottomDiv.appendChild(this.doneButton);
+            this.editorDiv.appendChild(this.bottomDiv);
+            div.appendChild(this.editorDiv);
+        }
+        // Runs when the editor is closed by clicking on the Blockly workspace
+        onEditorClose() {
+            this.stopMelody();
+            if (this.gallery) {
+                this.gallery.stopMelody();
+            }
+            this.clearDomReferences();
+            if (this.sourceBlock_ && Blockly.Events.isEnabled() && this.getValue() !== this.prevString) {
+                Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.prevString, this.getValue()));
+            }
+            this.prevString = undefined;
+        }
+        // when click done
+        onDone() {
+            Blockly.DropDownDiv.hideIfOwner(this);
+            this.onEditorClose();
+        }
+        clearDomReferences() {
+            this.topDiv = null;
+            this.editorDiv = null;
+            this.gridDiv = null;
+            this.bottomDiv = null;
+            this.doneButton = null;
+            this.playButton = null;
+            this.playIcon = null;
+            this.tempoInput = null;
+            this.elt = null;
+            this.cells = null;
+            this.toggle = null;
+            this.root = null;
+            this.gallery.clearDomReferences();
+        }
+        // This is the string that will be inserted into the user's TypeScript code
+        getTypeScriptValue() {
+            if (this.invalidString) {
+                return this.invalidString;
+            }
+            if (this.melody) {
+                return "\"" + this.melody.getStringRepresentation() + "\"";
+            }
+            return "";
+        }
+        // This should parse the string returned by getTypeScriptValue() and restore the state based on that
+        parseTypeScriptValue(value) {
+            let oldValue = value;
+            try {
+                value = value.slice(1, -1); // remove the boundary quotes
+                value = value.trim(); // remove boundary white space
+                this.createMelodyIfDoesntExist();
+                let notes = value.split(" ");
+                notes.forEach(n => {
+                    if (!this.isValidNote(n))
+                        throw new Error(lf("Invalid note '{0}'. Notes can be C D E F G A B C5", n));
+                });
+                this.melody.resetMelody();
+                for (let j = 0; j < notes.length; j++) {
+                    if (notes[j] != "-") {
+                        let rowPos = pxtmelody.noteToRow(notes[j]);
+                        this.melody.updateMelody(rowPos, j);
+                    }
+                }
+                this.updateFieldLabel();
+            }
+            catch (e) {
+                pxt.log(e);
+                this.invalidString = oldValue;
+            }
+        }
+        isValidNote(note) {
+            switch (note) {
+                case "C":
+                case "D":
+                case "E":
+                case "F":
+                case "G":
+                case "A":
+                case "B":
+                case "C5":
+                case "-": return true;
+            }
+            return false;
+        }
+        // The width of the preview on the block itself
+        getPreviewWidth() {
+            this.updateSize_();
+            return this.size_.width;
+        }
+        // The height of the preview on the block itself
+        getPreviewHeight() {
+            var _a;
+            return ((_a = this.getConstants()) === null || _a === void 0 ? void 0 : _a.FIELD_BORDER_RECT_HEIGHT) || 16;
+        }
+        getDropdownBackgroundColour() {
+            if (this.sourceBlock_.parentBlock_) {
+                return this.sourceBlock_.parentBlock_.getColour();
+            }
+            else {
+                return "#3D3D3D";
+            }
+        }
+        getDropdownBorderColour() {
+            if (this.sourceBlock_.parentBlock_) {
+                return this.sourceBlock_.parentBlock_.getColourTertiary();
+            }
+            else {
+                return "#2A2A2A";
+            }
+        }
+        updateFieldLabel() {
+            if (!this.fieldGroup_)
+                return;
+            pxsim.U.clear(this.fieldGroup_);
+            let musicIcon = mkText("\uf001")
+                .appendClass("melody-editor-field-icon")
+                .at(6, 15);
+            this.fieldGroup_.appendChild(musicIcon.el);
+            let notes = this.melody.getStringRepresentation().trim().split(" ");
+            for (let i = 0; i < notes.length; i++) {
+                let className = pxtmelody.getColorClass(pxtmelody.noteToRow(notes[i]));
+                const cb = new svg.Rect()
+                    .at((FieldCustomMelody.COLOR_BLOCK_WIDTH + FieldCustomMelody.COLOR_BLOCK_SPACING) * i + FieldCustomMelody.COLOR_BLOCK_X, FieldCustomMelody.COLOR_BLOCK_Y)
+                    .size(FieldCustomMelody.COLOR_BLOCK_WIDTH, FieldCustomMelody.COLOR_BLOCK_HEIGHT)
+                    .stroke("#898989", 1)
+                    .corners(3, 2);
+                pxt.BrowserUtils.addClass(cb.el, className);
+                this.fieldGroup_.appendChild(cb.el);
+            }
+        }
+        setTempo(tempo) {
+            // reset text input if input is invalid
+            if ((isNaN(tempo) || tempo <= 0) && this.tempoInput) {
+                this.tempoInput.value = this.tempo + "";
+                return;
+            }
+            // update tempo and display to reflect new tempo
+            if (this.tempo != tempo) {
+                this.tempo = tempo;
+                if (this.melody) {
+                    this.melody.setTempo(this.tempo);
+                }
+                if (this.tempoInput) {
+                    this.tempoInput.value = this.tempo + "";
+                }
+                this.syncTempoField(false);
+            }
+        }
+        // sync value from tempo field on block with tempo in field editor
+        syncTempoField(blockToEditor) {
+            const s = this.sourceBlock_;
+            if (s.parentBlock_) {
+                const p = s.parentBlock_;
+                for (const input of p.inputList) {
+                    if (input.name === "tempo") {
+                        const tempoBlock = input.connection.targetBlock();
+                        if (tempoBlock) {
+                            if (blockToEditor)
+                                if (tempoBlock.getFieldValue("SLIDER")) {
+                                    this.tempoInput.value = tempoBlock.getFieldValue("SLIDER");
+                                    this.tempo = +this.tempoInput.value;
+                                }
+                                else {
+                                    this.tempoInput.value = this.tempo + "";
+                                }
+                            else { // Editor to block
+                                if (tempoBlock.type === "math_number_minmax") {
+                                    tempoBlock.setFieldValue(this.tempoInput.value, "SLIDER");
+                                }
+                                else {
+                                    tempoBlock.setFieldValue(this.tempoInput.value, "NUM");
+                                }
+                                this.tempoInput.focus();
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        // ms to hold note
+        getDuration() {
+            return 60000 / this.tempo;
+        }
+        createMelodyIfDoesntExist() {
+            if (!this.melody) {
+                this.melody = new pxtmelody.MelodyArray();
+                return true;
+            }
+            return false;
+        }
+        onNoteSelect(row, col) {
+            // update melody array
+            this.invalidString = null;
+            this.melody.updateMelody(row, col);
+            if (this.melody.getValue(row, col) && !this.isPlaying) {
+                this.playNote(row, col);
+            }
+            this.updateGrid();
+            this.updateFieldLabel();
+        }
+        updateGrid() {
+            for (let row = 0; row < this.numRow; row++) {
+                const rowClass = pxtmelody.getColorClass(row);
+                for (let col = 0; col < this.numCol; col++) {
+                    const cell = this.cells[row][col];
+                    if (this.melody.getValue(row, col)) {
+                        pxt.BrowserUtils.removeClass(cell, "melody-default");
+                        pxt.BrowserUtils.addClass(cell, rowClass);
+                    }
+                    else {
+                        pxt.BrowserUtils.addClass(cell, "melody-default");
+                        pxt.BrowserUtils.removeClass(cell, rowClass);
+                    }
+                }
+            }
+        }
+        playNote(rowNumber, colNumber) {
+            let count = ++this.soundingKeys;
+            if (this.isPlaying) {
+                this.timeouts.push(setTimeout(() => {
+                    this.playToneCore(rowNumber);
+                }, colNumber * this.getDuration()));
+                this.timeouts.push(setTimeout(() => {
+                    pxt.AudioContextManager.stop();
+                }, (colNumber + 1) * this.getDuration()));
+            }
+            else {
+                this.playToneCore(rowNumber);
+                this.timeouts.push(setTimeout(() => {
+                    if (this.soundingKeys == count)
+                        pxt.AudioContextManager.stop();
+                }, this.getDuration()));
+            }
+        }
+        queueToneForColumn(column, delay, duration) {
+            const start = setTimeout(() => {
+                ++this.soundingKeys;
+                pxt.AudioContextManager.stop();
+                for (let i = 0; i < this.numRow; i++) {
+                    if (this.melody.getValue(i, column)) {
+                        this.playToneCore(i);
+                    }
+                }
+                this.highlightColumn(column, true);
+                this.timeouts = this.timeouts.filter(t => t !== start);
+            }, delay);
+            const end = setTimeout(() => {
+                // pxt.AudioContextManager.stop();
+                this.timeouts = this.timeouts.filter(t => t !== end);
+                this.highlightColumn(column, false);
+            }, delay + duration);
+            this.timeouts.push(start);
+            this.timeouts.push(end);
+        }
+        playToneCore(row) {
+            let tone = 0;
+            switch (row) {
+                case 0:
+                    tone = 523;
+                    break; // Tenor C
+                case 1:
+                    tone = 494;
+                    break; // Middle B
+                case 2:
+                    tone = 440;
+                    break; // Middle A
+                case 3:
+                    tone = 392;
+                    break; // Middle G
+                case 4:
+                    tone = 349;
+                    break; // Middle F
+                case 5:
+                    tone = 330;
+                    break; // Middle E
+                case 6:
+                    tone = 294;
+                    break; // Middle D
+                case 7:
+                    tone = 262;
+                    break; // Middle C
+            }
+            pxt.AudioContextManager.tone(tone);
+        }
+        highlightColumn(col, on) {
+            const cells = this.cells.map(row => row[col]);
+            cells.forEach(cell => {
+                if (on)
+                    pxt.BrowserUtils.addClass(cell, "playing");
+                else
+                    pxt.BrowserUtils.removeClass(cell, "playing");
+            });
+        }
+        createGridDisplay() {
+            FieldCustomMelody.VIEWBOX_WIDTH = (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_VERTICAL_MARGIN) * this.numCol + FieldCustomMelody.CELL_VERTICAL_MARGIN;
+            if (pxt.BrowserUtils.isEdge())
+                FieldCustomMelody.VIEWBOX_WIDTH += 37;
+            FieldCustomMelody.VIEWBOX_HEIGHT = (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_HORIZONTAL_MARGIN) * this.numRow + FieldCustomMelody.CELL_HORIZONTAL_MARGIN;
+            this.elt = pxsim.svg.parseString(`<svg xmlns="http://www.w3.org/2000/svg" class="melody-grid-div" viewBox="0 0 ${FieldCustomMelody.VIEWBOX_WIDTH} ${FieldCustomMelody.VIEWBOX_HEIGHT}"/>`);
+            // Create the cells of the matrix that is displayed
+            this.cells = []; // initialize array that holds rect svg elements
+            for (let i = 0; i < this.numRow; i++) {
+                this.cells.push([]);
+            }
+            for (let i = 0; i < this.numRow; i++) {
+                for (let j = 0; j < this.numCol; j++) {
+                    this.createCell(i, j);
+                }
+            }
+            return this.elt;
+        }
+        createCell(x, y) {
+            const tx = x * (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_HORIZONTAL_MARGIN) + FieldCustomMelody.CELL_HORIZONTAL_MARGIN;
+            const ty = y * (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_VERTICAL_MARGIN) + FieldCustomMelody.CELL_VERTICAL_MARGIN;
+            const cellG = pxsim.svg.child(this.elt, "g", { transform: `translate(${ty} ${tx})` });
+            const cellRect = pxsim.svg.child(cellG, "rect", {
+                'cursor': 'pointer',
+                'width': FieldCustomMelody.CELL_WIDTH,
+                'height': FieldCustomMelody.CELL_WIDTH,
+                'stroke': 'white',
+                'data-x': x,
+                'data-y': y,
+                'rx': FieldCustomMelody.CELL_CORNER_RADIUS
+            });
+            // add appropriate class so the cell has the correct fill color
+            if (this.melody.getValue(x, y))
+                pxt.BrowserUtils.addClass(cellRect, pxtmelody.getColorClass(x));
+            else
+                pxt.BrowserUtils.addClass(cellRect, "melody-default");
+            if (this.sourceBlock_.workspace.isFlyout)
+                return;
+            pxsim.pointerEvents.down.forEach(evid => cellRect.addEventListener(evid, (ev) => {
+                this.onNoteSelect(x, y);
+                ev.stopPropagation();
+                ev.preventDefault();
+            }, false));
+            this.cells[x][y] = cellRect;
+        }
+        togglePlay() {
+            if (!this.isPlaying) {
+                this.isPlaying = true;
+                this.playMelody();
+            }
+            else {
+                this.stopMelody();
+            }
+            this.updatePlayButton();
+        }
+        updatePlayButton() {
+            if (this.isPlaying) {
+                pxt.BrowserUtils.removeClass(this.playIcon, "play icon");
+                pxt.BrowserUtils.addClass(this.playIcon, "stop icon");
+            }
+            else {
+                pxt.BrowserUtils.removeClass(this.playIcon, "stop icon");
+                pxt.BrowserUtils.addClass(this.playIcon, "play icon");
+            }
+        }
+        playMelody() {
+            if (this.isPlaying) {
+                for (let i = 0; i < this.numCol; i++) {
+                    this.queueToneForColumn(i, i * this.getDuration(), this.getDuration());
+                }
+                this.timeouts.push(setTimeout(// call the melody again after it finishes
+                () => this.playMelody(), (this.numCol) * this.getDuration()));
+            }
+            else {
+                this.stopMelody();
+            }
+        }
+        stopMelody() {
+            if (this.isPlaying) {
+                while (this.timeouts.length)
+                    clearTimeout(this.timeouts.shift());
+                pxt.AudioContextManager.stop();
+                this.isPlaying = false;
+                this.cells.forEach(row => row.forEach(cell => pxt.BrowserUtils.removeClass(cell, "playing")));
+            }
+        }
+        showGallery() {
+            this.stopMelody();
+            this.updatePlayButton();
+            this.gallery.show((result) => {
+                if (result) {
+                    this.melody.parseNotes(result);
+                    this.gallery.hide();
+                    this.toggle.toggle();
+                    this.updateFieldLabel();
+                    this.updateGrid();
+                }
+            });
+        }
+        hideGallery() {
+            this.gallery.hide();
+        }
+    }
+    // grid elements
+    FieldCustomMelody.CELL_WIDTH = 25;
+    FieldCustomMelody.CELL_HORIZONTAL_MARGIN = 7;
+    FieldCustomMelody.CELL_VERTICAL_MARGIN = 5;
+    FieldCustomMelody.CELL_CORNER_RADIUS = 5;
+    // preview field elements
+    FieldCustomMelody.COLOR_BLOCK_WIDTH = 10;
+    FieldCustomMelody.COLOR_BLOCK_HEIGHT = 20;
+    FieldCustomMelody.COLOR_BLOCK_X = 20;
+    FieldCustomMelody.COLOR_BLOCK_Y = 5;
+    FieldCustomMelody.COLOR_BLOCK_SPACING = 2;
+    FieldCustomMelody.MUSIC_ICON_WIDTH = 20;
+    pxtblockly.FieldCustomMelody = FieldCustomMelody;
+    const TOGGLE_WIDTH = 200;
+    const TOGGLE_HEIGHT = 40;
+    const TOGGLE_BORDER_WIDTH = 2;
+    const TOGGLE_CORNER_RADIUS = 4;
+    const BUTTON_CORNER_RADIUS = 2;
+    const BUTTON_BORDER_WIDTH = 1;
+    const BUTTON_BOTTOM_BORDER_WIDTH = 2;
+    class Toggle {
+        constructor(parent, props) {
+            this.props = defaultColors(props);
+            this.root = parent.group();
+            this.buildDom();
+            this.isLeft = true;
+        }
+        buildDom() {
+            // Our css minifier mangles animation names so they need to be injected manually
+            this.root.style().content(`
+            .toggle-left {
+                transform: translateX(0px);
+                animation: mvleft 0.2s 0s ease;
+            }
+
+            .toggle-right {
+                transform: translateX(100px);
+                animation: mvright 0.2s 0s ease;
+            }
+
+            @keyframes mvright {
+                0% {
+                    transform: translateX(0px);
+                }
+                100% {
+                    transform: translateX(100px);
+                }
+            }
+
+            @keyframes mvleft {
+                0% {
+                    transform: translateX(100px);
+                }
+                100% {
+                    transform: translateX(0px);
+                }
+            }
+            `);
+            // The outer border has an inner-stroke so we need to clip out the outer part
+            // because SVG's don't support "inner borders"
+            const clip = this.root.def().create("clipPath", "sprite-editor-toggle-border")
+                .clipPathUnits(true);
+            clip.draw("rect")
+                .at(0, 0)
+                .corners(TOGGLE_CORNER_RADIUS / TOGGLE_WIDTH, TOGGLE_CORNER_RADIUS / TOGGLE_HEIGHT)
+                .size(1, 1);
+            // Draw the outer border
+            this.root.draw("rect")
+                .size(TOGGLE_WIDTH, TOGGLE_HEIGHT)
+                .fill(this.props.baseColor)
+                .stroke(this.props.borderColor, TOGGLE_BORDER_WIDTH * 2)
+                .corners(TOGGLE_CORNER_RADIUS, TOGGLE_CORNER_RADIUS)
+                .clipPath("url(#sprite-editor-toggle-border)");
+            // Draw the background
+            this.root.draw("rect")
+                .at(TOGGLE_BORDER_WIDTH, TOGGLE_BORDER_WIDTH)
+                .size(TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH * 2, TOGGLE_HEIGHT - TOGGLE_BORDER_WIDTH * 2)
+                .fill(this.props.backgroundColor)
+                .corners(TOGGLE_CORNER_RADIUS, TOGGLE_CORNER_RADIUS);
+            // Draw the switch
+            this.switch = this.root.draw("rect")
+                .at(TOGGLE_BORDER_WIDTH, TOGGLE_BORDER_WIDTH)
+                .size((TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH * 2) / 2, TOGGLE_HEIGHT - TOGGLE_BORDER_WIDTH * 2)
+                .fill(this.props.switchColor)
+                .corners(TOGGLE_CORNER_RADIUS, TOGGLE_CORNER_RADIUS);
+            // Draw the left option
+            this.leftElement = this.root.group();
+            this.leftText = mkText(this.props.leftText)
+                .appendClass("sprite-editor-text")
+                .fill(this.props.selectedTextColor);
+            this.leftElement.appendChild(this.leftText);
+            // Draw the right option
+            this.rightElement = this.root.group();
+            this.rightText = mkText(this.props.rightText)
+                .appendClass("sprite-editor-text")
+                .fill(this.props.unselectedTextColor);
+            this.rightElement.appendChild(this.rightText);
+            this.root.onClick(() => this.toggle());
+        }
+        toggle(quiet = false) {
+            if (this.isLeft) {
+                this.switch.removeClass("toggle-left");
+                this.switch.appendClass("toggle-right");
+                this.leftText.fill(this.props.unselectedTextColor);
+                this.rightText.fill(this.props.selectedTextColor);
+            }
+            else {
+                this.switch.removeClass("toggle-right");
+                this.switch.appendClass("toggle-left");
+                this.leftText.fill(this.props.selectedTextColor);
+                this.rightText.fill(this.props.unselectedTextColor);
+            }
+            this.isLeft = !this.isLeft;
+            if (!quiet && this.changeHandler) {
+                this.changeHandler(this.isLeft);
+            }
+        }
+        onStateChange(handler) {
+            this.changeHandler = handler;
+        }
+        layout() {
+            const centerOffset = (TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH * 2) / 4;
+            this.leftText.moveTo(centerOffset + TOGGLE_BORDER_WIDTH, TOGGLE_HEIGHT / 2);
+            this.rightText.moveTo(TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH - centerOffset, TOGGLE_HEIGHT / 2);
+        }
+        translate(x, y) {
+            this.root.translate(x, y);
+        }
+        height() {
+            return TOGGLE_HEIGHT;
+        }
+        width() {
+            return TOGGLE_WIDTH;
+        }
+    }
+    function mkText(text) {
+        return new svg.Text(text)
+            .anchor("middle")
+            .setAttribute("dominant-baseline", "middle")
+            .setAttribute("dy", (pxt.BrowserUtils.isIE() || pxt.BrowserUtils.isEdge()) ? "0.3em" : "0.1em");
+    }
+    function defaultColors(props) {
+        if (!props.baseColor)
+            props.baseColor = "#e95153";
+        if (!props.backgroundColor)
+            props.backgroundColor = "rgba(52,73,94,.2)";
+        if (!props.borderColor)
+            props.borderColor = "rgba(52,73,94,.4)";
+        if (!props.selectedTextColor)
+            props.selectedTextColor = props.baseColor;
+        if (!props.unselectedTextColor)
+            props.unselectedTextColor = "hsla(0,0%,100%,.9)";
+        if (!props.switchColor)
+            props.switchColor = "#ffffff";
+        return props;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    let Note;
+    (function (Note) {
+        Note[Note["C"] = 262] = "C";
+        Note[Note["CSharp"] = 277] = "CSharp";
+        Note[Note["D"] = 294] = "D";
+        Note[Note["Eb"] = 311] = "Eb";
+        Note[Note["E"] = 330] = "E";
+        Note[Note["F"] = 349] = "F";
+        Note[Note["FSharp"] = 370] = "FSharp";
+        Note[Note["G"] = 392] = "G";
+        Note[Note["GSharp"] = 415] = "GSharp";
+        Note[Note["A"] = 440] = "A";
+        Note[Note["Bb"] = 466] = "Bb";
+        Note[Note["B"] = 494] = "B";
+        Note[Note["C3"] = 131] = "C3";
+        Note[Note["CSharp3"] = 139] = "CSharp3";
+        Note[Note["D3"] = 147] = "D3";
+        Note[Note["Eb3"] = 156] = "Eb3";
+        Note[Note["E3"] = 165] = "E3";
+        Note[Note["F3"] = 175] = "F3";
+        Note[Note["FSharp3"] = 185] = "FSharp3";
+        Note[Note["G3"] = 196] = "G3";
+        Note[Note["GSharp3"] = 208] = "GSharp3";
+        Note[Note["A3"] = 220] = "A3";
+        Note[Note["Bb3"] = 233] = "Bb3";
+        Note[Note["B3"] = 247] = "B3";
+        Note[Note["C4"] = 262] = "C4";
+        Note[Note["CSharp4"] = 277] = "CSharp4";
+        Note[Note["D4"] = 294] = "D4";
+        Note[Note["Eb4"] = 311] = "Eb4";
+        Note[Note["E4"] = 330] = "E4";
+        Note[Note["F4"] = 349] = "F4";
+        Note[Note["FSharp4"] = 370] = "FSharp4";
+        Note[Note["G4"] = 392] = "G4";
+        Note[Note["GSharp4"] = 415] = "GSharp4";
+        Note[Note["A4"] = 440] = "A4";
+        Note[Note["Bb4"] = 466] = "Bb4";
+        Note[Note["B4"] = 494] = "B4";
+        Note[Note["C5"] = 523] = "C5";
+        Note[Note["CSharp5"] = 555] = "CSharp5";
+        Note[Note["D5"] = 587] = "D5";
+        Note[Note["Eb5"] = 622] = "Eb5";
+        Note[Note["E5"] = 659] = "E5";
+        Note[Note["F5"] = 698] = "F5";
+        Note[Note["FSharp5"] = 740] = "FSharp5";
+        Note[Note["G5"] = 784] = "G5";
+        Note[Note["GSharp5"] = 831] = "GSharp5";
+        Note[Note["A5"] = 880] = "A5";
+        Note[Note["Bb5"] = 932] = "Bb5";
+        Note[Note["B5"] = 988] = "B5";
+        Note[Note["C6"] = 1047] = "C6";
+        Note[Note["CSharp6"] = 1109] = "CSharp6";
+        Note[Note["D6"] = 1175] = "D6";
+        Note[Note["Eb6"] = 1245] = "Eb6";
+        Note[Note["E6"] = 1319] = "E6";
+        Note[Note["F6"] = 1397] = "F6";
+        Note[Note["FSharp6"] = 1480] = "FSharp6";
+        Note[Note["G6"] = 1568] = "G6";
+        Note[Note["GSharp6"] = 1568] = "GSharp6";
+        Note[Note["A6"] = 1760] = "A6";
+        Note[Note["Bb6"] = 1865] = "Bb6";
+        Note[Note["B6"] = 1976] = "B6";
+        Note[Note["C7"] = 2093] = "C7";
+    })(Note || (Note = {}));
+    class FieldNote extends Blockly.FieldNumber {
+        constructor(text, params, validator) {
+            // passing null as we need more state before we properly set value.
+            super(null, 0, null, null, validator);
+            this.isFieldCustom_ = true;
+            this.SERIALIZABLE = true;
+            this.isTextValid_ = true;
+            /**
+             * default number of piano keys
+             */
+            this.nKeys_ = 36;
+            this.minNote_ = 28;
+            this.maxNote_ = 63;
+            /** Absolute error for note frequency identification (Hz) **/
+            this.eps = 2;
+            this.setSpellcheck(false);
+            this.prepareNotes();
+            this.isExpanded = false;
+            this.currentPage = 0;
+            this.totalPlayCount = 0;
+            if (params.editorColour) {
+                this.primaryColour = pxtblockly.parseColour(params.editorColour);
+                this.borderColour = Blockly.utils.colour.darken(this.primaryColour, 0.2);
+            }
+            const eps = parseInt(params.eps);
+            if (!Number.isNaN(eps) && eps >= 0) {
+                this.eps = eps;
+            }
+            const minNote = parseInt(params.minNote) || this.minNote_;
+            const maxNote = parseInt(params.maxNote) || this.maxNote_;
+            if (minNote >= 28 && maxNote <= 75 && maxNote > minNote) {
+                this.minNote_ = minNote;
+                this.maxNote_ = maxNote;
+                this.nKeys_ = this.maxNote_ - this.minNote_ + 1;
+            }
+            this.setValue(text);
+        }
+        /**
+         * Ensure that only a non negative number may be entered.
+         * @param {string} text The user's text.
+         * @return A string representing a valid positive number, or null if invalid.
+         */
+        doClassValidation_(text) {
+            // accommodate note strings like "Note.GSharp5" as well as numbers
+            const match = /^Note\.(.+)$/.exec(text);
+            const noteName = (match && match.length > 1) ? match[1] : null;
+            text = Note[noteName] ? Note[noteName] : String(parseFloat(text || "0"));
+            if (text === null) {
+                return null;
+            }
+            const n = parseFloat(text || "0");
+            if (isNaN(n) || n < 0) {
+                return null;
+            }
+            const showDecimal = Math.floor(n) != n;
+            return "" + n.toFixed(showDecimal ? 2 : 0);
+        }
+        /**
+         * Return the current note frequency.
+         * @return Current note in string format.
+         */
+        getValue() {
+            return this.value_ + "";
+        }
+        /**
+         * Called by setValue if the text input is valid. Updates the value of the
+         * field, and updates the text of the field if it is not currently being
+         * edited (i.e. handled by the htmlInput_).
+         * @param {string} note The new note in string format.
+         */
+        doValueUpdate_(note) {
+            if (isNaN(Number(note)) || Number(note) < 0)
+                return;
+            if (this.sourceBlock_ && Blockly.Events.isEnabled() && this.value_ != note) {
+                Blockly.Events.fire(new Blockly.Events.Change(this.sourceBlock_, "field", this.name, this.value_, note));
+            }
+            this.value_ = note;
+            this.refreshText();
+        }
+        /**
+         * Get the text from this field
+         * @return Current text.
+         */
+        getText() {
+            if (this.isExpanded) {
+                return "" + this.value_;
+            }
+            else {
+                const note = +this.value_;
+                for (let i = 0; i < this.nKeys_; i++) {
+                    if (Math.abs(this.getKeyFreq(i) - note) < this.eps) {
+                        return this.getKeyName(i);
+                    }
+                }
+                let text = note.toString();
+                if (!isNaN(note))
+                    text += " Hz";
+                return text;
+            }
+        }
+        /**
+         * This block shows up differently when it's being edited;
+         * on any transition between `editing <--> not-editing`
+         * or other change in state,
+         * refresh the text to get back into a valid state.
+         **/
+        refreshText() {
+            this.forceRerender();
+        }
+        onHtmlInputChange_(e) {
+            super.onHtmlInputChange_(e);
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            this.htmlInput_.focus();
+        }
+        onFinishEditing_(text) {
+            this.refreshText();
+        }
+        onHide() {
+            this.isExpanded = false;
+            this.refreshText();
+        }
+        ;
+        /**
+         * Create a piano under the note field.
+         */
+        showEditor_(e) {
+            this.isExpanded = true;
+            this.updateColor();
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            const isMobile = pxt.BrowserUtils.isMobile() || pxt.BrowserUtils.isIOS();
+            // invoke FieldTextInputs showeditor, so we can set quiet explicitly / not have a pop up dialogue
+            FieldNote.superClass_.showEditor_.call(this, e, /** quiet **/ isMobile, /** readonly **/ isMobile);
+            this.refreshText();
+            // save all changes in the same group of events
+            Blockly.Events.setGroup(true);
+            this.piano = [];
+            this.currentSelectedKey = undefined;
+            const totalWhiteKeys = this.nKeys_ - (this.nKeys_ / FieldNote.notesPerOctave * FieldNote.blackKeysPerOctave);
+            const whiteKeysPerOctave = FieldNote.notesPerOctave - FieldNote.blackKeysPerOctave;
+            let pianoWidth = FieldNote.keyWidth * totalWhiteKeys;
+            let pianoHeight = FieldNote.keyHeight + FieldNote.labelHeight;
+            const pagination = window.innerWidth < pianoWidth;
+            if (pagination) {
+                pianoWidth = whiteKeysPerOctave * FieldNote.keyWidth;
+                pianoHeight = FieldNote.keyHeight + FieldNote.labelHeight + FieldNote.prevNextHeight;
+            }
+            const pianoDiv = createStyledDiv("blocklyPianoDiv", `width: ${pianoWidth}px;
+                height: ${pianoHeight}px;`);
+            Blockly.DropDownDiv.getContentDiv().appendChild(pianoDiv);
+            // render note label
+            this.noteLabel = createStyledDiv("blocklyNoteLabel", `top: ${FieldNote.keyHeight}px;
+                width: ${pianoWidth}px;
+                background-color: ${this.primaryColour};
+                border-color: ${this.primaryColour};`);
+            pianoDiv.appendChild(this.noteLabel);
+            this.noteLabel.textContent = "-";
+            let startingPage = 0;
+            for (let i = 0; i < this.nKeys_; i++) {
+                const currentOctave = Math.floor(i / FieldNote.notesPerOctave);
+                let position = this.getPosition(i);
+                // modify original position in pagination
+                if (pagination && i >= FieldNote.notesPerOctave)
+                    position -= whiteKeysPerOctave * currentOctave * FieldNote.keyWidth;
+                const key = this.getKeyDiv(i, position);
+                this.piano.push(key);
+                pianoDiv.appendChild(key);
+                // if the current value is within eps of this note, select it.
+                if (Math.abs(this.getKeyFreq(i) - Number(this.getValue())) < this.eps) {
+                    pxt.BrowserUtils.addClass(key, "selected");
+                    this.currentSelectedKey = key;
+                    startingPage = currentOctave;
+                }
+            }
+            if (pagination) {
+                this.setPage(startingPage);
+                pianoDiv.appendChild(this.getNextPrevDiv(/** prev **/ true, pianoWidth));
+                pianoDiv.appendChild(this.getNextPrevDiv(/** prev **/ false, pianoWidth));
+            }
+            Blockly.DropDownDiv.setColour(this.primaryColour, this.borderColour);
+            Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_, () => this.onHide());
+        }
+        playKey(key, frequency) {
+            const notePlayID = ++this.totalPlayCount;
+            if (this.currentSelectedKey !== key) {
+                if (this.currentSelectedKey)
+                    pxt.BrowserUtils.removeClass(this.currentSelectedKey, "selected");
+                pxt.BrowserUtils.addClass(key, "selected");
+                this.setValue(frequency);
+            }
+            this.currentSelectedKey = key;
+            /**
+             * force a rerender of the preview; other attempts at changing the value
+             * do not show up on the block itself until after the fieldeditor is closed,
+             * as it is currently in an editable state.
+             **/
+            this.htmlInput_.value = this.getText();
+            pxt.AudioContextManager.tone(frequency);
+            setTimeout(() => {
+                // Clear the sound if it is still playing after 300ms
+                if (this.totalPlayCount == notePlayID)
+                    pxt.AudioContextManager.stop();
+            }, 300);
+        }
+        /**
+         * Close the note picker if this input is being deleted.
+         */
+        dispose() {
+            Blockly.DropDownDiv.hideIfOwner(this);
+            super.dispose();
+        }
+        updateColor() {
+            if (this.sourceBlock_.parentBlock_ && (this.sourceBlock_.isShadow() || hasOnlyOneField(this.sourceBlock_))) {
+                let b = this.sourceBlock_.parentBlock_;
+                this.primaryColour = b.getColour();
+                this.borderColour = b.getColourTertiary();
+            }
+            else {
+                this.primaryColour = "#3D3D3D";
+                this.borderColour = "#2A2A2A";
+            }
+        }
+        setPage(page) {
+            const pageCount = this.nKeys_ / FieldNote.notesPerOctave;
+            page = Math.max(Math.min(page, pageCount - 1), 0);
+            this.noteLabel.textContent = `Octave #${page + 1}`;
+            const firstKeyInOctave = page * FieldNote.notesPerOctave;
+            for (let i = 0; i < this.piano.length; ++i) {
+                const isInOctave = i >= firstKeyInOctave && i < firstKeyInOctave + FieldNote.notesPerOctave;
+                this.piano[i].style.display = isInOctave ? "block" : "none";
+            }
+            this.currentPage = page;
+        }
+        ;
+        /**
+         * create a DOM to assign a style to the previous and next buttons
+         * @param pianoWidth the width of the containing piano
+         * @param isPrev true if is previous button, false otherwise
+         * @return DOM with the new css style.s
+         */
+        getNextPrevDiv(isPrev, pianoWidth) {
+            const xPosition = isPrev ? 0 : (pianoWidth / 2);
+            const yPosition = FieldNote.keyHeight + FieldNote.labelHeight;
+            const output = createStyledDiv("blocklyNotePrevNext", `top: ${yPosition}px;
+                left: ${xPosition}px;
+                width: ${Math.ceil(pianoWidth / 2)}px;
+                ${isPrev ? "border-left-color" : "border-right-color"}: ${this.primaryColour};
+                background-color: ${this.primaryColour};
+                border-bottom-color: ${this.primaryColour};`);
+            pxt.BrowserUtils.pointerEvents.down.forEach(ev => {
+                Blockly.bindEventWithChecks_(output, ev, this, () => this.setPage(isPrev ? this.currentPage - 1 : this.currentPage + 1), 
+                /** noCaptureIdentifier **/ true);
+            });
+            output.textContent = isPrev ? "<" : ">";
+            return output;
+        }
+        getKeyDiv(keyInd, leftPosition) {
+            const output = createStyledDiv(`blocklyNote ${this.isWhite(keyInd) ? "" : "black"}`, `width: ${this.getKeyWidth(keyInd)}px;
+                height: ${this.getKeyHeight(keyInd)}px;
+                left: ${leftPosition}px;
+                border-color: ${this.primaryColour};`);
+            pxt.BrowserUtils.pointerEvents.down.forEach(ev => {
+                Blockly.bindEventWithChecks_(output, ev, this, () => this.playKey(output, this.getKeyFreq(keyInd)), 
+                /** noCaptureIdentifier **/ true);
+            });
+            Blockly.bindEventWithChecks_(output, 'mouseover', this, () => this.noteLabel.textContent = this.getKeyName(keyInd), 
+            /** noCaptureIdentifier **/ true);
+            return output;
+        }
+        /**
+         * @param idx index of the key
+         * @return true if idx is white
+         */
+        isWhite(idx) {
+            switch (idx % 12) {
+                case 1:
+                case 3:
+                case 6:
+                case 8:
+                case 10:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+        /**
+         * get width of the piano key
+         * @param idx index of the key
+         * @return width of the key
+         */
+        getKeyWidth(idx) {
+            if (this.isWhite(idx))
+                return FieldNote.keyWidth;
+            return FieldNote.keyWidth / 2;
+        }
+        /**
+         * get height of the piano key
+         * @param idx index of the key
+         * @return height of the key
+         */
+        getKeyHeight(idx) {
+            if (this.isWhite(idx))
+                return FieldNote.keyHeight;
+            return FieldNote.keyHeight / 2;
+        }
+        getKeyFreq(keyIndex) {
+            return this.getKeyNoteData(keyIndex).freq;
+        }
+        getKeyName(keyIndex) {
+            const note = this.getKeyNoteData(keyIndex);
+            let name = note.prefixedName;
+            if (this.nKeys_ <= FieldNote.notesPerOctave) {
+                // special case: one octave
+                name = note.name;
+            }
+            else if (this.minNote_ >= 28 && this.maxNote_ <= 63) {
+                // special case: centered
+                name = note.altPrefixedName || name;
+            }
+            return name;
+        }
+        getKeyNoteData(keyIndex) {
+            return FieldNote.Notes[keyIndex + this.minNote_];
+        }
+        /**
+         * get the position of the key in the piano
+         * @param idx index of the key
+         * @return position of the key
+         */
+        getPosition(idx) {
+            const whiteKeyCount = idx - Math.floor((idx + 1) / FieldNote.notesPerOctave * FieldNote.blackKeysPerOctave);
+            const pos = whiteKeyCount * FieldNote.keyWidth;
+            if (this.isWhite(idx))
+                return pos;
+            return pos - (FieldNote.keyWidth / 4);
+        }
+        prepareNotes() {
+            if (!FieldNote.Notes) {
+                FieldNote.Notes = {
+                    28: { name: lf("{id:note}C"), prefixedName: lf("Low C"), freq: 131 },
+                    29: { name: lf("C#"), prefixedName: lf("Low C#"), freq: 139 },
+                    30: { name: lf("{id:note}D"), prefixedName: lf("Low D"), freq: 147 },
+                    31: { name: lf("D#"), prefixedName: lf("Low D#"), freq: 156 },
+                    32: { name: lf("{id:note}E"), prefixedName: lf("Low E"), freq: 165 },
+                    33: { name: lf("{id:note}F"), prefixedName: lf("Low F"), freq: 175 },
+                    34: { name: lf("F#"), prefixedName: lf("Low F#"), freq: 185 },
+                    35: { name: lf("{id:note}G"), prefixedName: lf("Low G"), freq: 196 },
+                    36: { name: lf("G#"), prefixedName: lf("Low G#"), freq: 208 },
+                    37: { name: lf("{id:note}A"), prefixedName: lf("Low A"), freq: 220 },
+                    38: { name: lf("A#"), prefixedName: lf("Low A#"), freq: 233 },
+                    39: { name: lf("{id:note}B"), prefixedName: lf("Low B"), freq: 247 },
+                    40: { name: lf("{id:note}C"), prefixedName: lf("Middle C"), freq: 262 },
+                    41: { name: lf("C#"), prefixedName: lf("Middle C#"), freq: 277 },
+                    42: { name: lf("{id:note}D"), prefixedName: lf("Middle D"), freq: 294 },
+                    43: { name: lf("D#"), prefixedName: lf("Middle D#"), freq: 311 },
+                    44: { name: lf("{id:note}E"), prefixedName: lf("Middle E"), freq: 330 },
+                    45: { name: lf("{id:note}F"), prefixedName: lf("Middle F"), freq: 349 },
+                    46: { name: lf("F#"), prefixedName: lf("Middle F#"), freq: 370 },
+                    47: { name: lf("{id:note}G"), prefixedName: lf("Middle G"), freq: 392 },
+                    48: { name: lf("G#"), prefixedName: lf("Middle G#"), freq: 415 },
+                    49: { name: lf("{id:note}A"), prefixedName: lf("Middle A"), freq: 440 },
+                    50: { name: lf("A#"), prefixedName: lf("Middle A#"), freq: 466 },
+                    51: { name: lf("{id:note}B"), prefixedName: lf("Middle B"), freq: 494 },
+                    52: { name: lf("{id:note}C"), prefixedName: lf("Tenor C"), altPrefixedName: lf("High C"), freq: 523 },
+                    53: { name: lf("C#"), prefixedName: lf("Tenor C#"), altPrefixedName: lf("High C#"), freq: 554 },
+                    54: { name: lf("{id:note}D"), prefixedName: lf("Tenor D"), altPrefixedName: lf("High D"), freq: 587 },
+                    55: { name: lf("D#"), prefixedName: lf("Tenor D#"), altPrefixedName: lf("High D#"), freq: 622 },
+                    56: { name: lf("{id:note}E"), prefixedName: lf("Tenor E"), altPrefixedName: lf("High E"), freq: 659 },
+                    57: { name: lf("{id:note}F"), prefixedName: lf("Tenor F"), altPrefixedName: lf("High F"), freq: 698 },
+                    58: { name: lf("F#"), prefixedName: lf("Tenor F#"), altPrefixedName: lf("High F#"), freq: 740 },
+                    59: { name: lf("{id:note}G"), prefixedName: lf("Tenor G"), altPrefixedName: lf("High G"), freq: 784 },
+                    60: { name: lf("G#"), prefixedName: lf("Tenor G#"), altPrefixedName: lf("High G#"), freq: 831 },
+                    61: { name: lf("{id:note}A"), prefixedName: lf("Tenor A"), altPrefixedName: lf("High A"), freq: 880 },
+                    62: { name: lf("A#"), prefixedName: lf("Tenor A#"), altPrefixedName: lf("High A#"), freq: 932 },
+                    63: { name: lf("{id:note}B"), prefixedName: lf("Tenor B"), altPrefixedName: lf("High B"), freq: 988 },
+                    64: { name: lf("{id:note}C"), prefixedName: lf("High C"), freq: 1046 },
+                    65: { name: lf("C#"), prefixedName: lf("High C#"), freq: 1109 },
+                    66: { name: lf("{id:note}D"), prefixedName: lf("High D"), freq: 1175 },
+                    67: { name: lf("D#"), prefixedName: lf("High D#"), freq: 1245 },
+                    68: { name: lf("{id:note}E"), prefixedName: lf("High E"), freq: 1319 },
+                    69: { name: lf("{id:note}F"), prefixedName: lf("High F"), freq: 1397 },
+                    70: { name: lf("F#"), prefixedName: lf("High F#"), freq: 1478 },
+                    71: { name: lf("{id:note}G"), prefixedName: lf("High G"), freq: 1568 },
+                    72: { name: lf("G#"), prefixedName: lf("High G#"), freq: 1661 },
+                    73: { name: lf("{id:note}A"), prefixedName: lf("High A"), freq: 1760 },
+                    74: { name: lf("A#"), prefixedName: lf("High A#"), freq: 1865 },
+                    75: { name: lf("{id:note}B"), prefixedName: lf("High B"), freq: 1976 }
+                };
+            }
+        }
+    }
+    FieldNote.keyWidth = 22;
+    FieldNote.keyHeight = 90;
+    FieldNote.labelHeight = 24;
+    FieldNote.prevNextHeight = 20;
+    FieldNote.notesPerOctave = 12;
+    FieldNote.blackKeysPerOctave = 5;
+    pxtblockly.FieldNote = FieldNote;
+    function hasOnlyOneField(block) {
+        return block.inputList.length === 1 && block.inputList[0].fieldRow.length === 1;
+    }
+    function createStyledDiv(className, style) {
+        const output = document.createElement("div");
+        pxt.BrowserUtils.addClass(output, className);
+        output.setAttribute("style", style.replace(/\s+/g, " "));
+        return output;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+// common time options -- do not remove
+// lf("100 ms")
+// lf("200 ms")
+// lf("500 ms")
+// lf("1 second")
+// lf("2 seconds")
+// lf("5 seconds")
+// lf("1 minute")
+// lf("1 hour")
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldNumberDropdown extends Blockly.FieldNumberDropdown {
+        constructor(value, options, opt_validator) {
+            super(value, options.data, options.min, options.max, options.precision, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+        getOptions() {
+            let newOptions;
+            if (this.menuGenerator_) {
+                newOptions = JSON.parse(this.menuGenerator_).map((x) => {
+                    if (typeof x == 'object') {
+                        return [pxt.Util.rlf(x[0]), x[1]];
+                    }
+                    else {
+                        return [String(x), String(x)];
+                    }
+                });
+            }
+            return newOptions;
+        }
+    }
+    pxtblockly.FieldNumberDropdown = FieldNumberDropdown;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldPosition extends Blockly.FieldSlider {
+        constructor(text, params, validator) {
+            super(text, '0', '100', '1', '100', 'Value', validator);
+            this.isFieldCustom_ = true;
+            this.params = params;
+            if (!this.params.screenHeight)
+                this.params.screenHeight = 120;
+            if (!this.params.screenWidth)
+                this.params.screenWidth = 160;
+            if (!this.params.xInputName)
+                this.params.xInputName = "x";
+            if (!this.params.yInputName)
+                this.params.yInputName = "y";
+            if (this.params.min)
+                this.min_ = parseInt(this.params.min);
+            if (this.params.max)
+                this.max_ = parseInt(this.params.max);
+        }
+        showEditor_(_opt_e) {
+            // Find out which field we're in (x or y) and set the appropriate max.
+            const xField = this.getFieldByName(this.params.xInputName);
+            if (xField === this) {
+                this.max_ = this.params.screenWidth;
+                this.labelText_ = this.params.xInputName;
+            }
+            const yField = this.getFieldByName(this.params.yInputName);
+            if (yField === this) {
+                this.max_ = this.params.screenHeight;
+                this.labelText_ = this.params.yInputName;
+            }
+            // Call super to render the slider and show the dropdown div
+            super.showEditor_(_opt_e);
+            // Now render the screen in the dropdown div below the slider
+            this.renderScreenPicker();
+        }
+        doValueUpdate_(value) {
+            super.doValueUpdate_(value);
+            if (this.resetCrosshair)
+                this.resetCrosshair();
+        }
+        renderScreenPicker() {
+            let contentDiv = Blockly.DropDownDiv.getContentDiv();
+            this.selectorDiv_ = document.createElement('div');
+            this.selectorDiv_.className = "blocklyCanvasOverlayOuter";
+            contentDiv.appendChild(this.selectorDiv_);
+            const canvasOverlayDiv = document.createElement('div');
+            canvasOverlayDiv.className = 'blocklyCanvasOverlayDiv';
+            this.selectorDiv_.appendChild(canvasOverlayDiv);
+            const crossX = document.createElement('div');
+            crossX.className = 'cross-x';
+            canvasOverlayDiv.appendChild(crossX);
+            const crossY = document.createElement('div');
+            crossY.className = 'cross-y';
+            canvasOverlayDiv.appendChild(crossY);
+            const label = document.createElement('div');
+            label.className = 'label';
+            canvasOverlayDiv.appendChild(label);
+            const width = this.params.screenWidth * 1.5;
+            const height = this.params.screenHeight * 1.5;
+            canvasOverlayDiv.style.height = height + 'px';
+            canvasOverlayDiv.style.width = width + 'px';
+            // The slider is set to a fixed width, so we have to resize it
+            // to match the screen size
+            const slider = contentDiv.getElementsByClassName("goog-slider-horizontal")[0];
+            if (slider) {
+                slider.style.width = width + "px";
+                // Because we resized the slider, we need to update the handle position. The closure
+                // slider won't update unless the value changes so change it and un-change it
+                const value = parseFloat(this.getValue());
+                if (!isNaN(value) && value > this.getMin()) {
+                    this.setValue((value - 1) + "");
+                    this.setValue(value + "");
+                }
+            }
+            const setPos = (x, y) => {
+                x = Math.round(Math.max(0, Math.min(width, x)));
+                y = Math.round(Math.max(0, Math.min(height, y)));
+                crossX.style.top = y + 'px';
+                crossY.style.left = x + 'px';
+                x = Math.round(Math.max(0, Math.min(this.params.screenWidth, x / width * this.params.screenWidth)));
+                y = Math.round(Math.max(0, Math.min(this.params.screenHeight, y / height * this.params.screenHeight)));
+                // Check to see if label exists instead of showing NaN
+                if (isNaN(x)) {
+                    label.textContent = `${this.params.yInputName}=${y}`;
+                }
+                else if (isNaN(y)) {
+                    label.textContent = `${this.params.xInputName}=${x}`;
+                }
+                else {
+                    label.textContent = `${this.params.xInputName}=${x} ${this.params.yInputName}=${y}`;
+                }
+                // Position the label so that it doesn't go outside the screen bounds
+                const bb = label.getBoundingClientRect();
+                if (x > this.params.screenWidth / 2) {
+                    label.style.left = (x * (width / this.params.screenWidth) - bb.width - 8) + 'px';
+                }
+                else {
+                    label.style.left = (x * (width / this.params.screenWidth) + 4) + 'px';
+                }
+                if (y > this.params.screenHeight / 2) {
+                    label.style.top = (y * (height / this.params.screenHeight) - bb.height - 6) + "px";
+                }
+                else {
+                    label.style.top = (y * (height / this.params.screenHeight)) + 'px';
+                }
+            };
+            // Position initial crossX and crossY
+            this.resetCrosshair = () => {
+                const { currentX, currentY } = this.getXY();
+                setPos(currentX / this.params.screenWidth * width, currentY / this.params.screenHeight * height);
+            };
+            this.resetCrosshair();
+            Blockly.bindEvent_(this.selectorDiv_, 'mousemove', this, (e) => {
+                const bb = canvasOverlayDiv.getBoundingClientRect();
+                const x = e.clientX - bb.left;
+                const y = e.clientY - bb.top;
+                setPos(x, y);
+            });
+            Blockly.bindEvent_(this.selectorDiv_, 'mouseleave', this, this.resetCrosshair);
+            Blockly.bindEvent_(this.selectorDiv_, 'click', this, (e) => {
+                const bb = canvasOverlayDiv.getBoundingClientRect();
+                const x = e.clientX - bb.left;
+                const y = e.clientY - bb.top;
+                const normalizedX = Math.round(x / width * this.params.screenWidth);
+                const normalizedY = Math.round(y / height * this.params.screenHeight);
+                this.close();
+                this.setXY(normalizedX, normalizedY);
+            });
+        }
+        resizeHandler() {
+            this.close();
+        }
+        setXY(x, y) {
+            const xField = this.getFieldByName(this.params.xInputName);
+            if (xField && typeof xField.getValue() == "number") {
+                xField.setValue(String(x));
+            }
+            const yField = this.getFieldByName(this.params.yInputName);
+            if (yField && typeof yField.getValue() == "number") {
+                yField.setValue(String(y));
+            }
+        }
+        getFieldByName(name) {
+            const parentBlock = this.sourceBlock_.parentBlock_;
+            if (!parentBlock)
+                return undefined; // warn
+            for (let i = 0; i < parentBlock.inputList.length; i++) {
+                const input = parentBlock.inputList[i];
+                if (input.name === name) {
+                    return this.getTargetField(input);
+                }
+            }
+            return undefined;
+        }
+        getXY() {
+            let currentX;
+            let currentY;
+            const xField = this.getFieldByName(this.params.xInputName);
+            if (xField)
+                currentX = xField.getValue();
+            const yField = this.getFieldByName(this.params.yInputName);
+            if (yField)
+                currentY = yField.getValue();
+            return { currentX: parseInt(currentX), currentY: parseInt(currentY) };
+        }
+        getTargetField(input) {
+            const targetBlock = input.connection.targetBlock();
+            if (!targetBlock)
+                return null;
+            const targetInput = targetBlock.inputList[0];
+            if (!targetInput)
+                return null;
+            const targetField = targetInput.fieldRow[0];
+            return targetField;
+        }
+        widgetDispose_() {
+            const that = this;
+            Blockly.FieldNumber.superClass_.widgetDispose_.call(that);
+            that.close(true);
+        }
+        close(skipWidget) {
+            if (!skipWidget) {
+                Blockly.WidgetDiv.hideIfOwner(this);
+                Blockly.DropDownDiv.hideIfOwner(this);
+            }
+            // remove resize listener
+            window.removeEventListener("resize", this.resizeHandler);
+            this.resetCrosshair = undefined;
+            // Destroy the selector div
+            if (!this.selectorDiv_)
+                return;
+            goog.dom.removeNode(this.selectorDiv_);
+            this.selectorDiv_ = undefined;
+        }
+    }
+    pxtblockly.FieldPosition = FieldPosition;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldProcedure extends Blockly.FieldDropdown {
+        constructor(funcname, opt_validator) {
+            super([["Temp", "Temp"]], opt_validator);
+            this.setValue(funcname || '');
+        }
+        getOptions() {
+            return this.dropdownCreate();
+        }
+        ;
+        init() {
+            if (this.fieldGroup_) {
+                // Dropdown has already been initialized once.
+                return;
+            }
+            super.init.call(this);
+        }
+        ;
+        setSourceBlock(block) {
+            goog.asserts.assert(!block.isShadow(), 'Procedure fields are not allowed to exist on shadow blocks.');
+            super.setSourceBlock.call(this, block);
+        }
+        ;
+        /**
+         * Return a sorted list of variable names for procedure dropdown menus.
+         * Include a special option at the end for creating a new function name.
+         * @return {!Array.<string>} Array of procedure names.
+         * @this {pxtblockly.FieldProcedure}
+         */
+        dropdownCreate() {
+            let functionList = [];
+            if (this.sourceBlock_ && this.sourceBlock_.workspace) {
+                let blocks = this.sourceBlock_.workspace.getAllBlocks(false);
+                // Iterate through every block and check the name.
+                for (let i = 0; i < blocks.length; i++) {
+                    if (blocks[i].getProcedureDef) {
+                        let procName = blocks[i].getProcedureDef();
+                        functionList.push(procName[0]);
+                    }
+                }
+            }
+            // Ensure that the currently selected variable is an option.
+            let name = this.getValue();
+            if (name && functionList.indexOf(name) == -1) {
+                functionList.push(name);
+            }
+            functionList.sort(goog.string.caseInsensitiveCompare);
+            if (!functionList.length) {
+                // Add temporary list item so the dropdown doesn't break
+                functionList.push("Temp");
+            }
+            // Variables are not language-specific, use the name as both the user-facing
+            // text and the internal representation.
+            let options = [];
+            for (let i = 0; i < functionList.length; i++) {
+                options[i] = [functionList[i], functionList[i]];
+            }
+            return options;
+        }
+        onItemSelected(menu, menuItem) {
+            let itemText = menuItem.getValue();
+            if (itemText !== null) {
+                this.setValue(itemText);
+            }
+        }
+    }
+    pxtblockly.FieldProcedure = FieldProcedure;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldProtractor extends Blockly.FieldSlider {
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        constructor(value_, params, opt_validator) {
+            super(String(value_), '0', '180', '1', '15', lf("Angle"), opt_validator);
+            this.isFieldCustom_ = true;
+            this.params = params;
+        }
+        createLabelDom_(labelText) {
+            const labelContainer = document.createElement('div');
+            this.circleSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            pxsim.svg.hydrate(this.circleSVG, {
+                viewBox: "0 0 200 100",
+                width: "170"
+            });
+            labelContainer.appendChild(this.circleSVG);
+            const outerCircle = pxsim.svg.child(this.circleSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': `fill:transparent; transition: stroke-dashoffset 0.1s linear;`,
+                'stroke': '#a8aaa8', 'stroke-width': '1rem'
+            });
+            this.circleBar = pxsim.svg.child(this.circleSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': `fill:transparent; transition: stroke-dashoffset 0.1s linear;`,
+                'stroke': '#f12a21', 'stroke-width': '1rem'
+            });
+            this.reporter = pxsim.svg.child(this.circleSVG, "text", {
+                'x': 100, 'y': 80,
+                'text-anchor': 'middle', 'dominant-baseline': 'middle',
+                'style': 'font-size: 50px',
+                'class': 'sim-text inverted number'
+            });
+            // labelContainer.setAttribute('class', 'blocklyFieldSliderLabel');
+            const readout = document.createElement('span');
+            readout.setAttribute('class', 'blocklyFieldSliderReadout');
+            return [labelContainer, readout];
+        }
+        ;
+        setReadout_(readout, value) {
+            this.updateAngle(parseFloat(value));
+            // Update reporter
+            this.reporter.textContent = `${value}°`;
+        }
+        updateAngle(angle) {
+            angle = Math.max(0, Math.min(180, angle));
+            const radius = 90;
+            const pct = (180 - angle) / 180 * Math.PI * radius;
+            this.circleBar.setAttribute('stroke-dashoffset', `${pct}`);
+        }
+    }
+    pxtblockly.FieldProtractor = FieldProtractor;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+/// <reference path="./field_base.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    const MUSIC_ICON_WIDTH = 20;
+    const TOTAL_WIDTH = 160;
+    const TOTAL_HEIGHT = 40;
+    const X_PADDING = 5;
+    const Y_PADDING = 4;
+    const PREVIEW_WIDTH = TOTAL_WIDTH - X_PADDING * 5 - MUSIC_ICON_WIDTH;
+    class FieldSoundEffect extends pxtblockly.FieldBase {
+        constructor() {
+            super(...arguments);
+            this.registeredChangeListener = false;
+            this.onWorkspaceChange = (ev) => {
+                if (ev.type !== Blockly.Events.CHANGE)
+                    return;
+                const block = this.sourceBlock_.workspace.getBlockById(ev.blockId);
+                if (!block || block !== this.sourceBlock_ && block.parentBlock_ !== this.sourceBlock_)
+                    return;
+                this.redrawPreview();
+            };
+        }
+        onInit() {
+            if (!this.options)
+                this.options = {};
+            if (!this.options.durationInputName)
+                this.options.durationInputName = "duration";
+            if (!this.options.startFrequencyInputName)
+                this.options.startFrequencyInputName = "startFrequency";
+            if (!this.options.endFrequencyInputName)
+                this.options.endFrequencyInputName = "endFrequency";
+            if (!this.options.startVolumeInputName)
+                this.options.startVolumeInputName = "startVolume";
+            if (!this.options.endVolumeInputName)
+                this.options.endVolumeInputName = "endVolume";
+            if (!this.options.waveFieldName)
+                this.options.waveFieldName = "waveShape";
+            if (!this.options.interpolationFieldName)
+                this.options.interpolationFieldName = "interpolation";
+            if (!this.options.effectFieldName)
+                this.options.effectFieldName = "effect";
+            this.redrawPreview();
+            if (this.sourceBlock_.workspace) {
+                this.workspace = this.sourceBlock_.workspace;
+                if (!this.sourceBlock_.isShadow() && !this.sourceBlock_.isInsertionMarker()) {
+                    this.registeredChangeListener = true;
+                    this.workspace.addChangeListener(this.onWorkspaceChange);
+                }
+            }
+        }
+        onDispose() {
+            if (this.workspace && this.registeredChangeListener) {
+                this.workspace.removeChangeListener(this.onWorkspaceChange);
+                this.registeredChangeListener = false;
+            }
+        }
+        onValueChanged(newValue) {
+            return newValue;
+        }
+        redrawPreview() {
+            if (!this.fieldGroup_)
+                return;
+            if (this.drawnSound) {
+                const current = this.readCurrentSound();
+                if (current.startFrequency === this.drawnSound.startFrequency &&
+                    current.endFrequency === this.drawnSound.endFrequency &&
+                    current.startVolume === this.drawnSound.startVolume &&
+                    current.endVolume === this.drawnSound.endVolume &&
+                    current.wave === this.drawnSound.wave &&
+                    current.interpolation === this.drawnSound.interpolation) {
+                    return;
+                }
+            }
+            pxsim.U.clear(this.fieldGroup_);
+            const bg = new svg.Rect()
+                .at(X_PADDING, Y_PADDING)
+                .size(TOTAL_WIDTH, TOTAL_HEIGHT)
+                .setClass("blocklySpriteField")
+                .stroke("#fff", 1)
+                .fill("#dedede")
+                .corner(TOTAL_HEIGHT / 2);
+            const clipPathId = "preview-clip-" + pxt.U.guidGen();
+            const clip = new svg.ClipPath()
+                .id(clipPathId)
+                .clipPathUnits(false);
+            const clipRect = new svg.Rect()
+                .size(PREVIEW_WIDTH, TOTAL_HEIGHT)
+                .fill("#FFF")
+                .at(0, 0);
+            clip.appendChild(clipRect);
+            this.drawnSound = this.readCurrentSound();
+            const path = new svg.Path()
+                .stroke("grey", 2)
+                .fill("none")
+                .setD(pxt.assets.renderSoundPath(this.drawnSound, TOTAL_WIDTH - X_PADDING * 4 - MUSIC_ICON_WIDTH, TOTAL_HEIGHT - Y_PADDING * 2))
+                .clipPath("url('#" + clipPathId + "')");
+            const g = new svg.Group()
+                .translate(MUSIC_ICON_WIDTH + X_PADDING * 3, Y_PADDING + 3);
+            g.appendChild(clip);
+            g.appendChild(path);
+            const musicIcon = new svg.Text("\uf001")
+                .appendClass("melody-editor-field-icon")
+                .setAttribute("alignment-baseline", "middle")
+                .anchor("middle")
+                .at(X_PADDING * 2 + MUSIC_ICON_WIDTH / 2, TOTAL_HEIGHT / 2 + 4);
+            this.fieldGroup_.appendChild(bg.el);
+            this.fieldGroup_.appendChild(musicIcon.el);
+            this.fieldGroup_.appendChild(g.el);
+        }
+        showEditor_() {
+            const initialSound = this.readCurrentSound();
+            Blockly.Events.disable();
+            let bbox;
+            // This is due to the changes in https://github.com/microsoft/pxt-blockly/pull/289
+            // which caused the widgetdiv to jump around if any fields underneath changed size
+            let widgetOwner = {
+                getScaledBBox: () => bbox
+            };
+            Blockly.WidgetDiv.show(widgetOwner, this.sourceBlock_.RTL, () => {
+                fv.hide();
+                widgetDiv.classList.remove("sound-effect-editor-widget");
+                widgetDiv.style.transform = "";
+                widgetDiv.style.position = "";
+                widgetDiv.style.left = "";
+                widgetDiv.style.top = "";
+                widgetDiv.style.width = "";
+                widgetDiv.style.height = "";
+                widgetDiv.style.opacity = "";
+                widgetDiv.style.transition = "";
+                Blockly.Events.enable();
+                Blockly.Events.setGroup(true);
+                this.fireNumberInputUpdate(this.options.durationInputName, initialSound.duration);
+                this.fireNumberInputUpdate(this.options.startFrequencyInputName, initialSound.startFrequency);
+                this.fireNumberInputUpdate(this.options.endFrequencyInputName, initialSound.endFrequency);
+                this.fireNumberInputUpdate(this.options.startVolumeInputName, initialSound.startVolume);
+                this.fireNumberInputUpdate(this.options.endVolumeInputName, initialSound.endVolume);
+                this.fireFieldDropdownUpdate(this.options.waveFieldName, waveformMapping[initialSound.wave]);
+                this.fireFieldDropdownUpdate(this.options.interpolationFieldName, interpolationMapping[initialSound.interpolation]);
+                this.fireFieldDropdownUpdate(this.options.effectFieldName, effectMapping[initialSound.effect]);
+                Blockly.Events.setGroup(false);
+                if (this.mostRecentValue)
+                    this.setBlockData(JSON.stringify(this.mostRecentValue));
+            });
+            const widgetDiv = Blockly.WidgetDiv.DIV;
+            const opts = {
+                onClose: () => {
+                    fv.hide();
+                    Blockly.WidgetDiv.hideIfOwner(widgetOwner);
+                },
+                onSoundChange: (newSound) => {
+                    this.mostRecentValue = newSound;
+                    this.updateSiblingBlocks(newSound);
+                    this.redrawPreview();
+                },
+                initialSound: initialSound
+            };
+            const fv = pxt.react.getFieldEditorView("soundeffect-editor", initialSound, opts, widgetDiv);
+            const block = this.sourceBlock_;
+            const bounds = block.getBoundingRectangle();
+            const coord = pxtblockly.workspaceToScreenCoordinates(block.workspace, new Blockly.utils.Coordinate(bounds.right, bounds.top));
+            const animationDistance = 20;
+            const left = coord.x + 20;
+            const top = coord.y - animationDistance;
+            widgetDiv.style.opacity = "0";
+            widgetDiv.classList.add("sound-effect-editor-widget");
+            widgetDiv.style.position = "absolute";
+            widgetDiv.style.left = left + "px";
+            widgetDiv.style.top = top + "px";
+            widgetDiv.style.width = "30rem";
+            widgetDiv.style.height = "40rem";
+            widgetDiv.style.display = "block";
+            widgetDiv.style.transition = "transform 0.25s ease 0s, opacity 0.25s ease 0s";
+            widgetDiv.style.borderRadius = "";
+            fv.onHide(() => {
+                // do nothing
+            });
+            fv.show();
+            const divBounds = widgetDiv.getBoundingClientRect();
+            const injectDivBounds = block.workspace.getInjectionDiv().getBoundingClientRect();
+            if (divBounds.height > injectDivBounds.height) {
+                widgetDiv.style.height = "";
+                widgetDiv.style.top = `calc(1rem - ${animationDistance}px)`;
+                widgetDiv.style.bottom = `calc(1rem + ${animationDistance}px)`;
+            }
+            else {
+                if (divBounds.bottom > injectDivBounds.bottom || divBounds.top < injectDivBounds.top) {
+                    // This editor is pretty tall, so just center vertically on the inject div
+                    widgetDiv.style.top = (injectDivBounds.top + (injectDivBounds.height / 2) - (divBounds.height / 2)) - animationDistance + "px";
+                }
+            }
+            const toolboxWidth = block.workspace.getToolbox().getWidth();
+            if (divBounds.width > injectDivBounds.width - toolboxWidth) {
+                widgetDiv.style.width = "";
+                widgetDiv.style.left = "1rem";
+                widgetDiv.style.right = "1rem";
+            }
+            else {
+                // Check to see if we are bleeding off the right side of the canvas
+                if (divBounds.left + divBounds.width >= injectDivBounds.right) {
+                    // If so, try and place to the left of the block instead of the right
+                    const blockLeft = pxtblockly.workspaceToScreenCoordinates(block.workspace, new Blockly.utils.Coordinate(bounds.left, bounds.top));
+                    const workspaceLeft = injectDivBounds.left + toolboxWidth;
+                    if (blockLeft.x - divBounds.width - 20 > workspaceLeft) {
+                        widgetDiv.style.left = (blockLeft.x - divBounds.width - 20) + "px";
+                    }
+                    else {
+                        // As a last resort, just center on the inject div
+                        widgetDiv.style.left = (workspaceLeft + ((injectDivBounds.width - toolboxWidth) / 2) - divBounds.width / 2) + "px";
+                    }
+                }
+            }
+            const finalDimensions = widgetDiv.getBoundingClientRect();
+            bbox = new Blockly.utils.Rect(finalDimensions.top, finalDimensions.bottom, finalDimensions.left, finalDimensions.right);
+            requestAnimationFrame(() => {
+                widgetDiv.style.opacity = "1";
+                widgetDiv.style.transform = `translateY(${animationDistance}px)`;
+            });
+        }
+        render_() {
+            super.render_();
+            this.size_.height = TOTAL_HEIGHT + Y_PADDING * 2;
+            this.size_.width = TOTAL_WIDTH + X_PADDING;
+        }
+        updateSiblingBlocks(sound) {
+            this.setNumberInputValue(this.options.durationInputName, sound.duration);
+            this.setNumberInputValue(this.options.startFrequencyInputName, sound.startFrequency);
+            this.setNumberInputValue(this.options.endFrequencyInputName, sound.endFrequency);
+            this.setNumberInputValue(this.options.startVolumeInputName, sound.startVolume);
+            this.setNumberInputValue(this.options.endVolumeInputName, sound.endVolume);
+            this.setFieldDropdownValue(this.options.waveFieldName, waveformMapping[sound.wave]);
+            this.setFieldDropdownValue(this.options.interpolationFieldName, interpolationMapping[sound.interpolation]);
+            this.setFieldDropdownValue(this.options.effectFieldName, effectMapping[sound.effect]);
+        }
+        setNumberInputValue(name, value) {
+            const block = this.getSiblingBlock(name) || this.getSiblingBlock(name, true);
+            if (!block)
+                return;
+            if (block.type === "math_number" || block.type === "math_integer" || block.type === "math_whole_number") {
+                block.setFieldValue(Math.round(value), "NUM");
+            }
+            else if (block.type === "math_number_minmax") {
+                block.setFieldValue(Math.round(value), "SLIDER");
+            }
+        }
+        getNumberInputValue(name, defaultValue) {
+            const block = this.getSiblingBlock(name) || this.getSiblingBlock(name, true);
+            if (!block)
+                return defaultValue;
+            if (block.type === "math_number" || block.type === "math_integer" || block.type === "math_whole_number") {
+                return parseInt(block.getFieldValue("NUM") + "");
+            }
+            else if (block.type === "math_number_minmax") {
+                return parseInt(block.getFieldValue("SLIDER") + "");
+            }
+            return defaultValue;
+        }
+        fireNumberInputUpdate(name, oldValue) {
+            const block = this.getSiblingBlock(name) || this.getSiblingBlock(name, true);
+            if (!block)
+                return;
+            let fieldName;
+            if (block.type === "math_number" || block.type === "math_integer" || block.type === "math_whole_number") {
+                fieldName = "NUM";
+            }
+            else if (block.type === "math_number_minmax") {
+                fieldName = "SLIDER";
+            }
+            if (!fieldName)
+                return;
+            Blockly.Events.fire(new Blockly.Events.Change(block, "field", fieldName, oldValue, this.getNumberInputValue(name, oldValue)));
+        }
+        setFieldDropdownValue(name, value) {
+            const field = this.getSiblingField(name) || this.getSiblingField(name, true);
+            if (!field)
+                return;
+            field.setValue(value);
+        }
+        getFieldDropdownValue(name) {
+            const field = this.getSiblingField(name) || this.getSiblingField(name, true);
+            if (!field)
+                return undefined;
+            return field.getValue();
+        }
+        fireFieldDropdownUpdate(name, oldValue) {
+            const field = this.getSiblingField(name) || this.getSiblingField(name, true);
+            if (!field)
+                return;
+            Blockly.Events.fire(new Blockly.Events.Change(field.sourceBlock_, "field", field.name, oldValue, this.getFieldDropdownValue(name)));
+        }
+        readCurrentSound() {
+            const savedSound = this.readBlockDataSound();
+            return {
+                duration: this.getNumberInputValue(this.options.durationInputName, savedSound.duration),
+                startFrequency: this.getNumberInputValue(this.options.startFrequencyInputName, savedSound.startFrequency),
+                endFrequency: this.getNumberInputValue(this.options.endFrequencyInputName, savedSound.endFrequency),
+                startVolume: this.getNumberInputValue(this.options.startVolumeInputName, savedSound.startVolume),
+                endVolume: this.getNumberInputValue(this.options.endVolumeInputName, savedSound.endVolume),
+                wave: reverseLookup(waveformMapping, this.getFieldDropdownValue(this.options.waveFieldName)) || savedSound.wave,
+                interpolation: reverseLookup(interpolationMapping, this.getFieldDropdownValue(this.options.interpolationFieldName)) || savedSound.interpolation,
+                effect: reverseLookup(effectMapping, this.getFieldDropdownValue(this.options.effectFieldName)) || savedSound.effect,
+            };
+        }
+        // This stores the values of the fields in case a block (e.g. a variable) is placed in one
+        // of the inputs.
+        readBlockDataSound() {
+            const data = this.getBlockData();
+            let sound;
+            try {
+                sound = JSON.parse(data);
+            }
+            catch (e) {
+                sound = {
+                    duration: 1000,
+                    startFrequency: 100,
+                    endFrequency: 4800,
+                    startVolume: 100,
+                    endVolume: 0,
+                    wave: "sine",
+                    interpolation: "linear",
+                    effect: "none"
+                };
+            }
+            return sound;
+        }
+    }
+    pxtblockly.FieldSoundEffect = FieldSoundEffect;
+    const waveformMapping = {
+        "sine": "WaveShape.Sine",
+        "square": "WaveShape.Square",
+        "sawtooth": "WaveShape.Sawtooth",
+        "triangle": "WaveShape.Triangle",
+        "noise": "WaveShape.Noise",
+    };
+    const effectMapping = {
+        "none": "SoundExpressionEffect.None",
+        "vibrato": "SoundExpressionEffect.Vibrato",
+        "tremolo": "SoundExpressionEffect.Tremolo",
+        "warble": "SoundExpressionEffect.Warble",
+    };
+    const interpolationMapping = {
+        "linear": "InterpolationCurve.Linear",
+        "curve": "InterpolationCurve.Curve",
+        "logarithmic": "InterpolationCurve.Logarithmic",
+    };
+    function reverseLookup(map, value) {
+        return Object.keys(map).find(k => map[k] === value);
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldSpeed extends Blockly.FieldSlider {
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        constructor(value_, params, opt_validator) {
+            super(String(value_), '-100', '100', '1', '10', 'Speed', opt_validator);
+            this.isFieldCustom_ = true;
+            this.params = params;
+            if (this.params['min'])
+                this.min_ = parseFloat(this.params.min);
+            if (this.params['max'])
+                this.max_ = parseFloat(this.params.max);
+            if (this.params['label'])
+                this.labelText_ = this.params.label;
+            if (!this.params.format)
+                this.params.format = "{0}%";
+        }
+        createLabelDom_(labelText) {
+            const labelContainer = document.createElement('div');
+            this.speedSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            pxsim.svg.hydrate(this.speedSVG, {
+                viewBox: "0 0 200 100",
+                width: "170"
+            });
+            labelContainer.appendChild(this.speedSVG);
+            const outerCircle = pxsim.svg.child(this.speedSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': `fill:transparent; transition: stroke-dashoffset 0.1s linear;`,
+                'stroke': '#a8aaa8', 'stroke-width': '1rem'
+            });
+            this.circleBar = pxsim.svg.child(this.speedSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': `fill:transparent; transition: stroke-dashoffset 0.1s linear;`,
+                'stroke': '#f12a21', 'stroke-width': '1rem'
+            });
+            this.reporter = pxsim.svg.child(this.speedSVG, "text", {
+                'x': 100, 'y': 80,
+                'text-anchor': 'middle', 'dominant-baseline': 'middle',
+                'style': `font-size: ${Math.max(14, 50 - 5 * (this.params.format.length - 4))}px`,
+                'class': 'sim-text inverted number'
+            });
+            // labelContainer.setAttribute('class', 'blocklyFieldSliderLabel');
+            const readout = document.createElement('span');
+            readout.setAttribute('class', 'blocklyFieldSliderReadout');
+            // var label = document.createElement('span');
+            // label.setAttribute('class', 'blocklyFieldSliderLabelText');
+            // label.innerHTML = labelText;
+            // labelContainer.appendChild(label);
+            // labelContainer.appendChild(readout);
+            return [labelContainer, readout];
+        }
+        ;
+        setReadout_(readout, value) {
+            this.updateSpeed(parseFloat(value));
+            // Update reporter
+            this.reporter.textContent = ts.pxtc.U.rlf(this.params.format, value);
+        }
+        updateSpeed(speed) {
+            let sign = this.sign(speed);
+            speed = (Math.abs(speed) / 100 * 50) + 50;
+            if (sign == -1)
+                speed = 50 - speed;
+            let c = Math.PI * (90 * 2);
+            let pct = ((100 - speed) / 100) * c;
+            this.circleBar.setAttribute('stroke-dashoffset', `${pct}`);
+        }
+        // A re-implementation of Math.sign (since IE11 doesn't support it)
+        sign(num) {
+            return num ? num < 0 ? -1 : 1 : 0;
+        }
+    }
+    pxtblockly.FieldSpeed = FieldSpeed;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+/// <reference path="./field_asset.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldSpriteEditor extends pxtblockly.FieldAssetEditor {
+        getAssetType() {
+            return "image" /* Image */;
+        }
+        createNewAsset(text) {
+            const project = pxt.react.getTilemapProject();
+            if (text) {
+                const asset = pxt.lookupProjectAssetByTSReference(text, project);
+                if (asset)
+                    return asset;
+            }
+            if (this.getBlockData()) {
+                return project.lookupAsset("image" /* Image */, this.getBlockData());
+            }
+            const bmp = text ? pxt.sprite.imageLiteralToBitmap(text) : new pxt.sprite.Bitmap(this.params.initWidth, this.params.initHeight);
+            if (!bmp) {
+                this.isGreyBlock = true;
+                this.valueText = text;
+                return undefined;
+            }
+            const data = bmp.data();
+            const newAsset = {
+                internalID: -1,
+                id: this.sourceBlock_.id,
+                type: "image" /* Image */,
+                jresData: pxt.sprite.base64EncodeBitmap(data),
+                meta: {},
+                bitmap: data
+            };
+            return newAsset;
+        }
+        getValueText() {
+            if (this.asset && !this.isTemporaryAsset()) {
+                return pxt.getTSReferenceForAsset(this.asset);
+            }
+            return pxt.sprite.bitmapToImageLiteral(this.asset && pxt.sprite.Bitmap.fromData(this.asset.bitmap), "typescript" /* TypeScript */);
+        }
+        parseFieldOptions(opts) {
+            return parseFieldOptions(opts);
+        }
+    }
+    pxtblockly.FieldSpriteEditor = FieldSpriteEditor;
+    function parseFieldOptions(opts) {
+        // NOTE: This implementation is duplicated in pxtcompiler/emitter/service.ts
+        // TODO: Refactor to share implementation.
+        const parsed = {
+            initColor: 1,
+            initWidth: 16,
+            initHeight: 16,
+            disableResize: false,
+            lightMode: false,
+        };
+        if (!opts) {
+            return parsed;
+        }
+        parsed.lightMode = opts.lightMode;
+        if (opts.sizes) {
+            const pairs = opts.sizes.split(";");
+            const sizes = [];
+            for (let i = 0; i < pairs.length; i++) {
+                const pair = pairs[i].split(",");
+                if (pair.length !== 2) {
+                    continue;
+                }
+                let width = parseInt(pair[0]);
+                let height = parseInt(pair[1]);
+                if (isNaN(width) || isNaN(height)) {
+                    continue;
+                }
+                const screenSize = pxt.appTarget.runtime && pxt.appTarget.runtime.screenSize;
+                if (width < 0 && screenSize)
+                    width = screenSize.width;
+                if (height < 0 && screenSize)
+                    height = screenSize.height;
+                sizes.push([width, height]);
+            }
+            if (sizes.length > 0) {
+                parsed.initWidth = sizes[0][0];
+                parsed.initHeight = sizes[0][1];
+            }
+        }
+        if (opts.filter) {
+            parsed.filter = opts.filter;
+        }
+        if (opts.disableResize) {
+            parsed.disableResize = opts.disableResize.toLowerCase() === "true" || opts.disableResize === "1";
+        }
+        parsed.initColor = withDefault(opts.initColor, parsed.initColor);
+        parsed.initWidth = withDefault(opts.initWidth, parsed.initWidth);
+        parsed.initHeight = withDefault(opts.initHeight, parsed.initHeight);
+        return parsed;
+        function withDefault(raw, def) {
+            const res = parseInt(raw);
+            if (isNaN(res)) {
+                return def;
+            }
+            return res;
+        }
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldStyledLabel extends Blockly.FieldLabel {
+        constructor(value, options, opt_validator) {
+            super(value, getClass(options));
+            this.isFieldCustom_ = true;
+        }
+    }
+    pxtblockly.FieldStyledLabel = FieldStyledLabel;
+    function getClass(options) {
+        if (options) {
+            if (options.bold && options.italics) {
+                return 'blocklyBoldItalicizedText';
+            }
+            else if (options.bold) {
+                return 'blocklyBoldText';
+            }
+            else if (options.italics) {
+                return 'blocklyItalicizedText';
+            }
+        }
+        return undefined;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldTextInput extends Blockly.FieldTextInput {
+        constructor(value, options, opt_validator) {
+            super(value, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+    }
+    pxtblockly.FieldTextInput = FieldTextInput;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldTilemap extends pxtblockly.FieldAssetEditor {
+        getInitText() {
+            return this.initText;
+        }
+        getTileset() {
+            var _a;
+            return (_a = this.asset) === null || _a === void 0 ? void 0 : _a.data.tileset;
+        }
+        getAssetType() {
+            return "tilemap" /* Tilemap */;
+        }
+        createNewAsset(newText = "") {
+            if (newText) {
+                // backticks are escaped inside markdown content
+                newText = newText.replace(/&#96;/g, "`");
+            }
+            const project = pxt.react.getTilemapProject();
+            const existing = pxt.lookupProjectAssetByTSReference(newText, project);
+            if (existing)
+                return existing;
+            const tilemap = pxt.sprite.decodeTilemap(newText, "typescript", project) || project.blankTilemap(this.params.tileWidth, this.params.initWidth, this.params.initHeight);
+            let newAsset;
+            // Ignore invalid bitmaps
+            if (checkTilemap(tilemap)) {
+                this.initText = newText;
+                this.isGreyBlock = false;
+                const [name] = project.createNewTilemapFromData(tilemap);
+                newAsset = project.getTilemap(name);
+            }
+            else if (newText.trim()) {
+                this.isGreyBlock = true;
+                this.valueText = newText;
+            }
+            return newAsset;
+        }
+        onEditorClose(newValue) {
+            pxt.sprite.updateTilemapReferencesFromResult(pxt.react.getTilemapProject(), newValue);
+        }
+        getValueText() {
+            if (this.isGreyBlock)
+                return pxt.Util.htmlUnescape(this.valueText);
+            if (this.asset) {
+                return pxt.getTSReferenceForAsset(this.asset);
+            }
+            return this.getInitText();
+        }
+        parseFieldOptions(opts) {
+            return parseFieldOptions(opts);
+        }
+    }
+    pxtblockly.FieldTilemap = FieldTilemap;
+    function parseFieldOptions(opts) {
+        const parsed = {
+            initWidth: 16,
+            initHeight: 16,
+            disableResize: false,
+            tileWidth: 16,
+            lightMode: false
+        };
+        if (!opts) {
+            return parsed;
+        }
+        parsed.lightMode = opts.lightMode;
+        if (opts.filter) {
+            parsed.filter = opts.filter;
+        }
+        if (opts.tileWidth) {
+            if (typeof opts.tileWidth === "number") {
+                switch (opts.tileWidth) {
+                    case 8:
+                        parsed.tileWidth = 8;
+                        break;
+                    case 16:
+                        parsed.tileWidth = 16;
+                        break;
+                    case 32:
+                        parsed.tileWidth = 32;
+                        break;
+                }
+            }
+            else {
+                const tw = opts.tileWidth.trim().toLowerCase();
+                switch (tw) {
+                    case "8":
+                    case "eight":
+                        parsed.tileWidth = 8;
+                        break;
+                    case "16":
+                    case "sixteen":
+                        parsed.tileWidth = 16;
+                        break;
+                    case "32":
+                    case "thirtytwo":
+                        parsed.tileWidth = 32;
+                        break;
+                }
+            }
+        }
+        parsed.initWidth = withDefault(opts.initWidth, parsed.initWidth);
+        parsed.initHeight = withDefault(opts.initHeight, parsed.initHeight);
+        return parsed;
+        function withDefault(raw, def) {
+            const res = parseInt(raw);
+            if (isNaN(res)) {
+                return def;
+            }
+            return res;
+        }
+    }
+    function checkTilemap(tilemap) {
+        if (!tilemap || !tilemap.tilemap || !tilemap.tilemap.width || !tilemap.tilemap.height)
+            return false;
+        if (!tilemap.layers || tilemap.layers.width !== tilemap.tilemap.width || tilemap.layers.height !== tilemap.tilemap.height)
+            return false;
+        if (!tilemap.tileset)
+            return false;
+        return true;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    const PREVIEW_SIDE_LENGTH = 32;
+    class FieldTileset extends pxtblockly.FieldImages {
+        constructor(text, options, validator) {
+            super(text, options, validator);
+            this.isFieldCustom_ = true;
+            this.menuGenerator_ = () => {
+                var _a, _b;
+                if (((_a = this.sourceBlock_) === null || _a === void 0 ? void 0 : _a.workspace) && pxtblockly.needsTilemapUpgrade((_b = this.sourceBlock_) === null || _b === void 0 ? void 0 : _b.workspace)) {
+                    return [constructTransparentTile()];
+                }
+                return FieldTileset.getReferencedTiles(this.sourceBlock_.workspace);
+            };
+            this.assetChangeListener = () => {
+                this.doValueUpdate_(this.getValue());
+                this.forceRerender();
+            };
+            this.blocksInfo = options.blocksInfo;
+        }
+        static getReferencedTiles(workspace) {
+            const project = pxt.react.getTilemapProject();
+            if (project.revision() !== FieldTileset.cachedRevision || workspace.id != FieldTileset.cachedWorkspaceId) {
+                FieldTileset.cachedRevision = project.revision();
+                FieldTileset.cachedWorkspaceId = workspace.id;
+                const references = pxtblockly.getAllReferencedTiles(workspace);
+                const supportedTileWidths = [16, 8, 32];
+                for (const width of supportedTileWidths) {
+                    const projectTiles = project.getProjectTiles(width, width === 16);
+                    if (!projectTiles)
+                        continue;
+                    for (const tile of projectTiles.tiles) {
+                        if (!references.find(t => t.id === tile.id)) {
+                            references.push(tile);
+                        }
+                    }
+                }
+                let weights = {};
+                references.sort((a, b) => {
+                    if (a.id === b.id)
+                        return 0;
+                    if (a.bitmap.width !== b.bitmap.width) {
+                        return a.bitmap.width - b.bitmap.width;
+                    }
+                    if (a.isProjectTile !== b.isProjectTile) {
+                        if (a.isProjectTile)
+                            return -1;
+                        else
+                            return 1;
+                    }
+                    return (weights[a.id] || (weights[a.id] = tileWeight(a.id))) -
+                        (weights[b.id] || (weights[b.id] = tileWeight(b.id)));
+                });
+                const getTileImage = (t) => tileWeight(t.id) <= 2 ?
+                    mkTransparentTileImage(t.bitmap.width) :
+                    pxtblockly.bitmapToImageURI(pxt.sprite.Bitmap.fromData(t.bitmap), PREVIEW_SIDE_LENGTH, false);
+                FieldTileset.referencedTiles = references.map(tile => [{
+                        src: getTileImage(tile),
+                        width: PREVIEW_SIDE_LENGTH,
+                        height: PREVIEW_SIDE_LENGTH,
+                        alt: displayName(tile)
+                    }, tile.id, tile]);
+            }
+            return FieldTileset.referencedTiles;
+        }
+        initView() {
+            super.initView();
+            if (this.sourceBlock_ && this.sourceBlock_.isInFlyout) {
+                this.setValue(this.getOptions()[0][1]);
+            }
+        }
+        getValue() {
+            if (this.selectedOption_) {
+                let tile = this.selectedOption_[2];
+                tile = pxt.react.getTilemapProject().lookupAsset(tile.type, tile.id);
+                return pxt.getTSReferenceForAsset(tile);
+            }
+            const v = super.getValue();
+            // If the user decompiled from JavaScript, then they might have passed an image literal
+            // instead of the qualified name of a tile. The decompiler strips out the "img" part
+            // so we need to add it back
+            if (typeof v === "string" && v.indexOf(".") === -1 && v.indexOf(`\``) === -1) {
+                return `img\`${v}\``;
+            }
+            return v;
+        }
+        getText() {
+            const v = this.getValue();
+            if (typeof v === "string" && v.indexOf("`") !== -1) {
+                return v;
+            }
+            return super.getText();
+        }
+        render_() {
+            if (this.value_ && this.selectedOption_) {
+                if (this.selectedOption_[1] !== this.value_) {
+                    const tile = pxt.react.getTilemapProject().resolveTile(this.value_);
+                    FieldTileset.cachedRevision = -1;
+                    if (tile) {
+                        this.selectedOption_ = [{
+                                src: pxtblockly.bitmapToImageURI(pxt.sprite.Bitmap.fromData(tile.bitmap), PREVIEW_SIDE_LENGTH, false),
+                                width: PREVIEW_SIDE_LENGTH,
+                                height: PREVIEW_SIDE_LENGTH,
+                                alt: displayName(tile)
+                            }, this.value_, tile];
+                    }
+                }
+            }
+            super.render_();
+        }
+        doValueUpdate_(newValue) {
+            super.doValueUpdate_(newValue);
+            const options = this.getOptions(true);
+            // This text can be one of four things:
+            // 1. The JavaScript expression (assets.tile`name`)
+            // 2. The tile id (qualified name)
+            // 3. The tile display name
+            // 4. Something invalid (like an image literal or undefined)
+            if (newValue) {
+                // If it's an expression, pull out the id
+                const match = pxt.parseAssetTSReference(newValue);
+                if (match) {
+                    newValue = match.name;
+                }
+                newValue = newValue.trim();
+                for (const option of options) {
+                    if (newValue === option[2].id || newValue === option[2].meta.displayName || newValue === pxt.getShortIDForAsset(option[2])) {
+                        this.selectedOption_ = option;
+                        this.value_ = this.getValue();
+                        this.updateAssetListener();
+                        return;
+                    }
+                }
+                this.selectedOption_ = null;
+                this.updateAssetListener();
+            }
+        }
+        getOptions(opt_useCache) {
+            if (typeof this.menuGenerator_ !== 'function') {
+                this.transparent = constructTransparentTile();
+                return [this.transparent];
+            }
+            return this.menuGenerator_.call(this);
+        }
+        dispose() {
+            super.dispose();
+            pxt.react.getTilemapProject().removeChangeListener("tile" /* Tile */, this.assetChangeListener);
+        }
+        updateAssetListener() {
+            const project = pxt.react.getTilemapProject();
+            project.removeChangeListener("tile" /* Tile */, this.assetChangeListener);
+            if (this.selectedOption_) {
+                project.addChangeListener(this.selectedOption_[2], this.assetChangeListener);
+            }
+        }
+    }
+    pxtblockly.FieldTileset = FieldTileset;
+    function constructTransparentTile() {
+        const tile = pxt.react.getTilemapProject().getTransparency(16);
+        return [{
+                src: mkTransparentTileImage(16),
+                width: PREVIEW_SIDE_LENGTH,
+                height: PREVIEW_SIDE_LENGTH,
+                alt: pxt.U.lf("transparency")
+            }, tile.id, tile];
+    }
+    function mkTransparentTileImage(sideLength) {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = sideLength;
+        canvas.height = sideLength;
+        context.fillStyle = "#aeaeae";
+        context.fillRect(0, 0, sideLength, sideLength);
+        context.fillStyle = "#dedede";
+        for (let x = 0; x < sideLength; x += 4) {
+            for (let y = 0; y < sideLength; y += 4) {
+                if (((x + y) >> 2) & 1)
+                    context.fillRect(x, y, 4, 4);
+            }
+        }
+        return canvas.toDataURL();
+    }
+    function tileWeight(id) {
+        switch (id) {
+            case "myTiles.transparency16":
+                return 1;
+            case "myTiles.transparency8":
+            case "myTiles.transparency32":
+                return 2;
+            default:
+                if (id.startsWith("myTiles.tile")) {
+                    const num = parseInt(id.slice(12));
+                    if (!Number.isNaN(num))
+                        return num + 2;
+                }
+                return 9999999999;
+        }
+    }
+    function displayName(tile) {
+        return tile.meta.displayName || pxt.getShortIDForAsset(tile);
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldToggle extends Blockly.FieldNumber {
+        constructor(state, params, opt_validator) {
+            super(state, undefined, undefined, undefined, opt_validator);
+            this.isFieldCustom_ = true;
+            this.CURSOR = 'pointer';
+            this.params = params;
+            this.setValue(state);
+            this.addArgType('toggle');
+            this.type_ = params.type;
+        }
+        initView() {
+            if (!this.fieldGroup_) {
+                return;
+            }
+            // Add an attribute to cassify the type of field.
+            if (this.getArgTypes() !== null) {
+                if (this.sourceBlock_.isShadow()) {
+                    this.sourceBlock_.svgGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+                else {
+                    // Fields without a shadow wrapper, like square dropdowns.
+                    this.fieldGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+            }
+            // If not in a shadow block, and has more than one input, draw a box.
+            if (!this.sourceBlock_.isShadow()
+                && (this.sourceBlock_.inputList && this.sourceBlock_.inputList.length > 1)) {
+                this.borderRect_ = Blockly.utils.dom.createSvgElement('rect', {
+                    'rx': Blockly.BlockSvg.CORNER_RADIUS,
+                    'ry': Blockly.BlockSvg.CORNER_RADIUS,
+                    'x': 0,
+                    'y': 0,
+                    'width': this.size_.width,
+                    'height': this.size_.height,
+                    'fill': this.sourceBlock_.getColour(),
+                    'stroke': this.sourceBlock_.getColourTertiary()
+                }, null);
+                this.fieldGroup_.insertBefore(this.borderRect_, this.textElement_);
+            }
+            // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
+            const size = this.getSize();
+            this.checkElement_ = Blockly.utils.dom.createSvgElement('g', {
+                'class': `blocklyToggle ${this.state_ ? 'blocklyToggleOn' : 'blocklyToggleOff'}`,
+                'transform': `translate(8, ${size.height / 2})`,
+            }, this.fieldGroup_);
+            switch (this.getOutputShape()) {
+                case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+                    this.toggleThumb_ = Blockly.utils.dom.createSvgElement('polygon', {
+                        'class': 'blocklyToggleRect',
+                        'points': '-7,-14 -21,0 -7,14 7,14 21,0 7,-14',
+                        'cursor': 'pointer'
+                    }, this.checkElement_);
+                    break;
+                case Blockly.OUTPUT_SHAPE_ROUND:
+                    this.toggleThumb_ = Blockly.utils.dom.createSvgElement('rect', {
+                        'class': 'blocklyToggleCircle',
+                        'x': -6, 'y': -14, 'height': 28,
+                        'width': 28, 'rx': 14, 'ry': 14,
+                        'cursor': 'pointer'
+                    }, this.checkElement_);
+                    break;
+                case Blockly.OUTPUT_SHAPE_SQUARE:
+                    this.toggleThumb_ = Blockly.utils.dom.createSvgElement('rect', {
+                        'class': 'blocklyToggleRect',
+                        'x': -6, 'y': -14, 'height': 28,
+                        'width': 28, 'rx': 3, 'ry': 3,
+                        'cursor': 'pointer'
+                    }, this.checkElement_);
+                    break;
+            }
+            let fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
+            /** @type {!Element} */
+            this.textElement_ = Blockly.utils.dom.createSvgElement('text', {
+                'class': 'blocklyText',
+                'x': fieldX,
+                'dy': '0.6ex',
+                'y': size.height / 2
+            }, this.fieldGroup_);
+            this.updateEditable();
+            const svgRoot = this.sourceBlock_.getSvgRoot();
+            svgRoot.appendChild(this.fieldGroup_);
+            svgRoot.querySelector(".blocklyBlockBackground").setAttribute('fill', this.sourceBlock_.getColourTertiary());
+            this.switchToggle(this.state_);
+            this.setValue(this.getValue());
+            // Force a render.
+            this.markDirty();
+        }
+        getDisplayText_() {
+            return this.state_ ? this.getTrueText() : this.getFalseText();
+        }
+        getTrueText() {
+            return lf("True");
+        }
+        getFalseText() {
+            return lf("False");
+        }
+        updateSize_() {
+            switch (this.getOutputShape()) {
+                case Blockly.OUTPUT_SHAPE_ROUND:
+                    this.size_.width = this.getInnerWidth() * 2 - 7;
+                    break;
+                case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+                    this.size_.width = this.getInnerWidth() * 2 + 8 - Math.floor(this.getInnerWidth() / 2);
+                    break;
+                case Blockly.OUTPUT_SHAPE_SQUARE:
+                    this.size_.width = 9 + this.getInnerWidth() * 2;
+                    break;
+            }
+        }
+        getInnerWidth() {
+            return this.getMaxLength() * 10;
+        }
+        getMaxLength() {
+            return Math.max(this.getTrueText().length, this.getFalseText().length);
+        }
+        getOutputShape() {
+            return this.sourceBlock_.isShadow() ? this.sourceBlock_.getOutputShape() : Blockly.OUTPUT_SHAPE_SQUARE;
+        }
+        doClassValidation_(newBool) {
+            return typeof this.fromVal(newBool) == "boolean" ? newBool : "false";
+        }
+        applyColour() {
+            let color = this.sourceBlock_.getColourTertiary();
+            if (this.borderRect_) {
+                this.borderRect_.setAttribute('stroke', color);
+            }
+            else {
+                this.sourceBlock_.pathObject.svgPath.setAttribute('fill', color);
+            }
+        }
+        ;
+        /**
+         * Return 'TRUE' if the toggle is ON, 'FALSE' otherwise.
+         * @return {string} Current state.
+         */
+        getValue() {
+            return this.toVal(this.state_);
+        }
+        ;
+        /**
+         * Set the checkbox to be checked if newBool is 'TRUE' or true,
+         * unchecks otherwise.
+         * @param {string|boolean} newBool New state.
+         */
+        doValueUpdate_(newBool) {
+            let newState = this.fromVal(newBool);
+            if (this.state_ !== newState) {
+                if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.state_, newState));
+                }
+                this.state_ = newState;
+                this.switchToggle(this.state_);
+                this.isDirty_ = true;
+            }
+        }
+        switchToggle(newState) {
+            if (this.checkElement_) {
+                this.updateSize_();
+                const size = this.getSize();
+                const innerWidth = this.getInnerWidth();
+                if (newState) {
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOn');
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOff');
+                }
+                else {
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOn');
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOff');
+                }
+                const outputShape = this.getOutputShape();
+                let width = 0, halfWidth = 0;
+                let leftPadding = 0, rightPadding = 0;
+                switch (outputShape) {
+                    case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+                        width = size.width / 2;
+                        halfWidth = width / 2;
+                        leftPadding = -halfWidth; // total translation when toggle is left-aligned = 0
+                        rightPadding = halfWidth - innerWidth; // total translation when right-aligned = width
+                        /**
+                         *  Toggle defined clockwise from bottom left:
+                         *
+                         *        0,  14 ----------- width, 14
+                         *       /                           \
+                         *  -14, 0                            width + 14, 0
+                         *       \                           /
+                         *        0, -14 ----------- width, -14
+                         */
+                        this.toggleThumb_.setAttribute('points', `${0},-14 -14,0 ${0},14 ${width},14 ${width + 14},0 ${width},-14`);
+                        break;
+                    case Blockly.OUTPUT_SHAPE_ROUND:
+                    case Blockly.OUTPUT_SHAPE_SQUARE:
+                        width = 5 + innerWidth;
+                        halfWidth = width / 2;
+                        this.toggleThumb_.setAttribute('width', "" + width);
+                        this.toggleThumb_.setAttribute('x', `-${halfWidth}`);
+                        leftPadding = rightPadding = outputShape == Blockly.OUTPUT_SHAPE_SQUARE ? 2 : -6;
+                        break;
+                }
+                this.checkElement_.setAttribute('transform', `translate(${newState ? rightPadding + innerWidth + halfWidth : halfWidth + leftPadding}, ${size.height / 2})`);
+            }
+        }
+        render_() {
+            if (this.visible_ && this.textElement_) {
+                // Replace the text.
+                goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+                let textNode = document.createTextNode(this.getDisplayText_());
+                this.textElement_.appendChild(textNode);
+                pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
+                this.updateSize_();
+                // Update text centering, based on newly calculated width.
+                let width = this.size_.width;
+                let centerTextX = this.state_ ? (width + width / 8) : width / 2;
+                // Apply new text element x position.
+                let newX = centerTextX - width / 2;
+                this.textElement_.setAttribute('x', `${newX}`);
+            }
+            // Update any drawn box to the correct width and height.
+            if (this.borderRect_) {
+                this.borderRect_.setAttribute('width', `${this.size_.width}`);
+                this.borderRect_.setAttribute('height', `${this.size_.height}`);
+            }
+        }
+        /**
+         * Toggle the state of the toggle.
+         * @private
+         */
+        showEditor_() {
+            let newState = !this.state_;
+            /*
+            if (this.sourceBlock_) {
+              // Call any validation function, and allow it to override.
+              newState = this.callValidator(newState);
+            }*/
+            if (newState !== null) {
+                this.setValue(this.toVal(newState));
+            }
+        }
+        toVal(newState) {
+            if (this.type_ == "number")
+                return String(newState ? '1' : '0');
+            else
+                return String(newState ? 'true' : 'false');
+        }
+        fromVal(val) {
+            if (typeof val == "string") {
+                if (val == "1" || val.toUpperCase() == "TRUE")
+                    return true;
+                return false;
+            }
+            return !!val;
+        }
+    }
+    pxtblockly.FieldToggle = FieldToggle;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldToggleHighLow extends pxtblockly.FieldToggle {
+        constructor(state, params, opt_validator) {
+            super(state, params, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+        getTrueText() {
+            return lf("HIGH");
+        }
+        getFalseText() {
+            return lf("LOW");
+        }
+    }
+    pxtblockly.FieldToggleHighLow = FieldToggleHighLow;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldToggleOnOff extends pxtblockly.FieldToggle {
+        constructor(state, params, opt_validator) {
+            super(state, params, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+        getTrueText() {
+            return lf("ON");
+        }
+        getFalseText() {
+            return lf("OFF");
+        }
+    }
+    pxtblockly.FieldToggleOnOff = FieldToggleOnOff;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldToggleUpDown extends pxtblockly.FieldToggle {
+        constructor(state, params, opt_validator) {
+            super(state, params, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+        getTrueText() {
+            return lf("UP");
+        }
+        getFalseText() {
+            return lf("DOWN");
+        }
+    }
+    pxtblockly.FieldToggleUpDown = FieldToggleUpDown;
+    class FieldToggleDownUp extends pxtblockly.FieldToggle {
+        constructor(state, params, opt_validator) {
+            super(state, params, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+        getTrueText() {
+            return lf("DOWN");
+        }
+        getFalseText() {
+            return lf("UP");
+        }
+    }
+    pxtblockly.FieldToggleDownUp = FieldToggleDownUp;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldToggleWinLose extends pxtblockly.FieldToggle {
+        constructor(state, params, opt_validator) {
+            super(state, params, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+        getTrueText() {
+            return lf("WIN");
+        }
+        getFalseText() {
+            return lf("LOSE");
+        }
+    }
+    pxtblockly.FieldToggleWinLose = FieldToggleWinLose;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldToggleYesNo extends pxtblockly.FieldToggle {
+        constructor(state, params, opt_validator) {
+            super(state, params, opt_validator);
+            this.isFieldCustom_ = true;
+        }
+        getTrueText() {
+            return lf("Yes");
+        }
+        getFalseText() {
+            return lf("No");
+        }
+    }
+    pxtblockly.FieldToggleYesNo = FieldToggleYesNo;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldTsExpression extends Blockly.FieldTextInput {
+        constructor() {
+            super(...arguments);
+            this.isFieldCustom_ = true;
+            this.pythonMode = false;
+        }
+        /**
+         * Same as parent, but adds a different class to text when disabled
+         */
+        updateEditable() {
+            let group = this.fieldGroup_;
+            if (!this.EDITABLE || !group) {
+                return;
+            }
+            if (this.sourceBlock_.isEditable()) {
+                pxt.BrowserUtils.addClass(group, 'blocklyEditableText');
+                pxt.BrowserUtils.removeClass(group, 'blocklyGreyExpressionBlockText');
+                this.fieldGroup_.style.cursor = this.CURSOR;
+            }
+            else {
+                pxt.BrowserUtils.addClass(group, 'blocklyGreyExpressionBlockText');
+                pxt.BrowserUtils.removeClass(group, 'blocklyEditableText');
+                this.fieldGroup_.style.cursor = '';
+            }
+        }
+        setPythonEnabled(enabled) {
+            if (enabled === this.pythonMode)
+                return;
+            this.pythonMode = enabled;
+            this.forceRerender();
+        }
+        getText() {
+            return this.pythonMode ? pxt.Util.lf("<python code>") : this.getValue();
+        }
+        applyColour() {
+            var _a;
+            if (this.sourceBlock_ && ((_a = this.getConstants()) === null || _a === void 0 ? void 0 : _a.FULL_BLOCK_FIELDS)) {
+                if (this.borderRect_) {
+                    this.borderRect_.setAttribute('stroke', this.sourceBlock_.style.colourTertiary);
+                }
+            }
+        }
+    }
+    pxtblockly.FieldTsExpression = FieldTsExpression;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldTurnRatio extends Blockly.FieldSlider {
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        constructor(value_, params, opt_validator) {
+            super(String(value_), '-200', '200', '1', '10', 'TurnRatio', opt_validator);
+            this.isFieldCustom_ = true;
+            this.params = params;
+            this.sliderColor_ = '#a8aaa8';
+        }
+        createLabelDom_(labelText) {
+            let labelContainer = document.createElement('div');
+            let svg = Blockly.utils.dom.createSvgElement('svg', {
+                'xmlns': 'http://www.w3.org/2000/svg',
+                'xmlns:html': 'http://www.w3.org/1999/xhtml',
+                'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+                'version': '1.1',
+                'height': (FieldTurnRatio.HALF + FieldTurnRatio.HANDLE_RADIUS + 10) + 'px',
+                'width': (FieldTurnRatio.HALF * 2) + 'px'
+            }, labelContainer);
+            let defs = Blockly.utils.dom.createSvgElement('defs', {}, svg);
+            let marker = Blockly.utils.dom.createSvgElement('marker', {
+                'id': 'head',
+                'orient': "auto",
+                'markerWidth': '2',
+                'markerHeight': '4',
+                'refX': '0.1', 'refY': '1.5'
+            }, defs);
+            let markerPath = Blockly.utils.dom.createSvgElement('path', {
+                'd': 'M0,0 V3 L1.5,1.5 Z',
+                'fill': '#f12a21'
+            }, marker);
+            this.reporter_ = pxsim.svg.child(svg, "text", {
+                'x': FieldTurnRatio.HALF, 'y': 96,
+                'text-anchor': 'middle', 'dominant-baseline': 'middle',
+                'style': 'font-size: 50px',
+                'class': 'sim-text inverted number'
+            });
+            this.path_ = Blockly.utils.dom.createSvgElement('path', {
+                'x1': FieldTurnRatio.HALF,
+                'y1': FieldTurnRatio.HALF,
+                'marker-end': 'url(#head)',
+                'style': 'fill: none; stroke: #f12a21; stroke-width: 10'
+            }, svg);
+            this.updateGraph_();
+            let readout = document.createElement('span');
+            readout.setAttribute('class', 'blocklyFieldSliderReadout');
+            return [labelContainer, readout];
+        }
+        ;
+        updateGraph_() {
+            if (!this.path_) {
+                return;
+            }
+            let v = goog.math.clamp(this.getValue() || 0, -200, 200);
+            const x = v / 100;
+            const nx = Math.max(-1, Math.min(1, x));
+            const theta = Math.max(nx) * Math.PI / 2;
+            const r = FieldTurnRatio.RADIUS - 6;
+            let cx = FieldTurnRatio.HALF;
+            const cy = FieldTurnRatio.HALF - 22;
+            if (Math.abs(x) > 1) {
+                cx -= (x - (x > 0 ? 1 : -1)) * r / 2; // move center of circle
+            }
+            const alpha = 0.2 + Math.abs(nx) * 0.5;
+            const y1 = r * alpha;
+            const y2 = r * Math.sin(Math.PI / 2 - theta);
+            const x2 = r * Math.cos(Math.PI / 2 - theta);
+            const y3 = y2 - r * alpha * Math.cos(2 * theta);
+            const x3 = x2 - r * alpha * Math.sin(2 * theta);
+            const d = `M ${cx} ${cy} C ${cx} ${cy - y1} ${cx + x3} ${cy - y3} ${cx + x2} ${cy - y2}`;
+            this.path_.setAttribute('d', d);
+            this.reporter_.textContent = `${v}`;
+        }
+        setReadout_(readout, value) {
+            this.updateGraph_();
+        }
+    }
+    FieldTurnRatio.HALF = 80;
+    FieldTurnRatio.HANDLE_RADIUS = 30;
+    FieldTurnRatio.RADIUS = FieldTurnRatio.HALF - FieldTurnRatio.HANDLE_RADIUS - 1;
+    pxtblockly.FieldTurnRatio = FieldTurnRatio;
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    class FieldUserEnum extends Blockly.FieldDropdown {
+        constructor(opts) {
+            super(createMenuGenerator(opts));
+            this.opts = opts;
+        }
+        init() {
+            super.init();
+            this.initVariables();
+        }
+        onItemSelected_(menu, menuItem) {
+            const value = menuItem.getValue();
+            if (value === "CREATE") {
+                promptAndCreateEnum(this.sourceBlock_.workspace, this.opts, lf("New {0}:", this.opts.memberName), newName => newName && this.setValue(newName));
+            }
+            else {
+                super.onItemSelected_(menu, menuItem);
+            }
+        }
+        doClassValidation_(value) {
+            var _a;
+            // update cached option list when adding a new kind
+            if (((_a = this.opts) === null || _a === void 0 ? void 0 : _a.initialMembers) && !this.opts.initialMembers.find(el => el == value))
+                this.getOptions();
+            return super.doClassValidation_(value);
+        }
+        initVariables() {
+            if (this.sourceBlock_ && this.sourceBlock_.workspace) {
+                const ws = this.sourceBlock_.workspace;
+                const existing = getMembersForEnum(ws, this.opts.name);
+                this.opts.initialMembers.forEach(memberName => {
+                    if (!existing.some(([name, value]) => name === memberName)) {
+                        createNewEnumMember(ws, this.opts, memberName);
+                    }
+                });
+                if (this.getValue() === "CREATE") {
+                    const newValue = getVariableNameForMember(ws, this.opts.name, this.opts.initialMembers[0]);
+                    if (newValue) {
+                        this.setValue(newValue);
+                    }
+                }
+            }
+        }
+    }
+    pxtblockly.FieldUserEnum = FieldUserEnum;
+    function createMenuGenerator(opts) {
+        return function () {
+            const res = [];
+            const that = this;
+            if (that.sourceBlock_ && that.sourceBlock_.workspace) {
+                const options = that.sourceBlock_.workspace.getVariablesOfType(opts.name);
+                options.forEach(model => {
+                    // The format of the name is 10mem where "10" is the value and "mem" is the enum member
+                    const withoutValue = model.name.replace(/^\d+/, "");
+                    res.push([withoutValue, model.name]);
+                });
+            }
+            else {
+                // Can't create variables from within the flyout, so we just have to fake it
+                opts.initialMembers.forEach((e) => res.push([e, e]));
+            }
+            res.push([lf("Add a new {0}...", opts.memberName), "CREATE"]);
+            return res;
+        };
+    }
+    function promptAndCreateEnum(ws, opts, message, cb) {
+        Blockly.prompt(message, null, response => {
+            if (response) {
+                let nameIsValid = false;
+                if (pxtc.isIdentifierStart(response.charCodeAt(0), 2)) {
+                    nameIsValid = true;
+                    for (let i = 1; i < response.length; i++) {
+                        if (!pxtc.isIdentifierPart(response.charCodeAt(i), 2)) {
+                            nameIsValid = false;
+                        }
+                    }
+                }
+                if (!nameIsValid) {
+                    Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."), () => promptAndCreateEnum(ws, opts, message, cb));
+                    return;
+                }
+                const existing = getMembersForEnum(ws, opts.name);
+                for (let i = 0; i < existing.length; i++) {
+                    const [name, value] = existing[i];
+                    if (name === response) {
+                        Blockly.alert(lf("A {0} named '{1}' already exists.", opts.memberName, response), () => promptAndCreateEnum(ws, opts, message, cb));
+                        return;
+                    }
+                }
+                cb(createNewEnumMember(ws, opts, response));
+            }
+        }, { placeholder: opts.promptHint });
+    }
+    function parseName(model) {
+        const match = /^(\d+)([^0-9].*)$/.exec(model.name);
+        if (match) {
+            return [match[2], parseInt(match[1])];
+        }
+        return [model.name, -1];
+    }
+    function getMembersForEnum(ws, enumName) {
+        const existing = ws.getVariablesOfType(enumName);
+        if (existing && existing.length) {
+            return existing.map(parseName);
+        }
+        else {
+            return [];
+        }
+    }
+    function getNextValue(members, opts) {
+        const existing = members.map(([name, value]) => value);
+        if (opts.isBitMask) {
+            for (let i = 0; i < existing.length; i++) {
+                let current = 1 << i;
+                if (existing.indexOf(current) < 0) {
+                    return current;
+                }
+            }
+            return 1 << existing.length;
+        }
+        else if (opts.isHash) {
+            return 0; // overriden when compiled
+        }
+        else {
+            const start = opts.firstValue || 0;
+            for (let i = 0; i < existing.length; i++) {
+                if (existing.indexOf(start + i) < 0) {
+                    return start + i;
+                }
+            }
+            return start + existing.length;
+        }
+    }
+    pxtblockly.getNextValue = getNextValue;
+    function createNewEnumMember(ws, opts, newName) {
+        const ex = getMembersForEnum(ws, opts.name);
+        const val = getNextValue(ex, opts);
+        const variableName = val + newName;
+        Blockly.Variables.getOrCreateVariablePackage(ws, null, variableName, opts.name);
+        return variableName;
+    }
+    function getVariableNameForMember(ws, enumName, memberName) {
+        const existing = ws.getVariablesOfType(enumName);
+        if (existing && existing.length) {
+            for (let i = 0; i < existing.length; i++) {
+                const [name,] = parseName(existing[i]);
+                if (name === memberName) {
+                    return existing[i].name;
+                }
+            }
+        }
+        return undefined;
+    }
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    let svg;
+    (function (svg) {
+        function hasClass(el, cls) {
+            return pxt.BrowserUtils.containsClass(el, cls);
+        }
+        svg.hasClass = hasClass;
+        function addClass(el, cls) {
+            pxt.BrowserUtils.addClass(el, cls);
+        }
+        svg.addClass = addClass;
+        function removeClass(el, cls) {
+            pxt.BrowserUtils.removeClass(el, cls);
+        }
+        svg.removeClass = removeClass;
+    })(svg = pxtblockly.svg || (pxtblockly.svg = {}));
+    function parseColour(colour) {
+        const hue = Number(colour);
+        if (!isNaN(hue)) {
+            return Blockly.hueToRgb(hue);
+        }
+        else if (goog.isString(colour) && colour.match(/^#[0-9a-fA-F]{6}$/)) {
+            return colour;
+        }
+        else {
+            return '#000';
+        }
+    }
+    pxtblockly.parseColour = parseColour;
+    /**
+     * Converts a bitmap into a square image suitable for display. In light mode the preview
+     * is drawn with no transparency (alpha is filled with background color)
+     */
+    function bitmapToImageURI(frame, sideLength, lightMode) {
+        const colors = pxt.appTarget.runtime.palette.slice(1);
+        const canvas = document.createElement("canvas");
+        canvas.width = sideLength;
+        canvas.height = sideLength;
+        // Works well for all of our default sizes, does not work well if the size is not
+        // a multiple of 2 or is greater than 32 (i.e. from the decompiler)
+        const cellSize = Math.min(sideLength / frame.width, sideLength / frame.height);
+        // Center the image if it isn't square
+        const xOffset = Math.max(Math.floor((sideLength * (1 - (frame.width / frame.height))) / 2), 0);
+        const yOffset = Math.max(Math.floor((sideLength * (1 - (frame.height / frame.width))) / 2), 0);
+        let context;
+        if (lightMode) {
+            context = canvas.getContext("2d", { alpha: false });
+            context.fillStyle = "#dedede";
+            context.fillRect(0, 0, sideLength, sideLength);
+        }
+        else {
+            context = canvas.getContext("2d");
+        }
+        for (let c = 0; c < frame.width; c++) {
+            for (let r = 0; r < frame.height; r++) {
+                const color = frame.get(c, r);
+                if (color) {
+                    context.fillStyle = colors[color - 1];
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+                else if (lightMode) {
+                    context.fillStyle = "#dedede";
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+        return canvas.toDataURL();
+    }
+    pxtblockly.bitmapToImageURI = bitmapToImageURI;
+    function tilemapToImageURI(data, sideLength, lightMode) {
+        const colors = pxt.appTarget.runtime.palette.slice();
+        const canvas = document.createElement("canvas");
+        canvas.width = sideLength;
+        canvas.height = sideLength;
+        // Works well for all of our default sizes, does not work well if the size is not
+        // a multiple of 2 or is greater than 32 (i.e. from the decompiler)
+        const cellSize = Math.min(sideLength / data.tilemap.width, sideLength / data.tilemap.height);
+        // Center the image if it isn't square
+        const xOffset = Math.max(Math.floor((sideLength * (1 - (data.tilemap.width / data.tilemap.height))) / 2), 0);
+        const yOffset = Math.max(Math.floor((sideLength * (1 - (data.tilemap.height / data.tilemap.width))) / 2), 0);
+        let context;
+        if (lightMode) {
+            context = canvas.getContext("2d", { alpha: false });
+            context.fillStyle = "#dedede";
+            context.fillRect(0, 0, sideLength, sideLength);
+        }
+        else {
+            context = canvas.getContext("2d");
+        }
+        let tileColors = [];
+        for (let c = 0; c < data.tilemap.width; c++) {
+            for (let r = 0; r < data.tilemap.height; r++) {
+                const tile = data.tilemap.get(c, r);
+                if (tile) {
+                    if (!tileColors[tile]) {
+                        const tileInfo = data.tileset.tiles[tile];
+                        tileColors[tile] = tileInfo ? pxt.sprite.computeAverageColor(pxt.sprite.Bitmap.fromData(tileInfo.bitmap), colors) : "#dedede";
+                    }
+                    context.fillStyle = tileColors[tile];
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+                else if (lightMode) {
+                    context.fillStyle = "#dedede";
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+        return canvas.toDataURL();
+    }
+    pxtblockly.tilemapToImageURI = tilemapToImageURI;
+    function deleteTilesetTileIfExists(ws, tile) {
+        const existing = ws.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE);
+        for (const model of existing) {
+            if (parseInt(model.name.substr(0, model.name.indexOf(";"))) === tile.projectId) {
+                ws.deleteVariableById(model.getId());
+                break;
+            }
+        }
+    }
+    function getAllBlocksWithTilemaps(ws) {
+        return getAllFields(ws, f => f instanceof pxtblockly.FieldTilemap && !f.isGreyBlock);
+    }
+    pxtblockly.getAllBlocksWithTilemaps = getAllBlocksWithTilemaps;
+    function getAllBlocksWithTilesets(ws) {
+        return getAllFields(ws, f => f instanceof pxtblockly.FieldTileset);
+    }
+    pxtblockly.getAllBlocksWithTilesets = getAllBlocksWithTilesets;
+    function needsTilemapUpgrade(ws) {
+        const allTiles = ws.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE).map(model => pxt.sprite.legacy.blocklyVariableToTile(model.name));
+        return !!allTiles.length;
+    }
+    pxtblockly.needsTilemapUpgrade = needsTilemapUpgrade;
+    function upgradeTilemapsInWorkspace(ws, proj) {
+        const allTiles = ws.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE).map(model => pxt.sprite.legacy.blocklyVariableToTile(model.name));
+        if (!allTiles.length)
+            return;
+        try {
+            Blockly.Events.disable();
+            let customMapping = [];
+            for (const tile of allTiles) {
+                if (tile.qualifiedName) {
+                    customMapping[tile.projectId] = proj.resolveTile(tile.qualifiedName);
+                }
+                else if (tile.data) {
+                    customMapping[tile.projectId] = proj.createNewTile(tile.data, "myTiles.tile" + tile.projectId);
+                }
+                deleteTilesetTileIfExists(ws, tile);
+            }
+            const tilemaps = getAllBlocksWithTilemaps(ws);
+            for (const tilemap of tilemaps) {
+                const legacy = pxt.sprite.legacy.decodeTilemap(tilemap.ref.getInitText(), "typescript");
+                const mapping = [];
+                const newData = new pxt.sprite.TilemapData(legacy.tilemap, {
+                    tileWidth: legacy.tileset.tileWidth,
+                    tiles: legacy.tileset.tiles.map((t, index) => {
+                        if (t.projectId != null) {
+                            return customMapping[t.projectId];
+                        }
+                        if (!mapping[index]) {
+                            mapping[index] = proj.resolveTile(t.qualifiedName);
+                        }
+                        return mapping[index];
+                    })
+                }, legacy.layers);
+                tilemap.ref.setValue(pxt.sprite.encodeTilemap(newData, "typescript"));
+            }
+            const tilesets = getAllBlocksWithTilesets(ws);
+            for (const tileset of tilesets) {
+                // Force a re-render
+                tileset.ref.doValueUpdate_(tileset.ref.getValue());
+                if (tileset.ref.isDirty_) {
+                    tileset.ref.forceRerender();
+                }
+            }
+        }
+        finally {
+            Blockly.Events.enable();
+        }
+    }
+    pxtblockly.upgradeTilemapsInWorkspace = upgradeTilemapsInWorkspace;
+    function getAllFields(ws, predicate) {
+        const result = [];
+        const top = ws.getTopBlocks(false);
+        top.forEach(block => getAllFieldsRecursive(block));
+        return result;
+        function getAllFieldsRecursive(block) {
+            for (const input of block.inputList) {
+                for (const field of input.fieldRow) {
+                    if (predicate(field)) {
+                        result.push({ block, field: field.name, ref: field });
+                    }
+                }
+                if (input.connection && input.connection.targetBlock()) {
+                    getAllFieldsRecursive(input.connection.targetBlock());
+                }
+            }
+            if (block.nextConnection && block.nextConnection.targetBlock()) {
+                getAllFieldsRecursive(block.nextConnection.targetBlock());
+            }
+        }
+    }
+    pxtblockly.getAllFields = getAllFields;
+    function getAllReferencedTiles(workspace, excludeBlockID) {
+        var _a;
+        let all = {};
+        const allMaps = getAllBlocksWithTilemaps(workspace);
+        const project = pxt.react.getTilemapProject();
+        for (const map of allMaps) {
+            if (map.block.id === excludeBlockID)
+                continue;
+            for (const tile of ((_a = map.ref.getTileset()) === null || _a === void 0 ? void 0 : _a.tiles) || []) {
+                all[tile.id] = project.lookupAsset("tile" /* Tile */, tile.id);
+            }
+        }
+        const projectMaps = project.getAssets("tilemap" /* Tilemap */);
+        for (const projectMap of projectMaps) {
+            for (const tile of projectMap.data.tileset.tiles) {
+                all[tile.id] = project.lookupAsset("tile" /* Tile */, tile.id);
+            }
+        }
+        const allTiles = getAllBlocksWithTilesets(workspace);
+        for (const tilesetField of allTiles) {
+            const value = tilesetField.ref.getValue();
+            const match = /^\s*assets\s*\.\s*tile\s*`([^`]*)`\s*$/.exec(value);
+            if (match) {
+                const tile = project.lookupAssetByName("tile" /* Tile */, match[1]);
+                if (tile && !all[tile.id]) {
+                    all[tile.id] = tile;
+                }
+            }
+            else if (!all[value]) {
+                all[value] = project.resolveTile(value);
+            }
+        }
+        return Object.keys(all).map(key => all[key]).filter(t => !!t);
+    }
+    pxtblockly.getAllReferencedTiles = getAllReferencedTiles;
+    function getTemporaryAssets(workspace, type) {
+        switch (type) {
+            case "image" /* Image */:
+                return getAllFields(workspace, field => field instanceof pxtblockly.FieldSpriteEditor && field.isTemporaryAsset())
+                    .map(f => f.ref.getAsset());
+            case "animation" /* Animation */:
+                return getAllFields(workspace, field => field instanceof pxtblockly.FieldAnimationEditor && field.isTemporaryAsset())
+                    .map(f => f.ref.getAsset());
+            default: return [];
+        }
+    }
+    pxtblockly.getTemporaryAssets = getTemporaryAssets;
+    function workspaceToScreenCoordinates(ws, wsCoordinates) {
+        // The position in pixels relative to the origin of the
+        // main workspace.
+        const scaledWS = wsCoordinates.scale(ws.scale);
+        // The offset in pixels between the main workspace's origin and the upper
+        // left corner of the injection div.
+        const mainOffsetPixels = ws.getOriginOffsetInPixels();
+        // The client coordinates offset by the injection div's upper left corner.
+        const clientOffsetPixels = Blockly.utils.Coordinate.sum(scaledWS, mainOffsetPixels);
+        const injectionDiv = ws.getInjectionDiv();
+        // Bounding rect coordinates are in client coordinates, meaning that they
+        // are in pixels relative to the upper left corner of the visible browser
+        // window.  These coordinates change when you scroll the browser window.
+        const boundingRect = injectionDiv.getBoundingClientRect();
+        return new Blockly.utils.Coordinate(clientOffsetPixels.x + boundingRect.left, clientOffsetPixels.y + boundingRect.top);
+    }
+    pxtblockly.workspaceToScreenCoordinates = workspaceToScreenCoordinates;
+})(pxtblockly || (pxtblockly = {}));

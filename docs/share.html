@@ -95,7 +95,7 @@
         <div class="item">
             <form id="tocsearch1" class="search" role="form" method="get" action="https://www.bing.com/search">
                 <div class="ui fluid icon input">
-                    <input type="hidden" name="q1" value="site:http://microsoft.github.io/pxt-sample/" />
+                    <input type="hidden" name="q1" value="site:https://sdk40010.github.io/pxt-sample/" />
                     
                 <input type="search" name="q" placeholder="Search..." aria-label="Search Documentation">
                 <i onclick="document.getElementById('tocsearch1').submit();" tabindex="0" class="search link icon" aria-label="Search" role="button"></i>
@@ -394,9 +394,9 @@
 </ul>
 <p>Copy the HTML for embedding the page from the publish dialog. It will look like the following:</p>
 <p>Open the HTML editor for your blog or website and paste it with your content</p>
-<h3 id="wordpress">Wordpress</h3><p><a target="_blank" rel="nofollow noopener" href="https://wordpress.com">wordpress.com</a> blogs do not support embedding content from most websites, so you will need to link to your project instead. Alternatively, if you have a Wordpress VIP account you can follow <a target="_blank" rel="nofollow noopener" href="https://vip.wordpress.com/documentation/embedding-rich-media-from-around-the-web-with-protected-embeds/#scripts-iframes-and-objects">these instructions</a> to embed an <code>iframe</code> into your blog. The URL that you need to add is like <code>http://microsoft.github.io/pxt-sample//#pub:PROJECTID</code>, but replace <code>PROJECTID</code> with your project’s unique identifier.</p>
+<h3 id="wordpress">Wordpress</h3><p><a target="_blank" rel="nofollow noopener" href="https://wordpress.com">wordpress.com</a> blogs do not support embedding content from most websites, so you will need to link to your project instead. Alternatively, if you have a Wordpress VIP account you can follow <a target="_blank" rel="nofollow noopener" href="https://vip.wordpress.com/documentation/embedding-rich-media-from-around-the-web-with-protected-embeds/#scripts-iframes-and-objects">these instructions</a> to embed an <code>iframe</code> into your blog. The URL that you need to add is like <code>https://sdk40010.github.io/pxt-sample//#pub:PROJECTID</code>, but replace <code>PROJECTID</code> with your project’s unique identifier.</p>
 <p>If you self host a Wordpress blog you can install the <a target="_blank" rel="nofollow noopener" href="https://wordpress.org/plugins/iframe/">iframe-plugin</a> and then write the following in your blog-post (again, replacing the <code>PROJECTID</code> with your project’s identifier):</p>
-<pre><code>[iframe src=&quot;http://microsoft.github.io/pxt-sample//#pub:PROJECTID&quot;]</code></pre><h3 id="blogger">Blogger</h3><ul>
+<pre><code>[iframe src=&quot;https://sdk40010.github.io/pxt-sample//#pub:PROJECTID&quot;]</code></pre><h3 id="blogger">Blogger</h3><ul>
 <li>Create a new post</li>
 <li>Click the ‘HTML’ button next to ‘Compose’ and paste in the HTML</li>
 </ul>
@@ -443,7 +443,7 @@
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2021 Microsoft</span>
+            <span class="item">© 2022 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>
@@ -605,7 +605,7 @@
         var pageTitle = isScriptPage(location) ? "Share Page" : null;
         appInsights.trackPageView(pageTitle, scrubUrl(location), {urlReferrer: scrubUrl(document.referrer.toString())});
 
-        var scriptIdRegex = /(?:\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
+        var scriptIdRegex = /(?:S?\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
         // Check if the current page contains a share URL
         function isScriptPage(url) {
             return !!url.match(scriptIdRegex);

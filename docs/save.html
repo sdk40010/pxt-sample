@@ -95,7 +95,7 @@
         <div class="item">
             <form id="tocsearch1" class="search" role="form" method="get" action="https://www.bing.com/search">
                 <div class="ui fluid icon input">
-                    <input type="hidden" name="q1" value="site:http://microsoft.github.io/pxt-sample/" />
+                    <input type="hidden" name="q1" value="site:https://sdk40010.github.io/pxt-sample/" />
                     
                 <input type="search" name="q" placeholder="Search..." aria-label="Search Documentation">
                 <i onclick="document.getElementById('tocsearch1').submit();" tabindex="0" class="search link icon" aria-label="Search" role="button"></i>
@@ -380,7 +380,7 @@
 <li><em>pxt.json</em></li>
 </ul>
 <p>These files contain the JavaScript source code, the attributes and positions of the blocks, and dependency information.</p>
-<h2 id="storage-location-and-persistance">Storage location and persistance</h2><p>The project files are actually stored as data in the browser’s indexed data store. The project data is keyed from an identifier associated with the project and the <a target="_blank" rel="nofollow noopener" href="http://microsoft.github.io/pxt-sample/">MakeCode</a> web site URL. The data store doesn’t keep the project data forever. It’s subject to removal by a user when they decide to clear the browser’s cache and temporary files. Rules for how browsers clear should their cache and data store are specified by <a target="_blank" rel="nofollow noopener" href="https://www.w3.org/TR/clear-site-data/">W3C Clear Site Data</a> policy.</p>
+<h2 id="storage-location-and-persistance">Storage location and persistance</h2><p>The project files are actually stored as data in the browser’s indexed data store. The project data is keyed from an identifier associated with the project and the <a target="_blank" rel="nofollow noopener" href="https://sdk40010.github.io/pxt-sample/">MakeCode</a> web site URL. The data store doesn’t keep the project data forever. It’s subject to removal by a user when they decide to clear the browser’s cache and temporary files. Rules for how browsers clear should their cache and data store are specified by <a target="_blank" rel="nofollow noopener" href="https://www.w3.org/TR/clear-site-data/">W3C Clear Site Data</a> policy.</p>
 
     </div>
 
@@ -419,7 +419,7 @@
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2021 Microsoft</span>
+            <span class="item">© 2022 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>
@@ -581,7 +581,7 @@
         var pageTitle = isScriptPage(location) ? "Share Page" : null;
         appInsights.trackPageView(pageTitle, scrubUrl(location), {urlReferrer: scrubUrl(document.referrer.toString())});
 
-        var scriptIdRegex = /(?:\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
+        var scriptIdRegex = /(?:S?\d{5}-\d{5}-\d{5}-\d{5})|(?:_[0-9a-zA-Z]{12})/g;
         // Check if the current page contains a share URL
         function isScriptPage(url) {
             return !!url.match(scriptIdRegex);

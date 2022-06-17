@@ -1,1 +1,104 @@
-function initSimulatorServiceWorker(){const e="@relprefix@".replace("---","").replace(/^\//,""),t=-1===e.indexOf("/"),r="makecode-sim;"+e+";@pxtRelId@",n=["@simUrl@","/pxt-sample/pxtsim.js","/pxt-sample/sim.js"].map((e=>e.trim())).filter((e=>!!e&&0!==e.indexOf("@")));self.setSimulatorWorkerOptions=e=>{var t;e&&Array.isArray(e.urls)&&n.push(...(t=e.urls,s(t.map((e=>e.trim())).filter((e=>!!e)))))};let i=!1;function s(e){const t=[];for(const r of e)-1===t.indexOf(r)&&t.push(r);return t}self.addEventListener("install",(e=>{if(t){i=!0;try{importScripts("@simworkerconfigUrl@")}catch(e){console.log("Failed to load target service worker config")}console.log("Installing service worker..."),e.waitUntil(caches.open(r).then((e=>(console.log("Opened cache"),e.addAll(s(n))))).then((()=>self.skipWaiting())))}else console.log("Skipping service worker install for unnamed endpoint")})),self.addEventListener("activate",(n=>{t?(console.log("Activating service worker..."),n.waitUntil(caches.keys().then((t=>{const n=t.filter((t=>{const n=function(e){const t=e.split(";");return 3!==t.length?null:t[1]}(t);return null===n||n===e&&t!==r}));return Promise.all(n.map((e=>caches.delete(e))))})).then((()=>i?(i=!1,function(){const t=self;return t.clients.claim().then((()=>t.clients.matchAll())).then((t=>{t.forEach((t=>t.postMessage({type:"serviceworker",state:"activated",ref:e})))}))}()):Promise.resolve())))):console.log("Skipping service worker activate for unnamed endpoint")})),self.addEventListener("fetch",(e=>{e.respondWith(caches.match(e.request).then((t=>t||fetch(e.request))))}))}initSimulatorServiceWorker();
+initSimulatorServiceWorker();
+function initSimulatorServiceWorker() {
+    // Empty string for released, otherwise contains the ref or version path
+    const ref = `@relprefix@`.replace("---", "").replace(/^\//, "");
+    // We don't do offline for version paths, only named releases
+    const isNamedEndpoint = ref.indexOf("/") === -1;
+    // pxtRelId is replaced with the commit hash for this release
+    const refCacheName = "makecode-sim;" + ref + ";@pxtRelId@";
+    const simUrls = [
+        // This is the URL loaded in the simulator iframe (includes ref)
+        `@simUrl@`,
+        `/pxt-sample/pxtsim.js`,
+        `/pxt-sample/sim.js`,
+    ];
+    const allFiles = simUrls.map(url => url.trim())
+        .filter(url => !!url && url.indexOf("@") !== 0);
+    // This function is called by workerConfig.js in the target to configure any
+    // extra URLs that need to be cached
+    self.setSimulatorWorkerOptions = opts => {
+        if (opts && Array.isArray(opts.urls)) {
+            allFiles.push(...resolveURLs(opts.urls));
+        }
+    };
+    let didInstall = false;
+    self.addEventListener("install", (ev) => {
+        if (!isNamedEndpoint) {
+            console.log("Skipping service worker install for unnamed endpoint");
+            return;
+        }
+        didInstall = true;
+        // Check to see if there are any extra sim URLs to be cached by the target
+        try {
+            importScripts(`@simworkerconfigUrl@`);
+        }
+        catch (e) {
+            // This file is optional in the target, so ignore 404 response
+            console.log("Failed to load target service worker config");
+        }
+        console.log("Installing service worker...");
+        ev.waitUntil(caches.open(refCacheName)
+            .then(cache => {
+            console.log("Opened cache");
+            return cache.addAll(dedupe(allFiles));
+        })
+            .then(() => self.skipWaiting()));
+    });
+    self.addEventListener("activate", (ev) => {
+        if (!isNamedEndpoint) {
+            console.log("Skipping service worker activate for unnamed endpoint");
+            return;
+        }
+        console.log("Activating service worker...");
+        ev.waitUntil(caches.keys()
+            .then(cacheNames => {
+            // Delete all caches that "belong" to this ref except for the current version
+            const toDelete = cacheNames.filter(c => {
+                const cacheRef = getRefFromCacheName(c);
+                return cacheRef === null || (cacheRef === ref && c !== refCacheName);
+            });
+            return Promise.all(toDelete.map(name => caches.delete(name)));
+        })
+            .then(() => {
+            if (didInstall) {
+                // Only notify clients for the first activation
+                didInstall = false;
+                return notifyAllClientsAsync();
+            }
+            return Promise.resolve();
+        }));
+    });
+    self.addEventListener("fetch", (ev) => {
+        ev.respondWith(caches.match(ev.request)
+            .then(response => {
+            return response || fetch(ev.request);
+        }));
+    });
+    function dedupe(urls) {
+        const res = [];
+        for (const url of urls) {
+            if (res.indexOf(url) === -1)
+                res.push(url);
+        }
+        return res;
+    }
+    function resolveURLs(urls) {
+        return dedupe(urls.map(url => url.trim()).filter(url => !!url));
+    }
+    function getRefFromCacheName(name) {
+        const parts = name.split(";");
+        if (parts.length !== 3)
+            return null;
+        return parts[1];
+    }
+    function notifyAllClientsAsync() {
+        const scope = self;
+        return scope.clients.claim().then(() => scope.clients.matchAll()).then(clients => {
+            clients.forEach(client => client.postMessage({
+                type: "serviceworker",
+                state: "activated",
+                ref: ref
+            }));
+        });
+    }
+}

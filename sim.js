@@ -241,7 +241,7 @@ var pxsim;
             this.delay = delays[s];
         }
         set penColor(color) {
-            this.color = `#${("00000" + color.toString(16)).substring(-6)}`;
+            this.color = `#${color.toString(16)}`;
         }
         set turtle(visible) {
             this.turtleSprite.visible = visible;
