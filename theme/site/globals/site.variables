@@ -29,16 +29,16 @@
 --------------------*/
 
 /*---  Colors  ---*/
-@black            : #2d3436;
-@blue             : #74b9ff;
-@green            : #55efc4;
-@grey             : #636e72;
-@orange           : #fab1a0;
-@pink             : #fd79a8;
-@purple           : #a29bfe;
-@red              : #ff7675;
-@teal             : #81ecec;
-@yellow           : #ffeaa7;
+@black            : #263238;
+@blue             : #82b1ff;
+@green            : #00e676;
+@grey             : #424242;
+@orange           : #ff9e80;
+@pink             : #ff80ab;
+@purple           : #b388ff;
+@red              : #ff8a80;
+@teal             : #1de9b6;
+@yellow           : #ffe57f;
 
 /*-------------------
     Brand Colors
