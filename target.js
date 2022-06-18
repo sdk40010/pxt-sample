@@ -30,6 +30,7 @@ var pxtTargetBundle = {
         "privacyUrl": "https://go.microsoft.com/fwlink/?LinkId=521839",
         "termsOfUseUrl": "https://go.microsoft.com/fwlink/?LinkID=206977",
         "betaUrl": "https://makecode.com/",
+        "embedUrl": "https://sdk40010.github.io/pxt-sample/",
         "boardName": "Turtle Graphics",
         "docMenu": [
             {
@@ -367,7 +368,6 @@ var pxtTargetBundle = {
                 ]
             }
         ],
-        "embedUrl": "https://sdk40010.github.io/pxt-sample/",
         "id": "turtle",
         "title": "MakeCode Editor for Turtle graphics",
         "name": "turtle",
