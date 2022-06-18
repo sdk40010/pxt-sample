@@ -26,10 +26,12 @@
     },
     "appTheme": {
         "logoUrl": "https://github.com/Microsoft/pxt-sample",
-        "homeUrl": "http://microsoft.github.io/pxt-sample/",
+        "homeUrl": "https://sdk40010.github.io/pxt-sample/",
         "privacyUrl": "https://go.microsoft.com/fwlink/?LinkId=521839",
         "termsOfUseUrl": "https://go.microsoft.com/fwlink/?LinkID=206977",
         "betaUrl": "https://makecode.com/",
+        "embedUrl": "https://sdk40010.github.io/pxt-sample/",
+        "boardName": "Turtle Graphics",
         "docMenu": [
             {
                 "name": "About",
