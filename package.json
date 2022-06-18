@@ -42,6 +42,8 @@
   },
   "scripts": {
     "start": "pxt serve",
-    "skillmap": "pxt skillmap --serve --docs skillmap"
+    "skillmap": "pxt skillmap --serve --docs skillmap",
+    "pkg": "pxt staticpkg && pxt serve --pkg",
+    "gh": "pxt staticpkg --gh"
   }
 }
