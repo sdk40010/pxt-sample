@@ -17,7 +17,8 @@ var pxtTargetBundle = {
         "variablesBlocks": true,
         "textBlocks": false,
         "functionBlocks": false,
-        "listsBlocks": false
+        "listsBlocks": false,
+        "onStartUnDeletable": true
     },
     "simulator": {
         "autoRun": true,

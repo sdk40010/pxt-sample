@@ -1,14 +1,21 @@
 # Skillmap
 
-* name: 初心者向けスキルマップ
+* name: ブロックスキルマップ
 * description: タートルグラフィックスでプログラミングを学んでみましょう。
 
-## path
+## block
 
 * name: タートルグラフィックス
 
-### activity
+### block-activity1
 
 * name: 矢印
 * type: tutorial
 * url: /skillmap/beginner/arrow
+* next: block-activity2
+
+### block-activity2
+
+* name: 三角形
+* type: tutorial
+* url: /skillmap/beginner/triangle
