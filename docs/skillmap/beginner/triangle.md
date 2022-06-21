@@ -7,7 +7,7 @@
 いろんな大きさの直角二等辺三角形を描いてみましょう。
 
 ## 
-![triangle](/static/skillmap/beginner/triangle.png)
+![triangle](static/skillmap/beginner/triangle.png)
 直角二等辺三角形は3辺の比が**1:1:√2**で、3つの角のうち2つの角が**45°**の三角形です。まずは、1つ目の辺を描いていきます。
 
 - :check:
